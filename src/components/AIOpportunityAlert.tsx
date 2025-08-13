@@ -235,7 +235,7 @@ export const AIOpportunityAlert = () => {
               <Brain className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">AI机会提醒</h3>
+              <h3 className="font-semibold text-foreground">最强大脑自动检测</h3>
               <p className="text-sm text-muted-foreground">
                 监控90%胜率机会 • 上次检查: {lastCheck.toLocaleTimeString()}
               </p>
