@@ -160,9 +160,65 @@ const CRYPTO_NAMES = {
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   const [cryptoData, setCryptoData] = useState<CryptoData[]>([]);
   const [newsData, setNewsData] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start with false
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+
+  // Initialize with mock data immediately
+  useEffect(() => {
+    const mockData: CryptoData[] = symbols.map((symbol, index) => ({
+      symbol,
+      name: getTokenName(symbol),
+      price: Math.random() * 1000 + 100,
+      change24h: (Math.random() - 0.5) * 100,
+      changePercent24h: (Math.random() - 0.5) * 10,
+      volume24h: Math.random() * 1000000000,
+      high24h: Math.random() * 1100 + 100,
+      low24h: Math.random() * 900 + 50,
+      marketCap: Math.random() * 100000000000,
+      marketCapRank: index + 1,
+      circulatingSupply: Math.random() * 1000000000,
+      totalSupply: Math.random() * 1000000000,
+      maxSupply: Math.random() * 1000000000,
+      ath: Math.random() * 2000 + 200,
+      atl: Math.random() * 10,
+      image: `/src/assets/${symbol.toLowerCase()}-3d-logo.png`,
+      dominance: Math.random() * 5,
+      rsi: Math.random() * 100,
+      ma20: Math.random() * 1000 + 100,
+      ma50: Math.random() * 1000 + 100,
+      support: Math.random() * 900 + 50,
+      resistance: Math.random() * 1100 + 100
+    }));
+    
+    const mockNews: NewsArticle[] = [
+      {
+        title: "Bitcoin ETF Trading Volume Hits Record $3.2B Daily",
+        description: "Institutional adoption reaches new heights",
+        url: "#",
+        urlToImage: "",
+        publishedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+        source: { name: "CoinDesk Pro" },
+        sentiment: "bullish",
+        impact: "high",
+        time: "30 min ago"
+      },
+      {
+        title: "Ethereum Shanghai Upgrade Successfully Deployed", 
+        description: "Network improvements show positive results",
+        url: "#",
+        urlToImage: "",
+        publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+        source: { name: "The Block" },
+        sentiment: "bullish",
+        impact: "high",
+        time: "1 hour ago"
+      }
+    ];
+    
+    setCryptoData(mockData);
+    setNewsData(mockNews);
+  }, []);
 
   const fetchCryptoData = async () => {
     try {
@@ -205,7 +261,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         maxSupply: Math.random() * 1000000000,
         ath: Math.random() * 2000 + 200,
         atl: Math.random() * 10,
-        image: `https://assets.coingecko.com/coins/images/${index + 1}/large/${symbol.toLowerCase()}.png`,
+        image: `/src/assets/${symbol.toLowerCase()}-3d-logo.png`,
         dominance: Math.random() * 5,
         rsi: Math.random() * 100,
         ma20: Math.random() * 1000 + 100,
