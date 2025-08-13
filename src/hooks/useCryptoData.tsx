@@ -40,13 +40,121 @@ interface NewsArticle {
   time?: string; // For backward compatibility
 }
 
+// 扩展的加密货币符号列表 - 包含top 100
 const DEFAULT_SYMBOLS = [
-  'BTC', 'ETH', 'ADA', 'SOL', 'DOT', 'MATIC', 
-  'BNB', 'XRP', 'DOGE', 'AVAX', 'LINK', 'UNI', 
-  'LTC', 'ATOM', 'ICP', 'NEAR', 'APT', 'FTM',
-  'ALGO', 'VET', 'XLM', 'FIL', 'MANA', 'SAND',
-  'CRO', 'SHIB', 'LRC', 'ENJ', 'BAT', 'ZEC'
+  // Top 10
+  "BTC", "ETH", "USDT", "BNB", "XRP", "USDC", "STETH", "ADA", "SOL", "DOGE",
+  // Top 11-30
+  "TRX", "TON", "AVAX", "DOT", "MATIC", "SHIB", "LTC", "BCH", "LINK", "XLM",
+  "UNI", "ATOM", "ETC", "HBAR", "FIL", "ICP", "CRO", "APT", "NEAR", "VET",
+  // Top 31-60
+  "GRT", "ALGO", "QNT", "MANA", "SAND", "AAVE", "MKR", "LRC", "ENJ", "BAT",
+  "ZEC", "COMP", "YFI", "SNX", "1INCH", "REN", "KNC", "CRV", "UMA", "BAL",
+  // Top 61-100
+  "SUSHI", "FTM", "FLOW", "EGLD", "ONE", "HIVE", "THETA", "TFUEL", "KAVA", "BAND",
+  "RVN", "ZIL", "ICX", "ONT", "QTUM", "WAVES", "SC", "DGB", "LSK", "ARK",
+  "NANO", "IOST", "ZEN", "MAID", "REP", "KMD", "DCR", "STRAT", "NXT", "SYS",
+  // 新兴和热门币种
+  "PEPE", "BONK", "WIF", "FLOKI", "BABYDOGE", "SAFE", "MEME", "WOJAK", "TURBO", "LADYS"
 ];
+
+// 加密货币名称映射（中英文）
+const CRYPTO_NAMES = {
+  // Top 10
+  "BTC": { name: "Bitcoin", cn: "比特币" },
+  "ETH": { name: "Ethereum", cn: "以太坊" },
+  "USDT": { name: "Tether", cn: "泰达币" },
+  "BNB": { name: "Binance Coin", cn: "币安币" },
+  "XRP": { name: "Ripple", cn: "瑞波币" },
+  "USDC": { name: "USD Coin", cn: "美元币" },
+  "STETH": { name: "Staked Ether", cn: "质押以太坊" },
+  "ADA": { name: "Cardano", cn: "卡尔达诺" },
+  "SOL": { name: "Solana", cn: "索拉纳" },
+  "DOGE": { name: "Dogecoin", cn: "狗狗币" },
+  // Top 11-30
+  "TRX": { name: "TRON", cn: "波场" },
+  "TON": { name: "Toncoin", cn: "Ton币" },
+  "AVAX": { name: "Avalanche", cn: "雪崩协议" },
+  "DOT": { name: "Polkadot", cn: "波卡" },
+  "MATIC": { name: "Polygon", cn: "马蹄链" },
+  "SHIB": { name: "Shiba Inu", cn: "柴犬币" },
+  "LTC": { name: "Litecoin", cn: "莱特币" },
+  "BCH": { name: "Bitcoin Cash", cn: "比特币现金" },
+  "LINK": { name: "Chainlink", cn: "链环" },
+  "XLM": { name: "Stellar", cn: "恒星币" },
+  "UNI": { name: "Uniswap", cn: "Uniswap" },
+  "ATOM": { name: "Cosmos", cn: "宇宙币" },
+  "ETC": { name: "Ethereum Classic", cn: "以太经典" },
+  "HBAR": { name: "Hedera", cn: "哈希图" },
+  "FIL": { name: "Filecoin", cn: "文件币" },
+  "ICP": { name: "Internet Computer", cn: "互联网计算机" },
+  "CRO": { name: "Cronos", cn: "Cronos" },
+  "APT": { name: "Aptos", cn: "Aptos" },
+  "NEAR": { name: "NEAR Protocol", cn: "NEAR协议" },
+  "VET": { name: "VeChain", cn: "唯链" },
+  // 其他币种...
+  "GRT": { name: "The Graph", cn: "图协议" },
+  "ALGO": { name: "Algorand", cn: "算法币" },
+  "QNT": { name: "Quant", cn: "量子链" },
+  "MANA": { name: "Decentraland", cn: "虚拟世界" },
+  "SAND": { name: "The Sandbox", cn: "沙盒" },
+  "AAVE": { name: "Aave", cn: "Aave" },
+  "MKR": { name: "Maker", cn: "制造者" },
+  "LRC": { name: "Loopring", cn: "路印协议" },
+  "ENJ": { name: "Enjin Coin", cn: "恩金币" },
+  "BAT": { name: "Basic Attention Token", cn: "注意力币" },
+  "ZEC": { name: "Zcash", cn: "零币" },
+  "COMP": { name: "Compound", cn: "复合币" },
+  "YFI": { name: "yearn.finance", cn: "渴望金融" },
+  "SNX": { name: "Synthetix", cn: "合成资产" },
+  "1INCH": { name: "1inch", cn: "1inch" },
+  "REN": { name: "Ren", cn: "任币" },
+  "KNC": { name: "Kyber Network", cn: "凯伯网络" },
+  "CRV": { name: "Curve DAO Token", cn: "曲线" },
+  "UMA": { name: "UMA", cn: "通用市场准入" },
+  "BAL": { name: "Balancer", cn: "平衡器" },
+  "SUSHI": { name: "SushiSwap", cn: "寿司" },
+  "FTM": { name: "Fantom", cn: "幻影币" },
+  "FLOW": { name: "Flow", cn: "Flow" },
+  "EGLD": { name: "MultiversX", cn: "多元宇宙" },
+  "ONE": { name: "Harmony", cn: "和谐币" },
+  "HIVE": { name: "Hive", cn: "蜂巢币" },
+  "THETA": { name: "Theta Network", cn: "Theta网络" },
+  "TFUEL": { name: "Theta Fuel", cn: "Theta燃料" },
+  "KAVA": { name: "Kava", cn: "Kava" },
+  "BAND": { name: "Band Protocol", cn: "Band协议" },
+  "RVN": { name: "Ravencoin", cn: "渡鸦币" },
+  "ZIL": { name: "Zilliqa", cn: "Zilliqa" },
+  "ICX": { name: "ICON", cn: "图标" },
+  "ONT": { name: "Ontology", cn: "本体" },
+  "QTUM": { name: "Qtum", cn: "量子链" },
+  "WAVES": { name: "Waves", cn: "波浪币" },
+  "SC": { name: "Siacoin", cn: "云储币" },
+  "DGB": { name: "DigiByte", cn: "极特币" },
+  "LSK": { name: "Lisk", cn: "应用链" },
+  "ARK": { name: "Ark", cn: "方舟币" },
+  "NANO": { name: "Nano", cn: "纳诺币" },
+  "IOST": { name: "IOST", cn: "IOST" },
+  "ZEN": { name: "Horizen", cn: "ZEN" },
+  "MAID": { name: "MaidSafeCoin", cn: "安全网络币" },
+  "REP": { name: "Augur", cn: "预测市场" },
+  "KMD": { name: "Komodo", cn: "科莫多币" },
+  "DCR": { name: "Decred", cn: "德信币" },
+  "STRAT": { name: "Stratis", cn: "斯特拉迪斯" },
+  "NXT": { name: "NXT", cn: "未来币" },
+  "SYS": { name: "Syscoin", cn: "系统币" },
+  // Meme coins
+  "PEPE": { name: "Pepe", cn: "佩佩币" },
+  "BONK": { name: "Bonk", cn: "Bonk" },
+  "WIF": { name: "dogwifhat", cn: "戴帽狗" },
+  "FLOKI": { name: "FLOKI", cn: "弗洛基" },
+  "BABYDOGE": { name: "Baby Doge Coin", cn: "小狗币" },
+  "SAFE": { name: "SafeMoon", cn: "安全月球" },
+  "MEME": { name: "Memecoin", cn: "模因币" },
+  "WOJAK": { name: "Wojak", cn: "沃伊扎克" },
+  "TURBO": { name: "Turbo", cn: "涡轮币" },
+  "LADYS": { name: "Milady", cn: "女士币" }
+};
 
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   const [cryptoData, setCryptoData] = useState<CryptoData[]>([]);
@@ -206,39 +314,40 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   };
 };
 
-function getTokenName(symbol: string): string {
-  const tokenNames: { [key: string]: string } = {
-    'BTC': 'Bitcoin',
-    'ETH': 'Ethereum',
-    'ADA': 'Cardano',
-    'SOL': 'Solana',
-    'DOT': 'Polkadot',
-    'MATIC': 'Polygon',
-    'BNB': 'Binance Coin',
-    'XRP': 'Ripple',
-    'DOGE': 'Dogecoin',
-    'AVAX': 'Avalanche',
-    'LINK': 'Chainlink',
-    'UNI': 'Uniswap',
-    'LTC': 'Litecoin',
-    'ATOM': 'Cosmos',
-    'ICP': 'Internet Computer',
-    'NEAR': 'NEAR Protocol',
-    'APT': 'Aptos',
-    'FTM': 'Fantom',
-    'ALGO': 'Algorand',
-    'VET': 'VeChain',
-    'XLM': 'Stellar',
-    'FIL': 'Filecoin',
-    'MANA': 'Decentraland',
-    'SAND': 'The Sandbox',
-    'CRO': 'Cronos',
-    'SHIB': 'Shiba Inu',
-    'LRC': 'Loopring',
-    'ENJ': 'Enjin Coin',
-    'BAT': 'Basic Attention Token',
-    'ZEC': 'Zcash'
-  };
+// 获取代币全名的辅助函数
+export const getTokenName = (symbol: string): string => {
+  const tokenInfo = CRYPTO_NAMES[symbol as keyof typeof CRYPTO_NAMES];
+  return tokenInfo?.name || symbol;
+};
+
+// 获取代币中文名的辅助函数
+export const getTokenChineseName = (symbol: string): string => {
+  const tokenInfo = CRYPTO_NAMES[symbol as keyof typeof CRYPTO_NAMES];
+  return tokenInfo?.cn || symbol;
+};
+
+// 搜索过滤函数
+export const filterCryptoData = (data: CryptoData[], searchQuery: string): CryptoData[] => {
+  if (!searchQuery.trim()) return data;
   
-  return tokenNames[symbol] || symbol;
-}
+  const query = searchQuery.toLowerCase();
+  
+  return data.filter(crypto => {
+    const symbol = crypto.symbol.toLowerCase();
+    const name = getTokenName(crypto.symbol).toLowerCase();
+    const chineseName = getTokenChineseName(crypto.symbol).toLowerCase();
+    
+    return symbol.includes(query) || 
+           name.includes(query) || 
+           chineseName.includes(query);
+  });
+};
+
+// 获取所有支持的加密货币列表
+export const getAllSupportedCryptos = (): Array<{symbol: string, name: string, chineseName: string}> => {
+  return DEFAULT_SYMBOLS.map(symbol => ({
+    symbol,
+    name: getTokenName(symbol),
+    chineseName: getTokenChineseName(symbol)
+  }));
+};

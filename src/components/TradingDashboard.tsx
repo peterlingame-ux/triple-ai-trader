@@ -13,8 +13,9 @@ import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useCryptoData } from "@/hooks/useCryptoData";
+import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
+import { CryptoSearch } from "./CryptoSearch";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw, Wallet, Bot } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
@@ -79,10 +80,22 @@ export const TradingDashboard = () => {
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Filter crypto data based on search query
+  const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
 
   // Get portfolio data from either wallet or auto-trader
   const portfolioData = getPortfolioData();
   const { totalValue, dailyChange, activeTrades, source } = portfolioData;
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
 
   return (
     <div className="min-h-screen relative p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
@@ -233,8 +246,20 @@ export const TradingDashboard = () => {
               </Button>
             </div>
           </div>
+          
+          {/* Search Component */}
+          <div className="mb-6">
+            <CryptoSearch
+              onSearch={handleSearch}
+              onClearSearch={handleClearSearch}
+              searchQuery={searchQuery}
+              totalCryptos={cryptoData.length}
+              filteredCount={filteredCryptoData.length}
+            />
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(showAllCrypto ? cryptoData : cryptoData.slice(0, 6)).map((crypto) => (
+            {(showAllCrypto ? filteredCryptoData : filteredCryptoData.slice(0, 6)).map((crypto) => (
               <CryptoCard
                 key={crypto.symbol}
                 symbol={crypto.symbol}
@@ -248,6 +273,17 @@ export const TradingDashboard = () => {
               />
             ))}
           </div>
+          
+          {filteredCryptoData.length === 0 && searchQuery && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                未找到匹配 "{searchQuery}" 的加密货币
+              </p>
+              <p className="text-muted-foreground/70 text-sm mt-2">
+                请尝试搜索其他关键词，如 Bitcoin、BTC 或比特币
+              </p>
+            </div>
+          )}
         </div>
 
         {/* AI Advisors Section */}
