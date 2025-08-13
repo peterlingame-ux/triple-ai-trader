@@ -9,7 +9,7 @@ import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
-import { AICommunicator } from "./AICommunicator";
+
 import { AutoTrader } from "./AutoTrader";
 import { CryptoAnalysisDialog } from "./CryptoAnalysisDialog";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
@@ -300,7 +300,6 @@ export const TradingDashboard = () => {
               {t('ai.advisors')}
             </h2>
             <div className="flex items-center gap-2">
-              <AICommunicator cryptoData={cryptoData} newsData={newsData} />
               <AutoTrader />
             </div>
           </div>

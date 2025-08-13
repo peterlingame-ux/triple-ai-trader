@@ -28,7 +28,7 @@ const translations = {
     'advisor.analysis': 'AI Analysis',
     'advisor.detailed': 'Get Detailed Analysis',
     'advisor.featured': '⭐ Featured',
-    'ai.communicate': 'Start Communication',
+    
     'wallet.connect': 'Connect Wallet',
     'wallet.real': 'Real Portfolio',
     'wallet.virtual': 'Virtual Trading Portfolio',
@@ -133,7 +133,7 @@ const translations = {
     'advisor.analysis': 'AI分析',
     'advisor.detailed': '获取详细分析',
     'advisor.featured': '⭐ 精选',
-    'ai.communicate': '开始沟通',
+    
     'wallet.connect': '连接钱包',
     'wallet.real': '真实投资组合',
     'wallet.virtual': '虚拟交易组合',
@@ -238,7 +238,7 @@ const translations = {
     'advisor.analysis': 'Análisis AI',
     'advisor.detailed': 'Obtener Análisis Detallado',
     'advisor.featured': '⭐ Destacado',
-    'ai.communicate': 'Iniciar Comunicación',
+    
     'wallet.connect': 'Conectar Billetera',
     'wallet.real': 'Portafolio Real',
     'wallet.virtual': 'Portafolio de Trading Virtual',
@@ -284,7 +284,7 @@ const translations = {
     'advisor.analysis': 'AI分析',
     'advisor.detailed': '詳細分析を取得',
     'advisor.featured': '⭐ 注目',
-    'ai.communicate': 'コミュニケーション開始',
+    
     'wallet.connect': 'ウォレット接続',
     'wallet.real': '実際のポートフォリオ',
     'wallet.virtual': 'バーチャルトレーディングポートフォリオ',
@@ -330,7 +330,7 @@ const translations = {
     'advisor.analysis': 'AI 분석',
     'advisor.detailed': '상세 분석 받기',
     'advisor.featured': '⭐ 특집',
-    'ai.communicate': '소통 시작',
+    
     'wallet.connect': '지갑 연결',
     'wallet.real': '실제 포트폴리오',
     'wallet.virtual': '가상 거래 포트폴리오',
@@ -376,7 +376,7 @@ const translations = {
     'advisor.analysis': 'Analyse IA',
     'advisor.detailed': 'Obtenir une Analyse Détaillée',
     'advisor.featured': '⭐ Vedette',
-    'ai.communicate': 'Commencer la Communication',
+    
     'wallet.connect': 'Connecter le Portefeuille',
     'wallet.real': 'Portefeuille Réel',
     'wallet.virtual': 'Portefeuille de Trading Virtuel',
@@ -422,7 +422,7 @@ const translations = {
     'advisor.analysis': 'KI-Analyse',
     'advisor.detailed': 'Detaillierte Analyse Erhalten',
     'advisor.featured': '⭐ Empfohlen',
-    'ai.communicate': 'Kommunikation Starten',
+    
     'wallet.connect': 'Wallet Verbinden',
     'wallet.real': 'Echtes Portfolio',
     'wallet.virtual': 'Virtuelles Trading-Portfolio',
@@ -468,7 +468,7 @@ const translations = {
     'advisor.analysis': 'Analisi IA',
     'advisor.detailed': 'Ottieni Analisi Dettagliata',
     'advisor.featured': '⭐ In Evidenza',
-    'ai.communicate': 'Inizia Comunicazione',
+    
     'wallet.connect': 'Connetti Wallet',
     'wallet.real': 'Portfolio Reale',
     'wallet.virtual': 'Portfolio di Trading Virtuale',
@@ -514,7 +514,7 @@ const translations = {
     'advisor.analysis': 'Análise IA',
     'advisor.detailed': 'Obter Análise Detalhada',
     'advisor.featured': '⭐ Destaque',
-    'ai.communicate': 'Iniciar Comunicação',
+    
     'wallet.connect': 'Conectar Carteira',
     'wallet.real': 'Portfolio Real',
     'wallet.virtual': 'Portfolio de Trading Virtual',
@@ -560,7 +560,7 @@ const translations = {
     'advisor.analysis': 'ИИ Анализ',
     'advisor.detailed': 'Получить Детальный Анализ',
     'advisor.featured': '⭐ Рекомендуемое',
-    'ai.communicate': 'Начать Общение',
+    
     'wallet.connect': 'Подключить Кошелек',
     'wallet.real': 'Реальный Портфель',
     'wallet.virtual': 'Виртуальный Торговый Портфель',
@@ -606,7 +606,7 @@ const translations = {
     'advisor.analysis': 'تحليل الذكاء الاصطناعي',
     'advisor.detailed': 'احصل على تحليل مفصل',
     'advisor.featured': '⭐ مميز',
-    'ai.communicate': 'بدء التواصل',
+    
     'wallet.connect': 'ربط المحفظة',
     'wallet.real': 'المحفظة الحقيقية',
     'wallet.virtual': 'محفظة التداول الافتراضية',
@@ -652,7 +652,7 @@ const translations = {
     'advisor.analysis': 'AI विश्लेषण',
     'advisor.detailed': 'विस्तृत विश्लेषण प्राप्त करें',
     'advisor.featured': '⭐ फीचर्ड',
-    'ai.communicate': 'संवाद शुरू करें',
+    
     'wallet.connect': 'वॉलेट कनेक्ट करें',
     'wallet.real': 'वास्तविक पोर्टफोलियो',
     'wallet.virtual': 'वर्चुअल ट्रेडिंग पोर्टफोलियो',
@@ -698,7 +698,7 @@ const translations = {
     'advisor.analysis': 'การวิเคราะห์ AI',
     'advisor.detailed': 'รับการวิเคราะห์โดยละเอียด',
     'advisor.featured': '⭐ แนะนำ',
-    'ai.communicate': 'เริ่มการสื่อสาร',
+    
     'wallet.connect': 'เชื่อมต่อกระเป๋าเงิน',
     'wallet.real': 'พอร์ตโฟลิโอจริง',
     'wallet.virtual': 'พอร์ตโฟลิโอเทรดเสมือน',
@@ -744,7 +744,7 @@ const translations = {
     'advisor.analysis': 'Phân Tích AI',
     'advisor.detailed': 'Nhận Phân Tích Chi Tiết',
     'advisor.featured': '⭐ Nổi Bật',
-    'ai.communicate': 'Bắt Đầu Giao Tiếp',
+    
     'wallet.connect': 'Kết Nối Ví',
     'wallet.real': 'Danh Mục Thực',
     'wallet.virtual': 'Danh Mục Giao Dịch Ảo',
@@ -790,7 +790,7 @@ const translations = {
     'advisor.analysis': 'AI Analizi',
     'advisor.detailed': 'Detaylı Analiz Al',
     'advisor.featured': '⭐ Öne Çıkan',
-    'ai.communicate': 'İletişim Başlat',
+    
     'wallet.connect': 'Cüzdan Bağla',
     'wallet.real': 'Gerçek Portföy',
     'wallet.virtual': 'Sanal İşlem Portföyü',
@@ -836,7 +836,7 @@ const translations = {
     'advisor.analysis': 'AI Analyse',
     'advisor.detailed': 'Krijg Gedetailleerde Analyse',
     'advisor.featured': '⭐ Aanbevolen',
-    'ai.communicate': 'Start Communicatie',
+    
     'wallet.connect': 'Portemonnee Verbinden',
     'wallet.real': 'Echte Portfolio',
     'wallet.virtual': 'Virtuele Trading Portfolio',
