@@ -66,7 +66,7 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
           
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-white mb-1">{name}</h2>
-            <p className="text-amber-300 text-sm mb-2">{specialty}</p>
+            <p className="text-amber-300 text-sm mb-2">{t(specialty)}</p>
             
             {/* Net Worth */}
             <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg p-3 mb-3 border border-green-500/30">

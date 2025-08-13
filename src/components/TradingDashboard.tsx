@@ -50,7 +50,7 @@ const allCryptoData = [
 const aiAdvisors = [
   {
     name: "Elon Musk",
-    specialty: "Visionary Tech & Market Disruption",
+    specialty: "elon.specialty",
     confidence: 94,
     recommendation: "BUY DOGE, BTC",
     reasoning: "mars.missions.funding", // 使用翻译键
@@ -59,7 +59,7 @@ const aiAdvisors = [
   },
   {
     name: "Warren Buffett",
-    specialty: "Value Investing & Long-term Wealth Building",
+    specialty: "warren.specialty",
     confidence: 88,
     recommendation: "HOLD BTC, BUY ETH",
     reasoning: "warren.investment.philosophy", // 使用翻译键
@@ -68,7 +68,7 @@ const aiAdvisors = [
   },
   {
     name: "Bill Gates",
-    specialty: "Technology Innovation & Philanthropic Investment",
+    specialty: "bill.specialty",
     confidence: 92,
     recommendation: "BUY ETH, HOLD MATIC",
     reasoning: "bill.blockchain.evolution", // 使用翻译键
@@ -320,7 +320,7 @@ export const TradingDashboard = () => {
                 {advisor.name === 'Elon Musk' && (
                   <ElonProfile
                     name={advisor.name}
-                    specialty={advisor.specialty}
+                    specialty={t(advisor.specialty)}
                     confidence={advisor.confidence}
                     recommendation={advisor.recommendation}
                     reasoning={t('elon.current.analysis')}
@@ -331,7 +331,7 @@ export const TradingDashboard = () => {
                 {advisor.name === 'Warren Buffett' && (
                   <WarrenProfile
                     name={advisor.name}
-                    specialty={advisor.specialty}
+                    specialty={t(advisor.specialty)}
                     confidence={advisor.confidence}
                     recommendation={advisor.recommendation}
                     reasoning={t('warren.current.analysis')}
@@ -342,7 +342,7 @@ export const TradingDashboard = () => {
                 {advisor.name === 'Bill Gates' && (
                   <BillProfile
                     name={advisor.name}
-                    specialty={advisor.specialty}
+                    specialty={t(advisor.specialty)}
                     confidence={advisor.confidence}
                     recommendation={advisor.recommendation}
                     reasoning={t('bill.current.analysis')}

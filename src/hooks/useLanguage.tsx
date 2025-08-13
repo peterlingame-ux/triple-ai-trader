@@ -186,6 +186,11 @@ const translations = {
     'advisor.investmentPhilosophy': '投资理念',
     'advisor.currentAnalysis': '当前市场分析',
     
+    // 三位顾问的专业领域翻译
+    'elon.specialty': '远见科技与市场颠覆',
+    'warren.specialty': '价值投资与长期财富建设',
+    'bill.specialty': '科技创新与慈善投资',
+    
     // 马斯克相关翻译
     'elon.spacex': 'SpaceX CEO',
     'elon.spacex.desc': '革命性太空技术',
