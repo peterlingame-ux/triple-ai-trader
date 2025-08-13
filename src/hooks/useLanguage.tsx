@@ -11,7 +11,7 @@ interface LanguageContextType {
 const translations = {
   en: {
     'app.title': 'Meta BrainX',
-    'app.subtitle': 'Advanced Cryptocurrency Trading Dashboard with AI Intelligence',
+    'app.subtitle': '3- IN- 1 Ultimate Brain making money easier',
     'portfolio.total': 'Total Portfolio',
     'portfolio.change': '24h Change',
     'portfolio.trades': 'Active Trades',
@@ -31,7 +31,7 @@ const translations = {
   },
   zh: {
     'app.title': 'Meta BrainX',
-    'app.subtitle': '先进的加密货币交易仪表板与AI智能',
+    'app.subtitle': '3合1终极大脑让赚钱更简单',
     'portfolio.total': '总投资组合',
     'portfolio.change': '24小时变化',
     'portfolio.trades': '活跃交易',
@@ -51,7 +51,7 @@ const translations = {
   },
   es: {
     'app.title': 'Meta BrainX',
-    'app.subtitle': 'Panel de Trading de Criptomonedas Avanzado con Inteligencia AI',
+    'app.subtitle': '3 EN 1 Cerebro Ultimate que hace ganar dinero más fácil',
     'portfolio.total': 'Portafolio Total',
     'portfolio.change': 'Cambio 24h',
     'portfolio.trades': 'Operaciones Activas',
