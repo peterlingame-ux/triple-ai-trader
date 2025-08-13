@@ -315,18 +315,35 @@ export const WalletConnector = () => {
       <DialogTrigger asChild>
         <Button 
           variant="outline" 
-          className={`flex items-center gap-2 px-4 py-2 ${
+          className={`group flex items-center gap-3 px-4 py-2.5 backdrop-blur-sm transition-all duration-300 hover-scale shadow-lg ${
             isWalletConnected 
-              ? 'bg-green-500/10 border-green-500/30 text-green-400 hover:bg-green-500/20' 
-              : 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-purple-500/30 hover:from-purple-600/30 hover:to-blue-600/30'
+              ? 'bg-gradient-to-r from-green-600/20 to-emerald-600/20 hover:from-green-600/30 hover:to-emerald-600/30 text-green-400 border-green-500/30 hover:shadow-green-500/25' 
+              : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 hover:from-purple-600/30 hover:to-pink-600/30 text-purple-400 border-purple-500/30 hover:shadow-purple-500/25'
           }`}
           onClick={isWalletConnected ? disconnect : () => setIsOpen(true)}
         >
-          <Wallet className="w-4 h-4" />
-          {isWalletConnected 
-            ? formatAddress(walletAddress)
-            : t('wallet.connect')
-          }
+          {isWalletConnected ? (
+            <>
+              <div className="relative">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-pulse"></div>
+              </div>
+              <div className="hidden sm:flex flex-col items-start">
+                <span className="text-sm font-medium text-green-400">已连接</span>
+                <span className="text-xs text-green-400/70">
+                  {walletAddress ? formatAddress(walletAddress) : '钱包'}
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <Wallet className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+              <div className="hidden sm:flex flex-col items-start">
+                <span className="text-sm font-medium">连接钱包</span>
+                <span className="text-xs text-purple-400/70">多种选择</span>
+              </div>
+            </>
+          )}
         </Button>
       </DialogTrigger>
       

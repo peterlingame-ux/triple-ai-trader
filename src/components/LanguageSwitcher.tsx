@@ -42,24 +42,32 @@ export const LanguageSwitcher = () => {
   return (
     <div className="relative">
       <Select value={language} onValueChange={(value) => setLanguage(value as any)}>
-        <SelectTrigger className="w-auto min-w-[160px] bg-slate-800/90 border-slate-600 hover:border-amber-500/50 transition-all duration-300 backdrop-blur-sm">
+        <SelectTrigger className="group w-auto min-w-[160px] bg-gradient-to-r from-green-600/20 to-teal-600/20 hover:from-green-600/30 hover:to-teal-600/30 border-green-500/30 hover:border-green-400/50 transition-all duration-300 backdrop-blur-sm hover-scale shadow-lg hover:shadow-green-500/25">
            <div className="flex items-center gap-3">
-             <Globe className="w-4 h-4 text-amber-400" />
-             <FlagIcon countryCode={currentLang?.countryCode || 'us'} size="md" />
-             <span className="text-sm font-medium text-white hidden md:block">
-               {currentLang?.nativeName}
-             </span>
-             <span className="text-sm font-medium text-white md:hidden">
+             <div className="relative">
+               <Globe className="w-5 h-5 text-green-400 group-hover:rotate-12 transition-transform duration-300" />
+               <div className="absolute -inset-1 bg-green-400/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+             </div>
+             <FlagIcon countryCode={currentLang?.countryCode || 'us'} size="md" className="ring-1 ring-green-500/30 rounded-sm" />
+             <div className="hidden sm:flex flex-col items-start">
+               <span className="text-sm font-medium text-green-400">
+                 {currentLang?.nativeName}
+               </span>
+               <span className="text-xs text-green-400/70">
+                 语言设置
+               </span>
+             </div>
+             <span className="text-sm font-medium text-green-400 sm:hidden">
                {currentLang?.code.toUpperCase()}
              </span>
            </div>
         </SelectTrigger>
         
-        <SelectContent className="bg-slate-900/98 border-slate-600 max-h-80 overflow-y-auto backdrop-blur-md z-50 shadow-2xl">
+        <SelectContent className="bg-slate-800/90 backdrop-blur-xl border-slate-600/50 max-h-80 overflow-y-auto z-50 shadow-2xl animate-fade-in">
           {Object.entries(groupedLanguages).map(([region, langs]) => (
             <div key={region}>
               <div className="px-3 py-2">
-                <Badge variant="outline" className="text-xs text-amber-400 border-amber-600/30 bg-amber-600/10">
+                <Badge variant="outline" className="text-xs text-green-400 border-green-600/30 bg-green-600/10">
                   {region}
                 </Badge>
               </div>
@@ -67,7 +75,9 @@ export const LanguageSwitcher = () => {
                 <SelectItem 
                   key={lang.code} 
                   value={lang.code}
-                  className="hover:bg-slate-700/80 focus:bg-slate-700/80 cursor-pointer py-3 transition-all duration-200"
+                  className={`hover:bg-green-500/20 focus:bg-green-500/20 cursor-pointer py-3 transition-all duration-200 ${
+                    language === lang.code ? 'bg-green-500/10 text-green-400' : 'text-foreground'
+                  }`}
                 >
                    <div className="flex items-center gap-3 w-full">
                      <FlagIcon countryCode={lang.countryCode} size="md" className="flex-shrink-0" />
@@ -80,7 +90,7 @@ export const LanguageSwitcher = () => {
                        </span>
                      </div>
                      {language === lang.code && (
-                       <div className="w-2 h-2 bg-amber-400 rounded-full flex-shrink-0"></div>
+                       <div className="w-2 h-2 bg-green-400 rounded-full flex-shrink-0 animate-pulse"></div>
                      )}
                    </div>
                 </SelectItem>

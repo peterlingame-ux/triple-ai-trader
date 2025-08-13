@@ -116,29 +116,55 @@ export const TradingDashboard = () => {
       
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Enhanced Professional Header */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-4">
-              <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide">
-                {t('app.title')}
-              </h1>
-              <Badge variant="outline" className="px-3 py-1.5 bg-success/10 text-success border-success/30 animate-pulse">
-                <Zap className="w-3 h-3 mr-1" />
-                {t('status.live')}
-              </Badge>
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Premium Header with Glassmorphism Effect */}
+        <div className="relative">
+          {/* Background Blur Card */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/60 via-blue-900/40 to-slate-800/60 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl"></div>
+          
+          {/* Content */}
+          <div className="relative px-8 py-6">
+            <div className="flex items-center justify-between">
+              {/* Left Section - Brand & Status */}
+              <div className="flex items-center gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide drop-shadow-lg">
+                        {t('app.title')}
+                      </h1>
+                      <div className="absolute -inset-1 bg-gradient-to-r from-amber-300/20 via-yellow-300/20 to-amber-400/20 blur-lg -z-10 rounded-lg"></div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className="px-4 py-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border-green-500/30 backdrop-blur-sm animate-pulse hover-scale">
+                        <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
+                        <Zap className="w-4 h-4 mr-1" />
+                        {t('status.live')}
+                      </Badge>
+                      <div className="hidden lg:block w-px h-6 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+                      <p className="hidden lg:block text-amber-200/90 font-inter font-medium text-lg tracking-wide max-w-md">
+                        {t('app.subtitle')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right Section - User Controls */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 p-2 bg-gradient-to-r from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg">
+                  <UserProfile />
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+                  <WalletConnector />
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+                  <LanguageSwitcher />
+                </div>
+              </div>
             </div>
-            <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide max-w-2xl">
-              {t('app.subtitle')}
-            </p>
           </div>
           
-          <div className="flex items-center gap-3">
-            <UserProfile />
-            <WalletConnector />
-            <LanguageSwitcher />
-          </div>
+          {/* Bottom Glow Effect */}
+          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 h-4 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent blur-xl"></div>
         </div>
 
         {/* AI Opportunity Alert */}
