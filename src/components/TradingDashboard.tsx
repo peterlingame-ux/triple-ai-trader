@@ -117,54 +117,53 @@ export const TradingDashboard = () => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Premium Header with Glassmorphism Effect */}
+        {/* Professional Header Design */}
         <div className="relative">
-          {/* Background Blur Card */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/60 via-blue-900/40 to-slate-800/60 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl"></div>
+          {/* Background with enhanced glassmorphism */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl"></div>
           
           {/* Content */}
-          <div className="relative px-8 py-6">
-            <div className="flex items-center justify-between">
-              {/* Left Section - Brand & Status */}
-              <div className="flex items-center gap-6">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide drop-shadow-lg">
-                        {t('app.title')}
-                      </h1>
-                      <div className="absolute -inset-1 bg-gradient-to-r from-amber-300/20 via-yellow-300/20 to-amber-400/20 blur-lg -z-10 rounded-lg"></div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="px-4 py-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border-green-500/30 backdrop-blur-sm animate-pulse hover-scale">
-                        <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                        <Zap className="w-4 h-4 mr-1" />
-                        {t('status.live')}
-                      </Badge>
-                      <div className="hidden lg:block w-px h-6 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
-                      <p className="hidden lg:block text-amber-200/90 font-inter font-medium text-lg tracking-wide max-w-md">
-                        {t('app.subtitle')}
-                      </p>
-                    </div>
-                  </div>
+          <div className="relative px-10 py-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              {/* Left Section - Brand */}
+              <div className="flex items-center gap-8">
+                <div className="space-y-2">
+                  <h1 className="text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
+                    Meta BrainX
+                  </h1>
+                  <p className="text-lg text-slate-300 font-inter font-medium tracking-wide">
+                    3合1终极大脑让赚钱更简单
+                  </p>
+                </div>
+              </div>
+              
+              {/* Center Section - Status Indicator */}
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Badge variant="outline" className="px-6 py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
+                    <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <Brain className="w-5 h-5 mr-2" />
+                    实时市场数据
+                  </Badge>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
               
               {/* Right Section - User Controls */}
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-3 p-2 bg-gradient-to-r from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl border border-white/10 shadow-lg">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 backdrop-blur-sm rounded-xl border border-white/5 shadow-lg">
                   <UserProfile />
-                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
                   <WalletConnector />
-                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
                   <LanguageSwitcher />
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Bottom Glow Effect */}
-          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 h-4 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent blur-xl"></div>
+          {/* Subtle bottom accent */}
+          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-sm"></div>
         </div>
 
         {/* AI Opportunity Alert */}
