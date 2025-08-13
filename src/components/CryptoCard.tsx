@@ -14,10 +14,12 @@ interface CryptoCardProps {
   price: number;
   change: number;
   changePercent: number;
-  icon?: string;
+  image?: string;
+  volume?: number;
+  marketCap?: number;
 }
 
-export const CryptoCard = ({ symbol, name, price, change, changePercent }: CryptoCardProps) => {
+export const CryptoCard = ({ symbol, name, price, change, changePercent, image, volume, marketCap }: CryptoCardProps) => {
   const isPositive = change >= 0;
   
   const getCrypto3DIcon = (symbol: string) => {
@@ -72,6 +74,26 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent }: Crypt
           {isPositive ? '+' : ''}${Math.abs(change).toFixed(2)}
         </p>
       </div>
+      
+      {/* Additional market data */}
+      {(volume || marketCap) && (
+        <div className="pt-2 border-t border-border/50 mt-3">
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            {volume && (
+              <div>
+                <p className="text-muted-foreground">24h Volume</p>
+                <p className="text-foreground font-mono">${(volume / 1e9).toFixed(2)}B</p>
+              </div>
+            )}
+            {marketCap && (
+              <div>
+                <p className="text-muted-foreground">Market Cap</p>
+                <p className="text-foreground font-mono">${(marketCap / 1e9).toFixed(1)}B</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

@@ -11,7 +11,8 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { useLanguage } from "@/hooks/useLanguage";
-import { BarChart3, Brain, DollarSign, TrendingUp, Zap } from "lucide-react";
+import { useCryptoData } from "@/hooks/useCryptoData";
+import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -72,12 +73,28 @@ const aiAdvisors = [
 
 export const TradingDashboard = () => {
   const { t } = useLanguage();
+  const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const [totalPortfolio, setTotalPortfolio] = useState(125678.42);
   const [dailyChange, setDailyChange] = useState(3456.78);
   const [activeTrades, setActiveTrades] = useState(12);
   const [showAllCrypto, setShowAllCrypto] = useState(false);
 
-  // Simulate real-time updates
+  // Calculate portfolio values based on real data
+  useEffect(() => {
+    if (cryptoData.length > 0) {
+      const totalValue = cryptoData.slice(0, 10).reduce((sum, crypto) => {
+        return sum + (crypto.price * Math.random() * 10); // Simulate holdings
+      }, 0);
+      setTotalPortfolio(totalValue);
+      
+      const totalChange = cryptoData.slice(0, 10).reduce((sum, crypto) => {
+        return sum + (crypto.change24h * Math.random() * 10);
+      }, 0);
+      setDailyChange(totalChange);
+    }
+  }, [cryptoData]);
+
+  // Real-time updates simulation (supplementary to API data)
   useEffect(() => {
     const interval = setInterval(() => {
       setTotalPortfolio(prev => prev + (Math.random() - 0.5) * 100);
@@ -189,25 +206,40 @@ export const TradingDashboard = () => {
             <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
               <BarChart3 className="w-6 h-6" />
               {t('market.overview')}
+              {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
             </h2>
-            <Button 
-              variant="outline" 
-              onClick={() => setShowAllCrypto(!showAllCrypto)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6"
-            >
-              {showAllCrypto ? "Show Top 6" : "All Categories"}
-              <BarChart3 className="w-4 h-4 ml-2" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                onClick={refreshData}
+                size="sm"
+                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30"
+              >
+                <RefreshCw className="w-4 h-4 mr-1" />
+                Refresh Data
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowAllCrypto(!showAllCrypto)}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6"
+              >
+                {showAllCrypto ? "Show Top 6" : "All Categories"}
+                <BarChart3 className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(showAllCrypto ? allCryptoData : mockCryptoData).map((crypto) => (
+            {(showAllCrypto ? cryptoData : cryptoData.slice(0, 6)).map((crypto) => (
               <CryptoCard
                 key={crypto.symbol}
                 symbol={crypto.symbol}
                 name={crypto.name}
                 price={crypto.price}
-                change={crypto.change}
-                changePercent={crypto.changePercent}
+                change={crypto.change24h}
+                changePercent={crypto.changePercent24h}
+                image={crypto.image}
+                volume={crypto.volume24h}
+                marketCap={crypto.marketCap}
               />
             ))}
           </div>
@@ -220,7 +252,7 @@ export const TradingDashboard = () => {
               <Brain className="w-6 h-6" />
               {t('ai.advisors')}
             </h2>
-            <AICommunicator />
+            <AICommunicator cryptoData={cryptoData} newsData={newsData} />
           </div>
           <div className="space-y-6">
             {aiAdvisors.map((advisor, index) => (

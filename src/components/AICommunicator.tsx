@@ -33,8 +33,12 @@ interface CryptoAnalytics {
 
 interface NewsItem {
   title: string;
-  source: string;
-  time: string;
+  description?: string;
+  url?: string;
+  urlToImage?: string;
+  publishedAt?: string;
+  source: { name: string } | string;
+  time?: string;
   sentiment: 'bullish' | 'bearish' | 'neutral';
   impact: 'high' | 'medium' | 'low';
 }
@@ -48,7 +52,12 @@ interface ChartData {
   volume: number;
 }
 
-export const AICommunicator = () => {
+interface AICommunicatorProps {
+  cryptoData?: CryptoAnalytics[];
+  newsData?: NewsItem[];
+}
+
+export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicatorProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -58,8 +67,8 @@ export const AICommunicator = () => {
   const [timeframe, setTimeframe] = useState<string>("1D");
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // Enhanced cryptocurrency analytics data with more professional parameters
-  const cryptoAnalytics: CryptoAnalytics[] = [
+  // Use passed data or fallback to mock data
+  const activeCryptoData = cryptoData.length > 0 ? cryptoData.slice(0, 3) : [
     {
       symbol: "BTC",
       name: "Bitcoin",
@@ -128,62 +137,44 @@ export const AICommunicator = () => {
     }
   ];
 
-  // Enhanced news data with more professional market analysis
-  const newsData: NewsItem[] = [
+  // Use passed news data or fallback to mock data
+  const activeNewsData = newsData.length > 0 ? newsData : [
     {
-      title: "Bitcoin ETF Trading Volume Hits $2.8B Daily Record",
-      source: "CoinDesk Pro",
-      time: "15 min ago",
-      sentiment: "bullish",
-      impact: "high"
+      title: "Bitcoin ETF Trading Volume Hits Record $3.2B Daily",
+      description: "Institutional adoption reaches new heights",
+      url: "#",
+      urlToImage: "",
+      publishedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      source: { name: "CoinDesk Pro" },
+      sentiment: "bullish" as const,
+      impact: "high" as const
     },
     {
-      title: "Ethereum Shanghai Upgrade: $4.7B ETH Unlocked",
-      source: "The Block Research",
-      time: "32 min ago",
-      sentiment: "neutral",
-      impact: "high"
+      title: "Ethereum Shanghai Upgrade Successfully Deployed",
+      description: "Network improvements show positive results",
+      url: "#",
+      urlToImage: "",
+      publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+      source: { name: "The Block" },
+      sentiment: "bullish" as const,
+      impact: "high" as const
     },
     {
-      title: "Institutional Adoption: BlackRock Files for Solana ETF",
-      source: "Bloomberg Terminal",
-      time: "1 hour ago",
-      sentiment: "bullish",
-      impact: "high"
-    },
-    {
-      title: "Fed Chair Powell: Digital Assets Regulation Framework Q2",
-      source: "Reuters Financial",
-      time: "2 hours ago",
-      sentiment: "neutral",
-      impact: "medium"
-    },
-    {
-      title: "Crypto Derivatives Market Reaches $3.2T Daily Volume",
-      source: "CoinGecko Analytics",
-      time: "3 hours ago",
-      sentiment: "bullish",
-      impact: "medium"
-    },
-    {
-      title: "Major Exchange Reports 150% Increase in DeFi Trading",
-      source: "DeFiPulse",
-      time: "4 hours ago",
-      sentiment: "bullish",
-      impact: "low"
-    },
-    {
-      title: "Whale Alert: 50,000 BTC Moved to Unknown Wallet",
-      source: "Whale Alert",
-      time: "5 hours ago",
-      sentiment: "bearish",
-      impact: "medium"
+      title: "Major Exchange Reports 200% Increase in DeFi Volume",
+      description: "Decentralized finance continues rapid growth",
+      url: "#",
+      urlToImage: "",
+      publishedAt: new Date(Date.now() - 120 * 60 * 1000).toISOString(),
+      source: { name: "DeFiPulse" },
+      sentiment: "bullish" as const,
+      impact: "medium" as const
     }
   ];
 
-  // Mock chart data
+
+  // Mock chart data using active crypto data
   const generateChartData = (symbol: string, timeframe: string): ChartData[] => {
-    const basePrice = cryptoAnalytics.find(c => c.symbol === symbol)?.price || 40000;
+    const basePrice = activeCryptoData.find(c => c.symbol === symbol)?.price || 40000;
     const data: ChartData[] = [];
     const periods = timeframe === "1H" ? 24 : timeframe === "1D" ? 30 : timeframe === "1W" ? 7 : 12;
     
@@ -225,7 +216,7 @@ export const AICommunicator = () => {
   };
 
   const generateCombinedResponse = (userMessage: string) => {
-    const currentCrypto = cryptoAnalytics.find(c => c.symbol === selectedCrypto);
+    const currentCrypto = activeCryptoData.find(c => c.symbol === selectedCrypto);
     const responses = [
       `🚀 Elon: Based on ${selectedCrypto} RSI of ${currentCrypto?.rsi}, ${currentCrypto?.rsi > 70 ? 'overbought but still HODL! To the moon!' : 'good entry point for Mars funding!'}`,
       `💰 Warren: ${selectedCrypto} trading at ${((currentCrypto?.price || 0) / (currentCrypto?.ma20 || 1) * 100 - 100).toFixed(1)}% ${currentCrypto?.price > currentCrypto?.ma20 ? 'above' : 'below'} MA20. ${currentCrypto?.price < currentCrypto?.ma20 ? 'Value opportunity emerging.' : 'Price reflects fair value.'}`,
@@ -236,7 +227,7 @@ export const AICommunicator = () => {
   };
 
   const getSelectedCryptoData = () => {
-    return cryptoAnalytics.find(c => c.symbol === selectedCrypto) || cryptoAnalytics[0];
+    return activeCryptoData.find(c => c.symbol === selectedCrypto) || activeCryptoData[0];
   };
 
   const getSentimentColor = (sentiment: string) => {
@@ -325,7 +316,8 @@ export const AICommunicator = () => {
                 <TabsTrigger value="SOL" className="data-[state=active]:bg-purple-500/20">SOL</TabsTrigger>
               </TabsList>
 
-              {cryptoAnalytics.map((crypto) => (
+              {cryptoData.length > 0 ? (
+                activeCryptoData.map((crypto) => (
                 <TabsContent key={crypto.symbol} value={crypto.symbol} className="space-y-4 mt-4">
                   {/* Price Header */}
                   <div className="bg-slate-800/50 rounded-lg p-4">
@@ -514,15 +506,19 @@ export const AICommunicator = () => {
                        <h4 className="text-white font-inter font-semibold">Market News</h4>
                      </div>
                      <div className="space-y-2 max-h-32 overflow-y-auto">
-                       {newsData.map((news, index) => (
+                       {activeNewsData.map((news, index) => (
                          <div key={index} className="flex items-start gap-3 p-2 bg-slate-700/50 rounded text-xs">
                            <div className="flex-1">
                              <p className="text-white font-medium">{news.title}</p>
-                             <div className="flex items-center gap-2 mt-1">
-                               <span className="text-slate-400">{news.source}</span>
-                               <span className="text-slate-500">•</span>
-                               <span className="text-slate-400">{news.time}</span>
-                             </div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-slate-400">
+                                  {typeof news.source === 'string' ? news.source : news.source.name}
+                                </span>
+                                <span className="text-slate-500">•</span>
+                                <span className="text-slate-400">
+                                  {news.time || (news.publishedAt ? new Date(news.publishedAt).toLocaleTimeString() : 'Unknown')}
+                                </span>
+                              </div>
                            </div>
                            <div className="flex flex-col gap-1">
                              <Badge className={`text-xs ${getSentimentColor(news.sentiment)}`}>
@@ -533,12 +529,16 @@ export const AICommunicator = () => {
                              </Badge>
                            </div>
                          </div>
-                       ))}
-                     </div>
-                   </div>
-
+                        ))}
+                      </div>
+                    </div>
                 </TabsContent>
-              ))}
+              ))
+              ) : (
+                <div className="text-center text-slate-400 py-8">
+                  <p>Loading real-time crypto data...</p>
+                </div>
+              )}
             </Tabs>
           </div>
         </div>
