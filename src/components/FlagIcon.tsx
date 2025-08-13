@@ -38,19 +38,22 @@ export const FlagIcon = ({ countryCode, size = 'md', className = '' }: FlagIconP
 
   const flag = flagEmojis[countryCode.toLowerCase()] || '🏳️';
 
-  return (
-    <span 
-      className={`inline-flex items-center justify-center ${sizeClasses[size]} ${className}`}
-      role="img"
-      aria-label={`Flag of ${countryCode}`}
-      style={{
-        fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif',
-        textRendering: 'optimizeLegibility',
-        filter: 'brightness(1.1) contrast(1.1)',
-        textShadow: '0 0.5px 1px rgba(0,0,0,0.1)'
-      }}
-    >
-      {flag}
-    </span>
-  );
+   return (
+     <div className="flex items-center gap-1">
+       <span 
+         className={`inline-flex items-center justify-center ${sizeClasses[size]} ${className}`}
+         role="img"
+         aria-label={`Flag of ${countryCode}`}
+         style={{
+           fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "EmojiOne Color", sans-serif',
+           textRendering: 'optimizeLegibility',
+           filter: 'brightness(1.2) contrast(1.1)',
+           textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+           fontSize: size === 'lg' ? '1.25rem' : size === 'md' ? '1rem' : '0.875rem'
+         }}
+       >
+         {flag}
+       </span>
+     </div>
+   );
 };
