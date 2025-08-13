@@ -255,290 +255,371 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[95vw] bg-slate-900 border-slate-700 max-h-[95vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="text-white flex items-center gap-2 font-orbitron">
-            <Bot className="w-5 h-5" />
+      <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 border-slate-700 flex flex-col p-0">
+        <DialogHeader className="p-6 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/80 to-blue-900/80">
+          <DialogTitle className="text-white flex items-center gap-3 font-orbitron text-xl">
+            <Bot className="w-6 h-6 text-accent" />
             SUPREME BRAIN - Advanced Trading Analytics
+            <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50 ml-auto">
+              <Activity className="w-3 h-3 mr-1" />
+              Live Analytics
+            </Badge>
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 flex gap-4 min-h-0">
-          {/* Left side - Conversation */}
-          <div className="w-1/3 flex flex-col space-y-4">
-            <div className="flex-1 bg-slate-800/50 rounded-lg p-4 overflow-y-auto space-y-3">
-              {conversation.length === 0 ? (
-                <div className="text-center text-slate-400 py-8">
-                  <Bot className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                  <p className="font-inter text-sm">Ask for analysis on selected crypto with live market data</p>
-                </div>
-              ) : (
-                conversation.map((msg, index) => (
-                  <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[90%] p-3 rounded-lg text-xs ${
-                      msg.role === 'user' 
-                        ? 'bg-blue-600 text-white' 
-                        : 'bg-slate-700 text-slate-100'
-                    }`}>
-                      <p className="font-inter whitespace-pre-line">{msg.content}</p>
+        <div className="flex-1 flex gap-6 min-h-0 p-6">
+          {/* Left side - AI Conversation Panel */}
+          <div className="w-80 flex flex-col space-y-4">
+            <Card className="flex-1 bg-gradient-crypto border-border p-4 flex flex-col">
+              <div className="flex items-center gap-2 mb-4">
+                <MessageSquare className="w-5 h-5 text-accent" />
+                <h3 className="font-semibold text-foreground">AI Analysis Chat</h3>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto space-y-3 mb-4">
+                {conversation.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    <Bot className="w-12 h-12 mx-auto mb-3 text-accent/50" />
+                    <p className="font-inter text-sm">Ask for analysis on selected crypto with live market data</p>
+                    <div className="mt-4 space-y-2 text-xs">
+                      <p className="text-accent">💡 Try asking:</p>
+                      <p>"What's the technical outlook for {selectedCrypto}?"</p>
+                      <p>"Should I buy or sell now?"</p>
+                      <p>"Analyze the current market trend"</p>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
-            
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Ask about technical analysis..."
-                className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
-              />
-              <Button 
-                onClick={handleSendMessage}
-                disabled={!message.trim()}
-                className="bg-blue-600 hover:bg-blue-700 px-3"
-                size="sm"
-              >
-                <Send className="w-3 h-3" />
-              </Button>
-            </div>
+                ) : (
+                  conversation.map((msg, index) => (
+                    <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[90%] p-3 rounded-lg text-xs ${
+                        msg.role === 'user' 
+                          ? 'bg-accent text-accent-foreground' 
+                          : 'bg-muted text-foreground'
+                      }`}>
+                        <p className="font-inter whitespace-pre-line">{msg.content}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Ask about technical analysis..."
+                  className="flex-1 bg-input border border-border rounded-lg px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent font-inter"
+                />
+                <Button 
+                  onClick={handleSendMessage}
+                  disabled={!message.trim()}
+                  className="bg-accent hover:bg-accent/80 px-3"
+                  size="sm"
+                >
+                  <Send className="w-3 h-3" />
+                </Button>
+              </div>
+            </Card>
           </div>
 
-          {/* Right side - Advanced Analytics */}
+          {/* Right side - Professional Trading Analytics */}
           <div className="flex-1 space-y-4">
-            <Tabs value={selectedCrypto} onValueChange={setSelectedCrypto} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-slate-800">
-                <TabsTrigger value="BTC" className="data-[state=active]:bg-orange-500/20">BTC</TabsTrigger>
-                <TabsTrigger value="ETH" className="data-[state=active]:bg-purple-500/20">ETH</TabsTrigger>
-                <TabsTrigger value="SOL" className="data-[state=active]:bg-purple-500/20">SOL</TabsTrigger>
+            {/* Asset Selection Header */}
+            <Card className="bg-gradient-crypto border-border p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <BarChart3 className="w-5 h-5 text-accent" />
+                  <h3 className="font-semibold text-foreground">Asset Analysis</h3>
+                </div>
+                <div className="flex gap-2">
+                  {activeCryptoData.map((crypto) => (
+                    <Button
+                      key={crypto.symbol}
+                      variant={selectedCrypto === crypto.symbol ? "default" : "outline"}
+                      size="sm"
+                      className={`${
+                        selectedCrypto === crypto.symbol 
+                          ? 'bg-accent text-accent-foreground' 
+                          : 'bg-muted/20 border-border hover:bg-accent/20'
+                      }`}
+                      onClick={() => setSelectedCrypto(crypto.symbol)}
+                    >
+                      {crypto.symbol}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </Card>
+
+            <Tabs value="overview" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 bg-muted/20">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-accent">
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Price Chart
+                </TabsTrigger>
+                <TabsTrigger value="technical" className="data-[state=active]:bg-accent">
+                  <Activity className="w-4 h-4 mr-2" />
+                  Technical Analysis
+                </TabsTrigger>
+                <TabsTrigger value="news" className="data-[state=active]:bg-accent">
+                  <Globe className="w-4 h-4 mr-2" />
+                  News Sentiment
+                </TabsTrigger>
               </TabsList>
 
-              {cryptoData.length > 0 ? (
-                activeCryptoData.map((crypto) => (
-                <TabsContent key={crypto.symbol} value={crypto.symbol} className="space-y-4 mt-4">
-                  {/* Price Header */}
-                  <div className="bg-slate-800/50 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <h3 className="text-2xl font-orbitron font-bold text-white">{crypto.symbol}</h3>
-                        <span className="text-slate-400 font-inter">{crypto.name}</span>
-                      </div>
-                      <div className={`flex items-center gap-2 ${crypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {crypto.changePercent24h >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
-                        <span className="font-mono font-bold">{crypto.changePercent24h.toFixed(2)}%</span>
-                      </div>
-                    </div>
-                    <div className="flex items-baseline gap-4">
-                      <span className="text-3xl font-mono font-bold text-white">${crypto.price.toLocaleString()}</span>
-                      <span className={`font-mono ${crypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {crypto.changePercent24h >= 0 ? '+' : ''}${crypto.change24h.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Chart and Data Grid */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Chart Section */}
-                    <div className="col-span-2 bg-slate-800/50 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-white font-inter font-semibold">Price Chart</h4>
-                        <div className="flex gap-1">
-                          {['1H', '1D', '1W', '1M'].map((tf) => (
-                            <Button
-                              key={tf}
-                              size="sm"
-                              variant={timeframe === tf ? "default" : "outline"}
-                              onClick={() => setTimeframe(tf)}
-                              className="text-xs px-2 py-1 h-6"
-                            >
-                              {tf}
-                            </Button>
-                          ))}
+              {/* Price Chart Tab */}
+              <TabsContent value="overview" className="space-y-4 mt-4">
+                {(() => {
+                  const currentCrypto = getSelectedCryptoData();
+                  return (
+                    <>
+                      {/* Price Header */}
+                      <Card className="bg-gradient-crypto border-border p-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <h3 className="text-3xl font-orbitron font-bold text-foreground">{currentCrypto.symbol}</h3>
+                            <span className="text-xl text-muted-foreground font-inter">{currentCrypto.name}</span>
+                          </div>
+                          <div className={`flex items-center gap-2 ${currentCrypto.changePercent24h >= 0 ? 'text-success' : 'text-destructive'}`}>
+                            {currentCrypto.changePercent24h >= 0 ? <TrendingUp className="w-6 h-6" /> : <TrendingDown className="w-6 h-6" />}
+                            <span className="font-mono font-bold text-xl">{currentCrypto.changePercent24h.toFixed(2)}%</span>
+                          </div>
                         </div>
-                      </div>
-                      <div ref={chartRef} className="h-48 bg-slate-900 rounded border flex items-center justify-center">
-                        <div className="text-center text-slate-400">
-                          <LineChart className="w-12 h-12 mx-auto mb-2" />
-                          <p className="text-sm">Interactive Chart ({timeframe})</p>
-                          <p className="text-xs">Candlestick data for {crypto.symbol}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Technical Indicators */}
-                    <div className="bg-slate-800/50 rounded-lg p-4">
-                      <h4 className="text-white font-inter font-semibold mb-3">Technical Indicators</h4>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">RSI(14)</span>
-                          <span className={`font-mono ${crypto.rsi > 70 ? 'text-red-400' : crypto.rsi < 30 ? 'text-green-400' : 'text-yellow-400'}`}>
-                            {crypto.rsi}
+                        <div className="flex items-baseline gap-4">
+                          <span className="text-4xl font-mono font-bold text-foreground">${currentCrypto.price.toLocaleString()}</span>
+                          <span className={`font-mono text-lg ${currentCrypto.changePercent24h >= 0 ? 'text-success' : 'text-destructive'}`}>
+                            {currentCrypto.changePercent24h >= 0 ? '+' : ''}${currentCrypto.change24h.toFixed(2)}
                           </span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">MA20</span>
-                          <span className="text-white font-mono">${crypto.ma20.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">MA50</span>
-                          <span className="text-white font-mono">${crypto.ma50.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Support</span>
-                          <span className="text-green-400 font-mono">${crypto.support.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Resistance</span>
-                          <span className="text-red-400 font-mono">${crypto.resistance.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">24h High</span>
-                          <span className="text-white font-mono">${crypto.high24h.toLocaleString()}</span>
-                        </div>
-                         <div className="flex justify-between">
-                           <span className="text-slate-400">24h Low</span>
-                           <span className="text-white font-mono">${crypto.low24h.toLocaleString()}</span>
-                         </div>
-                         <div className="flex justify-between">
-                           <span className="text-slate-400">ATH</span>
-                           <span className="text-yellow-400 font-mono">${crypto.ath.toLocaleString()}</span>
-                         </div>
-                         <div className="flex justify-between">
-                           <span className="text-slate-400">ATL</span>
-                           <span className="text-blue-400 font-mono">${crypto.atl}</span>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
+                      </Card>
 
-                   {/* Enhanced Market Data Grid */}
-                   <div className="grid grid-cols-6 gap-3">
-                     <Card className="bg-slate-800/50 p-3 border-slate-700">
-                       <div className="text-center">
-                         <p className="text-slate-400 text-xs mb-1">Market Cap</p>
-                         <p className="text-white font-mono font-bold text-sm">${(crypto.marketCap / 1e9).toFixed(1)}B</p>
-                       </div>
-                     </Card>
-                     <Card className="bg-slate-800/50 p-3 border-slate-700">
-                       <div className="text-center">
-                         <p className="text-slate-400 text-xs mb-1">24h Volume</p>
-                         <p className="text-white font-mono font-bold text-sm">${(crypto.volume24h / 1e9).toFixed(1)}B</p>
-                       </div>
-                     </Card>
-                     <Card className="bg-slate-800/50 p-3 border-slate-700">
-                       <div className="text-center">
-                         <p className="text-slate-400 text-xs mb-1">Dominance</p>
-                         <p className="text-white font-mono font-bold text-sm">{crypto.dominance}%</p>
-                       </div>
-                     </Card>
-                     <Card className="bg-slate-800/50 p-3 border-slate-700">
-                       <div className="text-center">
-                         <p className="text-slate-400 text-xs mb-1">Circulating</p>
-                         <p className="text-white font-mono font-bold text-sm">{(crypto.circulatingSupply / 1e6).toFixed(1)}M</p>
-                       </div>
-                     </Card>
-                     <Card className="bg-slate-800/50 p-3 border-slate-700">
-                       <div className="text-center">
-                         <p className="text-slate-400 text-xs mb-1">Max Supply</p>
-                         <p className="text-white font-mono font-bold text-sm">
-                           {crypto.maxSupply === 0 ? '∞' : `${(crypto.maxSupply / 1e6).toFixed(1)}M`}
-                         </p>
-                       </div>
-                     </Card>
-                     <Card className="bg-slate-800/50 p-3 border-slate-700">
-                       <div className="text-center">
-                         <p className="text-slate-400 text-xs mb-1">Supply Ratio</p>
-                         <p className="text-white font-mono font-bold text-sm">
-                           {crypto.maxSupply === 0 ? 'N/A' : `${((crypto.circulatingSupply / crypto.maxSupply) * 100).toFixed(1)}%`}
-                         </p>
-                       </div>
-                     </Card>
-                   </div>
+                      {/* Chart and Indicators */}
+                      <div className="grid grid-cols-3 gap-4">
+                        {/* Chart Section */}
+                        <div className="col-span-2">
+                          <Card className="bg-gradient-crypto border-border p-4 h-80">
+                            <div className="flex items-center justify-between mb-4">
+                              <h4 className="text-foreground font-inter font-semibold">Price Chart</h4>
+                              <div className="flex gap-1">
+                                {['1H', '1D', '1W', '1M'].map((tf) => (
+                                  <Button
+                                    key={tf}
+                                    size="sm"
+                                    variant={timeframe === tf ? "default" : "outline"}
+                                    onClick={() => setTimeframe(tf)}
+                                    className={`text-xs px-3 py-1 h-7 ${
+                                      timeframe === tf ? 'bg-accent text-accent-foreground' : 'bg-muted/20 border-border'
+                                    }`}
+                                  >
+                                    {tf}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                            <div ref={chartRef} className="h-60 bg-muted/10 rounded border border-border flex items-center justify-center">
+                              <div className="text-center text-muted-foreground">
+                                <LineChart className="w-16 h-16 mx-auto mb-3" />
+                                <p className="text-lg font-semibold">Interactive Chart ({timeframe})</p>
+                                <p className="text-sm">Candlestick data for {currentCrypto.symbol}</p>
+                              </div>
+                            </div>
+                          </Card>
+                        </div>
 
-                   {/* Professional Trading Signals */}
-                   <Card className="bg-slate-800/50 p-4 border-slate-700">
-                     <h4 className="text-white font-inter font-semibold mb-3 flex items-center gap-2">
-                       <Zap className="w-4 h-4 text-yellow-400" />
-                       AI Trading Signals
-                     </h4>
-                     <div className="grid grid-cols-3 gap-4 text-sm">
-                       <div className="text-center">
-                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                           crypto.rsi > 70 ? 'bg-red-500/20 text-red-400' : 
-                           crypto.rsi < 30 ? 'bg-green-500/20 text-green-400' : 
-                           'bg-yellow-500/20 text-yellow-400'
-                         }`}>
-                           <Activity className="w-3 h-3" />
-                           {crypto.rsi > 70 ? 'OVERBOUGHT' : crypto.rsi < 30 ? 'OVERSOLD' : 'NEUTRAL'}
-                         </div>
-                         <p className="text-slate-400 text-xs mt-1">RSI Signal</p>
-                       </div>
-                       <div className="text-center">
-                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                           crypto.price > crypto.ma20 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                         }`}>
-                           <TrendingUp className="w-3 h-3" />
-                           {crypto.price > crypto.ma20 ? 'BULLISH' : 'BEARISH'}
-                         </div>
-                         <p className="text-slate-400 text-xs mt-1">MA20 Trend</p>
-                       </div>
-                       <div className="text-center">
-                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                           crypto.price > crypto.support && crypto.price < crypto.resistance ? 'bg-blue-500/20 text-blue-400' : 
-                           crypto.price <= crypto.support ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
-                         }`}>
-                           <BarChart3 className="w-3 h-3" />
-                           {crypto.price > crypto.support && crypto.price < crypto.resistance ? 'RANGE' : 
-                            crypto.price <= crypto.support ? 'SUPPORT TEST' : 'BREAKOUT'}
-                         </div>
-                         <p className="text-slate-400 text-xs mt-1">S/R Level</p>
-                       </div>
-                      </div>
-                    </Card>
-
-                   {/* News Feed */}
-                   <div className="bg-slate-800/50 rounded-lg p-4">
-                     <div className="flex items-center gap-2 mb-3">
-                       <Globe className="w-4 h-4 text-blue-400" />
-                       <h4 className="text-white font-inter font-semibold">Market News</h4>
-                     </div>
-                     <div className="space-y-2 max-h-32 overflow-y-auto">
-                       {activeNewsData.map((news, index) => (
-                         <div key={index} className="flex items-start gap-3 p-2 bg-slate-700/50 rounded text-xs">
-                           <div className="flex-1">
-                             <p className="text-white font-medium">{news.title}</p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <span className="text-slate-400">
-                                  {typeof news.source === 'string' ? news.source : news.source.name}
-                                </span>
-                                <span className="text-slate-500">•</span>
-                                <span className="text-slate-400">
-                                  {news.time || (news.publishedAt ? new Date(news.publishedAt).toLocaleTimeString() : 'Unknown')}
+                        {/* Technical Indicators */}
+                        <div>
+                          <Card className="bg-gradient-crypto border-border p-4 h-80">
+                            <h4 className="text-foreground font-inter font-semibold mb-4">Technical Indicators</h4>
+                            <div className="space-y-4 text-sm">
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">RSI(14)</span>
+                                <span className={`font-mono font-bold ${currentCrypto.rsi > 70 ? 'text-destructive' : currentCrypto.rsi < 30 ? 'text-success' : 'text-accent'}`}>
+                                  {currentCrypto.rsi.toFixed(1)}
                                 </span>
                               </div>
-                           </div>
-                           <div className="flex flex-col gap-1">
-                             <Badge className={`text-xs ${getSentimentColor(news.sentiment)}`}>
-                               {news.sentiment.toUpperCase()}
-                             </Badge>
-                             <Badge className={`text-xs ${getImpactBadge(news.impact)}`}>
-                               {news.impact.toUpperCase()}
-                             </Badge>
-                           </div>
-                         </div>
-                        ))}
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">MA20</span>
+                                <span className="text-foreground font-mono">${currentCrypto.ma20.toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">MA50</span>
+                                <span className="text-foreground font-mono">${currentCrypto.ma50.toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Support</span>
+                                <span className="text-success font-mono">${currentCrypto.support.toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Resistance</span>
+                                <span className="text-destructive font-mono">${currentCrypto.resistance.toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">24h High</span>
+                                <span className="text-foreground font-mono">${currentCrypto.high24h.toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">24h Low</span>
+                                <span className="text-foreground font-mono">${currentCrypto.low24h.toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">ATH</span>
+                                <span className="text-accent font-mono">${currentCrypto.ath.toLocaleString()}</span>
+                              </div>
+                            </div>
+                          </Card>
+                        </div>
                       </div>
-                    </div>
-                </TabsContent>
-              ))
-              ) : (
-                <div className="text-center text-slate-400 py-8">
-                  <p>Loading real-time crypto data...</p>
-                </div>
-              )}
+                    </>
+                  );
+                })()}
+              </TabsContent>
+
+              {/* Technical Analysis Tab */}
+              <TabsContent value="technical" className="space-y-4 mt-4">
+                {(() => {
+                  const currentCrypto = getSelectedCryptoData();
+                  return (
+                    <>
+                      {/* Market Metrics Grid */}
+                      <div className="grid grid-cols-6 gap-3">
+                        <Card className="bg-gradient-crypto border-border p-3">
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-xs mb-1">Market Cap</p>
+                            <p className="text-foreground font-mono font-bold text-sm">${(currentCrypto.marketCap / 1e9).toFixed(1)}B</p>
+                          </div>
+                        </Card>
+                        <Card className="bg-gradient-crypto border-border p-3">
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-xs mb-1">24h Volume</p>
+                            <p className="text-foreground font-mono font-bold text-sm">${(currentCrypto.volume24h / 1e9).toFixed(1)}B</p>
+                          </div>
+                        </Card>
+                        <Card className="bg-gradient-crypto border-border p-3">
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-xs mb-1">Dominance</p>
+                            <p className="text-foreground font-mono font-bold text-sm">{currentCrypto.dominance.toFixed(1)}%</p>
+                          </div>
+                        </Card>
+                        <Card className="bg-gradient-crypto border-border p-3">
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-xs mb-1">Circulating</p>
+                            <p className="text-foreground font-mono font-bold text-sm">{(currentCrypto.circulatingSupply / 1e6).toFixed(1)}M</p>
+                          </div>
+                        </Card>
+                        <Card className="bg-gradient-crypto border-border p-3">
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-xs mb-1">Max Supply</p>
+                            <p className="text-foreground font-mono font-bold text-sm">
+                              {currentCrypto.maxSupply === 0 ? '∞' : `${(currentCrypto.maxSupply / 1e6).toFixed(1)}M`}
+                            </p>
+                          </div>
+                        </Card>
+                        <Card className="bg-gradient-crypto border-border p-3">
+                          <div className="text-center">
+                            <p className="text-muted-foreground text-xs mb-1">Supply Ratio</p>
+                            <p className="text-foreground font-mono font-bold text-sm">
+                              {currentCrypto.maxSupply === 0 ? 'N/A' : `${((currentCrypto.circulatingSupply / currentCrypto.maxSupply) * 100).toFixed(1)}%`}
+                            </p>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* AI Trading Signals */}
+                      <Card className="bg-gradient-crypto border-border p-6">
+                        <h4 className="text-foreground font-inter font-semibold mb-4 flex items-center gap-2">
+                          <Zap className="w-5 h-5 text-accent" />
+                          AI Trading Signals
+                        </h4>
+                        <div className="grid grid-cols-3 gap-6 text-sm">
+                          <div className="text-center">
+                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
+                              currentCrypto.rsi > 70 ? 'bg-destructive/20 text-destructive' : 
+                              currentCrypto.rsi < 30 ? 'bg-success/20 text-success' : 
+                              'bg-accent/20 text-accent'
+                            }`}>
+                              <Activity className="w-4 h-4" />
+                              {currentCrypto.rsi > 70 ? 'OVERBOUGHT' : currentCrypto.rsi < 30 ? 'OVERSOLD' : 'NEUTRAL'}
+                            </div>
+                            <p className="text-muted-foreground text-xs mt-2">RSI Signal</p>
+                          </div>
+                          <div className="text-center">
+                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
+                              currentCrypto.price > currentCrypto.ma20 ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'
+                            }`}>
+                              <TrendingUp className="w-4 h-4" />
+                              {currentCrypto.price > currentCrypto.ma20 ? 'BULLISH' : 'BEARISH'}
+                            </div>
+                            <p className="text-muted-foreground text-xs mt-2">MA20 Trend</p>
+                          </div>
+                          <div className="text-center">
+                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
+                              currentCrypto.price > currentCrypto.support && currentCrypto.price < currentCrypto.resistance ? 'bg-accent/20 text-accent' : 
+                              currentCrypto.price <= currentCrypto.support ? 'bg-destructive/20 text-destructive' : 'bg-success/20 text-success'
+                            }`}>
+                              <BarChart3 className="w-4 h-4" />
+                              {currentCrypto.price > currentCrypto.support && currentCrypto.price < currentCrypto.resistance ? 'RANGE' : 
+                               currentCrypto.price <= currentCrypto.support ? 'SUPPORT TEST' : 'BREAKOUT'}
+                            </div>
+                            <p className="text-muted-foreground text-xs mt-2">S/R Level</p>
+                          </div>
+                        </div>
+                      </Card>
+                    </>
+                  );
+                })()}
+              </TabsContent>
+
+              {/* News Analysis Tab */}
+              <TabsContent value="news" className="space-y-4 mt-4">
+                <Card className="bg-gradient-crypto border-border p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Globe className="w-5 h-5 text-accent" />
+                    <h4 className="text-foreground font-inter font-semibold">AI News Sentiment Analysis</h4>
+                  </div>
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {activeNewsData.map((news, index) => (
+                      <div key={index} className="p-4 bg-muted/10 rounded-lg border border-border">
+                        <div className="flex items-start gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs ${
+                                  news.sentiment === 'bullish' ? 'bg-success/20 text-success border-success/30' : 
+                                  news.sentiment === 'bearish' ? 'bg-destructive/20 text-destructive border-destructive/30' : 
+                                  'bg-accent/20 text-accent border-accent/30'
+                                }`}
+                              >
+                                {news.sentiment.toUpperCase()}
+                              </Badge>
+                              <Badge 
+                                variant="outline" 
+                                className={`text-xs ${
+                                  news.impact === 'high' ? 'bg-destructive/20 text-destructive border-destructive/30' : 
+                                  news.impact === 'medium' ? 'bg-accent/20 text-accent border-accent/30' : 
+                                  'bg-success/20 text-success border-success/30'
+                                }`}
+                              >
+                                {news.impact.toUpperCase()} IMPACT
+                              </Badge>
+                              <span className="text-xs text-muted-foreground ml-auto">
+                                {news.time || (news.publishedAt ? new Date(news.publishedAt).toLocaleTimeString() : 'Just now')}
+                              </span>
+                            </div>
+                            <h5 className="font-semibold text-foreground mb-2">{news.title}</h5>
+                            <p className="text-sm text-muted-foreground mb-2">{news.description}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Source: {typeof news.source === 'string' ? news.source : news.source.name}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </TabsContent>
             </Tabs>
           </div>
         </div>
