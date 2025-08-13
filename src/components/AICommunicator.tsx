@@ -9,6 +9,8 @@ import { MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { getAllSupportedCryptos, getTokenName } from "@/hooks/useCryptoData";
+import { useAIAnalysis } from "@/hooks/useAIAnalysis";
+import { AIConfigPanel } from "@/components/AIConfigPanel";
 
 interface CryptoAnalytics {
   symbol: string;
@@ -72,6 +74,16 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
   
   // Get all supported cryptocurrencies for selection
   const allSupportedCryptos = getAllSupportedCryptos();
+  
+  // AI Analysis hooks
+  const {
+    analyzePriceChart,
+    analyzeTechnicalIndicators,
+    analyzeNewsSentiment,
+    config: aiConfig,
+    updateModelConfig,
+    loading: aiLoading
+  } = useAIAnalysis();
 
   // Use passed data or fallback to mock data
   const activeCryptoData = cryptoData.length > 0 ? cryptoData.slice(0, 3) : [
@@ -205,19 +217,104 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
     return data;
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!message.trim()) return;
 
     const newConversation = [...conversation, { role: 'user' as const, content: message }];
-    const aiResponse = generateCombinedResponse(message);
-    newConversation.push({ role: 'ai' as const, content: aiResponse });
+    
+    try {
+      // 根据用户消息内容调用不同的AI分析
+      let aiResponse = "";
+      
+      if (message.toLowerCase().includes('价格') || message.toLowerCase().includes('图表') || message.toLowerCase().includes('chart')) {
+        // 调用价格图表分析AI
+        const currentCrypto = getSelectedCryptoData();
+        const analysisData = {
+          symbol: selectedCrypto,
+          timeframe: timeframe,
+          priceData: {
+            current: currentCrypto.price,
+            high24h: currentCrypto.high24h,
+            low24h: currentCrypto.low24h,
+            volume24h: currentCrypto.volume24h,
+            change24h: currentCrypto.change24h
+          },
+          technicalData: {
+            rsi: currentCrypto.rsi,
+            ma20: currentCrypto.ma20,
+            ma50: currentCrypto.ma50,
+            support: currentCrypto.support,
+            resistance: currentCrypto.resistance
+          }
+        };
+        aiResponse = await analyzePriceChart(analysisData);
+      } else if (message.toLowerCase().includes('技术') || message.toLowerCase().includes('指标') || message.toLowerCase().includes('technical')) {
+        // 调用技术分析AI
+        const currentCrypto = getSelectedCryptoData();
+        const analysisData = {
+          symbol: selectedCrypto,
+          indicators: {
+            rsi: currentCrypto.rsi,
+            macd: ((currentCrypto.price - currentCrypto.ma20) / currentCrypto.ma20 * 100),
+            kdj: (currentCrypto.rsi * 0.8),
+            bollinger: {
+              upper: currentCrypto.price * 1.02,
+              middle: currentCrypto.ma20,
+              lower: currentCrypto.price * 0.98
+            },
+            movingAverages: {
+              ma5: currentCrypto.price * 0.995,
+              ma10: currentCrypto.price * 0.992,
+              ma20: currentCrypto.ma20,
+              ma50: currentCrypto.ma50,
+              ma200: currentCrypto.ma50 * 0.92
+            },
+            supportResistance: {
+              support1: currentCrypto.support,
+              support2: currentCrypto.support * 0.95,
+              resistance1: currentCrypto.resistance,
+              resistance2: currentCrypto.resistance * 1.05
+            }
+          },
+          marketData: {
+            price: currentCrypto.price,
+            volume: currentCrypto.volume24h,
+            marketCap: currentCrypto.marketCap,
+            dominance: currentCrypto.dominance
+          }
+        };
+        aiResponse = await analyzeTechnicalIndicators(analysisData);
+      } else if (message.toLowerCase().includes('新闻') || message.toLowerCase().includes('情感') || message.toLowerCase().includes('news')) {
+        // 调用新闻情感分析AI
+        const analysisData = {
+          news: activeNewsData.map(news => ({
+            title: news.title,
+            description: news.description || '',
+            source: typeof news.source === 'string' ? news.source : news.source.name,
+            publishedAt: news.publishedAt || ''
+          })),
+          symbol: selectedCrypto,
+          timeframe: timeframe
+        };
+        aiResponse = await analyzeNewsSentiment(analysisData);
+      } else {
+        // 默认综合分析
+        aiResponse = generateCombinedResponse(message);
+      }
+      
+      newConversation.push({ role: 'ai' as const, content: aiResponse });
+    } catch (error) {
+      // 如果AI调用失败，使用默认响应
+      const fallbackResponse = generateCombinedResponse(message);
+      newConversation.push({ role: 'ai' as const, content: fallbackResponse });
+    }
     
     setConversation(newConversation);
     setMessage("");
     
     toast({
-      title: "Message Sent",
-      description: "AI advisors are analyzing market data...",
+      title: "AI分析完成",
+      description: "多模型AI已完成分析...",
     });
   };
 
@@ -266,10 +363,16 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
           <DialogTitle className="text-white flex items-center gap-3 font-orbitron text-xl">
             <Bot className="w-6 h-6 text-accent" />
             SUPREME BRAIN - Advanced Trading Analytics
-            <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50 ml-auto">
-              <Activity className="w-3 h-3 mr-1" />
-              Live Analytics
-            </Badge>
+            <div className="flex items-center gap-2 ml-auto">
+              <AIConfigPanel 
+                config={aiConfig}
+                onUpdateConfig={updateModelConfig}
+              />
+              <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50">
+                <Activity className="w-3 h-3 mr-1" />
+                Live Analytics
+              </Badge>
+            </div>
           </DialogTitle>
         </DialogHeader>
         
