@@ -18,19 +18,19 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
   const { t } = useLanguage();
 
   const achievements = [
-    { icon: Building, label: "Berkshire Hathaway", desc: "Chairman & CEO since 1965" },
-    { icon: PieChart, label: "Value Investing", desc: "Pioneered modern value investing" },
-    { icon: BookOpen, label: "Annual Letters", desc: "Legendary shareholder letters" },
-    { icon: Award, label: "Oracle of Omaha", desc: "World's most respected investor" }
+    { icon: Building, label: t('warren.berkshire'), desc: t('warren.berkshire.desc') },
+    { icon: PieChart, label: t('warren.value'), desc: t('warren.value.desc') },
+    { icon: BookOpen, label: t('warren.letters'), desc: t('warren.letters.desc') },
+    { icon: Award, label: t('warren.oracle'), desc: t('warren.oracle.desc') }
   ];
 
   const investmentAreas = [
-    "Value Investing",
-    "Insurance Companies", 
-    "Consumer Goods",
-    "Financial Services",
-    "Energy Sector",
-    "Technology (Apple)"
+    t('warren.valueInvesting'),
+    t('warren.insurance'), 
+    t('warren.consumer'),
+    t('warren.financial'),
+    t('warren.energy'),
+    t('warren.technology')
   ];
 
   return (
@@ -73,7 +73,7 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
               <div className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-green-400" />
                 <div>
-                  <p className="text-green-200 text-xs">Personal Net Worth</p>
+                  <p className="text-green-200 text-xs">{t('advisor.netWorth')}</p>
                   <p className="text-green-400 text-xl font-bold">$118.3 Billion</p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Award className="w-4 h-4" />
-            Representative Works
+            {t('advisor.representativeWorks')}
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {achievements.map((achievement, index) => (
@@ -114,7 +114,7 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <PieChart className="w-4 h-4" />
-            Investment Expertise
+            {t('advisor.investmentExpertise')}
           </h3>
           <div className="flex flex-wrap gap-2">
             {investmentAreas.map((area, index) => (
@@ -129,14 +129,11 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Brain className="w-4 h-4" />
-            Investment Philosophy
+            {t('advisor.investmentPhilosophy')}
           </h3>
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <p className="text-gray-300 text-sm leading-relaxed">
-              "Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1. 
-              I buy wonderful businesses at fair prices and hold them forever. 
-              Time is the friend of the wonderful business, the enemy of the mediocre. 
-              Be fearful when others are greedy and greedy when others are fearful."
+              {t('warren.philosophy')}
             </p>
           </div>
         </div>
@@ -145,7 +142,7 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
         <div className="mb-4">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Current Market Analysis
+            {t('advisor.currentAnalysis')}
           </h3>
           <p className="text-gray-300 text-sm leading-relaxed bg-white/5 rounded-lg p-4 border border-white/10">
             {reasoning}

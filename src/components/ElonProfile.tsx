@@ -18,19 +18,19 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
   const { t } = useLanguage();
 
   const achievements = [
-    { icon: Rocket, label: "SpaceX CEO", desc: "Revolutionary space technology" },
-    { icon: Zap, label: "Tesla Inc.", desc: "Electric vehicle innovation" },
-    { icon: Brain, label: "Neuralink", desc: "Brain-computer interfaces" },
-    { icon: Star, label: "Starlink", desc: "Global satellite internet" }
+    { icon: Rocket, label: t('elon.spacex'), desc: t('elon.spacex.desc') },
+    { icon: Zap, label: t('elon.tesla'), desc: t('elon.tesla.desc') },
+    { icon: Brain, label: t('elon.neuralink'), desc: t('elon.neuralink.desc') },
+    { icon: Star, label: t('elon.starlink'), desc: t('elon.starlink.desc') }
   ];
 
   const investmentAreas = [
-    "Sustainable Energy",
-    "Space Technology", 
-    "Artificial Intelligence",
-    "Transportation",
-    "Cryptocurrency",
-    "Neural Technology"
+    t('elon.sustainable'),
+    t('elon.space'), 
+    t('elon.ai'),
+    t('elon.transport'),
+    t('elon.crypto'),
+    t('elon.neural')
   ];
 
   return (
@@ -73,7 +73,7 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
               <div className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-green-400" />
                 <div>
-                  <p className="text-green-200 text-xs">Personal Net Worth</p>
+                  <p className="text-green-200 text-xs">{t('advisor.netWorth')}</p>
                   <p className="text-green-400 text-xl font-bold">$219.2 Billion</p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Award className="w-4 h-4" />
-            Representative Works
+            {t('advisor.representativeWorks')}
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {achievements.map((achievement, index) => (
@@ -114,7 +114,7 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Zap className="w-4 h-4" />
-            Investment Expertise
+            {t('advisor.investmentExpertise')}
           </h3>
           <div className="flex flex-wrap gap-2">
             {investmentAreas.map((area, index) => (
@@ -129,14 +129,11 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Brain className="w-4 h-4" />
-            Investment Philosophy
+            {t('advisor.investmentPhilosophy')}
           </h3>
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <p className="text-gray-300 text-sm leading-relaxed">
-              "I believe in investing in technologies that can fundamentally change the world. 
-              From sustainable energy to space exploration, every investment should push humanity forward. 
-              Cryptocurrency represents the future of finance - decentralized, global, and unstoppable. 
-              The key is to think long-term and bet on exponential technologies."
+              {t('elon.philosophy')}
             </p>
           </div>
         </div>
@@ -145,7 +142,7 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-4">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Current Market Analysis
+            {t('advisor.currentAnalysis')}
           </h3>
           <p className="text-gray-300 text-sm leading-relaxed bg-white/5 rounded-lg p-4 border border-white/10">
             {reasoning}

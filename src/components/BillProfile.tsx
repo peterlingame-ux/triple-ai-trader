@@ -18,19 +18,19 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
   const { t } = useLanguage();
 
   const achievements = [
-    { icon: Monitor, label: "Microsoft", desc: "Co-founder & Former CEO" },
-    { icon: Heart, label: "Gates Foundation", desc: "World's largest private foundation" },
-    { icon: Globe, label: "Global Health", desc: "Eradicated diseases worldwide" },
-    { icon: Award, label: "Technology Pioneer", desc: "PC revolution leader" }
+    { icon: Monitor, label: t('bill.microsoft'), desc: t('bill.microsoft.desc') },
+    { icon: Heart, label: t('bill.foundation'), desc: t('bill.foundation.desc') },
+    { icon: Globe, label: t('bill.health'), desc: t('bill.health.desc') },
+    { icon: Award, label: t('bill.pioneer'), desc: t('bill.pioneer.desc') }
   ];
 
   const investmentAreas = [
-    "Technology Innovation",
-    "Global Health", 
-    "Education",
-    "Clean Energy",
-    "Agriculture",
-    "Financial Inclusion"
+    t('bill.techInnovation'),
+    t('bill.globalHealth'), 
+    t('bill.education'),
+    t('bill.cleanEnergy'),
+    t('bill.agriculture'),
+    t('bill.inclusion')
   ];
 
   return (
@@ -73,7 +73,7 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
               <div className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-green-400" />
                 <div>
-                  <p className="text-green-200 text-xs">Personal Net Worth</p>
+                  <p className="text-green-200 text-xs">{t('advisor.netWorth')}</p>
                   <p className="text-green-400 text-xl font-bold">$128.6 Billion</p>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Award className="w-4 h-4" />
-            Representative Works
+            {t('advisor.representativeWorks')}
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {achievements.map((achievement, index) => (
@@ -114,7 +114,7 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Globe className="w-4 h-4" />
-            Investment Expertise
+            {t('advisor.investmentExpertise')}
           </h3>
           <div className="flex flex-wrap gap-2">
             {investmentAreas.map((area, index) => (
@@ -129,14 +129,11 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Brain className="w-4 h-4" />
-            Investment Philosophy
+            {t('advisor.investmentPhilosophy')}
           </h3>
           <div className="bg-white/5 rounded-lg p-4 border border-white/10">
             <p className="text-gray-300 text-sm leading-relaxed">
-              "I believe technology should empower everyone and solve humanity's greatest challenges. 
-              My investments focus on innovation that can scale globally and create positive impact. 
-              From healthcare to education, every dollar should work towards building a better future. 
-              Capitalism needs to work for everyone, not just the wealthy."
+              {t('bill.philosophy')}
             </p>
           </div>
         </div>
@@ -145,7 +142,7 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-4">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            Current Market Analysis
+            {t('advisor.currentAnalysis')}
           </h3>
           <p className="text-gray-300 text-sm leading-relaxed bg-white/5 rounded-lg p-4 border border-white/10">
             {reasoning}
