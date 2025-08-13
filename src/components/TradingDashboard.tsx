@@ -92,10 +92,10 @@ export const TradingDashboard = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">
+            <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 mb-2 tracking-wide">
               {t('app.title')}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide">
               {t('app.subtitle')}
             </p>
           </div>
@@ -117,8 +117,8 @@ export const TradingDashboard = () => {
                 <DollarSign className="w-6 h-6 text-accent" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{t('portfolio.total')}</p>
-                <p className="text-2xl font-bold text-accent">
+                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.total')}</p>
+                  <p className="text-2xl font-bold text-accent font-mono tracking-wider">
                   ${totalPortfolio.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
@@ -131,8 +131,8 @@ export const TradingDashboard = () => {
                 <TrendingUp className="w-6 h-6 text-success" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{t('portfolio.change')}</p>
-                <p className="text-2xl font-bold text-success">
+                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.change')}</p>
+                  <p className="text-2xl font-bold text-success font-mono tracking-wider">
                   +${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
@@ -145,8 +145,8 @@ export const TradingDashboard = () => {
                 <BarChart3 className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{t('portfolio.trades')}</p>
-                <p className="text-2xl font-bold text-foreground">{activeTrades}</p>
+                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.trades')}</p>
+                  <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
               </div>
             </div>
           </Card>
@@ -155,7 +155,7 @@ export const TradingDashboard = () => {
         {/* Crypto Cards Grid */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
               <BarChart3 className="w-6 h-6" />
               {t('market.overview')}
             </h2>
@@ -184,7 +184,7 @@ export const TradingDashboard = () => {
 
         {/* AI Advisors Section */}
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2 font-orbitron tracking-wide">
             <Brain className="w-6 h-6" />
             {t('ai.advisors')}
           </h2>

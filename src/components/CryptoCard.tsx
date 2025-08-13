@@ -47,8 +47,8 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent }: Crypt
             )}
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg">{symbol}</h3>
-            <p className="text-slate-400 text-sm">{name}</p>
+            <h3 className="text-white font-bold text-lg font-orbitron tracking-wide">{symbol}</h3>
+            <p className="text-slate-400 text-sm font-inter">{name}</p>
           </div>
         </div>
         
@@ -65,10 +65,10 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent }: Crypt
       
       {/* Price Section */}
       <div className="mt-4 space-y-1">
-        <p className="text-2xl font-bold text-white">
+        <p className="text-2xl font-bold text-white font-mono tracking-wider">
           ${price.toLocaleString(undefined, { minimumFractionDigits: price < 1 ? 3 : 0, maximumFractionDigits: price < 1 ? 3 : 0 })}
         </p>
-        <p className={`text-sm font-medium ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+        <p className={`text-sm font-medium font-mono ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
           {isPositive ? '+' : ''}${Math.abs(change).toFixed(2)}
         </p>
       </div>
