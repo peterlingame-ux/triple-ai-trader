@@ -12,6 +12,7 @@ import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
+import { AIOpportunityAlert } from "./AIOpportunityAlert";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
@@ -137,6 +138,9 @@ export const TradingDashboard = () => {
             <LanguageSwitcher />
           </div>
         </div>
+
+        {/* AI Opportunity Alert */}
+        <AIOpportunityAlert />
 
         {/* Portfolio Overview with Dynamic Data Source */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
