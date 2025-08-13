@@ -37,11 +37,13 @@ const aiAdvisors = [
     isSpecial: true
   },
   {
-    name: "Macro Vision",
-    specialty: "Fundamental Analysis & Economic Trends",
-    confidence: 91,
-    recommendation: "BUY MATIC, HOLD DOT",
-    reasoning: "Ethereum scaling solutions seeing increased adoption. Layer 2 tokens like Polygon positioned for growth. Institutional money flowing into infrastructure projects with strong fundamentals."
+    name: "比尔盖茨",
+    specialty: "Technology Innovation & Philanthropic Investment",
+    confidence: 92,
+    recommendation: "BUY ETH, HOLD MATIC",
+    reasoning: "As someone who has witnessed the evolution of technology from personal computers to the internet, I believe blockchain represents the next fundamental shift. Ethereum's smart contract platform mirrors what we built with Windows - a foundation for others to innovate upon. My investment philosophy focuses on technologies that can solve humanity's greatest challenges. Cryptocurrency and blockchain can democratize financial services globally, especially in developing nations. However, we must ensure these technologies serve the greater good, not just speculation.",
+    avatar: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png",
+    isSpecial: true
   }
 ];
 
