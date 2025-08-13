@@ -362,7 +362,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
         <DialogHeader className="p-6 border-b border-slate-700/50 bg-gradient-to-r from-slate-800/80 to-blue-900/80">
           <DialogTitle className="text-white flex items-center gap-3 font-orbitron text-xl">
             <Bot className="w-6 h-6 text-accent" />
-            SUPREME BRAIN - Advanced Trading Analytics
+            {t('ai.title')}
             <div className="flex items-center gap-2 ml-auto">
               <AIConfigPanel 
                 config={aiConfig}
@@ -370,7 +370,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
               />
               <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50">
                 <Activity className="w-3 h-3 mr-1" />
-                Live Analytics
+                {t('ai.live_analytics')}
               </Badge>
             </div>
           </DialogTitle>
@@ -382,16 +382,16 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
             <Card className="flex-1 bg-gradient-crypto border-border p-4 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
                 <MessageSquare className="w-5 h-5 text-accent" />
-                <h3 className="font-semibold text-foreground">AI Analysis Chat</h3>
+                <h3 className="font-semibold text-foreground">{t('ai.analysis_chat')}</h3>
               </div>
               
               <div className="flex-1 overflow-y-auto space-y-3 mb-4">
                 {conversation.length === 0 ? (
                   <div className="text-center text-muted-foreground py-8">
                     <Bot className="w-12 h-12 mx-auto mb-3 text-accent/50" />
-                    <p className="font-inter text-sm">Ask for analysis on selected crypto with live market data</p>
+                    <p className="font-inter text-sm">{t('ai.ask_analysis')}</p>
                     <div className="mt-4 space-y-2 text-xs">
-                      <p className="text-accent">💡 Try asking:</p>
+                      <p className="text-accent">{t('ai.try_asking')}</p>
                       <p>"What's the technical outlook for {selectedCrypto}?"</p>
                       <p>"Should I buy or sell now?"</p>
                       <p>"Analyze the current market trend"</p>
@@ -418,7 +418,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask about technical analysis..."
+                  placeholder={t('ai.ask_placeholder')}
                   className="flex-1 bg-input border border-border rounded-lg px-3 py-2 text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent font-inter"
                 />
                 <Button 
@@ -440,7 +440,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <BarChart3 className="w-5 h-5 text-accent" />
-                  <h3 className="font-semibold text-foreground">货币选择 & 分析</h3>
+                  <h3 className="font-semibold text-foreground">{t('ai.currency_selection')}</h3>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex gap-2">
@@ -496,15 +496,15 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
               <TabsList className="grid w-full grid-cols-3 bg-muted/20">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-accent">
                   <BarChart3 className="w-4 h-4 mr-2" />
-                  Price Chart
+                  {t('ai.price_chart')}
                 </TabsTrigger>
                 <TabsTrigger value="technical" className="data-[state=active]:bg-accent">
                   <Activity className="w-4 h-4 mr-2" />
-                  Technical Analysis
+                  {t('ai.technical_analysis')}
                 </TabsTrigger>
                 <TabsTrigger value="news" className="data-[state=active]:bg-accent">
                   <Globe className="w-4 h-4 mr-2" />
-                  News Sentiment
+                  {t('ai.news_sentiment')}
                 </TabsTrigger>
               </TabsList>
 
@@ -866,7 +866,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                 <Card className="bg-gradient-crypto border-border p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Globe className="w-5 h-5 text-accent" />
-                    <h4 className="text-foreground font-inter font-semibold">AI News Sentiment Analysis</h4>
+                    <h4 className="text-foreground font-inter font-semibold">{t('ai.news_sentiment_analysis')}</h4>
                   </div>
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {activeNewsData.map((news, index) => (

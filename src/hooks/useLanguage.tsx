@@ -50,6 +50,19 @@ const translations = {
     'search.try_other': '',
     'search.suggestion': 'Please try searching with other keywords like Bitcoin, BTC',
     
+    // AI communication interface translations
+    'ai.title': 'SUPREME BRAIN - Advanced Trading Analytics',
+    'ai.live_analytics': 'Live Analytics',
+    'ai.analysis_chat': 'AI Analysis Chat',
+    'ai.ask_analysis': 'Ask for analysis on selected crypto with live market data',
+    'ai.try_asking': '💡 Try asking:',
+    'ai.ask_placeholder': 'Ask about technical analysis...',
+    'ai.technical_analysis': 'Technical Analysis',
+    'ai.news_sentiment': 'News Sentiment',
+    'ai.news_sentiment_analysis': 'AI News Sentiment Analysis',
+    'ai.price_chart': 'Price Chart',
+    'ai.currency_selection': 'Currency Selection & Analysis',
+    
     // Three advisors specialty translations
     'elon.specialty': 'Visionary Tech & Market Disruption',
     'warren.specialty': 'Value Investing & Long-term Wealth Building',
@@ -262,6 +275,19 @@ const translations = {
     'search.not_found': '未找到匹配',
     'search.try_other': '的加密货币',
     'search.suggestion': '请尝试搜索其他关键词，如 Bitcoin、BTC 或比特币',
+    
+    // AI交流界面翻译
+    'ai.title': 'SUPREME BRAIN - 高级交易分析',
+    'ai.live_analytics': '实时分析',
+    'ai.analysis_chat': 'AI分析聊天',
+    'ai.ask_analysis': '针对选定的加密货币进行实时市场数据分析',
+    'ai.try_asking': '💡 试试问：',
+    'ai.ask_placeholder': '询问技术分析...',
+    'ai.technical_analysis': '技术分析',
+    'ai.news_sentiment': '新闻情绪',
+    'ai.news_sentiment_analysis': 'AI新闻情绪分析',
+    'ai.price_chart': '价格图表',
+    'ai.currency_selection': '货币选择 & 分析',
     
     // 三位顾问的专业领域翻译
     'elon.specialty': '远见科技与市场颠覆',

@@ -143,11 +143,11 @@ export const ProfessionalTradingInterface = () => {
                 AI Analysis
               </h3>
               <p className="text-sm text-muted-foreground mb-3">
-                Ask for analysis on selected crypto with live market data
+                {t('ai.ask_analysis')}
               </p>
               <div className="flex gap-2">
                 <Input
-                  placeholder="Ask about technical analysis..."
+                  placeholder={t('ai.ask_placeholder')}
                   value={analysisQuery}
                   onChange={(e) => setAnalysisQuery(e.target.value)}
                   className="bg-input border-border"
@@ -314,7 +314,7 @@ export const ProfessionalTradingInterface = () => {
                 </Card>
 
                 <Card className="p-6 bg-gradient-crypto border-border">
-                  <h3 className="text-xl font-semibold mb-4">AI Technical Analysis</h3>
+                  <h3 className="text-xl font-semibold mb-4">{t('ai.technical_analysis')}</h3>
                   <div className="space-y-4">
                     <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
