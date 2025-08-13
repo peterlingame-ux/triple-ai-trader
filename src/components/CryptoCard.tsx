@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Bitcoin, Coins, Zap, Circle, Hexagon, Triangle } from "lucide-react";
-import ethereumLogo from "@/assets/ethereum-logo.png";
+import ethereumLogo from "@/assets/ethereum-real-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -34,9 +34,13 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent }: Crypt
       <div className="flex items-center justify-between">
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${
+            symbol === 'ETH' 
+              ? 'bg-gradient-to-br from-purple-600 to-blue-500' 
+              : 'bg-gradient-to-br from-amber-400 to-orange-500'
+          }`}>
             {symbol === 'ETH' ? (
-              <img src={ethereumLogo} alt="Ethereum" className="w-6 h-6" />
+              <img src={ethereumLogo} alt="Ethereum" className="w-6 h-6 drop-shadow-sm" />
             ) : (
               <IconComponent className="w-5 h-5 text-white" />
             )}
