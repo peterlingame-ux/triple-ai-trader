@@ -160,30 +160,57 @@ const CRYPTO_NAMES = {
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   // Initialize with mock data immediately to avoid blank page
   const generateMockData = (symbols: string[]): CryptoData[] => {
-    return symbols.map((symbol, index) => ({
-      symbol,
-      name: getTokenName(symbol),
-      price: Math.random() * 1000 + 100,
-      change24h: (Math.random() - 0.5) * 100,
-      changePercent24h: (Math.random() - 0.5) * 10,
-      volume24h: Math.random() * 1000000000,
-      high24h: Math.random() * 1100 + 100,
-      low24h: Math.random() * 900 + 50,
-      marketCap: Math.random() * 100000000000,
-      marketCapRank: index + 1,
-      circulatingSupply: Math.random() * 1000000000,
-      totalSupply: Math.random() * 1000000000,
-      maxSupply: Math.random() * 1000000000,
-      ath: Math.random() * 2000 + 200,
-      atl: Math.random() * 10,
-      image: `https://assets.coingecko.com/coins/images/${index + 1}/large/${symbol.toLowerCase()}.png`,
-      dominance: Math.random() * 5,
-      rsi: Math.random() * 100,
-      ma20: Math.random() * 1000 + 100,
-      ma50: Math.random() * 1000 + 100,
-      support: Math.random() * 900 + 50,
-      resistance: Math.random() * 1100 + 100
-    }));
+    return symbols.map((symbol, index) => {
+      // 为不同加密货币设置合理的基础价格
+      const basePrices: Record<string, number> = {
+        'BTC': 43000, 'ETH': 2500, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 300,
+        'XRP': 0.6, 'ADA': 0.5, 'SOL': 100, 'DOGE': 0.08, 'MATIC': 0.9,
+        'DOT': 7, 'AVAX': 35, 'LINK': 14, 'LTC': 70, 'UNI': 6,
+        'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4
+      };
+      
+      const basePrice = basePrices[symbol] || (Math.random() * 10 + 1);
+      const currentPrice = basePrice * (0.95 + Math.random() * 0.1); // ±5%变动
+      
+      // 生成合理的OHLC数据
+      const change24hPercent = (Math.random() - 0.5) * 8; // ±4%变动
+      const yesterdayPrice = currentPrice / (1 + change24hPercent / 100);
+      
+      // 确保高低价格的逻辑关系
+      const high24h = Math.max(currentPrice, yesterdayPrice) * (1 + Math.random() * 0.03);
+      const low24h = Math.min(currentPrice, yesterdayPrice) * (1 - Math.random() * 0.03);
+      const change24h = currentPrice - yesterdayPrice;
+      
+      // 生成合理的技术指标
+      const rsi = 30 + Math.random() * 40; // RSI在30-70之间比较合理
+      const ma20 = currentPrice * (0.98 + Math.random() * 0.04);
+      const ma50 = currentPrice * (0.96 + Math.random() * 0.08);
+      
+      return {
+        symbol,
+        name: getTokenName(symbol),
+        price: Math.round(currentPrice * 100000) / 100000, // 保留5位小数
+        change24h: Math.round(change24h * 100) / 100,
+        changePercent24h: Math.round(change24hPercent * 100) / 100,
+        volume24h: Math.round(Math.random() * 1000000000),
+        high24h: Math.round(high24h * 100000) / 100000,
+        low24h: Math.round(low24h * 100000) / 100000,
+        marketCap: Math.round(currentPrice * (Math.random() * 100000000 + 10000000)),
+        marketCapRank: index + 1,
+        circulatingSupply: Math.round(Math.random() * 1000000000),
+        totalSupply: Math.round(Math.random() * 1000000000),
+        maxSupply: Math.round(Math.random() * 1000000000),
+        ath: Math.round(currentPrice * (1.5 + Math.random() * 2) * 100000) / 100000,
+        atl: Math.round(currentPrice * (0.1 + Math.random() * 0.3) * 100000) / 100000,
+        image: `https://assets.coingecko.com/coins/images/${index + 1}/large/${symbol.toLowerCase()}.png`,
+        dominance: Math.round((symbol === 'BTC' ? 40 + Math.random() * 10 : Math.random() * 5) * 100) / 100,
+        rsi: Math.round(rsi * 100) / 100,
+        ma20: Math.round(ma20 * 100000) / 100000,
+        ma50: Math.round(ma50 * 100000) / 100000,
+        support: Math.round(low24h * 0.98 * 100000) / 100000,
+        resistance: Math.round(high24h * 1.02 * 100000) / 100000
+      };
+    });
   };
 
   const generateMockNews = (): NewsArticle[] => [
@@ -252,31 +279,49 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     } catch (err) {
       console.log('使用模拟数据，API接口预留供后期接入真实数据');
       
-      // 生成模拟数据作为备用
-      const mockData: CryptoData[] = symbols.map((symbol, index) => ({
-        symbol,
-        name: getTokenName(symbol),
-        price: Math.random() * 1000 + 100,
-        change24h: (Math.random() - 0.5) * 100,
-        changePercent24h: (Math.random() - 0.5) * 10,
-        volume24h: Math.random() * 1000000000,
-        high24h: Math.random() * 1100 + 100,
-        low24h: Math.random() * 900 + 50,
-        marketCap: Math.random() * 100000000000,
-        marketCapRank: index + 1,
-        circulatingSupply: Math.random() * 1000000000,
-        totalSupply: Math.random() * 1000000000,
-        maxSupply: Math.random() * 1000000000,
-        ath: Math.random() * 2000 + 200,
-        atl: Math.random() * 10,
-        image: `https://assets.coingecko.com/coins/images/${index + 1}/large/${symbol.toLowerCase()}.png`,
-        dominance: Math.random() * 5,
-        rsi: Math.random() * 100,
-        ma20: Math.random() * 1000 + 100,
-        ma50: Math.random() * 1000 + 100,
-        support: Math.random() * 900 + 50,
-        resistance: Math.random() * 1100 + 100
-      }));
+      // 生成更合理的模拟数据作为备用
+      const mockData: CryptoData[] = symbols.map((symbol, index) => {
+        const basePrices: Record<string, number> = {
+          'BTC': 43000, 'ETH': 2500, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 300,
+          'XRP': 0.6, 'ADA': 0.5, 'SOL': 100, 'DOGE': 0.08, 'MATIC': 0.9,
+          'DOT': 7, 'AVAX': 35, 'LINK': 14, 'LTC': 70, 'UNI': 6,
+          'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4
+        };
+        
+        const basePrice = basePrices[symbol] || (Math.random() * 10 + 1);
+        const currentPrice = basePrice * (0.95 + Math.random() * 0.1);
+        const change24hPercent = (Math.random() - 0.5) * 8;
+        const yesterdayPrice = currentPrice / (1 + change24hPercent / 100);
+        const high24h = Math.max(currentPrice, yesterdayPrice) * (1 + Math.random() * 0.03);
+        const low24h = Math.min(currentPrice, yesterdayPrice) * (1 - Math.random() * 0.03);
+        const change24h = currentPrice - yesterdayPrice;
+        const rsi = 30 + Math.random() * 40;
+        
+        return {
+          symbol,
+          name: getTokenName(symbol),
+          price: Math.round(currentPrice * 100000) / 100000,
+          change24h: Math.round(change24h * 100) / 100,
+          changePercent24h: Math.round(change24hPercent * 100) / 100,
+          volume24h: Math.round(Math.random() * 1000000000),
+          high24h: Math.round(high24h * 100000) / 100000,
+          low24h: Math.round(low24h * 100000) / 100000,
+          marketCap: Math.round(currentPrice * (Math.random() * 100000000 + 10000000)),
+          marketCapRank: index + 1,
+          circulatingSupply: Math.round(Math.random() * 1000000000),
+          totalSupply: Math.round(Math.random() * 1000000000),
+          maxSupply: Math.round(Math.random() * 1000000000),
+          ath: Math.round(currentPrice * (1.5 + Math.random() * 2) * 100000) / 100000,
+          atl: Math.round(currentPrice * (0.1 + Math.random() * 0.3) * 100000) / 100000,
+          image: `https://assets.coingecko.com/coins/images/${index + 1}/large/${symbol.toLowerCase()}.png`,
+          dominance: Math.round((symbol === 'BTC' ? 40 + Math.random() * 10 : Math.random() * 5) * 100) / 100,
+          rsi: Math.round(rsi * 100) / 100,
+          ma20: Math.round(currentPrice * (0.98 + Math.random() * 0.04) * 100000) / 100000,
+          ma50: Math.round(currentPrice * (0.96 + Math.random() * 0.08) * 100000) / 100000,
+          support: Math.round(low24h * 0.98 * 100000) / 100000,
+          resistance: Math.round(high24h * 1.02 * 100000) / 100000
+        };
+      });
       
       setCryptoData(mockData);
       setError('API接口已预留，当前使用模拟数据');
