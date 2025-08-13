@@ -32,6 +32,8 @@ import loopring3dLogo from "@/assets/loopring-3d-logo.png";
 import enjin3dLogo from "@/assets/enjin-3d-logo.png";
 import bat3dLogo from "@/assets/bat-3d-logo.png";
 import zcash3dLogo from "@/assets/zcash-3d-logo.png";
+import pepe3dLogo from "@/assets/pepe-3d-logo.png";
+import trump3dLogo from "@/assets/trump-3d-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -78,7 +80,9 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
       'LRC': loopring3dLogo,
       'ENJ': enjin3dLogo,
       'BAT': bat3dLogo,
-      'ZEC': zcash3dLogo
+      'ZEC': zcash3dLogo,
+      'PEPE': pepe3dLogo,
+      'TRUMP': trump3dLogo
     };
     return logoMap[symbol] || null;
   };

@@ -55,7 +55,7 @@ const DEFAULT_SYMBOLS = [
   "RVN", "ZIL", "ICX", "ONT", "QTUM", "WAVES", "SC", "DGB", "LSK", "ARK",
   "NANO", "IOST", "ZEN", "MAID", "REP", "KMD", "DCR", "STRAT", "NXT", "SYS",
   // 新兴和热门币种
-  "PEPE", "BONK", "WIF", "FLOKI", "BABYDOGE", "SAFE", "MEME", "WOJAK", "TURBO", "LADYS"
+  "PEPE", "BONK", "WIF", "FLOKI", "BABYDOGE", "SAFE", "MEME", "WOJAK", "TURBO", "LADYS", "TRUMP"
 ];
 
 // 加密货币名称映射（中英文）
@@ -153,7 +153,8 @@ const CRYPTO_NAMES = {
   "MEME": { name: "Memecoin", cn: "模因币" },
   "WOJAK": { name: "Wojak", cn: "沃伊扎克" },
   "TURBO": { name: "Turbo", cn: "涡轮币" },
-  "LADYS": { name: "Milady", cn: "女士币" }
+  "LADYS": { name: "Milady", cn: "女士币" },
+  "TRUMP": { name: "TrumpCoin", cn: "特朗普币" }
 };
 
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
