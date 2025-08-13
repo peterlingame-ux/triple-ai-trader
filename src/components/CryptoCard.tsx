@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Coins } from "lucide-react";
@@ -34,6 +33,65 @@ import bat3dLogo from "@/assets/bat-3d-logo.png";
 import zcash3dLogo from "@/assets/zcash-3d-logo.png";
 import pepe3dLogo from "@/assets/pepe-3d-logo.png";
 import trump3dLogo from "@/assets/trump-3d-logo.png";
+import usdt3dLogo from "@/assets/usdt-3d-logo.png";
+import usdc3dLogo from "@/assets/usdc-3d-logo.png";
+import steth3dLogo from "@/assets/steth-3d-logo.png";
+import tron3dLogo from "@/assets/tron-3d-logo.png";
+import ton3dLogo from "@/assets/ton-3d-logo.png";
+import bch3dLogo from "@/assets/bch-3d-logo.png";
+import etc3dLogo from "@/assets/etc-3d-logo.png";
+import hbar3dLogo from "@/assets/hbar-3d-logo.png";
+import grt3dLogo from "@/assets/grt-3d-logo.png";
+import qnt3dLogo from "@/assets/qnt-3d-logo.png";
+import aave3dLogo from "@/assets/aave-3d-logo.png";
+import mkr3dLogo from "@/assets/mkr-3d-logo.png";
+import comp3dLogo from "@/assets/comp-3d-logo.png";
+import yfi3dLogo from "@/assets/yfi-3d-logo.png";
+import snx3dLogo from "@/assets/snx-3d-logo.png";
+import oneinch3dLogo from "@/assets/1inch-3d-logo.png";
+import ren3dLogo from "@/assets/ren-3d-logo.png";
+import knc3dLogo from "@/assets/knc-3d-logo.png";
+import crv3dLogo from "@/assets/crv-3d-logo.png";
+import uma3dLogo from "@/assets/uma-3d-logo.png";
+import bal3dLogo from "@/assets/bal-3d-logo.png";
+import sushi3dLogo from "@/assets/sushi-3d-logo.png";
+import flow3dLogo from "@/assets/flow-3d-logo.png";
+import egld3dLogo from "@/assets/egld-3d-logo.png";
+import one3dLogo from "@/assets/one-3d-logo.png";
+import hive3dLogo from "@/assets/hive-3d-logo.png";
+import theta3dLogo from "@/assets/theta-3d-logo.png";
+import tfuel3dLogo from "@/assets/tfuel-3d-logo.png";
+import kava3dLogo from "@/assets/kava-3d-logo.png";
+import band3dLogo from "@/assets/band-3d-logo.png";
+import rvn3dLogo from "@/assets/rvn-3d-logo.png";
+import zil3dLogo from "@/assets/zil-3d-logo.png";
+import icx3dLogo from "@/assets/icx-3d-logo.png";
+import ont3dLogo from "@/assets/ont-3d-logo.png";
+import qtum3dLogo from "@/assets/qtum-3d-logo.png";
+import waves3dLogo from "@/assets/waves-3d-logo.png";
+import sc3dLogo from "@/assets/sc-3d-logo.png";
+import dgb3dLogo from "@/assets/dgb-3d-logo.png";
+import lsk3dLogo from "@/assets/lsk-3d-logo.png";
+import ark3dLogo from "@/assets/ark-3d-logo.png";
+import nano3dLogo from "@/assets/nano-3d-logo.png";
+import iost3dLogo from "@/assets/iost-3d-logo.png";
+import zen3dLogo from "@/assets/zen-3d-logo.png";
+import maid3dLogo from "@/assets/maid-3d-logo.png";
+import rep3dLogo from "@/assets/rep-3d-logo.png";
+import kmd3dLogo from "@/assets/kmd-3d-logo.png";
+import dcr3dLogo from "@/assets/dcr-3d-logo.png";
+import strat3dLogo from "@/assets/strat-3d-logo.png";
+import nxt3dLogo from "@/assets/nxt-3d-logo.png";
+import sys3dLogo from "@/assets/sys-3d-logo.png";
+import bonk3dLogo from "@/assets/bonk-3d-logo.png";
+import wif3dLogo from "@/assets/wif-3d-logo.png";
+import floki3dLogo from "@/assets/floki-3d-logo.png";
+import babydoge3dLogo from "@/assets/babydoge-3d-logo.png";
+import safe3dLogo from "@/assets/safe-3d-logo.png";
+import meme3dLogo from "@/assets/meme-3d-logo.png";
+import wojak3dLogo from "@/assets/wojak-3d-logo.png";
+import turbo3dLogo from "@/assets/turbo-3d-logo.png";
+import ladys3dLogo from "@/assets/ladys-3d-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -53,35 +111,94 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
     const logoMap: { [key: string]: string } = {
       'BTC': bitcoin3dLogo,
       'ETH': ethereum3dLogo,
-      'ADA': cardano3dLogo,
-      'SOL': solana3dLogo,
-      'DOT': polkadot3dLogo,
-      'MATIC': polygon3dLogo,
+      'USDT': usdt3dLogo,
       'BNB': binance3dLogo,
       'XRP': ripple3dLogo,
+      'USDC': usdc3dLogo,
+      'STETH': steth3dLogo,
+      'ADA': cardano3dLogo,
+      'SOL': solana3dLogo,
       'DOGE': dogecoin3dLogo,
+      'TRX': tron3dLogo,
+      'TON': ton3dLogo,
       'AVAX': avalanche3dLogo,
-      'LINK': chainlink3dLogo,
-      'UNI': uniswap3dLogo,
+      'DOT': polkadot3dLogo,
+      'MATIC': polygon3dLogo,
+      'SHIB': shiba3dLogo,
       'LTC': litecoin3dLogo,
-      'ATOM': cosmos3dLogo,
-      'ICP': icp3dLogo,
-      'NEAR': near3dLogo,
-      'APT': aptos3dLogo,
-      'FTM': fantom3dLogo,
-      'ALGO': algorand3dLogo,
-      'VET': vechain3dLogo,
+      'BCH': bch3dLogo,
+      'LINK': chainlink3dLogo,
       'XLM': stellar3dLogo,
+      'UNI': uniswap3dLogo,
+      'ATOM': cosmos3dLogo,
+      'ETC': etc3dLogo,
+      'HBAR': hbar3dLogo,
       'FIL': filecoin3dLogo,
+      'ICP': icp3dLogo,
+      'CRO': cronos3dLogo,
+      'APT': aptos3dLogo,
+      'NEAR': near3dLogo,
+      'VET': vechain3dLogo,
+      'GRT': grt3dLogo,
+      'ALGO': algorand3dLogo,
+      'QNT': qnt3dLogo,
       'MANA': mana3dLogo,
       'SAND': sandbox3dLogo,
-      'CRO': cronos3dLogo,
-      'SHIB': shiba3dLogo,
+      'AAVE': aave3dLogo,
+      'MKR': mkr3dLogo,
       'LRC': loopring3dLogo,
       'ENJ': enjin3dLogo,
       'BAT': bat3dLogo,
       'ZEC': zcash3dLogo,
+      'COMP': comp3dLogo,
+      'YFI': yfi3dLogo,
+      'SNX': snx3dLogo,
+      '1INCH': oneinch3dLogo,
+      'REN': ren3dLogo,
+      'KNC': knc3dLogo,
+      'CRV': crv3dLogo,
+      'UMA': uma3dLogo,
+      'BAL': bal3dLogo,
+      'SUSHI': sushi3dLogo,
+      'FTM': fantom3dLogo,
+      'FLOW': flow3dLogo,
+      'EGLD': egld3dLogo,
+      'ONE': one3dLogo,
+      'HIVE': hive3dLogo,
+      'THETA': theta3dLogo,
+      'TFUEL': tfuel3dLogo,
+      'KAVA': kava3dLogo,
+      'BAND': band3dLogo,
+      'RVN': rvn3dLogo,
+      'ZIL': zil3dLogo,
+      'ICX': icx3dLogo,
+      'ONT': ont3dLogo,
+      'QTUM': qtum3dLogo,
+      'WAVES': waves3dLogo,
+      'SC': sc3dLogo,
+      'DGB': dgb3dLogo,
+      'LSK': lsk3dLogo,
+      'ARK': ark3dLogo,
+      'NANO': nano3dLogo,
+      'IOST': iost3dLogo,
+      'ZEN': zen3dLogo,
+      'MAID': maid3dLogo,
+      'REP': rep3dLogo,
+      'KMD': kmd3dLogo,
+      'DCR': dcr3dLogo,
+      'STRAT': strat3dLogo,
+      'NXT': nxt3dLogo,
+      'SYS': sys3dLogo,
       'PEPE': pepe3dLogo,
+      'BONK': bonk3dLogo,
+      'WIF': wif3dLogo,
+      'FLOKI': floki3dLogo,
+      'BABYDOGE': babydoge3dLogo,
+      'SAFE': safe3dLogo,
+      'MEME': meme3dLogo,
+      'WOJAK': wojak3dLogo,
+      'TURBO': turbo3dLogo,
+      'LADYS': ladys3dLogo,
       'TRUMP': trump3dLogo
     };
     return logoMap[symbol] || null;
