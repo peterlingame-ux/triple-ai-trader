@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
+import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
@@ -302,24 +303,8 @@ export const TradingDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <Card className="p-6 bg-gradient-gold border-border">
-          <h3 className="text-xl font-bold text-accent-foreground mb-4">{t('actions.title')}</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              {t('actions.execute')}
-            </Button>
-            <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              {t('actions.analysis')}
-            </Button>
-            <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              {t('actions.risk')}
-            </Button>
-            <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              {t('actions.alerts')}
-            </Button>
-          </div>
-        </Card>
+        {/* Upcoming Advisors Section */}
+        <UpcomingAdvisors />
       </div>
       </div>
     </div>
