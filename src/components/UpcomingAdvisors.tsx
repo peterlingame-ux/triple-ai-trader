@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/hooks/useLanguage";
-import { User, Lock, Star, Clock, Sparkles, Users, Shield, Zap } from "lucide-react";
+import { User, Lock, Star, Clock, Sparkles, Users, Shield, Zap, TrendingUp, Award, Globe, DollarSign } from "lucide-react";
+import trumpAvatar from "@/assets/trump-avatar.jpg";
 
 export const UpcomingAdvisors = () => {
   const { t } = useLanguage();
@@ -12,9 +13,23 @@ export const UpcomingAdvisors = () => {
       specialty: '商业帝国战略大师',
       status: 'developing',
       description: '房地产帝王的财富征服之道',
-      avatar: '/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png',
+      avatar: trumpAvatar,
       isReady: true,
-      expertise: '商业帝国'
+      expertise: '商业帝国',
+      detailedInfo: {
+        title: '第45任美国总统 • 商业大亨',
+        achievements: [
+          '特朗普集团董事长兼总裁',
+          '房地产帝国缔造者',
+          '《做生意的艺术》作者',
+          '电视节目《学徒》制作人'
+        ],
+        specialty: '房地产投资、品牌建设、谈判艺术',
+        experience: '50+ 年商业经验',
+        netWorth: '$26亿美元 (2024)',
+        philosophy: '"在商业中，你要么做大，要么回家"',
+        keySkills: ['战略谈判', '品牌营销', '房地产开发', '媒体运营']
+      }
     },
     {
       name: '量化交易大师',
@@ -22,7 +37,14 @@ export const UpcomingAdvisors = () => {
       status: 'coming_soon',
       description: '华尔街顶级量化基金操盘手',
       isReady: false,
-      expertise: '量化策略'
+      expertise: '量化策略',
+      detailedInfo: {
+        title: '神秘量化大师',
+        achievements: ['即将揭晓'],
+        specialty: '算法交易、数据分析',
+        experience: '顶级机构经验',
+        philosophy: '数据驱动的投资决策'
+      }
     },
     {
       name: '加密货币之王', 
@@ -30,7 +52,14 @@ export const UpcomingAdvisors = () => {
       status: 'coming_soon',
       description: '区块链世界的财富密码破译者',
       isReady: false,
-      expertise: '数字资产'
+      expertise: '数字资产',
+      detailedInfo: {
+        title: '神秘加密大师',
+        achievements: ['即将揭晓'],
+        specialty: 'DeFi、NFT、区块链投资',
+        experience: '加密领域先驱',
+        philosophy: '去中心化金融的未来'
+      }
     },
     {
       name: '宏观经济大师',
@@ -38,7 +67,14 @@ export const UpcomingAdvisors = () => {
       status: 'coming_soon', 
       description: '国际金融市场的预言家',
       isReady: false,
-      expertise: '宏观策略'
+      expertise: '宏观策略',
+      detailedInfo: {
+        title: '神秘宏观大师',
+        achievements: ['即将揭晓'],
+        specialty: '全球宏观、货币政策分析',
+        experience: '国际金融机构经验',
+        philosophy: '洞察全球经济脉搏'
+      }
     }
   ];
 
@@ -166,12 +202,113 @@ export const UpcomingAdvisors = () => {
               }`} />
             </Card>
 
-            {/* Professional Tooltip */}
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 pointer-events-none">
-              <div className="bg-slate-900/95 text-white text-sm px-4 py-3 rounded-xl shadow-2xl backdrop-blur-sm border border-slate-700/50 max-w-xs">
-                <p className="font-medium text-amber-300 mb-1">{advisor.description}</p>
-                <p className="text-xs text-slate-400">点击了解更多详情</p>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-t-6 border-transparent border-t-slate-900/95"></div>
+            {/* Professional Detailed Tooltip */}
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-6 opacity-0 group-hover:opacity-100 transition-all duration-500 z-30 pointer-events-none">
+              <div className="bg-slate-900/98 text-white rounded-2xl shadow-2xl backdrop-blur-md border border-slate-700/60 overflow-hidden" style={{ width: '320px' }}>
+                {advisor.isReady ? (
+                  /* Detailed Trump Info */
+                  <div className="p-6 space-y-4">
+                    {/* Header */}
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-500/40 flex-shrink-0">
+                        <img 
+                          src={advisor.avatar} 
+                          alt={advisor.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-green-300 font-bold text-lg mb-1">{advisor.name}</h4>
+                        <p className="text-green-400/80 text-sm font-medium mb-2">{advisor.detailedInfo.title}</p>
+                        <div className="flex items-center gap-2 text-xs">
+                          <DollarSign className="w-3 h-3 text-amber-400" />
+                          <span className="text-amber-300 font-medium">{advisor.detailedInfo.netWorth}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Key Info */}
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Award className="w-4 h-4 text-amber-400" />
+                          <span className="text-amber-300 font-medium text-sm">核心成就</span>
+                        </div>
+                        <div className="space-y-1">
+                          {advisor.detailedInfo.achievements.slice(0, 3).map((achievement, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <div className="w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0"></div>
+                              <span className="text-slate-300 text-xs">{achievement}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <TrendingUp className="w-4 h-4 text-blue-400" />
+                          <span className="text-blue-300 font-medium text-sm">专业领域</span>
+                        </div>
+                        <p className="text-slate-300 text-xs">{advisor.detailedInfo.specialty}</p>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Globe className="w-4 h-4 text-purple-400" />
+                          <span className="text-purple-300 font-medium text-sm">投资哲学</span>
+                        </div>
+                        <p className="text-slate-300 text-xs italic">"{advisor.detailedInfo.philosophy}"</p>
+                      </div>
+
+                      {/* Skills */}
+                      <div>
+                        <span className="text-slate-400 font-medium text-xs mb-2 block">核心技能</span>
+                        <div className="flex flex-wrap gap-1">
+                          {advisor.detailedInfo.keySkills?.map((skill, idx) => (
+                            <Badge key={idx} className="bg-green-500/10 text-green-400 border-green-500/30 text-xs px-2 py-0.5">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="pt-3 border-t border-slate-700/50">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 text-xs">经验：{advisor.detailedInfo.experience}</span>
+                        <Badge className="bg-green-500/20 text-green-300 border-green-500/40 text-xs px-2 py-1">
+                          🔧 开发中
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Mystery Advisor Info */
+                  <div className="p-6 space-y-4">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-slate-700 to-gray-800 flex items-center justify-center">
+                        <span className="text-3xl text-slate-500">?</span>
+                      </div>
+                      <h4 className="text-slate-400 font-bold text-lg mb-2">{advisor.name}</h4>
+                      <p className="text-slate-500 text-sm mb-3">{advisor.detailedInfo.title}</p>
+                    </div>
+                    
+                    <div className="space-y-2 text-center">
+                      <p className="text-slate-400 text-xs">专业领域: {advisor.detailedInfo.specialty}</p>
+                      <p className="text-slate-500 text-xs italic">"{advisor.detailedInfo.philosophy}"</p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-700/50 text-center">
+                      <Badge className="bg-slate-600/20 text-slate-400 border-slate-600/40 text-xs px-3 py-1">
+                        ⏳ 即将揭晓
+                      </Badge>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Tooltip Arrow */}
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-slate-900/98"></div>
               </div>
             </div>
           </div>
