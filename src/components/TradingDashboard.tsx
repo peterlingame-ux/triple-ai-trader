@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
+import { CryptoAnalysisDialog } from "./CryptoAnalysisDialog";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
@@ -130,10 +131,11 @@ export const TradingDashboard = () => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Enhanced Professional Header */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-4">
+        {/* Hero Section with Analysis Button */}
+        <div className="text-center mb-8 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-3xl"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-center gap-4 mb-4">
               <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide">
                 {t('app.title')}
               </h1>
@@ -142,11 +144,15 @@ export const TradingDashboard = () => {
                 {t('status.live')}
               </Badge>
             </div>
-            <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide max-w-2xl">
+            <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide max-w-2xl mx-auto mb-6">
               {t('app.subtitle')}
             </p>
+            <CryptoAnalysisDialog />
           </div>
-          
+        </div>
+
+        {/* Enhanced Professional Header */}
+        <div className="flex items-center justify-end">
           <div className="flex items-center gap-3">
             <WalletConnector />
             <LanguageSwitcher />
