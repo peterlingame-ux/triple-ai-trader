@@ -99,31 +99,16 @@ export const TradingDashboard = () => {
 
   return (
     <div className="min-h-screen relative p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
-      {/* Animated crypto symbols background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-10 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center animate-pulse">
-          <span className="text-blue-300 text-xl font-bold">₿</span>
+      {/* Simplified background elements for better performance */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+        <div className="absolute top-10 left-10 w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-lg font-bold">₿</span>
         </div>
-        <div className="absolute top-32 right-20 w-10 h-10 rounded-full bg-blue-400/20 flex items-center justify-center animate-bounce">
-          <span className="text-blue-200 text-lg font-bold">Ξ</span>
+        <div className="absolute top-32 right-20 w-6 h-6 rounded-full bg-accent/15 flex items-center justify-center">
+          <span className="text-accent text-sm font-bold">Ξ</span>
         </div>
-        <div className="absolute top-1/4 left-1/4 w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center animate-pulse delay-300">
-          <span className="text-blue-300 text-sm font-bold">◆</span>
-        </div>
-        <div className="absolute bottom-1/3 right-10 w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center animate-bounce delay-500">
-          <span className="text-blue-200 text-xl font-bold">$</span>
-        </div>
-        <div className="absolute bottom-20 left-1/5 w-10 h-10 rounded-full bg-blue-400/20 flex items-center justify-center animate-pulse delay-700">
-          <span className="text-blue-300 text-lg font-bold">⟠</span>
-        </div>
-        <div className="absolute top-1/2 right-1/3 w-12 h-12 rounded-full bg-blue-600/20 flex items-center justify-center animate-bounce delay-1000">
-          <span className="text-blue-200 text-xl font-bold">◇</span>
-        </div>
-        <div className="absolute top-3/4 left-10 w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center animate-pulse delay-1200">
-          <span className="text-blue-300 text-sm font-bold">○</span>
-        </div>
-        <div className="absolute bottom-10 right-1/2 w-10 h-10 rounded-full bg-blue-400/20 flex items-center justify-center animate-bounce delay-1500">
-          <span className="text-blue-200 text-lg font-bold">⬟</span>
+        <div className="absolute bottom-1/3 right-10 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-lg font-bold">$</span>
         </div>
       </div>
       

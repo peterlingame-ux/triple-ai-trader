@@ -207,7 +207,7 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
   const crypto3DLogo = getCrypto3DIcon(symbol);
   
   return (
-    <Card className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700/50 hover:shadow-xl transition-all duration-300 rounded-xl">
+    <Card className="p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 rounded-xl">
       <div className="flex items-center justify-between">
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
@@ -228,20 +228,20 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
               />
             ) : null}
             <div className="fallback-icon w-16 h-16 flex items-center justify-center" style={{ display: crypto3DLogo ? 'none' : 'flex' }}>
-              <Coins className="w-16 h-16 text-amber-500" />
+              <Coins className="w-16 h-16 text-accent" />
             </div>
           </div>
           <div>
-            <h3 className="text-white font-bold text-lg font-orbitron tracking-wide">{symbol}</h3>
-            <p className="text-slate-400 text-sm font-inter">{name}</p>
+            <h3 className="text-foreground font-bold text-lg font-orbitron tracking-wide">{symbol}</h3>
+            <p className="text-muted-foreground text-sm font-inter">{name}</p>
           </div>
         </div>
         
         {/* Right side - Percentage Badge */}
         <div className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${
           isPositive 
-            ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-            : 'bg-red-500/20 text-red-400 border border-red-500/30'
+            ? 'bg-success/20 text-success border border-success/30' 
+            : 'bg-destructive/20 text-destructive border border-destructive/30'
         }`}>
           {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {isPositive ? '+' : ''}{changePercent.toFixed(2)}%
@@ -250,10 +250,10 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
       
       {/* Price Section */}
       <div className="mt-4 space-y-1">
-        <p className="text-2xl font-bold text-white font-mono tracking-wider">
+        <p className="text-2xl font-bold text-foreground font-mono tracking-wider">
           ${price.toLocaleString(undefined, { minimumFractionDigits: price < 1 ? 3 : 0, maximumFractionDigits: price < 1 ? 3 : 0 })}
         </p>
-        <p className={`text-sm font-medium font-mono ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+        <p className={`text-sm font-medium font-mono ${isPositive ? 'text-success' : 'text-destructive'}`}>
           {isPositive ? '+' : ''}${Math.abs(change).toFixed(2)}
         </p>
       </div>
