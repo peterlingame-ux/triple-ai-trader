@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Bitcoin, Coins, Zap, Circle, Hexagon, Triangle } from "lucide-react";
-import ethereumLogo from "@/assets/ethereum-real-logo.png";
-import bitcoinLogo from "@/assets/bitcoin-logo.png";
-import cardanoLogo from "@/assets/cardano-logo.png";
-import solanaLogo from "@/assets/solana-logo.png";
-import polkadotLogo from "@/assets/polkadot-logo.png";
-import polygonLogo from "@/assets/polygon-logo.png";
+import { TrendingUp, TrendingDown, Coins } from "lucide-react";
+import bitcoin3dLogo from "@/assets/bitcoin-3d-logo.png";
+import ethereum3dLogo from "@/assets/ethereum-3d-logo.png";
+import cardano3dLogo from "@/assets/cardano-3d-logo.png";
+import solana3dLogo from "@/assets/solana-3d-logo.png";
+import polkadot3dLogo from "@/assets/polkadot-3d-logo.png";
+import polygon3dLogo from "@/assets/polygon-3d-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -20,43 +20,30 @@ interface CryptoCardProps {
 export const CryptoCard = ({ symbol, name, price, change, changePercent }: CryptoCardProps) => {
   const isPositive = change >= 0;
   
-  const getCryptoIcon = (symbol: string) => {
+  const getCrypto3DIcon = (symbol: string) => {
     const logoMap = {
-      'BTC': bitcoinLogo,
-      'ETH': ethereumLogo,
-      'ADA': cardanoLogo,
-      'SOL': solanaLogo,
-      'DOT': polkadotLogo,
-      'MATIC': polygonLogo
+      'BTC': bitcoin3dLogo,
+      'ETH': ethereum3dLogo,
+      'ADA': cardano3dLogo,
+      'SOL': solana3dLogo,
+      'DOT': polkadot3dLogo,
+      'MATIC': polygon3dLogo
     };
     return logoMap[symbol] || null;
   };
 
-  const getCryptoColor = (symbol: string) => {
-    const colorMap = {
-      'BTC': 'bg-orange-500',
-      'ETH': 'bg-purple-600',
-      'ADA': 'bg-blue-500',
-      'SOL': 'bg-purple-500',
-      'DOT': 'bg-pink-500',
-      'MATIC': 'bg-purple-700'
-    };
-    return colorMap[symbol] || 'bg-gray-500';
-  };
-
-  const cryptoLogo = getCryptoIcon(symbol);
-  const bgColor = getCryptoColor(symbol);
+  const crypto3DLogo = getCrypto3DIcon(symbol);
   
   return (
     <Card className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700/50 hover:shadow-xl transition-all duration-300 rounded-xl">
       <div className="flex items-center justify-between">
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${bgColor}`}>
-            {cryptoLogo ? (
-              <img src={cryptoLogo} alt={`${name} logo`} className="w-7 h-7" />
+          <div className="w-12 h-12 flex items-center justify-center">
+            {crypto3DLogo ? (
+              <img src={crypto3DLogo} alt={`${name} logo`} className="w-12 h-12 drop-shadow-lg" />
             ) : (
-              <Coins className="w-6 h-6 text-white" />
+              <Coins className="w-12 h-12 text-amber-500 drop-shadow-lg" />
             )}
           </div>
           <div>
