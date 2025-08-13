@@ -38,6 +38,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAIAnalysis } from "@/hooks/useAIAnalysis";
 import { useCryptoData } from "@/hooks/useCryptoData";
+import { useWalletData } from "@/hooks/useWalletData";
 
 type TradingStrategy = 'conservative' | 'aggressive';
 type TradingType = 'spot' | 'futures';
@@ -134,6 +135,7 @@ interface TradingStats {
 export const AutoTrader = () => {
   const { toast } = useToast();
   const { cryptoData, newsData } = useCryptoData();
+  const { updateAutoTraderData } = useWalletData();
   const {
     analyzePriceChart,
     analyzeTechnicalIndicators,
@@ -181,6 +183,33 @@ export const AutoTrader = () => {
 
   const [tradingActivity, setTradingActivity] = useState<string[]>([]);
   const [aiAnalysisResults, setAiAnalysisResults] = useState<{[symbol: string]: any}>({});
+
+  // Sync initial data with WalletProvider
+  useEffect(() => {
+    updateAutoTraderData({
+      virtualBalance: config.virtualBalance,
+      totalPnL: stats.totalPnL,
+      dailyPnL: stats.dailyPnL,
+      activeTrades: positions.filter(p => p.status === 'open').length,
+      winRate: stats.winRate,
+      monthlyPnL: stats.monthlyPnL
+    });
+  }, [stats, positions, config.virtualBalance]);
+
+  // Real-time sync of active trades count
+  useEffect(() => {
+    const activeTradesCount = positions.filter(p => p.status === 'open').length;
+    updateAutoTraderData({
+      activeTrades: activeTradesCount
+    });
+  }, [positions]);
+
+  // Sync virtual balance changes
+  useEffect(() => {
+    updateAutoTraderData({
+      virtualBalance: config.virtualBalance
+    });
+  }, [config.virtualBalance]);
 
   // Enhanced AI signal generation using real AI API analysis
   useEffect(() => {
@@ -503,6 +532,13 @@ export const AutoTrader = () => {
       ...prev.slice(0, 19)
     ]);
 
+    // Immediately sync active trades count with WalletProvider
+    setTimeout(() => {
+      updateAutoTraderData({
+        activeTrades: positions.length + 1 // +1 because this position is being added
+      });
+    }, 100);
+
     toast({
       title: "AI自动交易执行",
       description: `${signal.symbol} ${tradingTypeText} ${signal.type === 'long' ? '买入' : '卖空'} 订单已执行${leverageText}`,
@@ -544,13 +580,27 @@ export const AutoTrader = () => {
             ...prev.slice(0, 19)
           ]);
           
-          // Update stats
-          setStats(prevStats => ({
-            ...prevStats,
-            totalPnL: prevStats.totalPnL + pnl,
-            totalTrades: prevStats.totalTrades + 1,
-            dailyPnL: prevStats.dailyPnL + pnl
-          }));
+          // Update stats and sync with WalletProvider
+          setStats(prevStats => {
+            const newStats = {
+              ...prevStats,
+              totalPnL: prevStats.totalPnL + pnl,
+              totalTrades: prevStats.totalTrades + 1,
+              dailyPnL: prevStats.dailyPnL + pnl
+            };
+            
+            // Sync with WalletProvider
+            updateAutoTraderData({
+              virtualBalance: config.virtualBalance,
+              totalPnL: newStats.totalPnL,
+              dailyPnL: newStats.dailyPnL,
+              activeTrades: positions.filter(p => p.status === 'open').length,
+              winRate: newStats.winRate,
+              monthlyPnL: newStats.monthlyPnL
+            });
+            
+            return newStats;
+          });
 
           return {
             ...position,
@@ -606,18 +656,33 @@ export const AutoTrader = () => {
       ...prev.slice(0, 19)
     ]);
     
-    setStats(prevStats => ({
-      ...prevStats,
-      totalPnL: prevStats.totalPnL + position.pnl,
-      totalTrades: prevStats.totalTrades + 1
-    }));
+    setStats(prevStats => {
+      const newStats = {
+        ...prevStats,
+        totalPnL: prevStats.totalPnL + position.pnl,
+        totalTrades: prevStats.totalTrades + 1
+      };
+      
+      // Sync with WalletProvider
+      updateAutoTraderData({
+        virtualBalance: config.virtualBalance,
+        totalPnL: newStats.totalPnL,
+        dailyPnL: newStats.dailyPnL,
+        activeTrades: positions.filter(p => p.status === 'open').length - 1, // -1 because this position will be closed
+        winRate: newStats.winRate,
+        monthlyPnL: newStats.monthlyPnL
+      });
+      
+      return newStats;
+    });
   };
 
   const resetVirtualAccount = () => {
-    setConfig(prev => ({ ...prev, virtualBalance: 100000 }));
+    const newConfig = { ...config, virtualBalance: 100000 };
+    setConfig(newConfig);
     setPositions([]);
     setSignals([]);
-    setStats({
+    const resetStats = {
       totalPnL: 0,
       winRate: 87.5,
       totalTrades: 48,
@@ -630,8 +695,19 @@ export const AutoTrader = () => {
       leverageUsed: 3.2,
       maxDrawdown: -2.8,
       sharpeRatio: 2.15
-    });
+    };
+    setStats(resetStats);
     setTradingActivity(['🔄 虚拟账户已重置']);
+    
+    // Sync with WalletProvider
+    updateAutoTraderData({
+      virtualBalance: 100000,
+      totalPnL: 0,
+      dailyPnL: 0,
+      activeTrades: 0,
+      winRate: 87.5,
+      monthlyPnL: 0
+    });
     
     toast({
       title: "虚拟账户已重置",
