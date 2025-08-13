@@ -96,7 +96,23 @@ const translations = {
     'wallet.more_platforms': '+{count} more',
     'wallet.more_features': '+{count} more',
     'wallet.recommended': 'Recommended',
-    'wallet.installed': 'Installed'
+    'wallet.installed': 'Installed',
+    // Wallet descriptions
+    'wallet.metamask.description': 'The world\'s most popular Ethereum wallet with extensive DApp support',
+    'wallet.coinbase.description': 'Self-custody wallet by Coinbase with institutional-grade security',
+    'wallet.walletconnect.description': 'Universal protocol connecting 300+ wallets to DApps',
+    'wallet.trust.description': 'Multi-cryptocurrency wallet by Binance',
+    'wallet.phantom.description': 'Leading Solana wallet with beautiful interface design',
+    'wallet.tokenpocket.description': 'Asia\'s leading multi-chain wallet supporting 100+ blockchain ecosystems',
+    'wallet.ledger.description': 'Industry-leading hardware wallet with bank-grade security protection',
+    'wallet.trezor.description': 'Hardware wallet pioneer with open-source security solutions',
+    'wallet.exodus.description': 'Beautiful multi-cryptocurrency wallet with built-in exchange',
+    'wallet.atomic.description': 'Decentralized wallet supporting atomic swaps',
+    'wallet.gnosis.description': 'Multi-signature wallet designed for institutions and teams',
+    'wallet.argent.description': 'Smart contract wallet with social recovery support',
+    'wallet.binance.description': 'Official Binance wallet with deep exchange integration',
+    'wallet.okx.description': 'Web3 wallet by OKX exchange',
+    'wallet.connect_button': 'Connect {wallet}'
   },
   zh: {
     'app.title': 'Meta BrainX',
@@ -185,7 +201,23 @@ const translations = {
     'wallet.more_platforms': '+{count}更多',
     'wallet.more_features': '+{count}更多',
     'wallet.recommended': '推荐',
-    'wallet.installed': '已安装'
+    'wallet.installed': '已安装',
+    // Wallet descriptions
+    'wallet.metamask.description': '全球最受欢迎的以太坊钱包，拥有广泛的DApp支持',
+    'wallet.coinbase.description': 'Coinbase出品的自托管钱包，具有机构级安全性',
+    'wallet.walletconnect.description': '连接300+钱包到DApps的通用协议',
+    'wallet.trust.description': '币安旗下的多加密货币钱包',
+    'wallet.phantom.description': '领先的Solana钱包，拥有精美的界面设计',
+    'wallet.tokenpocket.description': '亚洲领先的多链钱包，支持100+公链生态',
+    'wallet.ledger.description': '行业领先的硬件钱包，银行级安全保护',
+    'wallet.trezor.description': '硬件钱包先驱，开源安全解决方案',
+    'wallet.exodus.description': '精美的多加密货币钱包，内置交易功能',
+    'wallet.atomic.description': '去中心化钱包，支持原子交换',
+    'wallet.gnosis.description': '为机构和团队设计的多签名钱包',
+    'wallet.argent.description': '智能合约钱包，支持社交恢复',
+    'wallet.binance.description': '币安官方钱包，深度集成交易所功能',
+    'wallet.okx.description': 'OKX交易所出品的Web3钱包',
+    'wallet.connect_button': '连接 {wallet}'
   },
   es: {
     'app.title': 'Meta BrainX',

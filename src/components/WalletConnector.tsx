@@ -27,7 +27,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'metamask',
     name: 'MetaMask',
-    description: '全球最受欢迎的以太坊钱包，拥有广泛的DApp支持',
+    description: '', // Will be filled by translation
     icon: '🦊',
     category: 'browser',
     securityLevel: 'high',
@@ -40,7 +40,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'coinbase',
     name: 'Coinbase Wallet',
-    description: 'Coinbase出品的自托管钱包，具有机构级安全性',
+    description: '', // Will be filled by translation
     icon: '🔷',
     category: 'browser',
     securityLevel: 'very-high',
@@ -52,7 +52,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'walletconnect',
     name: 'WalletConnect',
-    description: '连接300+钱包到DApps的通用协议',
+    description: '', // Will be filled by translation
     icon: '🔗',
     category: 'browser',
     securityLevel: 'high',
@@ -63,7 +63,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'trust',
     name: 'Trust Wallet',
-    description: '币安旗下的多加密货币钱包',
+    description: '', // Will be filled by translation
     icon: '🛡️',
     category: 'mobile',
     securityLevel: 'high',
@@ -74,7 +74,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'phantom',
     name: 'Phantom',
-    description: '领先的Solana钱包，拥有精美的界面设计',
+    description: '', // Will be filled by translation
     icon: '👻',
     category: 'browser',
     securityLevel: 'high',
@@ -85,7 +85,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'tokenpocket',
     name: 'TokenPocket (TP钱包)',
-    description: '亚洲领先的多链钱包，支持100+公链生态',
+    description: '', // Will be filled by translation
     icon: '🔷',
     category: 'mobile',
     securityLevel: 'high',
@@ -99,7 +99,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'ledger',
     name: 'Ledger',
-    description: '行业领先的硬件钱包，银行级安全保护',
+    description: '', // Will be filled by translation
     icon: '🔐',
     category: 'hardware',
     securityLevel: 'extreme',
@@ -111,7 +111,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'trezor',
     name: 'Trezor',
-    description: '硬件钱包先驱，开源安全解决方案',
+    description: '', // Will be filled by translation
     icon: '⚡',
     category: 'hardware',
     securityLevel: 'extreme',
@@ -124,7 +124,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'exodus',
     name: 'Exodus',
-    description: '精美的多加密货币钱包，内置交易功能',
+    description: '', // Will be filled by translation
     icon: '🌟',
     category: 'mobile',
     securityLevel: 'high',
@@ -135,7 +135,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'atomic',
     name: 'Atomic Wallet',
-    description: '去中心化钱包，支持原子交换',
+    description: '', // Will be filled by translation
     icon: '⚛️',
     category: 'mobile',
     securityLevel: 'high',
@@ -148,7 +148,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'gnosis',
     name: 'Gnosis Safe',
-    description: '为机构和团队设计的多签名钱包',
+    description: '', // Will be filled by translation
     icon: '🏛️',
     category: 'institutional',
     securityLevel: 'extreme',
@@ -159,7 +159,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'argent',
     name: 'Argent',
-    description: '智能合约钱包，支持社交恢复',
+    description: '', // Will be filled by translation
     icon: '🛡️',
     category: 'mobile',
     securityLevel: 'very-high',
@@ -172,7 +172,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'binance',
     name: 'Binance Wallet',
-    description: '币安官方钱包，深度集成交易所功能',
+    description: '', // Will be filled by translation
     icon: '🟡',
     category: 'mobile',
     securityLevel: 'high',
@@ -183,7 +183,7 @@ const walletOptions: WalletOption[] = [
   {
     id: 'okx',
     name: 'OKX Wallet',
-    description: 'OKX交易所出品的Web3钱包',
+    description: '', // Will be filled by translation
     icon: '⚫',
     category: 'browser',
     securityLevel: 'high',
@@ -212,6 +212,12 @@ export const WalletConnector = () => {
   const filteredWallets = selectedCategory === 'all' 
     ? walletOptions 
     : walletOptions.filter(wallet => wallet.category === selectedCategory);
+
+  // Update wallet descriptions with translations
+  const getWalletWithTranslation = (wallet: WalletOption) => ({
+    ...wallet,
+    description: t(`wallet.${wallet.id}.description`)
+  });
 
   const getSecurityColor = (level: string) => {
     switch (level) {
@@ -416,7 +422,9 @@ export const WalletConnector = () => {
 
             {/* Wallet Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredWallets.map((wallet) => (
+              {filteredWallets.map((wallet) => {
+                const walletWithTranslation = getWalletWithTranslation(wallet);
+                return (
                 <Card 
                   key={wallet.id} 
                   className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all cursor-pointer group"
@@ -436,7 +444,7 @@ export const WalletConnector = () => {
                               <Badge className="bg-green-500/20 text-green-400 text-xs">{t('wallet.installed')}</Badge>
                             )}
                           </div>
-                          <p className="text-slate-400 text-sm">{wallet.description}</p>
+                          <p className="text-slate-400 text-sm">{walletWithTranslation.description}</p>
                         </div>
                       </div>
                       <div className="text-slate-500 group-hover:text-slate-400">
@@ -496,11 +504,12 @@ export const WalletConnector = () => {
                       }}
                     >
                       <Wallet className="w-4 h-4 mr-2" />
-                      连接 {wallet.name}
+                      {t('wallet.connect_button').replace('{wallet}', wallet.name)}
                     </Button>
                   </div>
                 </Card>
-              ))}
+                );
+              })}
             </div>
 
             {/* Security Notice */}
