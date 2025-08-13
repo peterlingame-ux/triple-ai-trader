@@ -11,7 +11,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/hooks/useLanguage";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap } from "lucide-react";
 
-// Mock data for crypto prices
+// Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
   { symbol: "BTC", name: "Bitcoin", price: 43250, change: 1245.50, changePercent: 2.97 },
   { symbol: "ETH", name: "Ethereum", price: 2567, change: -45.30, changePercent: -1.73 },
@@ -19,6 +19,22 @@ const mockCryptoData = [
   { symbol: "SOL", name: "Solana", price: 98.75, change: 3.42, changePercent: 3.59 },
   { symbol: "DOT", name: "Polkadot", price: 7.23, change: -0.18, changePercent: -2.43 },
   { symbol: "MATIC", name: "Polygon", price: 0.89, change: 0.065, changePercent: 7.88 },
+];
+
+const allCryptoData = [
+  ...mockCryptoData,
+  { symbol: "BNB", name: "Binance Coin", price: 315.67, change: 12.45, changePercent: 4.12 },
+  { symbol: "XRP", name: "Ripple", price: 0.634, change: -0.021, changePercent: -3.20 },
+  { symbol: "DOGE", name: "Dogecoin", price: 0.078, change: 0.004, changePercent: 5.41 },
+  { symbol: "AVAX", name: "Avalanche", price: 36.78, change: 1.89, changePercent: 5.42 },
+  { symbol: "LINK", name: "Chainlink", price: 14.23, change: -0.67, changePercent: -4.50 },
+  { symbol: "UNI", name: "Uniswap", price: 6.45, change: 0.34, changePercent: 5.57 },
+  { symbol: "LTC", name: "Litecoin", price: 73.45, change: -2.12, changePercent: -2.81 },
+  { symbol: "ATOM", name: "Cosmos", price: 8.67, change: 0.45, changePercent: 5.48 },
+  { symbol: "ICP", name: "Internet Computer", price: 5.23, change: -0.23, changePercent: -4.21 },
+  { symbol: "NEAR", name: "NEAR Protocol", price: 2.34, change: 0.12, changePercent: 5.41 },
+  { symbol: "APT", name: "Aptos", price: 8.90, change: 0.67, changePercent: 8.13 },
+  { symbol: "FTM", name: "Fantom", price: 0.445, change: 0.023, changePercent: 5.46 },
 ];
 
 // Mock AI advisors data
@@ -57,6 +73,7 @@ export const TradingDashboard = () => {
   const [totalPortfolio, setTotalPortfolio] = useState(125678.42);
   const [dailyChange, setDailyChange] = useState(3456.78);
   const [activeTrades, setActiveTrades] = useState(12);
+  const [showAllCrypto, setShowAllCrypto] = useState(false);
 
   // Simulate real-time updates
   useEffect(() => {
@@ -135,12 +152,22 @@ export const TradingDashboard = () => {
 
         {/* Crypto Cards Grid */}
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
-            <BarChart3 className="w-6 h-6" />
-            {t('market.overview')}
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <BarChart3 className="w-6 h-6" />
+              {t('market.overview')}
+            </h2>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowAllCrypto(!showAllCrypto)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6"
+            >
+              {showAllCrypto ? "Show Top 6" : "All Categories"}
+              <BarChart3 className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mockCryptoData.map((crypto) => (
+            {(showAllCrypto ? allCryptoData : mockCryptoData).map((crypto) => (
               <CryptoCard
                 key={crypto.symbol}
                 symbol={crypto.symbol}
