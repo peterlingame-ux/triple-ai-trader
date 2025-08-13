@@ -58,7 +58,7 @@ export const AICommunicator = () => {
   const [timeframe, setTimeframe] = useState<string>("1D");
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // Enhanced cryptocurrency analytics data
+  // Enhanced cryptocurrency analytics data with more professional parameters
   const cryptoAnalytics: CryptoAnalytics[] = [
     {
       symbol: "BTC",
@@ -85,19 +85,19 @@ export const AICommunicator = () => {
     {
       symbol: "ETH",
       name: "Ethereum",
-      price: 2567,
-      change24h: -45.30,
-      changePercent24h: -1.73,
-      volume24h: 12300000000,
+      price: 4724.70,
+      change24h: 3.65,
+      changePercent24h: 0.08,
+      volume24h: 18735000000,
       marketCap: 308000000000,
       dominance: 18.6,
       rsi: 45.2,
-      ma20: 2650,
-      ma50: 2720,
-      support: 2450,
-      resistance: 2750,
-      high24h: 2698,
-      low24h: 2445,
+      ma20: 4650,
+      ma50: 4580,
+      support: 4620,
+      resistance: 4780,
+      high24h: 4760,
+      low24h: 4620,
       ath: 4878,
       atl: 0.43,
       circulatingSupply: 120000000,
@@ -128,42 +128,56 @@ export const AICommunicator = () => {
     }
   ];
 
-  // Mock news data
+  // Enhanced news data with more professional market analysis
   const newsData: NewsItem[] = [
     {
-      title: "Bitcoin ETF Sees Record $2.1B Inflows",
-      source: "CoinDesk",
-      time: "2 hours ago",
+      title: "Bitcoin ETF Trading Volume Hits $2.8B Daily Record",
+      source: "CoinDesk Pro",
+      time: "15 min ago",
       sentiment: "bullish",
       impact: "high"
     },
     {
-      title: "Ethereum Layer 2 Activity Surges 150%",
-      source: "The Block",
-      time: "4 hours ago",
-      sentiment: "bullish",
-      impact: "medium"
-    },
-    {
-      title: "Fed Signals Potential Rate Cuts in 2024",
-      source: "Reuters",
-      time: "6 hours ago",
-      sentiment: "bullish",
-      impact: "high"
-    },
-    {
-      title: "Solana DeFi TVL Reaches New ATH",
-      source: "DeFiLlama",
-      time: "8 hours ago",
-      sentiment: "bullish",
-      impact: "medium"
-    },
-    {
-      title: "Regulatory Clarity Expected for Crypto",
-      source: "Bloomberg",
-      time: "12 hours ago",
+      title: "Ethereum Shanghai Upgrade: $4.7B ETH Unlocked",
+      source: "The Block Research",
+      time: "32 min ago",
       sentiment: "neutral",
       impact: "high"
+    },
+    {
+      title: "Institutional Adoption: BlackRock Files for Solana ETF",
+      source: "Bloomberg Terminal",
+      time: "1 hour ago",
+      sentiment: "bullish",
+      impact: "high"
+    },
+    {
+      title: "Fed Chair Powell: Digital Assets Regulation Framework Q2",
+      source: "Reuters Financial",
+      time: "2 hours ago",
+      sentiment: "neutral",
+      impact: "medium"
+    },
+    {
+      title: "Crypto Derivatives Market Reaches $3.2T Daily Volume",
+      source: "CoinGecko Analytics",
+      time: "3 hours ago",
+      sentiment: "bullish",
+      impact: "medium"
+    },
+    {
+      title: "Major Exchange Reports 150% Increase in DeFi Trading",
+      source: "DeFiPulse",
+      time: "4 hours ago",
+      sentiment: "bullish",
+      impact: "low"
+    },
+    {
+      title: "Whale Alert: 50,000 BTC Moved to Unknown Wallet",
+      source: "Whale Alert",
+      time: "5 hours ago",
+      sentiment: "bearish",
+      impact: "medium"
     }
   ];
 
@@ -392,71 +406,137 @@ export const AICommunicator = () => {
                           <span className="text-slate-400">24h High</span>
                           <span className="text-white font-mono">${crypto.high24h.toLocaleString()}</span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">24h Low</span>
-                          <span className="text-white font-mono">${crypto.low24h.toLocaleString()}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                         <div className="flex justify-between">
+                           <span className="text-slate-400">24h Low</span>
+                           <span className="text-white font-mono">${crypto.low24h.toLocaleString()}</span>
+                         </div>
+                         <div className="flex justify-between">
+                           <span className="text-slate-400">ATH</span>
+                           <span className="text-yellow-400 font-mono">${crypto.ath.toLocaleString()}</span>
+                         </div>
+                         <div className="flex justify-between">
+                           <span className="text-slate-400">ATL</span>
+                           <span className="text-blue-400 font-mono">${crypto.atl}</span>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
 
-                  {/* Market Data Grid */}
-                  <div className="grid grid-cols-4 gap-4">
-                    <Card className="bg-slate-800/50 p-3">
-                      <div className="text-center">
-                        <p className="text-slate-400 text-xs">Market Cap</p>
-                        <p className="text-white font-mono font-bold">${(crypto.marketCap / 1e9).toFixed(1)}B</p>
-                      </div>
-                    </Card>
-                    <Card className="bg-slate-800/50 p-3">
-                      <div className="text-center">
-                        <p className="text-slate-400 text-xs">24h Volume</p>
-                        <p className="text-white font-mono font-bold">${(crypto.volume24h / 1e9).toFixed(1)}B</p>
-                      </div>
-                    </Card>
-                    <Card className="bg-slate-800/50 p-3">
-                      <div className="text-center">
-                        <p className="text-slate-400 text-xs">Dominance</p>
-                        <p className="text-white font-mono font-bold">{crypto.dominance}%</p>
-                      </div>
-                    </Card>
-                    <Card className="bg-slate-800/50 p-3">
-                      <div className="text-center">
-                        <p className="text-slate-400 text-xs">Circulating</p>
-                        <p className="text-white font-mono font-bold">{(crypto.circulatingSupply / 1e6).toFixed(1)}M</p>
-                      </div>
-                    </Card>
-                  </div>
+                   {/* Enhanced Market Data Grid */}
+                   <div className="grid grid-cols-6 gap-3">
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Market Cap</p>
+                         <p className="text-white font-mono font-bold text-sm">${(crypto.marketCap / 1e9).toFixed(1)}B</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">24h Volume</p>
+                         <p className="text-white font-mono font-bold text-sm">${(crypto.volume24h / 1e9).toFixed(1)}B</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Dominance</p>
+                         <p className="text-white font-mono font-bold text-sm">{crypto.dominance}%</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Circulating</p>
+                         <p className="text-white font-mono font-bold text-sm">{(crypto.circulatingSupply / 1e6).toFixed(1)}M</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Max Supply</p>
+                         <p className="text-white font-mono font-bold text-sm">
+                           {crypto.maxSupply === 0 ? '∞' : `${(crypto.maxSupply / 1e6).toFixed(1)}M`}
+                         </p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Supply Ratio</p>
+                         <p className="text-white font-mono font-bold text-sm">
+                           {crypto.maxSupply === 0 ? 'N/A' : `${((crypto.circulatingSupply / crypto.maxSupply) * 100).toFixed(1)}%`}
+                         </p>
+                       </div>
+                     </Card>
+                   </div>
 
-                  {/* News Feed */}
-                  <div className="bg-slate-800/50 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Globe className="w-4 h-4 text-blue-400" />
-                      <h4 className="text-white font-inter font-semibold">Market News</h4>
-                    </div>
-                    <div className="space-y-2 max-h-32 overflow-y-auto">
-                      {newsData.map((news, index) => (
-                        <div key={index} className="flex items-start gap-3 p-2 bg-slate-700/50 rounded text-xs">
-                          <div className="flex-1">
-                            <p className="text-white font-medium">{news.title}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-slate-400">{news.source}</span>
-                              <span className="text-slate-500">•</span>
-                              <span className="text-slate-400">{news.time}</span>
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-1">
-                            <Badge className={`text-xs ${getSentimentColor(news.sentiment)}`}>
-                              {news.sentiment.toUpperCase()}
-                            </Badge>
-                            <Badge className={`text-xs ${getImpactBadge(news.impact)}`}>
-                              {news.impact.toUpperCase()}
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                   {/* Professional Trading Signals */}
+                   <Card className="bg-slate-800/50 p-4 border-slate-700">
+                     <h4 className="text-white font-inter font-semibold mb-3 flex items-center gap-2">
+                       <Zap className="w-4 h-4 text-yellow-400" />
+                       AI Trading Signals
+                     </h4>
+                     <div className="grid grid-cols-3 gap-4 text-sm">
+                       <div className="text-center">
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                           crypto.rsi > 70 ? 'bg-red-500/20 text-red-400' : 
+                           crypto.rsi < 30 ? 'bg-green-500/20 text-green-400' : 
+                           'bg-yellow-500/20 text-yellow-400'
+                         }`}>
+                           <Activity className="w-3 h-3" />
+                           {crypto.rsi > 70 ? 'OVERBOUGHT' : crypto.rsi < 30 ? 'OVERSOLD' : 'NEUTRAL'}
+                         </div>
+                         <p className="text-slate-400 text-xs mt-1">RSI Signal</p>
+                       </div>
+                       <div className="text-center">
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                           crypto.price > crypto.ma20 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                         }`}>
+                           <TrendingUp className="w-3 h-3" />
+                           {crypto.price > crypto.ma20 ? 'BULLISH' : 'BEARISH'}
+                         </div>
+                         <p className="text-slate-400 text-xs mt-1">MA20 Trend</p>
+                       </div>
+                       <div className="text-center">
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                           crypto.price > crypto.support && crypto.price < crypto.resistance ? 'bg-blue-500/20 text-blue-400' : 
+                           crypto.price <= crypto.support ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
+                         }`}>
+                           <BarChart3 className="w-3 h-3" />
+                           {crypto.price > crypto.support && crypto.price < crypto.resistance ? 'RANGE' : 
+                            crypto.price <= crypto.support ? 'SUPPORT TEST' : 'BREAKOUT'}
+                         </div>
+                         <p className="text-slate-400 text-xs mt-1">S/R Level</p>
+                       </div>
+                      </div>
+                    </Card>
+
+                   {/* News Feed */}
+                   <div className="bg-slate-800/50 rounded-lg p-4">
+                     <div className="flex items-center gap-2 mb-3">
+                       <Globe className="w-4 h-4 text-blue-400" />
+                       <h4 className="text-white font-inter font-semibold">Market News</h4>
+                     </div>
+                     <div className="space-y-2 max-h-32 overflow-y-auto">
+                       {newsData.map((news, index) => (
+                         <div key={index} className="flex items-start gap-3 p-2 bg-slate-700/50 rounded text-xs">
+                           <div className="flex-1">
+                             <p className="text-white font-medium">{news.title}</p>
+                             <div className="flex items-center gap-2 mt-1">
+                               <span className="text-slate-400">{news.source}</span>
+                               <span className="text-slate-500">•</span>
+                               <span className="text-slate-400">{news.time}</span>
+                             </div>
+                           </div>
+                           <div className="flex flex-col gap-1">
+                             <Badge className={`text-xs ${getSentimentColor(news.sentiment)}`}>
+                               {news.sentiment.toUpperCase()}
+                             </Badge>
+                             <Badge className={`text-xs ${getImpactBadge(news.impact)}`}>
+                               {news.impact.toUpperCase()}
+                             </Badge>
+                           </div>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+
                 </TabsContent>
               ))}
             </Tabs>
