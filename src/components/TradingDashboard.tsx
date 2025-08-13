@@ -10,6 +10,7 @@ import { BillProfile } from "./BillProfile";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
+import { AutoTrader } from "./AutoTrader";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData } from "@/hooks/useCryptoData";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw } from "lucide-react";
@@ -252,7 +253,10 @@ export const TradingDashboard = () => {
               <Brain className="w-6 h-6" />
               {t('ai.advisors')}
             </h2>
-            <AICommunicator cryptoData={cryptoData} newsData={newsData} />
+            <div className="flex items-center gap-2">
+              <AICommunicator cryptoData={cryptoData} newsData={newsData} />
+              <AutoTrader />
+            </div>
           </div>
           <div className="space-y-6">
             {aiAdvisors.map((advisor, index) => (
