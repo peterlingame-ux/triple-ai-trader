@@ -13,6 +13,7 @@ import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
+import { UserProfile } from "./UserProfile";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
@@ -134,6 +135,7 @@ export const TradingDashboard = () => {
           </div>
           
           <div className="flex items-center gap-3">
+            <UserProfile />
             <WalletConnector />
             <LanguageSwitcher />
           </div>
