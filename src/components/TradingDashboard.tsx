@@ -60,7 +60,7 @@ const aiAdvisors = [
     isSpecial: true
   },
   {
-    name: "比尔盖茨",
+    name: "Bill Gates",
     specialty: "Technology Innovation & Philanthropic Investment",
     confidence: 92,
     recommendation: "BUY ETH, HOLD MATIC",
@@ -217,7 +217,7 @@ export const TradingDashboard = () => {
                     isSpecial={advisor.isSpecial}
                   />
                 )}
-                {advisor.name === '比尔盖茨' && (
+                {advisor.name === 'Bill Gates' && (
                   <BillProfile
                     name={advisor.name}
                     specialty={advisor.specialty}
