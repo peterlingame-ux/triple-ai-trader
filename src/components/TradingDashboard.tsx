@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
 import { AIAdvisor } from "./AIAdvisor";
+import { ElonProfile } from "./ElonProfile";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/hooks/useLanguage";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap } from "lucide-react";
@@ -158,16 +159,30 @@ export const TradingDashboard = () => {
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {aiAdvisors.map((advisor, index) => (
-              <AIAdvisor
-                key={index}
-                name={advisor.name}
-                specialty={advisor.specialty}
-                confidence={advisor.confidence}
-                recommendation={advisor.recommendation}
-                reasoning={advisor.reasoning}
-                avatar={advisor.avatar}
-                isSpecial={advisor.isSpecial}
-              />
+              advisor.name === 'Elon Musk' ? (
+                <div key={index} className="lg:col-span-3">
+                  <ElonProfile
+                    name={advisor.name}
+                    specialty={advisor.specialty}
+                    confidence={advisor.confidence}
+                    recommendation={advisor.recommendation}
+                    reasoning={advisor.reasoning}
+                    avatar={advisor.avatar}
+                    isSpecial={advisor.isSpecial}
+                  />
+                </div>
+              ) : (
+                <AIAdvisor
+                  key={index}
+                  name={advisor.name}
+                  specialty={advisor.specialty}
+                  confidence={advisor.confidence}
+                  recommendation={advisor.recommendation}
+                  reasoning={advisor.reasoning}
+                  avatar={advisor.avatar}
+                  isSpecial={advisor.isSpecial}
+                />
+              )
             ))}
           </div>
         </div>
