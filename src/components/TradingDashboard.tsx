@@ -19,11 +19,13 @@ const mockCryptoData = [
 // Mock AI advisors data
 const aiAdvisors = [
   {
-    name: "Alpha Brain",
-    specialty: "Technical Analysis & Pattern Recognition",
-    confidence: 87,
-    recommendation: "BUY BTC, ETH",
-    reasoning: "Technical indicators show strong bullish patterns forming. RSI indicates oversold conditions with potential for significant upward movement. Support levels holding firm at $42K for BTC."
+    name: "Elon Musk",
+    specialty: "Visionary Tech & Market Disruption",
+    confidence: 94,
+    recommendation: "BUY DOGE, BTC",
+    reasoning: "Mars missions need funding, and crypto is the future of interplanetary commerce. Dogecoin to the moon! Tesla will accept more crypto payments. The simulation theory suggests all investments are digital anyway.",
+    avatar: "/lovable-uploads/efc313aa-5268-413f-bb28-d1bf3b1f6f9f.png",
+    isSpecial: true
   },
   {
     name: "Quantum Trader",
@@ -155,6 +157,8 @@ export const TradingDashboard = () => {
                 confidence={advisor.confidence}
                 recommendation={advisor.recommendation}
                 reasoning={advisor.reasoning}
+                avatar={advisor.avatar}
+                isSpecial={advisor.isSpecial}
               />
             ))}
           </div>

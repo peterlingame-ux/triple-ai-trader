@@ -10,9 +10,10 @@ interface AIAdvisorProps {
   recommendation: string;
   reasoning: string;
   avatar?: string;
+  isSpecial?: boolean;
 }
 
-export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoning }: AIAdvisorProps) => {
+export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoning, avatar, isSpecial }: AIAdvisorProps) => {
   const getConfidenceColor = (conf: number) => {
     if (conf >= 80) return "text-success";
     if (conf >= 60) return "text-accent";
@@ -26,10 +27,25 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
   };
 
   return (
-    <Card className="p-6 bg-gradient-ai border-border hover:shadow-glow transition-all duration-300">
+    <Card className="p-6 bg-gradient-ai border-border hover:shadow-glow transition-all duration-300 relative overflow-hidden">
+      {isSpecial && (
+        <div className="absolute top-2 right-2">
+          <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50">
+            ⭐ Featured
+          </Badge>
+        </div>
+      )}
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-          <Brain className="w-6 h-6 text-accent" />
+        <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center overflow-hidden">
+          {avatar ? (
+            <img 
+              src={avatar} 
+              alt={name}
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            <Brain className="w-6 h-6 text-accent" />
+          )}
         </div>
         <div>
           <h3 className="font-bold text-lg text-foreground">{name}</h3>
