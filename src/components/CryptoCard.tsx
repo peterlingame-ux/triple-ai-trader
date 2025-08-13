@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Coins } from "lucide-react";
@@ -7,6 +8,12 @@ import cardano3dLogo from "@/assets/cardano-3d-logo.png";
 import solana3dLogo from "@/assets/solana-3d-logo.png";
 import polkadot3dLogo from "@/assets/polkadot-3d-logo.png";
 import polygon3dLogo from "@/assets/polygon-3d-logo.png";
+import binance3dLogo from "@/assets/binance-3d-logo.png";
+import ripple3dLogo from "@/assets/ripple-3d-logo.png";
+import dogecoin3dLogo from "@/assets/dogecoin-3d-logo.png";
+import avalanche3dLogo from "@/assets/avalanche-3d-logo.png";
+import chainlink3dLogo from "@/assets/chainlink-3d-logo.png";
+import uniswap3dLogo from "@/assets/uniswap-3d-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -23,13 +30,38 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
   const isPositive = change >= 0;
   
   const getCrypto3DIcon = (symbol: string) => {
-    const logoMap = {
+    const logoMap: { [key: string]: string } = {
       'BTC': bitcoin3dLogo,
       'ETH': ethereum3dLogo,
       'ADA': cardano3dLogo,
       'SOL': solana3dLogo,
       'DOT': polkadot3dLogo,
-      'MATIC': polygon3dLogo
+      'MATIC': polygon3dLogo,
+      'BNB': binance3dLogo,
+      'XRP': ripple3dLogo,
+      'DOGE': dogecoin3dLogo,
+      'AVAX': avalanche3dLogo,
+      'LINK': chainlink3dLogo,
+      'UNI': uniswap3dLogo,
+      // 为其他货币使用在线3D图标
+      'LTC': `https://assets.coingecko.com/coins/images/2/large/litecoin.png`,
+      'ATOM': `https://assets.coingecko.com/coins/images/1481/large/cosmos_hub.png`,
+      'ICP': `https://assets.coingecko.com/coins/images/14495/large/Internet_Computer_logo.png`,
+      'NEAR': `https://assets.coingecko.com/coins/images/10365/large/near.jpg`,
+      'APT': `https://assets.coingecko.com/coins/images/26455/large/aptos_round.png`,
+      'FTM': `https://assets.coingecko.com/coins/images/4001/large/Fantom_round.png`,
+      'ALGO': `https://assets.coingecko.com/coins/images/4380/large/download.png`,
+      'VET': `https://assets.coingecko.com/coins/images/1167/large/VeChain-Logo-768x725.png`,
+      'XLM': `https://assets.coingecko.com/coins/images/100/large/Stellar_symbol_black_RGB.png`,
+      'FIL': `https://assets.coingecko.com/coins/images/12817/large/filecoin.png`,
+      'MANA': `https://assets.coingecko.com/coins/images/878/large/decentraland-mana.png`,
+      'SAND': `https://assets.coingecko.com/coins/images/12129/large/sandbox_logo.jpg`,
+      'CRO': `https://assets.coingecko.com/coins/images/7310/large/cro_token_logo.png`,
+      'SHIB': `https://assets.coingecko.com/coins/images/11939/large/shiba.png`,
+      'LRC': `https://assets.coingecko.com/coins/images/913/large/LRC.png`,
+      'ENJ': `https://assets.coingecko.com/coins/images/1102/large/enjin-coin-logo.png`,
+      'BAT': `https://assets.coingecko.com/coins/images/677/large/basic-attention-token.png`,
+      'ZEC': `https://assets.coingecko.com/coins/images/486/large/circle-zcash-color.png`
     };
     return logoMap[symbol] || null;
   };
@@ -43,10 +75,24 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 flex items-center justify-center">
             {crypto3DLogo ? (
-              <img src={crypto3DLogo} alt={`${name} logo`} className="w-12 h-12 drop-shadow-lg" />
-            ) : (
+              <img 
+                src={crypto3DLogo} 
+                alt={`${name} logo`} 
+                className="w-12 h-12 drop-shadow-lg object-contain"
+                style={{ 
+                  filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
+                  imageRendering: 'crisp-edges'
+                }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.parentElement?.querySelector('.fallback-icon') as HTMLElement;
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div className="fallback-icon w-12 h-12 flex items-center justify-center" style={{ display: crypto3DLogo ? 'none' : 'flex' }}>
               <Coins className="w-12 h-12 text-amber-500 drop-shadow-lg" />
-            )}
+            </div>
           </div>
           <div>
             <h3 className="text-white font-bold text-lg font-orbitron tracking-wide">{symbol}</h3>
