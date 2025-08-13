@@ -8,6 +8,7 @@ import { ElonProfile } from "./ElonProfile";
 import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { WalletConnector } from "./WalletConnector";
 import { useLanguage } from "@/hooks/useLanguage";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap } from "lucide-react";
 
@@ -99,6 +100,7 @@ export const TradingDashboard = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <WalletConnector />
             <LanguageSwitcher />
             <Badge variant="outline" className="px-3 py-1 bg-success/10 text-success border-success/30">
               <Zap className="w-3 h-3 mr-1" />
