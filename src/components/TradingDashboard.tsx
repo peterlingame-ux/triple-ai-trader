@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
 import { AIAdvisor } from "./AIAdvisor";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useLanguage } from "@/hooks/useLanguage";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap } from "lucide-react";
 
 // Mock data for crypto prices
@@ -24,7 +26,7 @@ const aiAdvisors = [
     confidence: 94,
     recommendation: "BUY DOGE, BTC",
     reasoning: "Mars missions need funding, and crypto is the future of interplanetary commerce. Dogecoin to the moon! Tesla will accept more crypto payments. The simulation theory suggests all investments are digital anyway.",
-    avatar: "/lovable-uploads/efc313aa-5268-413f-bb28-d1bf3b1f6f9f.png",
+    avatar: "/lovable-uploads/9cc92493-5e50-470d-9543-d2fe07d350f6.png",
     isSpecial: true
   },
   {
@@ -48,6 +50,7 @@ const aiAdvisors = [
 ];
 
 export const TradingDashboard = () => {
+  const { t } = useLanguage();
   const [totalPortfolio, setTotalPortfolio] = useState(125678.42);
   const [dailyChange, setDailyChange] = useState(3456.78);
   const [activeTrades, setActiveTrades] = useState(12);
@@ -69,16 +72,17 @@ export const TradingDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold text-foreground mb-2">
-              Meta BrainX
+              {t('app.title')}
             </h1>
             <p className="text-muted-foreground">
-              Advanced Cryptocurrency Trading Dashboard with AI Intelligence
+              {t('app.subtitle')}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
             <Badge variant="outline" className="px-3 py-1 bg-success/10 text-success border-success/30">
               <Zap className="w-3 h-3 mr-1" />
-              Live Market Data
+              {t('status.live')}
             </Badge>
           </div>
         </div>
@@ -91,7 +95,7 @@ export const TradingDashboard = () => {
                 <DollarSign className="w-6 h-6 text-accent" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total Portfolio</p>
+                <p className="text-sm text-muted-foreground">{t('portfolio.total')}</p>
                 <p className="text-2xl font-bold text-accent">
                   ${totalPortfolio.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
@@ -105,7 +109,7 @@ export const TradingDashboard = () => {
                 <TrendingUp className="w-6 h-6 text-success" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">24h Change</p>
+                <p className="text-sm text-muted-foreground">{t('portfolio.change')}</p>
                 <p className="text-2xl font-bold text-success">
                   +${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
@@ -119,7 +123,7 @@ export const TradingDashboard = () => {
                 <BarChart3 className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Active Trades</p>
+                <p className="text-sm text-muted-foreground">{t('portfolio.trades')}</p>
                 <p className="text-2xl font-bold text-foreground">{activeTrades}</p>
               </div>
             </div>
@@ -130,7 +134,7 @@ export const TradingDashboard = () => {
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <BarChart3 className="w-6 h-6" />
-            Market Overview
+            {t('market.overview')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {mockCryptoData.map((crypto) => (
@@ -150,7 +154,7 @@ export const TradingDashboard = () => {
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <Brain className="w-6 h-6" />
-            KING OF THE BRAIN
+            {t('ai.advisors')}
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {aiAdvisors.map((advisor, index) => (
@@ -170,19 +174,19 @@ export const TradingDashboard = () => {
 
         {/* Quick Actions */}
         <Card className="p-6 bg-gradient-gold border-border">
-          <h3 className="text-xl font-bold text-accent-foreground mb-4">Quick Actions</h3>
+          <h3 className="text-xl font-bold text-accent-foreground mb-4">{t('actions.title')}</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              Execute Trade
+              {t('actions.execute')}
             </Button>
             <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              Portfolio Analysis
+              {t('actions.analysis')}
             </Button>
             <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              Risk Assessment
+              {t('actions.risk')}
             </Button>
             <Button variant="outline" className="bg-background/10 border-accent-foreground/20">
-              Market Alerts
+              {t('actions.alerts')}
             </Button>
           </div>
         </Card>

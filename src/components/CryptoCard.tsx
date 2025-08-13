@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Bitcoin, Coins, Zap, Circle, Hexagon, Triangle } from "lucide-react";
 
 interface CryptoCardProps {
   symbol: string;
@@ -14,12 +14,26 @@ interface CryptoCardProps {
 export const CryptoCard = ({ symbol, name, price, change, changePercent }: CryptoCardProps) => {
   const isPositive = change >= 0;
   
+  const getCryptoIcon = (symbol: string) => {
+    const iconMap = {
+      'BTC': Bitcoin,
+      'ETH': Hexagon,
+      'ADA': Circle,
+      'SOL': Zap,
+      'DOT': Circle,
+      'MATIC': Triangle
+    };
+    return iconMap[symbol] || Coins;
+  };
+
+  const IconComponent = getCryptoIcon(symbol);
+  
   return (
     <Card className="p-4 bg-card border-border hover:shadow-glow transition-all duration-300 bg-gradient-crypto">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
-            {symbol.slice(0, 2)}
+          <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+            <IconComponent className="w-4 h-4 text-accent" />
           </div>
           <div>
             <h3 className="font-semibold text-foreground">{symbol}</h3>

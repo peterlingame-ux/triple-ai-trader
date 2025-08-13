@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, MessageSquare, TrendingUp } from "lucide-react";
 import { ElonAvatar3D } from "./ElonAvatar3D";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface AIAdvisorProps {
   name: string;
@@ -15,6 +16,7 @@ interface AIAdvisorProps {
 }
 
 export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoning, avatar, isSpecial }: AIAdvisorProps) => {
+  const { t } = useLanguage();
   const getConfidenceColor = (conf: number) => {
     if (conf >= 80) return "text-success";
     if (conf >= 60) return "text-accent";
@@ -32,7 +34,7 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
       {isSpecial && (
         <div className="absolute top-2 right-2">
           <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50">
-            ⭐ Featured
+            {t('advisor.featured')}
           </Badge>
         </div>
       )}
@@ -56,7 +58,7 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
         </div>
         <div className="ml-auto">
           <Badge variant="outline" className={getConfidenceColor(confidence)}>
-            {confidence}% confident
+            {confidence}% {t('advisor.confidence')}
           </Badge>
         </div>
       </div>
@@ -65,7 +67,7 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
         <div>
           <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
-            Recommendation
+            {t('advisor.recommendation')}
           </h4>
           <Badge variant={getRecommendationVariant(recommendation)} className="text-sm px-3 py-1">
             {recommendation}
@@ -75,7 +77,7 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
         <div>
           <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
-            AI Analysis
+            {t('advisor.analysis')}
           </h4>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {reasoning}
@@ -83,7 +85,7 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
         </div>
 
         <Button variant="outline" className="w-full mt-4 border-accent/30 hover:bg-accent/10">
-          Get Detailed Analysis
+          {t('advisor.detailed')}
         </Button>
       </div>
     </Card>
