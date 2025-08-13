@@ -142,7 +142,7 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
         </div>
 
         {/* Analysis */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
             Current Market Analysis
@@ -151,12 +151,6 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
             {reasoning}
           </p>
         </div>
-
-        {/* Action Button */}
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white border-0">
-          <Rocket className="w-4 h-4 mr-2" />
-          Get Detailed Investment Strategy
-        </Button>
       </div>
     </Card>
   );

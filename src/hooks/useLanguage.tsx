@@ -16,7 +16,7 @@ const translations = {
     'portfolio.change': '24h Change',
     'portfolio.trades': 'Active Trades',
     'market.overview': 'Market Overview',
-    'ai.advisors': 'KING OF THE BRAIN',
+    'ai.advisors': '最强大脑',
     'actions.title': 'Quick Actions',
     'actions.execute': 'Execute Trade',
     'actions.analysis': 'Portfolio Analysis',
@@ -27,7 +27,8 @@ const translations = {
     'advisor.recommendation': 'Recommendation',
     'advisor.analysis': 'AI Analysis',
     'advisor.detailed': 'Get Detailed Analysis',
-    'advisor.featured': '⭐ Featured'
+    'advisor.featured': '⭐ Featured',
+    'ai.communicate': 'Start Communication'
   },
   zh: {
     'app.title': 'Meta BrainX',
@@ -36,7 +37,7 @@ const translations = {
     'portfolio.change': '24小时变化',
     'portfolio.trades': '活跃交易',
     'market.overview': '市场概览',
-    'ai.advisors': 'KING OF THE BRAIN',
+    'ai.advisors': '最强大脑',
     'actions.title': '快速操作',
     'actions.execute': '执行交易',
     'actions.analysis': '投资组合分析',
@@ -47,7 +48,8 @@ const translations = {
     'advisor.recommendation': '推荐',
     'advisor.analysis': 'AI分析',
     'advisor.detailed': '获取详细分析',
-    'advisor.featured': '⭐ 精选'
+    'advisor.featured': '⭐ 精选',
+    'ai.communicate': '开始沟通'
   },
   es: {
     'app.title': 'Meta BrainX',
@@ -56,7 +58,7 @@ const translations = {
     'portfolio.change': 'Cambio 24h',
     'portfolio.trades': 'Operaciones Activas',
     'market.overview': 'Resumen del Mercado',
-    'ai.advisors': 'KING OF THE BRAIN',
+    'ai.advisors': '最强大脑',
     'actions.title': 'Acciones Rápidas',
     'actions.execute': 'Ejecutar Operación',
     'actions.analysis': 'Análisis de Portafolio',
@@ -67,7 +69,8 @@ const translations = {
     'advisor.recommendation': 'Recomendación',
     'advisor.analysis': 'Análisis AI',
     'advisor.detailed': 'Obtener Análisis Detallado',
-    'advisor.featured': '⭐ Destacado'
+    'advisor.featured': '⭐ Destacado',
+    'ai.communicate': 'Iniciar Comunicación'
   }
 };
 

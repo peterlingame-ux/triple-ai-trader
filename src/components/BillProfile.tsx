@@ -142,7 +142,7 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
         </div>
 
         {/* Analysis */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
             Current Market Analysis
@@ -151,12 +151,6 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
             {reasoning}
           </p>
         </div>
-
-        {/* Action Button */}
-        <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white border-0">
-          <Monitor className="w-4 h-4 mr-2" />
-          Get Technology Investment Strategy
-        </Button>
       </div>
     </Card>
   );

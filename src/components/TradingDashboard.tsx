@@ -9,6 +9,7 @@ import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
+import { AICommunicator } from "./AICommunicator";
 import { useLanguage } from "@/hooks/useLanguage";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap } from "lucide-react";
 
@@ -184,10 +185,13 @@ export const TradingDashboard = () => {
 
         {/* AI Advisors Section */}
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2 font-orbitron tracking-wide">
-            <Brain className="w-6 h-6" />
-            {t('ai.advisors')}
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+              <Brain className="w-6 h-6" />
+              {t('ai.advisors')}
+            </h2>
+            <AICommunicator />
+          </div>
           <div className="space-y-6">
             {aiAdvisors.map((advisor, index) => (
               <div key={index}>

@@ -142,7 +142,7 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
         </div>
 
         {/* Analysis */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <MessageSquare className="w-4 h-4" />
             Current Market Analysis
@@ -151,12 +151,6 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
             {reasoning}
           </p>
         </div>
-
-        {/* Action Button */}
-        <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white border-0">
-          <Building className="w-4 h-4 mr-2" />
-          Get Value Investment Strategy
-        </Button>
       </div>
     </Card>
   );
