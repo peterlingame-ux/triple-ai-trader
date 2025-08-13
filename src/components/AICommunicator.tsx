@@ -75,7 +75,7 @@ export const AICommunicator = () => {
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2 font-orbitron">
             <Bot className="w-5 h-5" />
-            最强大脑 - 三合一AI顾问
+            SUPREME BRAIN - Triple AI Advisors
           </DialogTitle>
         </DialogHeader>
         
@@ -85,7 +85,7 @@ export const AICommunicator = () => {
             {conversation.length === 0 ? (
               <div className="text-center text-slate-400 py-8">
                 <Bot className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                <p className="font-inter">向最强大脑提问，获得Elon、Warren和Bill的综合建议</p>
+                <p className="font-inter">Ask the Supreme Brain for combined insights from Elon, Warren, and Bill</p>
               </div>
             ) : (
               conversation.map((msg, index) => (
@@ -109,7 +109,7 @@ export const AICommunicator = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="输入您的投资问题..."
+              placeholder="Enter your investment question..."
               className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
             />
             <Button 
