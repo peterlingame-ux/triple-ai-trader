@@ -12,68 +12,68 @@ export const UpcomingAdvisors = () => {
       name: t('advisors.trump.name'),
       specialty: t('advisors.trump.specialty'),
       status: 'developing',
-      description: 'Real estate empire conquest strategy',
+      description: t('upcoming.description.trump'),
       avatar: trumpAvatar,
       isReady: true,
       expertise: t('advisors.trump.expertise'),
       detailedInfo: {
-        title: '45th President of USA • Business Mogul',
+        title: t('upcoming.title.trump'),
         achievements: [
-          'Chairman & President of Trump Organization',
-          'Real Estate Empire Builder',
-          'Author of "The Art of the Deal"',
-          'Producer of TV show "The Apprentice"'
+          t('upcoming.achievements.trump.1'),
+          t('upcoming.achievements.trump.2'),
+          t('upcoming.achievements.trump.3'),
+          t('upcoming.achievements.trump.4')
         ],
-        specialty: 'Real Estate Investment, Brand Building, Negotiation Art',
-        experience: '50+ Years Business Experience',
+        specialty: t('upcoming.specialty.trump'),
+        experience: t('upcoming.experience.trump'),
         netWorth: '$2.6 Billion (2024)',
-        philosophy: "In business, you either go big or go home",
-        keySkills: ['Strategic Negotiation', 'Brand Marketing', 'Real Estate Development', 'Media Operations']
+        philosophy: t('upcoming.philosophy.trump'),
+        keySkills: [t('upcoming.skills.trump.1'), t('upcoming.skills.trump.2'), t('upcoming.skills.trump.3'), t('upcoming.skills.trump.4')]
       }
     },
     {
       name: t('advisors.quantitative.name'),
       specialty: t('advisors.quantitative.specialty'),
       status: 'coming_soon',
-      description: 'Top Wall Street quantitative fund trader',
+      description: t('upcoming.description.quant'),
       isReady: false,
       expertise: t('advisors.quantitative.expertise'),
       detailedInfo: {
-        title: 'Mysterious Quantitative Master',
-        achievements: ['To Be Revealed'],
-        specialty: 'Algorithmic Trading, Data Analysis',
-        experience: 'Top Institution Experience',
-        philosophy: 'Data-driven investment decisions'
+        title: t('upcoming.title.quant'),
+        achievements: [t('upcoming.achievements.tbd')],
+        specialty: t('upcoming.specialty.quant'),
+        experience: t('upcoming.experience.quant'),
+        philosophy: t('upcoming.philosophy.quant')
       }
     },
     {
       name: t('advisors.crypto.name'), 
       specialty: t('advisors.crypto.specialty'),
       status: 'coming_soon',
-      description: 'Blockchain world wealth code decoder',
+      description: t('upcoming.description.crypto'),
       isReady: false,
       expertise: t('advisors.crypto.expertise'),
       detailedInfo: {
-        title: 'Mysterious Crypto Master',
-        achievements: ['To Be Revealed'],
-        specialty: 'DeFi, NFT, Blockchain Investment',
-        experience: 'Crypto Field Pioneer',
-        philosophy: 'The future of decentralized finance'
+        title: t('upcoming.title.crypto'),
+        achievements: [t('upcoming.achievements.tbd')],
+        specialty: t('upcoming.specialty.crypto'),
+        experience: t('upcoming.experience.crypto'),
+        philosophy: t('upcoming.philosophy.crypto')
       }
     },
     {
       name: t('advisors.macro.name'),
       specialty: t('advisors.macro.specialty'),
       status: 'coming_soon', 
-      description: 'International financial market prophet',
+      description: t('upcoming.description.macro'),
       isReady: false,
       expertise: t('advisors.macro.expertise'),
       detailedInfo: {
-        title: 'Mysterious Macro Master',
-        achievements: ['To Be Revealed'],
-        specialty: 'Global Macro, Monetary Policy Analysis',
-        experience: 'International Financial Institution Experience',
-        philosophy: 'Insight into global economic pulse'
+        title: t('upcoming.title.macro'),
+        achievements: [t('upcoming.achievements.tbd')],
+        specialty: t('upcoming.specialty.macro'),
+        experience: t('upcoming.experience.macro'),
+        philosophy: t('upcoming.philosophy.macro')
       }
     }
   ];
@@ -125,7 +125,7 @@ export const UpcomingAdvisors = () => {
             </div>
             <span className="text-blue-200 font-medium tracking-wide">{t('advisors.coming_soon')}</span>
             <div className="ml-3 px-2 py-1 rounded-full bg-blue-500/20 text-xs text-blue-300 font-semibold">
-              Elite Warriors Assembling
+              {t('upcoming.elite.assembling')}
             </div>
           </div>
         </div>
@@ -252,7 +252,7 @@ export const UpcomingAdvisors = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <Award className="w-4 h-4 text-amber-400" />
-                          <span className="text-amber-300 font-medium text-sm">Key Achievements</span>
+                          <span className="text-amber-300 font-medium text-sm">{t('upcoming.key.achievements')}</span>
                         </div>
                         <div className="space-y-1">
                           {advisor.detailedInfo.achievements.slice(0, 3).map((achievement, idx) => (
@@ -267,7 +267,7 @@ export const UpcomingAdvisors = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <TrendingUp className="w-4 h-4 text-blue-400" />
-                          <span className="text-blue-300 font-medium text-sm">Specialty</span>
+                          <span className="text-blue-300 font-medium text-sm">{t('upcoming.specialty')}</span>
                         </div>
                         <p className="text-slate-300 text-xs">{advisor.detailedInfo.specialty}</p>
                       </div>
@@ -275,14 +275,14 @@ export const UpcomingAdvisors = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <Globe className="w-4 h-4 text-purple-400" />
-                          <span className="text-purple-300 font-medium text-sm">Investment Philosophy</span>
+                          <span className="text-purple-300 font-medium text-sm">{t('upcoming.philosophy')}</span>
                         </div>
                         <p className="text-slate-300 text-xs italic">"{advisor.detailedInfo.philosophy}"</p>
                       </div>
 
                       {/* Skills */}
                       <div>
-                        <span className="text-slate-400 font-medium text-xs mb-2 block">Core Skills</span>
+                        <span className="text-slate-400 font-medium text-xs mb-2 block">{t('upcoming.core.skills')}</span>
                         <div className="flex flex-wrap gap-1">
                           {advisor.detailedInfo.keySkills?.map((skill, idx) => (
                             <Badge key={idx} className="bg-green-500/10 text-green-400 border-green-500/30 text-xs px-2 py-0.5">
@@ -296,7 +296,7 @@ export const UpcomingAdvisors = () => {
                     {/* Footer */}
                     <div className="pt-3 border-t border-slate-700/50">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-xs">Experience: {advisor.detailedInfo.experience}</span>
+                        <span className="text-slate-400 text-xs">{t('upcoming.experience')}: {advisor.detailedInfo.experience}</span>
                         <Badge className="bg-green-500/20 text-green-300 border-green-500/40 text-xs px-2 py-1">
                           {t('advisors.trump.status')}
                         </Badge>
@@ -315,7 +315,7 @@ export const UpcomingAdvisors = () => {
                     </div>
                     
                     <div className="space-y-2 text-center">
-                      <p className="text-slate-400 text-xs">Specialty: {advisor.detailedInfo.specialty}</p>
+                      <p className="text-slate-400 text-xs">{t('upcoming.specialty')}: {advisor.detailedInfo.specialty}</p>
                       <p className="text-slate-500 text-xs italic">"{advisor.detailedInfo.philosophy}"</p>
                     </div>
 

@@ -53,7 +53,7 @@ const aiAdvisors = [
     specialty: "Visionary Tech & Market Disruption",
     confidence: 94,
     recommendation: "BUY DOGE, BTC",
-    reasoning: "Mars missions need funding, and crypto is the future of interplanetary commerce. Dogecoin to the moon! Tesla will accept more crypto payments. The simulation theory suggests all investments are digital anyway.",
+    reasoning: "mars.missions.funding", // 使用翻译键
     avatar: "/lovable-uploads/9cc92493-5e50-470d-9543-d2fe07d350f6.png",
     isSpecial: true
   },
@@ -62,7 +62,7 @@ const aiAdvisors = [
     specialty: "Value Investing & Long-term Wealth Building",
     confidence: 88,
     recommendation: "HOLD BTC, BUY ETH",
-    reasoning: "My investment philosophy centers on buying wonderful businesses at fair prices and holding them forever. In crypto, I see Bitcoin as digital gold with scarcity value, while Ethereum represents the infrastructure of the digital economy. Remember: 'Time in the market beats timing the market.' Focus on intrinsic value, not market volatility. The best investment is in yourself and technologies that create lasting value.",
+    reasoning: "warren.investment.philosophy", // 使用翻译键
     avatar: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png",
     isSpecial: true
   },
@@ -71,7 +71,7 @@ const aiAdvisors = [
     specialty: "Technology Innovation & Philanthropic Investment",
     confidence: 92,
     recommendation: "BUY ETH, HOLD MATIC",
-    reasoning: "As someone who has witnessed the evolution of technology from personal computers to the internet, I believe blockchain represents the next fundamental shift. Ethereum's smart contract platform mirrors what we built with Windows - a foundation for others to innovate upon. My investment philosophy focuses on technologies that can solve humanity's greatest challenges. Cryptocurrency and blockchain can democratize financial services globally, especially in developing nations. However, we must ensure these technologies serve the greater good, not just speculation.",
+    reasoning: "bill.blockchain.evolution", // 使用翻译键
     avatar: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png",
     isSpecial: true
   }
@@ -324,7 +324,7 @@ export const TradingDashboard = () => {
                     specialty={advisor.specialty}
                     confidence={advisor.confidence}
                     recommendation={advisor.recommendation}
-                    reasoning={advisor.reasoning}
+                    reasoning={t('elon.current.analysis')}
                     avatar={advisor.avatar}
                     isSpecial={advisor.isSpecial}
                   />
@@ -335,7 +335,7 @@ export const TradingDashboard = () => {
                     specialty={advisor.specialty}
                     confidence={advisor.confidence}
                     recommendation={advisor.recommendation}
-                    reasoning={advisor.reasoning}
+                    reasoning={t('warren.current.analysis')}
                     avatar={advisor.avatar}
                     isSpecial={advisor.isSpecial}
                   />
@@ -346,7 +346,7 @@ export const TradingDashboard = () => {
                     specialty={advisor.specialty}
                     confidence={advisor.confidence}
                     recommendation={advisor.recommendation}
-                    reasoning={advisor.reasoning}
+                    reasoning={t('bill.current.analysis')}
                     avatar={advisor.avatar}
                     isSpecial={advisor.isSpecial}
                   />
