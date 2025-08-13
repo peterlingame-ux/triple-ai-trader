@@ -63,6 +63,23 @@ const translations = {
     'ai.price_chart': 'Price Chart',
     'ai.currency_selection': 'Currency Selection & Analysis',
     
+    // AI conversation example questions translations
+    'ai.question1': '"What\'s the technical outlook for USDT?"',
+    'ai.question2': '"Should I buy or sell now?"',
+    'ai.question3': '"Analyze the current market trend"',
+    
+    // AI trading signals translations
+    'ai.trading_signals': 'AI Trading Signals',
+    'ai.signal.neutral': 'NEUTRAL',
+    'ai.signal.bearish': 'BEARISH',
+    'ai.signal.bullish': 'BULLISH',
+    'ai.signal.range': 'RANGE',
+    'ai.signal.overbought': 'OVERBOUGHT',
+    'ai.signal.oversold': 'OVERSOLD',
+    'ai.signal.rsi': 'RSI Signal',
+    'ai.signal.ma20_trend': 'MA20 Trend',
+    'ai.signal.sr_level': 'S/R Level',
+    
     // Three advisors specialty translations
     'elon.specialty': 'Visionary Tech & Market Disruption',
     'warren.specialty': 'Value Investing & Long-term Wealth Building',
@@ -288,6 +305,23 @@ const translations = {
     'ai.news_sentiment_analysis': 'AI新闻情绪分析',
     'ai.price_chart': '价格图表',
     'ai.currency_selection': '货币选择 & 分析',
+    
+    // AI对话示例问题翻译
+    'ai.question1': '"USDT的技术前景如何？"',
+    'ai.question2': '"我现在应该买入还是卖出？"',
+    'ai.question3': '"分析当前市场趋势"',
+    
+    // AI交易信号翻译
+    'ai.trading_signals': 'AI交易信号',
+    'ai.signal.neutral': '中性',
+    'ai.signal.bearish': '看跌',
+    'ai.signal.bullish': '看涨',
+    'ai.signal.range': '区间',
+    'ai.signal.overbought': '超买',
+    'ai.signal.oversold': '超卖',
+    'ai.signal.rsi': 'RSI信号',
+    'ai.signal.ma20_trend': 'MA20趋势',
+    'ai.signal.sr_level': '支撑/阻力位',
     
     // 三位顾问的专业领域翻译
     'elon.specialty': '远见科技与市场颠覆',

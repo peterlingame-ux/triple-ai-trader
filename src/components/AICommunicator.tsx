@@ -392,9 +392,9 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                     <p className="font-inter text-sm">{t('ai.ask_analysis')}</p>
                     <div className="mt-4 space-y-2 text-xs">
                       <p className="text-accent">{t('ai.try_asking')}</p>
-                      <p>"What's the technical outlook for {selectedCrypto}?"</p>
-                      <p>"Should I buy or sell now?"</p>
-                      <p>"Analyze the current market trend"</p>
+                      <p>{t('ai.question1')}</p>
+                      <p>{t('ai.question2')}</p>
+                      <p>{t('ai.question3')}</p>
                     </div>
                   </div>
                 ) : (
@@ -820,7 +820,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                       <Card className="bg-gradient-crypto border-border p-6">
                         <h4 className="text-foreground font-inter font-semibold mb-4 flex items-center gap-2">
                           <Zap className="w-5 h-5 text-accent" />
-                          AI Trading Signals
+                          {t('ai.trading_signals')}
                         </h4>
                         <div className="grid grid-cols-3 gap-6 text-sm">
                           <div className="text-center">
@@ -830,18 +830,18 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                               'bg-accent/20 text-accent'
                             }`}>
                               <Activity className="w-4 h-4" />
-                              {currentCrypto.rsi > 70 ? 'OVERBOUGHT' : currentCrypto.rsi < 30 ? 'OVERSOLD' : 'NEUTRAL'}
+                              {currentCrypto.rsi > 70 ? t('ai.signal.overbought') : currentCrypto.rsi < 30 ? t('ai.signal.oversold') : t('ai.signal.neutral')}
                             </div>
-                            <p className="text-muted-foreground text-xs mt-2">RSI Signal</p>
+                            <p className="text-muted-foreground text-xs mt-2">{t('ai.signal.rsi')}</p>
                           </div>
                           <div className="text-center">
                             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
                               currentCrypto.price > currentCrypto.ma20 ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'
                             }`}>
                               <TrendingUp className="w-4 h-4" />
-                              {currentCrypto.price > currentCrypto.ma20 ? 'BULLISH' : 'BEARISH'}
+                              {currentCrypto.price > currentCrypto.ma20 ? t('ai.signal.bullish') : t('ai.signal.bearish')}
                             </div>
-                            <p className="text-muted-foreground text-xs mt-2">MA20 Trend</p>
+                            <p className="text-muted-foreground text-xs mt-2">{t('ai.signal.ma20_trend')}</p>
                           </div>
                           <div className="text-center">
                             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
@@ -849,10 +849,10 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                               currentCrypto.price <= currentCrypto.support ? 'bg-destructive/20 text-destructive' : 'bg-success/20 text-success'
                             }`}>
                               <BarChart3 className="w-4 h-4" />
-                              {currentCrypto.price > currentCrypto.support && currentCrypto.price < currentCrypto.resistance ? 'RANGE' : 
+                              {currentCrypto.price > currentCrypto.support && currentCrypto.price < currentCrypto.resistance ? t('ai.signal.range') : 
                                currentCrypto.price <= currentCrypto.support ? 'SUPPORT TEST' : 'BREAKOUT'}
                             </div>
-                            <p className="text-muted-foreground text-xs mt-2">S/R Level</p>
+                            <p className="text-muted-foreground text-xs mt-2">{t('ai.signal.sr_level')}</p>
                           </div>
                         </div>
                       </Card>
