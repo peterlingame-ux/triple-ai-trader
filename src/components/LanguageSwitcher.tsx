@@ -54,7 +54,7 @@ export const LanguageSwitcher = () => {
                  {currentLang?.nativeName}
                </span>
                <span className="text-xs text-green-400/70">
-                 语言设置
+                 语言切换
                </span>
              </div>
              <span className="text-sm font-medium text-green-400 sm:hidden">

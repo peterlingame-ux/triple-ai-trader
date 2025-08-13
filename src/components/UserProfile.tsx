@@ -176,10 +176,10 @@ export const UserProfile = () => {
           </Avatar>
           <div className="hidden sm:flex flex-col items-start">
             <span className="text-sm font-medium text-blue-300">
-              {profileData.name || '设置个人资料'}
+              {profileData.name || '个人资料设置'}
             </span>
             <span className="text-xs text-blue-400/70">
-              {profileData.name ? '个人资料' : '点击设置'}
+              {profileData.name ? '个人资料' : '点击编辑'}
             </span>
           </div>
           <Edit3 className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />

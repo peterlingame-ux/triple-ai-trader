@@ -188,7 +188,7 @@ export const TradingDashboard = () => {
                   </p>
                   {source === 'autotrader' && (
                     <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">
-                      AI模拟
+                      AI虚拟
                     </Badge>
                   )}
                 </div>
