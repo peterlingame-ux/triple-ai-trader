@@ -146,7 +146,7 @@ export const TradingDashboard = () => {
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
             <Brain className="w-6 h-6" />
-            AI Trading Advisors
+            KING OF THE BRAIN
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {aiAdvisors.map((advisor, index) => (
