@@ -11,7 +11,6 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
-import { AICommunicator } from "./AICommunicator";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";

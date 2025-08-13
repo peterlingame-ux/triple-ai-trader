@@ -360,7 +360,6 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                 </ScrollArea>
               )}
             </div>
-            </div>
 
             {/* AI Chat Messages */}
             <ScrollArea className="flex-1 mb-4">
