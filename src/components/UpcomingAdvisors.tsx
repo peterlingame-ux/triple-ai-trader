@@ -81,33 +81,53 @@ export const UpcomingAdvisors = () => {
   return (
     <div className="space-y-6">
       {/* Professional Header Section */}
-      <Card className="p-8 bg-gradient-to-br from-slate-900/90 via-blue-900/20 to-slate-900/90 border-slate-700/50 backdrop-blur-sm">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="relative">
-              <Users className="w-10 h-10 text-amber-400 animate-pulse" />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
+      <Card className="relative overflow-hidden bg-gradient-to-br from-slate-900/95 via-blue-950/40 to-slate-900/95 border-slate-700/30 backdrop-blur-xl">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_70%)]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_0%,rgba(168,85,247,0.02)_50%,transparent_100%)]"></div>
+        
+        <div className="relative px-12 py-16 text-center">
+          {/* Icon Group */}
+          <div className="flex items-center justify-center gap-8 mb-10">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-yellow-500/20 rounded-full blur-xl animate-pulse"></div>
+              <div className="relative w-16 h-16 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 rounded-full flex items-center justify-center border border-amber-400/20">
+                <Users className="w-8 h-8 text-amber-400" />
+              </div>
             </div>
-            <div className="space-y-2">
-            <h3 className="text-4xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide">
-              {t('advisors.more_models')}
-            </h3>
-            <div className="flex items-center justify-center gap-3">
-              <Shield className="w-5 h-5 text-blue-400" />
-              <p className="text-xl font-semibold text-foreground">{t('advisors.not_alone')}</p>
-              <Zap className="w-5 h-5 text-amber-400 animate-pulse" />
+            
+            <div className="space-y-4">
+              <h2 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-300 tracking-tight leading-tight">
+                {t('advisors.more_models')}
+              </h2>
+              <div className="flex items-center justify-center gap-4">
+                <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-400/50"></div>
+                <Shield className="w-6 h-6 text-blue-400/80" />
+                <p className="text-2xl font-semibold text-slate-200 tracking-wide">{t('advisors.not_alone')}</p>
+                <Zap className="w-6 h-6 text-amber-400/80" />
+                <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-blue-400/50"></div>
+              </div>
             </div>
-            </div>
-            <div className="relative">
-              <Sparkles className="w-10 h-10 text-amber-400 animate-pulse" />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-400 rounded-full animate-ping"></div>
+            
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-500/20 rounded-full blur-xl animate-pulse"></div>
+              <div className="relative w-16 h-16 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full flex items-center justify-center border border-blue-400/20">
+                <Sparkles className="w-8 h-8 text-blue-400" />
+              </div>
             </div>
           </div>
           
-          <Badge className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 border-blue-500/30 px-4 py-2">
-            <Clock className="w-4 h-4 mr-2" />
-            <span className="font-medium">{t('advisors.coming_soon')}</span>
-          </Badge>
+          {/* Status Badge */}
+          <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-600/10 via-indigo-600/15 to-purple-600/10 border border-blue-500/20 backdrop-blur-sm">
+            <div className="relative mr-3">
+              <Clock className="w-5 h-5 text-blue-300" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+            </div>
+            <span className="text-blue-200 font-medium tracking-wide">{t('advisors.coming_soon')}</span>
+            <div className="ml-3 px-2 py-1 rounded-full bg-blue-500/20 text-xs text-blue-300 font-semibold">
+              Elite Warriors Assembling
+            </div>
+          </div>
         </div>
       </Card>
 
