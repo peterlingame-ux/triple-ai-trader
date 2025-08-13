@@ -116,23 +116,26 @@ export const TradingDashboard = () => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
+        {/* Enhanced Professional Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 mb-2 tracking-wide">
-              {t('app.title')}
-            </h1>
-            <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide">
+          <div className="space-y-2">
+            <div className="flex items-center gap-4">
+              <h1 className="text-5xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide">
+                {t('app.title')}
+              </h1>
+              <Badge variant="outline" className="px-3 py-1.5 bg-success/10 text-success border-success/30 animate-pulse">
+                <Zap className="w-3 h-3 mr-1" />
+                {t('status.live')}
+              </Badge>
+            </div>
+            <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide max-w-2xl">
               {t('app.subtitle')}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          
+          <div className="flex items-center gap-3">
             <WalletConnector />
             <LanguageSwitcher />
-            <Badge variant="outline" className="px-3 py-1 bg-success/10 text-success border-success/30">
-              <Zap className="w-3 h-3 mr-1" />
-              {t('status.live')}
-            </Badge>
           </div>
         </div>
 
