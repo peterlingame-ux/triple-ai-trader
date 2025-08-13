@@ -1,12 +1,11 @@
-import { TradingDashboard } from "@/components/TradingDashboard";
+import { ProfessionalTradingInterface } from "@/components/ProfessionalTradingInterface";
 
 const Index = () => {
   console.log("Index page rendering...");
   
   return (
     <div>
-      <h1>测试页面</h1>
-      <TradingDashboard />
+      <ProfessionalTradingInterface />
     </div>
   );
 };
