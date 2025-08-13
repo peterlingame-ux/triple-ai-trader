@@ -80,6 +80,18 @@ const walletOptions: WalletOption[] = [
     features: ['Solana原生', 'NFT支持', 'DeFi集成', '多链支持'],
     marketShare: 8
   },
+  {
+    id: 'tokenpocket',
+    name: 'TokenPocket (TP钱包)',
+    description: '亚洲领先的多链钱包，支持100+公链生态',
+    icon: '🔷',
+    category: 'mobile',
+    securityLevel: 'high',
+    platforms: ['iOS', 'Android', 'Chrome', 'Desktop'],
+    features: ['100+公链', 'DApp商店', 'NFT市场', '去中心化交易'],
+    marketShare: 9,
+    isRecommended: true
+  },
 
   // Hardware Wallets
   {
