@@ -49,8 +49,8 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
 
       <div className="relative z-10">
         {/* Header Section */}
-        <div className="flex items-start gap-6 mb-6">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-400/50 shadow-2xl">
+        <div className="flex items-start gap-6 mb-6 mt-4">
+          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-400/50 shadow-2xl mt-2">
             {avatar ? (
               <img 
                 src={avatar} 
