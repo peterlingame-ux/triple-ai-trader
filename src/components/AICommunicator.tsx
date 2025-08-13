@@ -67,6 +67,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
   const [conversation, setConversation] = useState<Array<{role: 'user' | 'ai', content: string}>>([]);
   const [selectedCrypto, setSelectedCrypto] = useState<string>("BTC");
   const [timeframe, setTimeframe] = useState<string>("1D");
+  const [activeTab, setActiveTab] = useState<string>("overview");
   const chartRef = useRef<HTMLDivElement>(null);
   
   // Get all supported cryptocurrencies for selection
@@ -388,7 +389,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
               </div>
             </Card>
 
-            <Tabs value="overview" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-muted/20">
                 <TabsTrigger value="overview" className="data-[state=active]:bg-accent">
                   <BarChart3 className="w-4 h-4 mr-2" />
