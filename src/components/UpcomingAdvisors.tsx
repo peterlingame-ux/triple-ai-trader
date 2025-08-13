@@ -9,71 +9,71 @@ export const UpcomingAdvisors = () => {
 
   const advisors = [
     {
-      name: 'Donald Trump',
-      specialty: '商业帝国战略大师',
+      name: t('advisors.trump.name'),
+      specialty: t('advisors.trump.specialty'),
       status: 'developing',
-      description: '房地产帝王的财富征服之道',
+      description: 'Real estate empire conquest strategy',
       avatar: trumpAvatar,
       isReady: true,
-      expertise: '商业帝国',
+      expertise: t('advisors.trump.expertise'),
       detailedInfo: {
-        title: '第45任美国总统 • 商业大亨',
+        title: '45th President of USA • Business Mogul',
         achievements: [
-          '特朗普集团董事长兼总裁',
-          '房地产帝国缔造者',
-          '《做生意的艺术》作者',
-          '电视节目《学徒》制作人'
+          'Chairman & President of Trump Organization',
+          'Real Estate Empire Builder',
+          'Author of "The Art of the Deal"',
+          'Producer of TV show "The Apprentice"'
         ],
-        specialty: '房地产投资、品牌建设、谈判艺术',
-        experience: '50+ 年商业经验',
-        netWorth: '$26亿美元 (2024)',
-        philosophy: '"在商业中，你要么做大，要么回家"',
-        keySkills: ['战略谈判', '品牌营销', '房地产开发', '媒体运营']
+        specialty: 'Real Estate Investment, Brand Building, Negotiation Art',
+        experience: '50+ Years Business Experience',
+        netWorth: '$2.6 Billion (2024)',
+        philosophy: "In business, you either go big or go home",
+        keySkills: ['Strategic Negotiation', 'Brand Marketing', 'Real Estate Development', 'Media Operations']
       }
     },
     {
-      name: '量化交易大师',
-      specialty: '算法交易专家',
+      name: t('advisors.quantitative.name'),
+      specialty: t('advisors.quantitative.specialty'),
       status: 'coming_soon',
-      description: '华尔街顶级量化基金操盘手',
+      description: 'Top Wall Street quantitative fund trader',
       isReady: false,
-      expertise: '量化策略',
+      expertise: t('advisors.quantitative.expertise'),
       detailedInfo: {
-        title: '神秘量化大师',
-        achievements: ['即将揭晓'],
-        specialty: '算法交易、数据分析',
-        experience: '顶级机构经验',
-        philosophy: '数据驱动的投资决策'
+        title: 'Mysterious Quantitative Master',
+        achievements: ['To Be Revealed'],
+        specialty: 'Algorithmic Trading, Data Analysis',
+        experience: 'Top Institution Experience',
+        philosophy: 'Data-driven investment decisions'
       }
     },
     {
-      name: '加密货币之王', 
-      specialty: 'Web3投资导师',
+      name: t('advisors.crypto.name'), 
+      specialty: t('advisors.crypto.specialty'),
       status: 'coming_soon',
-      description: '区块链世界的财富密码破译者',
+      description: 'Blockchain world wealth code decoder',
       isReady: false,
-      expertise: '数字资产',
+      expertise: t('advisors.crypto.expertise'),
       detailedInfo: {
-        title: '神秘加密大师',
-        achievements: ['即将揭晓'],
-        specialty: 'DeFi、NFT、区块链投资',
-        experience: '加密领域先驱',
-        philosophy: '去中心化金融的未来'
+        title: 'Mysterious Crypto Master',
+        achievements: ['To Be Revealed'],
+        specialty: 'DeFi, NFT, Blockchain Investment',
+        experience: 'Crypto Field Pioneer',
+        philosophy: 'The future of decentralized finance'
       }
     },
     {
-      name: '宏观经济大师',
-      specialty: '全球策略分析师',
+      name: t('advisors.macro.name'),
+      specialty: t('advisors.macro.specialty'),
       status: 'coming_soon', 
-      description: '国际金融市场的预言家',
+      description: 'International financial market prophet',
       isReady: false,
-      expertise: '宏观策略',
+      expertise: t('advisors.macro.expertise'),
       detailedInfo: {
-        title: '神秘宏观大师',
-        achievements: ['即将揭晓'],
-        specialty: '全球宏观、货币政策分析',
-        experience: '国际金融机构经验',
-        philosophy: '洞察全球经济脉搏'
+        title: 'Mysterious Macro Master',
+        achievements: ['To Be Revealed'],
+        specialty: 'Global Macro, Monetary Policy Analysis',
+        experience: 'International Financial Institution Experience',
+        philosophy: 'Insight into global economic pulse'
       }
     }
   ];
@@ -89,14 +89,14 @@ export const UpcomingAdvisors = () => {
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-4xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide">
-                更多人物模型
-              </h3>
-              <div className="flex items-center justify-center gap-3">
-                <Shield className="w-5 h-5 text-blue-400" />
-                <p className="text-xl font-semibold text-foreground">你不再是一个人战斗</p>
-                <Zap className="w-5 h-5 text-amber-400 animate-pulse" />
-              </div>
+            <h3 className="text-4xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 tracking-wide">
+              {t('advisors.more_models')}
+            </h3>
+            <div className="flex items-center justify-center gap-3">
+              <Shield className="w-5 h-5 text-blue-400" />
+              <p className="text-xl font-semibold text-foreground">{t('advisors.not_alone')}</p>
+              <Zap className="w-5 h-5 text-amber-400 animate-pulse" />
+            </div>
             </div>
             <div className="relative">
               <Sparkles className="w-10 h-10 text-amber-400 animate-pulse" />
@@ -106,7 +106,7 @@ export const UpcomingAdvisors = () => {
           
           <Badge className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 border-blue-500/30 px-4 py-2">
             <Clock className="w-4 h-4 mr-2" />
-            <span className="font-medium">敬请期待 - 顶级战友集结中</span>
+            <span className="font-medium">{t('advisors.coming_soon')}</span>
           </Badge>
         </div>
       </Card>
@@ -187,7 +187,7 @@ export const UpcomingAdvisors = () => {
                       : 'bg-slate-600/20 text-slate-400 border-slate-600/40'
                   }`}
                 >
-                  {advisor.isReady ? '🔧 正在开发中' : '⏳ 即将到来'}
+                  {advisor.isReady ? t('advisors.trump.status') : t('advisors.coming_soon_status')}
                 </Badge>
               </div>
 
@@ -232,7 +232,7 @@ export const UpcomingAdvisors = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <Award className="w-4 h-4 text-amber-400" />
-                          <span className="text-amber-300 font-medium text-sm">核心成就</span>
+                          <span className="text-amber-300 font-medium text-sm">Key Achievements</span>
                         </div>
                         <div className="space-y-1">
                           {advisor.detailedInfo.achievements.slice(0, 3).map((achievement, idx) => (
@@ -247,7 +247,7 @@ export const UpcomingAdvisors = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <TrendingUp className="w-4 h-4 text-blue-400" />
-                          <span className="text-blue-300 font-medium text-sm">专业领域</span>
+                          <span className="text-blue-300 font-medium text-sm">Specialty</span>
                         </div>
                         <p className="text-slate-300 text-xs">{advisor.detailedInfo.specialty}</p>
                       </div>
@@ -255,14 +255,14 @@ export const UpcomingAdvisors = () => {
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <Globe className="w-4 h-4 text-purple-400" />
-                          <span className="text-purple-300 font-medium text-sm">投资哲学</span>
+                          <span className="text-purple-300 font-medium text-sm">Investment Philosophy</span>
                         </div>
                         <p className="text-slate-300 text-xs italic">"{advisor.detailedInfo.philosophy}"</p>
                       </div>
 
                       {/* Skills */}
                       <div>
-                        <span className="text-slate-400 font-medium text-xs mb-2 block">核心技能</span>
+                        <span className="text-slate-400 font-medium text-xs mb-2 block">Core Skills</span>
                         <div className="flex flex-wrap gap-1">
                           {advisor.detailedInfo.keySkills?.map((skill, idx) => (
                             <Badge key={idx} className="bg-green-500/10 text-green-400 border-green-500/30 text-xs px-2 py-0.5">
@@ -276,9 +276,9 @@ export const UpcomingAdvisors = () => {
                     {/* Footer */}
                     <div className="pt-3 border-t border-slate-700/50">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400 text-xs">经验：{advisor.detailedInfo.experience}</span>
+                        <span className="text-slate-400 text-xs">Experience: {advisor.detailedInfo.experience}</span>
                         <Badge className="bg-green-500/20 text-green-300 border-green-500/40 text-xs px-2 py-1">
-                          🔧 开发中
+                          {t('advisors.trump.status')}
                         </Badge>
                       </div>
                     </div>
@@ -295,13 +295,13 @@ export const UpcomingAdvisors = () => {
                     </div>
                     
                     <div className="space-y-2 text-center">
-                      <p className="text-slate-400 text-xs">专业领域: {advisor.detailedInfo.specialty}</p>
+                      <p className="text-slate-400 text-xs">Specialty: {advisor.detailedInfo.specialty}</p>
                       <p className="text-slate-500 text-xs italic">"{advisor.detailedInfo.philosophy}"</p>
                     </div>
 
                     <div className="pt-3 border-t border-slate-700/50 text-center">
                       <Badge className="bg-slate-600/20 text-slate-400 border-slate-600/40 text-xs px-3 py-1">
-                        ⏳ 即将揭晓
+                        {t('advisors.coming_soon_status')}
                       </Badge>
                     </div>
                   </div>

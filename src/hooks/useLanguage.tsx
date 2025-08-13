@@ -35,7 +35,25 @@ const translations = {
     'trading.spot': 'Spot Trading',
     'trading.futures': 'Futures Trading',
     'trading.options': 'Options Trading',
-    'ai.autotrader': 'AI Auto Trading'
+    'ai.autotrader': 'AI Auto Trading',
+    // Upcoming Advisors section
+    'advisors.more_models': 'More Character Models',
+    'advisors.not_alone': 'You Are Not Fighting Alone',
+    'advisors.coming_soon': 'Coming Soon - Elite Warriors Assembling',
+    'advisors.trump.name': 'Donald Trump',
+    'advisors.trump.specialty': 'Business Empire Strategist',
+    'advisors.trump.expertise': 'Business Empire',
+    'advisors.trump.status': '🔧 In Development',
+    'advisors.quantitative.name': 'Quantitative Trading Master',
+    'advisors.quantitative.specialty': 'Algorithmic Trading Expert',
+    'advisors.quantitative.expertise': 'Quantitative Strategy',
+    'advisors.crypto.name': 'Crypto Currency King',
+    'advisors.crypto.specialty': 'Web3 Investment Mentor',
+    'advisors.crypto.expertise': 'Digital Assets',
+    'advisors.macro.name': 'Macro Economic Master',
+    'advisors.macro.specialty': 'Global Strategy Analyst',
+    'advisors.macro.expertise': 'Macro Strategy',
+    'advisors.coming_soon_status': '⏳ Coming Soon'
   },
   zh: {
     'app.title': 'Meta BrainX',
@@ -63,7 +81,25 @@ const translations = {
     'trading.spot': '现货交易',
     'trading.futures': '合约交易',
     'trading.options': '期权交易',
-    'ai.autotrader': 'AI自动交易'
+    'ai.autotrader': 'AI自动交易',
+    // Upcoming Advisors section
+    'advisors.more_models': '更多人物模型',
+    'advisors.not_alone': '你不再是一个人战斗',
+    'advisors.coming_soon': '敬请期待 - 顶级战友集结中',
+    'advisors.trump.name': 'Donald Trump',
+    'advisors.trump.specialty': '商业帝国战略大师',
+    'advisors.trump.expertise': '商业帝国',
+    'advisors.trump.status': '🔧 正在开发中',
+    'advisors.quantitative.name': '量化交易大师',
+    'advisors.quantitative.specialty': '算法交易专家',
+    'advisors.quantitative.expertise': '量化策略',
+    'advisors.crypto.name': '加密货币之王',
+    'advisors.crypto.specialty': 'Web3投资导师',
+    'advisors.crypto.expertise': '数字资产',
+    'advisors.macro.name': '宏观经济大师',
+    'advisors.macro.specialty': '全球策略分析师',
+    'advisors.macro.expertise': '宏观策略',
+    'advisors.coming_soon_status': '⏳ 即将到来'
   },
   es: {
     'app.title': 'Meta BrainX',
