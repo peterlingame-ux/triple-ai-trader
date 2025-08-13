@@ -232,7 +232,27 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     try {
       setLoading(true);
       
-      // Use mock data immediately for better UX
+      // 尝试从API获取真实数据
+      const response = await fetch('/functions/v1/crypto-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ symbols }),
+      });
+
+      if (response.ok) {
+        const apiData = await response.json();
+        setCryptoData(apiData);
+        setError(null);
+      } else {
+        // API失败时使用模拟数据
+        throw new Error(`API响应错误: ${response.status}`);
+      }
+    } catch (err) {
+      console.log('使用模拟数据，API接口预留供后期接入真实数据');
+      
+      // 生成模拟数据作为备用
       const mockData: CryptoData[] = symbols.map((symbol, index) => ({
         symbol,
         name: getTokenName(symbol),
@@ -257,30 +277,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         support: Math.random() * 900 + 50,
         resistance: Math.random() * 1100 + 100
       }));
-      setCryptoData(mockData);
-      setError(null);
       
-      // Try to fetch real data in background but don't let it block the UI
-      try {
-        const response = await fetch('/functions/v1/crypto-data', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ symbols }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setCryptoData(data);
-        }
-      } catch (apiErr) {
-        // Silently fail for API calls, we already have mock data
-        console.log('API call failed, using mock data');
-      }
-    } catch (err) {
-      console.error('Error fetching crypto data:', err);
-      setError('Failed to fetch real-time crypto data');
+      setCryptoData(mockData);
+      setError('API接口已预留，当前使用模拟数据');
     } finally {
       setLoading(false);
     }
