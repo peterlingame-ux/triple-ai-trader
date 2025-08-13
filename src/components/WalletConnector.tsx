@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Wallet, Shield, Smartphone, Globe, Zap, CheckCircle, AlertTriangle, Star, Copy, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useWalletData } from "@/hooks/useWalletData";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface WalletOption {
   id: string;
@@ -198,13 +199,14 @@ export const WalletConnector = () => {
   const [walletAddress, setWalletAddress] = useState<string>('');
   const { toast } = useToast();
   const { isWalletConnected, setWalletConnected } = useWalletData();
+  const { t } = useLanguage();
 
   const categories = [
-    { id: 'all', name: '全部钱包', icon: Wallet },
-    { id: 'browser', name: '浏览器扩展', icon: Globe },
-    { id: 'mobile', name: '移动应用', icon: Smartphone },
-    { id: 'hardware', name: '硬件钱包', icon: Shield },
-    { id: 'institutional', name: '机构级', icon: Star }
+    { id: 'all', name: t('wallet.category.all'), icon: Wallet },
+    { id: 'browser', name: t('wallet.category.browser'), icon: Globe },
+    { id: 'mobile', name: t('wallet.category.mobile'), icon: Smartphone },
+    { id: 'hardware', name: t('wallet.category.hardware'), icon: Shield },
+    { id: 'institutional', name: t('wallet.category.institutional'), icon: Star }
   ];
 
   const filteredWallets = selectedCategory === 'all' 
@@ -216,6 +218,14 @@ export const WalletConnector = () => {
       case 'extreme': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
       case 'very-high': return 'bg-green-500/20 text-green-400 border-green-500/30';
       default: return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    }
+  };
+
+  const getSecurityText = (level: string) => {
+    switch (level) {
+      case 'extreme': return t('wallet.security.extreme');
+      case 'very-high': return t('wallet.security.very_high');
+      default: return t('wallet.security.high');
     }
   };
 
@@ -242,8 +252,8 @@ export const WalletConnector = () => {
           setIsOpen(false);
           
           toast({
-            title: "钱包连接成功",
-            description: `已成功连接到 ${wallet.name} - 开始显示真实投资组合数据`,
+            title: t('wallet.connection_success'),
+            description: t('wallet.connection_success_desc').replace('{wallet}', wallet.name),
           });
         }
       } else {
@@ -254,14 +264,14 @@ export const WalletConnector = () => {
         setIsOpen(false);
         
         toast({
-          title: "钱包连接成功",
-          description: `已成功连接到 ${wallet.name} - 开始显示真实投资组合数据`,
+          title: t('wallet.connection_success'),
+          description: t('wallet.connection_success_desc').replace('{wallet}', wallet.name),
         });
       }
     } catch (error) {
       toast({
-        title: "连接失败",
-        description: "钱包连接失败，请重试",
+        title: t('wallet.connection_failed'),
+        description: t('wallet.connection_failed_desc'),
         variant: "destructive",
       });
     }
@@ -271,8 +281,8 @@ export const WalletConnector = () => {
     setWalletConnected(false);
     setWalletAddress('');
     toast({
-      title: "钱包已断开",
-      description: "已成功断开钱包连接 - 切换回AI虚拟交易数据",
+      title: t('wallet.disconnected'),
+      description: t('wallet.disconnected_desc'),
     });
   };
 
@@ -280,8 +290,8 @@ export const WalletConnector = () => {
     if (walletAddress) {
       navigator.clipboard.writeText(walletAddress);
       toast({
-        title: "地址已复制",
-        description: "钱包地址已复制到剪贴板",
+        title: t('wallet.address_copied'),
+        description: t('wallet.address_copied_desc'),
       });
     }
   };
@@ -309,7 +319,7 @@ export const WalletConnector = () => {
           <Wallet className="w-4 h-4" />
           {isWalletConnected 
             ? formatAddress(walletAddress)
-            : '连接钱包'
+            : t('wallet.connect')
           }
         </Button>
       </DialogTrigger>
@@ -318,9 +328,9 @@ export const WalletConnector = () => {
         <DialogHeader className="space-y-3">
           <DialogTitle className="text-white flex items-center gap-2 font-orbitron text-xl">
             <Wallet className="w-6 h-6" />
-            连接您的钱包
+            {t('wallet.connect_title')}
           </DialogTitle>
-          <p className="text-slate-400">选择市场上最安全可靠的钱包开始交易和管理您的投资组合</p>
+          <p className="text-slate-400">{t('wallet.select_description')}</p>
         </DialogHeader>
         
         {isWalletConnected ? (
@@ -331,13 +341,13 @@ export const WalletConnector = () => {
                 <div className="text-2xl">{getConnectedWalletInfo()?.icon}</div>
                 <div>
                   <h3 className="text-white font-semibold">{getConnectedWalletInfo()?.name}</h3>
-                  <p className="text-green-400 text-sm">已连接</p>
+                  <p className="text-green-400 text-sm">{t('wallet.connected')}</p>
                 </div>
               </div>
               
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">钱包地址:</span>
+                  <span className="text-slate-400 text-sm">{t('wallet.address')}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-white text-sm font-mono">
                       {formatAddress(walletAddress)}
@@ -354,7 +364,7 @@ export const WalletConnector = () => {
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">网络:</span>
+                  <span className="text-slate-400 text-sm">{t('wallet.network')}</span>
                   <span className="text-white font-medium">Ethereum</span>
                 </div>
               </div>
@@ -367,14 +377,14 @@ export const WalletConnector = () => {
                 className="flex-1 text-sm"
               >
                 <ExternalLink className="w-3 h-3 mr-1" />
-                在区块浏览器查看
+                {t('wallet.view_explorer')}
               </Button>
               <Button 
                 variant="destructive" 
                 onClick={disconnect}
                 className="flex-1 text-sm"
               >
-                断开连接
+                {t('wallet.disconnect')}
               </Button>
             </div>
           </div>
@@ -420,10 +430,10 @@ export const WalletConnector = () => {
                           <div className="flex items-center gap-2">
                             <h3 className="text-white font-semibold">{wallet.name}</h3>
                             {wallet.isRecommended && (
-                              <Badge className="bg-yellow-500/20 text-yellow-400 text-xs">推荐</Badge>
+                              <Badge className="bg-yellow-500/20 text-yellow-400 text-xs">{t('wallet.recommended')}</Badge>
                             )}
                             {wallet.isInstalled && (
-                              <Badge className="bg-green-500/20 text-green-400 text-xs">已安装</Badge>
+                              <Badge className="bg-green-500/20 text-green-400 text-xs">{t('wallet.installed')}</Badge>
                             )}
                           </div>
                           <p className="text-slate-400 text-sm">{wallet.description}</p>
@@ -438,15 +448,14 @@ export const WalletConnector = () => {
                     <div className="flex items-center justify-between">
                       <Badge className={`text-xs ${getSecurityColor(wallet.securityLevel)}`}>
                         <Shield className="w-3 h-3 mr-1" />
-                        {wallet.securityLevel === 'extreme' ? '极高安全' : 
-                         wallet.securityLevel === 'very-high' ? '很高安全' : '高安全'}
+                        {getSecurityText(wallet.securityLevel)}
                       </Badge>
-                      <span className="text-slate-400 text-xs">市场份额: {wallet.marketShare}%</span>
+                      <span className="text-slate-400 text-xs">{t('wallet.market_share')}: {wallet.marketShare}%</span>
                     </div>
 
                     {/* Platforms */}
                     <div>
-                      <p className="text-slate-400 text-xs mb-1">支持平台:</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('wallet.supported_platforms')}</p>
                       <div className="flex flex-wrap gap-1">
                         {wallet.platforms.slice(0, 3).map((platform) => (
                           <Badge key={platform} variant="outline" className="text-xs border-slate-600 text-slate-300">
@@ -455,7 +464,7 @@ export const WalletConnector = () => {
                         ))}
                         {wallet.platforms.length > 3 && (
                           <Badge variant="outline" className="text-xs border-slate-600 text-slate-300">
-                            +{wallet.platforms.length - 3}更多
+                            {t('wallet.more_platforms').replace('{count}', String(wallet.platforms.length - 3))}
                           </Badge>
                         )}
                       </div>
@@ -463,7 +472,7 @@ export const WalletConnector = () => {
 
                     {/* Features */}
                     <div>
-                      <p className="text-slate-400 text-xs mb-1">主要功能:</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('wallet.key_features')}</p>
                       <div className="flex flex-wrap gap-1">
                         {wallet.features.slice(0, 2).map((feature) => (
                           <Badge key={feature} className="bg-blue-500/20 text-blue-400 text-xs">
@@ -472,7 +481,7 @@ export const WalletConnector = () => {
                         ))}
                         {wallet.features.length > 2 && (
                           <Badge className="bg-slate-600/20 text-slate-400 text-xs">
-                            +{wallet.features.length - 2}更多
+                            {t('wallet.more_features').replace('{count}', String(wallet.features.length - 2))}
                           </Badge>
                         )}
                       </div>
