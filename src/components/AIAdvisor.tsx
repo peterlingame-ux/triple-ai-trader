@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, MessageSquare, TrendingUp } from "lucide-react";
+import { ElonAvatar3D } from "./ElonAvatar3D";
 
 interface AIAdvisorProps {
   name: string;
@@ -36,8 +37,10 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
         </div>
       )}
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center overflow-hidden">
-          {avatar ? (
+        <div className={`${name === 'Elon Musk' ? 'w-20 h-20' : 'w-12 h-12'} rounded-full bg-accent/20 flex items-center justify-center overflow-hidden`}>
+          {avatar && name === 'Elon Musk' ? (
+            <ElonAvatar3D />
+          ) : avatar ? (
             <img 
               src={avatar} 
               alt={name}
