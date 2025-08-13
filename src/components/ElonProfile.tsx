@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, MessageSquare, TrendingUp, Zap, Rocket, Star, Award } from "lucide-react";
+import { Brain, MessageSquare, TrendingUp, Zap, Rocket, Star, Award, DollarSign } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface ElonProfileProps {
@@ -66,7 +66,18 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
           
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-white mb-1">{name}</h2>
-            <p className="text-blue-300 text-sm mb-3">{specialty}</p>
+            <p className="text-blue-300 text-sm mb-2">{specialty}</p>
+            
+            {/* Net Worth */}
+            <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg p-3 mb-3 border border-green-500/30">
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-green-400" />
+                <div>
+                  <p className="text-green-200 text-xs">Personal Net Worth</p>
+                  <p className="text-green-400 text-xl font-bold">$219.2 Billion</p>
+                </div>
+              </div>
+            </div>
             
             <div className="flex items-center gap-4">
               <Badge className="bg-green-500/20 text-green-300 border-green-500/50">
