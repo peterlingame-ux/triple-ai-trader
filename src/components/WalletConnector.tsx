@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Wallet, Shield, Smartphone, Globe, Zap, CheckCircle, AlertTriangle, Star, Copy, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useWalletData } from "@/hooks/useWalletData";
 
 interface WalletOption {
   id: string;
@@ -194,9 +195,9 @@ const walletOptions: WalletOption[] = [
 export const WalletConnector = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [connectedWallet, setConnectedWallet] = useState<string | null>(null);
   const [walletAddress, setWalletAddress] = useState<string>('');
   const { toast } = useToast();
+  const { isWalletConnected, setWalletConnected } = useWalletData();
 
   const categories = [
     { id: 'all', name: '全部钱包', icon: Wallet },
@@ -236,24 +237,25 @@ export const WalletConnector = () => {
         });
         
         if (accounts.length > 0) {
-          setConnectedWallet(wallet.id);
+          setWalletConnected(true, accounts[0]);
           setWalletAddress(accounts[0]);
           setIsOpen(false);
           
           toast({
             title: "钱包连接成功",
-            description: `已成功连接到 ${wallet.name}`,
+            description: `已成功连接到 ${wallet.name} - 开始显示真实投资组合数据`,
           });
         }
       } else {
         // For other wallets, simulate connection
-        setConnectedWallet(wallet.id);
-        setWalletAddress('0x742d35Cc6634C0532925a3b8D404F...');
+        const mockAddress = '0x742d35Cc6634C0532925a3b8D404F867896354f2';
+        setWalletConnected(true, mockAddress);
+        setWalletAddress(mockAddress);
         setIsOpen(false);
         
         toast({
           title: "钱包连接成功",
-          description: `已成功连接到 ${wallet.name}`,
+          description: `已成功连接到 ${wallet.name} - 开始显示真实投资组合数据`,
         });
       }
     } catch (error) {
@@ -266,11 +268,11 @@ export const WalletConnector = () => {
   };
 
   const disconnect = () => {
-    setConnectedWallet(null);
+    setWalletConnected(false);
     setWalletAddress('');
     toast({
       title: "钱包已断开",
-      description: "已成功断开钱包连接",
+      description: "已成功断开钱包连接 - 切换回AI虚拟交易数据",
     });
   };
 
@@ -289,7 +291,7 @@ export const WalletConnector = () => {
   };
 
   const getConnectedWalletInfo = () => {
-    return walletOptions.find(w => w.id === connectedWallet);
+    return walletOptions.find(w => w.name === 'MetaMask'); // Default for demo
   };
 
   return (
@@ -298,14 +300,14 @@ export const WalletConnector = () => {
         <Button 
           variant="outline" 
           className={`flex items-center gap-2 px-4 py-2 ${
-            connectedWallet 
+            isWalletConnected 
               ? 'bg-green-500/10 border-green-500/30 text-green-400 hover:bg-green-500/20' 
               : 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 border-purple-500/30 hover:from-purple-600/30 hover:to-blue-600/30'
           }`}
-          onClick={connectedWallet ? disconnect : () => setIsOpen(true)}
+          onClick={isWalletConnected ? disconnect : () => setIsOpen(true)}
         >
           <Wallet className="w-4 h-4" />
-          {connectedWallet 
+          {isWalletConnected 
             ? formatAddress(walletAddress)
             : '连接钱包'
           }
@@ -321,7 +323,7 @@ export const WalletConnector = () => {
           <p className="text-slate-400">选择市场上最安全可靠的钱包开始交易和管理您的投资组合</p>
         </DialogHeader>
         
-        {connectedWallet ? (
+        {isWalletConnected ? (
           // Connected Wallet View
           <div className="space-y-4">
             <Card className="p-4 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/30">

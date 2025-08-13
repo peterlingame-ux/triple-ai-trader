@@ -13,7 +13,8 @@ import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData } from "@/hooks/useCryptoData";
-import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw } from "lucide-react";
+import { useWalletData } from "@/hooks/useWalletData";
+import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw, Wallet, Bot } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -75,35 +76,12 @@ const aiAdvisors = [
 export const TradingDashboard = () => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
-  const [totalPortfolio, setTotalPortfolio] = useState(125678.42);
-  const [dailyChange, setDailyChange] = useState(3456.78);
-  const [activeTrades, setActiveTrades] = useState(12);
+  const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
 
-  // Calculate portfolio values based on real data
-  useEffect(() => {
-    if (cryptoData.length > 0) {
-      const totalValue = cryptoData.slice(0, 10).reduce((sum, crypto) => {
-        return sum + (crypto.price * Math.random() * 10); // Simulate holdings
-      }, 0);
-      setTotalPortfolio(totalValue);
-      
-      const totalChange = cryptoData.slice(0, 10).reduce((sum, crypto) => {
-        return sum + (crypto.change24h * Math.random() * 10);
-      }, 0);
-      setDailyChange(totalChange);
-    }
-  }, [cryptoData]);
-
-  // Real-time updates simulation (supplementary to API data)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTotalPortfolio(prev => prev + (Math.random() - 0.5) * 100);
-      setDailyChange(prev => prev + (Math.random() - 0.5) * 50);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+  // Get portfolio data from either wallet or auto-trader
+  const portfolioData = getPortfolioData();
+  const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
   return (
     <div className="min-h-screen relative p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
@@ -158,17 +136,30 @@ export const TradingDashboard = () => {
           </div>
         </div>
 
-        {/* Portfolio Overview */}
+        {/* Portfolio Overview with Dynamic Data Source */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="p-6 bg-gradient-crypto border-border">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-accent" />
+                {source === 'wallet' ? (
+                  <Wallet className="w-6 h-6 text-accent" />
+                ) : (
+                  <Bot className="w-6 h-6 text-accent" />
+                )}
               </div>
               <div>
-                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.total')}</p>
-                  <p className="text-2xl font-bold text-accent font-mono tracking-wider">
-                  ${totalPortfolio.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground font-inter">
+                    {source === 'wallet' ? '真实投资组合' : '虚拟交易组合'}
+                  </p>
+                  {source === 'autotrader' && (
+                    <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">
+                      AI模拟
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-2xl font-bold text-accent font-mono tracking-wider">
+                  ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
             </div>
@@ -180,9 +171,16 @@ export const TradingDashboard = () => {
                 <TrendingUp className="w-6 h-6 text-success" />
               </div>
               <div>
-                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.change')}</p>
-                  <p className="text-2xl font-bold text-success font-mono tracking-wider">
-                  +${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground font-inter">24小时变化</p>
+                  {source === 'wallet' && (
+                    <Badge variant="outline" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
+                      实时
+                    </Badge>
+                  )}
+                </div>
+                <p className={`text-2xl font-bold font-mono tracking-wider ${dailyChange >= 0 ? 'text-success' : 'text-destructive'}`}>
+                  {dailyChange >= 0 ? '+' : ''}${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
             </div>
@@ -194,8 +192,10 @@ export const TradingDashboard = () => {
                 <BarChart3 className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.trades')}</p>
-                  <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
+                <p className="text-sm text-muted-foreground font-inter">
+                  {source === 'wallet' ? '持仓交易' : '活跃交易'}
+                </p>
+                <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
               </div>
             </div>
           </Card>
