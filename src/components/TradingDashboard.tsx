@@ -68,77 +68,66 @@ export const TradingDashboard = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header and Portfolio Section with Background */}
-        <div 
-          className="p-8 rounded-lg bg-contain bg-center bg-no-repeat relative overflow-hidden min-h-[400px]"
-          style={{
-            backgroundImage: `url('/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png')`,
-            backgroundSize: 'contain',
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40 backdrop-blur-[0.5px]"></div>
-          
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8 relative z-10">
-            <div>
-              <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
-                {t('app.title')}
-              </h1>
-              <p className="text-white/90 drop-shadow-md">
-                {t('app.subtitle')}
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <LanguageSwitcher />
-              <Badge variant="outline" className="px-3 py-1 bg-success/20 text-success border-success/50 backdrop-blur-sm">
-                <Zap className="w-3 h-3 mr-1" />
-                {t('status.live')}
-              </Badge>
-            </div>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground mb-2">
+              {t('app.title')}
+            </h1>
+            <p className="text-muted-foreground">
+              {t('app.subtitle')}
+            </p>
           </div>
-
-          {/* Portfolio Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-            <Card className="p-6 bg-white/10 backdrop-blur-md border-white/20">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center backdrop-blur-sm">
-                  <DollarSign className="w-6 h-6 text-yellow-300" />
-                </div>
-                <div>
-                  <p className="text-sm text-white/80">{t('portfolio.total')}</p>
-                  <p className="text-2xl font-bold text-yellow-300">
-                    ${totalPortfolio.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6 bg-white/10 backdrop-blur-md border-white/20">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center backdrop-blur-sm">
-                  <TrendingUp className="w-6 h-6 text-green-300" />
-                </div>
-                <div>
-                  <p className="text-sm text-white/80">{t('portfolio.change')}</p>
-                  <p className="text-2xl font-bold text-green-300">
-                    +${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6 bg-white/10 backdrop-blur-md border-white/20">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center backdrop-blur-sm">
-                  <BarChart3 className="w-6 h-6 text-blue-300" />
-                </div>
-                <div>
-                  <p className="text-sm text-white/80">{t('portfolio.trades')}</p>
-                  <p className="text-2xl font-bold text-white">{activeTrades}</p>
-                </div>
-              </div>
-            </Card>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            <Badge variant="outline" className="px-3 py-1 bg-success/10 text-success border-success/30">
+              <Zap className="w-3 h-3 mr-1" />
+              {t('status.live')}
+            </Badge>
           </div>
+        </div>
+
+        {/* Portfolio Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="p-6 bg-gradient-crypto border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-accent" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">{t('portfolio.total')}</p>
+                <p className="text-2xl font-bold text-accent">
+                  ${totalPortfolio.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-crypto border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">{t('portfolio.change')}</p>
+                <p className="text-2xl font-bold text-success">
+                  +${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-crypto border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">{t('portfolio.trades')}</p>
+                <p className="text-2xl font-bold text-foreground">{activeTrades}</p>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Crypto Cards Grid */}
