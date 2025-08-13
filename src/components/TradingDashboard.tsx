@@ -28,12 +28,13 @@ const aiAdvisors = [
     isSpecial: true
   },
   {
-    name: "巴菲特",
-    specialty: "Value Investing & Long-term Strategy",
+    name: "Warren Buffett",
+    specialty: "Value Investing & Long-term Wealth Building",
     confidence: 88,
     recommendation: "HOLD BTC, BUY ETH",
-    reasoning: "Be fearful when others are greedy, and greedy when others are fearful. Bitcoin has shown resilience as digital gold. Ethereum's utility in smart contracts represents fundamental value. Focus on long-term wealth building, not short-term speculation.",
-    avatar: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png"
+    reasoning: "My investment philosophy centers on buying wonderful businesses at fair prices and holding them forever. In crypto, I see Bitcoin as digital gold with scarcity value, while Ethereum represents the infrastructure of the digital economy. Remember: 'Time in the market beats timing the market.' Focus on intrinsic value, not market volatility. The best investment is in yourself and technologies that create lasting value.",
+    avatar: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png",
+    isSpecial: true
   },
   {
     name: "Macro Vision",

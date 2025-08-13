@@ -37,7 +37,7 @@ export const AIAdvisor = ({ name, specialty, confidence, recommendation, reasoni
         </div>
       )}
       <div className="flex items-center gap-3 mb-4">
-        <div className={`${name === 'Elon Musk' ? 'w-20 h-20' : 'w-12 h-12'} rounded-full bg-accent/20 flex items-center justify-center overflow-hidden`}>
+        <div className={`${name === 'Elon Musk' || name === 'Warren Buffett' ? 'w-20 h-20' : 'w-12 h-12'} rounded-full bg-accent/20 flex items-center justify-center overflow-hidden`}>
           {avatar && name === 'Elon Musk' ? (
             <ElonAvatar3D />
           ) : avatar ? (
