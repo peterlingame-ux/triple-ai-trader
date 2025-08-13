@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface CryptoData {
   symbol: string;
@@ -213,48 +214,94 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     });
   };
 
-  const generateMockNews = (): NewsArticle[] => [
-    {
-      title: "Bitcoin ETF Trading Volume Hits Record $3.2B Daily",
-      description: "Institutional adoption reaches new heights",
-      url: "#",
-      urlToImage: "",
-      publishedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-      source: { name: "CoinDesk Pro" },
-      sentiment: "bullish",
-      impact: "high",
-      time: "30 min ago"
-    },
-    {
-      title: "Ethereum Shanghai Upgrade Successfully Deployed",
-      description: "Network improvements show positive results",
-      url: "#",
-      urlToImage: "",
-      publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-      source: { name: "The Block" },
-      sentiment: "bullish",
-      impact: "high",
-      time: "1 hour ago"
-    },
-    {
-      title: "Major Exchange Reports 200% Increase in DeFi Volume",
-      description: "Decentralized finance continues rapid growth",
-      url: "#",
-      urlToImage: "",
-      publishedAt: new Date(Date.now() - 120 * 60 * 1000).toISOString(),
-      source: { name: "DeFiPulse" },
-      sentiment: "bullish",
-      impact: "medium",
-      time: "2 hours ago"
-    }
-  ];
-
   const [cryptoData, setCryptoData] = useState<CryptoData[]>(() => generateMockData(symbols));
-  const [newsData, setNewsData] = useState<NewsArticle[]>(() => generateMockNews());
+  const [newsData, setNewsData] = useState<NewsArticle[]>([]);
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const generateMockNews = (): NewsArticle[] => {
+    if (language === 'zh') {
+      return [
+        {
+          title: "比特币ETF日交易量创纪录达32亿美元",
+          description: "机构采用达到新高度",
+          url: "#",
+          urlToImage: "",
+          publishedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+          source: { name: "CoinDesk Pro" },
+          sentiment: "bullish",
+          impact: "high",
+          time: "30 min ago"
+        },
+        {
+          title: "以太坊上海升级成功部署",
+          description: "网络改进显示积极成果",
+          url: "#",
+          urlToImage: "",
+          publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+          source: { name: "The Block" },
+          sentiment: "bullish",
+          impact: "high",
+          time: "1 hour ago"
+        },
+        {
+          title: "主要交易所报告DeFi交易量增长200%",
+          description: "去中心化金融继续快速增长",
+          url: "#",
+          urlToImage: "",
+          publishedAt: new Date(Date.now() - 120 * 60 * 1000).toISOString(),
+          source: { name: "DeFiPulse" },
+          sentiment: "bullish",
+          impact: "medium",
+          time: "2 hours ago"
+        }
+      ];
+    }
+    
+    // Default English news
+    return [
+      {
+        title: "Bitcoin ETF Trading Volume Hits Record $3.2B Daily",
+        description: "Institutional adoption reaches new heights",
+        url: "#",
+        urlToImage: "",
+        publishedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+        source: { name: "CoinDesk Pro" },
+        sentiment: "bullish",
+        impact: "high",
+        time: "30 min ago"
+      },
+      {
+        title: "Ethereum Shanghai Upgrade Successfully Deployed",
+        description: "Network improvements show positive results",
+        url: "#",
+        urlToImage: "",
+        publishedAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+        source: { name: "The Block" },
+        sentiment: "bullish",
+        impact: "high",
+        time: "1 hour ago"
+      },
+      {
+        title: "Major Exchange Reports 200% Increase in DeFi Volume",
+        description: "Decentralized finance continues rapid growth",
+        url: "#",
+        urlToImage: "",
+        publishedAt: new Date(Date.now() - 120 * 60 * 1000).toISOString(),
+        source: { name: "DeFiPulse" },
+        sentiment: "bullish",
+        impact: "medium",
+        time: "2 hours ago"
+      }
+    ];
+  };
+  // 当语言变化时更新新闻数据
+  useEffect(() => {
+    setNewsData(generateMockNews());
+  }, [language]);
+  
   const fetchCryptoData = async () => {
     try {
       setLoading(true);

@@ -80,6 +80,18 @@ const translations = {
     'ai.signal.ma20_trend': 'MA20 Trend',
     'ai.signal.sr_level': 'S/R Level',
     
+    // News related translations
+    'news.impact.high': 'HIGH IMPACT',
+    'news.impact.medium': 'MEDIUM IMPACT',
+    'news.impact.low': 'LOW IMPACT',
+    'news.sentiment.bullish': 'BULLISH',
+    'news.sentiment.bearish': 'BEARISH',
+    'news.sentiment.neutral': 'NEUTRAL',
+    'news.source': 'Source:',
+    'news.time.min_ago': 'min ago',
+    'news.time.hour_ago': 'hour ago',
+    'news.time.hours_ago': 'hours ago',
+    
     // Three advisors specialty translations
     'elon.specialty': 'Visionary Tech & Market Disruption',
     'warren.specialty': 'Value Investing & Long-term Wealth Building',
@@ -322,6 +334,18 @@ const translations = {
     'ai.signal.rsi': 'RSI信号',
     'ai.signal.ma20_trend': 'MA20趋势',
     'ai.signal.sr_level': '支撑/阻力位',
+    
+    // 新闻相关翻译
+    'news.impact.high': '高影响',
+    'news.impact.medium': '中等影响',
+    'news.impact.low': '低影响',
+    'news.sentiment.bullish': '看涨',
+    'news.sentiment.bearish': '看跌',
+    'news.sentiment.neutral': '中性',
+    'news.source': '来源：',
+    'news.time.min_ago': '分钟前',
+    'news.time.hour_ago': '小时前',
+    'news.time.hours_ago': '小时前',
     
     // 三位顾问的专业领域翻译
     'elon.specialty': '远见科技与市场颠覆',

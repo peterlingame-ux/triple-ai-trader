@@ -63,6 +63,37 @@ interface AICommunicatorProps {
 
 export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicatorProps) => {
   const { t } = useLanguage();
+  
+  // 时间格式化函数
+  const formatTimeAgo = (publishedAt: string, time?: string): string => {
+    if (time) {
+      // 解析现有的时间字符串并翻译
+      if (time.includes('min ago')) {
+        const minutes = time.match(/(\d+)\s*min/)?.[1];
+        return `${minutes}${t('news.time.min_ago')}`;
+      } else if (time.includes('hour ago')) {
+        return `1${t('news.time.hour_ago')}`;
+      } else if (time.includes('hours ago')) {
+        const hours = time.match(/(\d+)\s*hour/)?.[1];
+        return `${hours}${t('news.time.hours_ago')}`;
+      }
+      return time;
+    }
+    
+    // 如果没有time字段，从publishedAt计算
+    const now = new Date();
+    const published = new Date(publishedAt);
+    const diffInMinutes = Math.floor((now.getTime() - published.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}${t('news.time.min_ago')}`;
+    } else if (diffInMinutes < 1440) {
+      const hours = Math.floor(diffInMinutes / 60);
+      return hours === 1 ? `1${t('news.time.hour_ago')}` : `${hours}${t('news.time.hours_ago')}`;
+    } else {
+      return published.toLocaleDateString();
+    }
+  };
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -882,7 +913,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                                   'bg-accent/20 text-accent border-accent/30'
                                 }`}
                               >
-                                {news.sentiment.toUpperCase()}
+                                {t(`news.sentiment.${news.sentiment}`)}
                               </Badge>
                               <Badge 
                                 variant="outline" 
@@ -892,16 +923,16 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                                   'bg-success/20 text-success border-success/30'
                                 }`}
                               >
-                                {news.impact.toUpperCase()} IMPACT
+                                {t(`news.impact.${news.impact}`)}
                               </Badge>
                               <span className="text-xs text-muted-foreground ml-auto">
-                                {news.time || (news.publishedAt ? new Date(news.publishedAt).toLocaleTimeString() : 'Just now')}
+                                {formatTimeAgo(news.publishedAt, news.time)}
                               </span>
                             </div>
                             <h5 className="font-semibold text-foreground mb-2">{news.title}</h5>
                             <p className="text-sm text-muted-foreground mb-2">{news.description}</p>
                             <p className="text-xs text-muted-foreground">
-                              Source: {typeof news.source === 'string' ? news.source : news.source.name}
+                              {t('news.source')} {typeof news.source === 'string' ? news.source : news.source.name}
                             </p>
                           </div>
                         </div>
