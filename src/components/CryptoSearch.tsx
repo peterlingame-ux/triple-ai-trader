@@ -3,6 +3,7 @@ import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface CryptoSearchProps {
   onSearch: (query: string) => void;
@@ -19,6 +20,7 @@ export const CryptoSearch = ({
   totalCryptos, 
   filteredCount 
 }: CryptoSearchProps) => {
+  const { t } = useLanguage();
   const [localQuery, setLocalQuery] = useState(searchQuery);
 
   const handleSearch = (value: string) => {
@@ -37,7 +39,7 @@ export const CryptoSearch = ({
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
         <Input
           type="text"
-          placeholder="搜索加密货币 (例如: Bitcoin, BTC, 比特币)..."
+          placeholder={t('search.placeholder')}
           value={localQuery}
           onChange={(e) => handleSearch(e.target.value)}
           className="pl-10 pr-12 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400 focus:border-primary"
@@ -57,11 +59,11 @@ export const CryptoSearch = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-slate-300 border-slate-600">
-            显示 {filteredCount} / {totalCryptos} 种货币
+            {t('search.showing')} {filteredCount} {t('search.of')} {totalCryptos} {t('search.currencies')}
           </Badge>
           {searchQuery && (
             <Badge variant="secondary" className="bg-primary/20 text-primary">
-              搜索: "{searchQuery}"
+              {t('search.filter')}: "{searchQuery}"
             </Badge>
           )}
         </div>
@@ -73,7 +75,7 @@ export const CryptoSearch = ({
             onClick={handleClear}
             className="text-xs border-slate-600 text-slate-300 hover:text-white"
           >
-            清除搜索
+            {t('search.clear')}
           </Button>
         )}
       </div>

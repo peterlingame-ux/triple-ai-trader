@@ -167,7 +167,7 @@ export const TradingDashboard = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-muted-foreground font-inter">
-                    {source === 'wallet' ? '真实投资组合' : '虚拟交易组合'}
+                    {source === 'wallet' ? t('wallet.real') : t('wallet.virtual')}
                   </p>
                   {source === 'autotrader' && (
                     <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">
@@ -189,7 +189,7 @@ export const TradingDashboard = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm text-muted-foreground font-inter">24小时变化</p>
+                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.change')}</p>
                   {source === 'wallet' && (
                     <Badge variant="outline" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
                       实时
@@ -210,7 +210,7 @@ export const TradingDashboard = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground font-inter">
-                  {source === 'wallet' ? '持仓交易' : '活跃交易'}
+                  {source === 'wallet' ? '持仓交易' : t('portfolio.trades')}
                 </p>
                 <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
               </div>
@@ -234,14 +234,14 @@ export const TradingDashboard = () => {
                 className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30"
               >
                 <RefreshCw className="w-4 h-4 mr-1" />
-                Refresh Data
+                {t('button.refresh')}
               </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setShowAllCrypto(!showAllCrypto)}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6"
               >
-                {showAllCrypto ? "Show Top 6" : "All Categories"}
+                {showAllCrypto ? t('button.show_top') : t('button.all_categories')}
                 <BarChart3 className="w-4 h-4 ml-2" />
               </Button>
             </div>
@@ -277,10 +277,10 @@ export const TradingDashboard = () => {
           {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-12">
               <p className="text-muted-foreground text-lg">
-                未找到匹配 "{searchQuery}" 的加密货币
+                {t('search.not_found')} "{searchQuery}" {t('search.try_other')}
               </p>
               <p className="text-muted-foreground/70 text-sm mt-2">
-                请尝试搜索其他关键词，如 Bitcoin、BTC 或比特币
+                {t('search.suggestion')}
               </p>
             </div>
           )}
