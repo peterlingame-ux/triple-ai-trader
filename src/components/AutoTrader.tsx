@@ -426,10 +426,147 @@ export const AutoTrader = () => {
                     <Target className="w-5 h-5 text-purple-400" />
                     <h3 className="text-white font-semibold">当前持仓</h3>
                   </div>
-                  <div className="text-center py-8">
-                    <p className="text-slate-400">当前持仓: {stats.activeTrades} 笔</p>
-                    <p className="text-slate-500 text-sm mt-2">总交易次数: {stats.totalTrades}</p>
-                  </div>
+                  
+                  {stats.activeTrades === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-slate-400">暂无持仓</p>
+                      <p className="text-slate-500 text-sm mt-2">总交易次数: {stats.totalTrades}</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="text-center p-3 bg-slate-700/50 rounded-lg">
+                          <p className="text-slate-400 text-sm">当前持仓</p>
+                          <p className="text-white text-2xl font-bold">{stats.activeTrades} 笔</p>
+                        </div>
+                        <div className="text-center p-3 bg-slate-700/50 rounded-lg">
+                          <p className="text-slate-400 text-sm">总交易次数</p>
+                          <p className="text-white text-2xl font-bold">{stats.totalTrades}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {/* 模拟持仓列表 */}
+                        <div className="bg-slate-700/30 rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs font-bold">₿</span>
+                              </div>
+                              <div>
+                                <p className="text-white font-semibold">BTC/USDT</p>
+                                <p className="text-green-400 text-sm">做多 {tradingType === "contract" ? `${leverage[0]}x` : '现货'}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-white">$5,230</p>
+                              <p className="text-green-400 text-sm">+$234.56</p>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="text-slate-400">开仓价: </span>
+                              <span className="text-white">$42,850</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400">当前价: </span>
+                              <span className="text-white">$43,250</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {stats.activeTrades > 1 && (
+                          <div className="bg-slate-700/30 rounded-lg p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                  <span className="text-white text-xs font-bold">Ξ</span>
+                                </div>
+                                <div>
+                                  <p className="text-white font-semibold">ETH/USDT</p>
+                                  <p className="text-red-400 text-sm">做空 {tradingType === "contract" ? `${leverage[0]}x` : '现货'}</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-white">$3,120</p>
+                                <p className="text-red-400 text-sm">-$45.30</p>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <span className="text-slate-400">开仓价: </span>
+                                <span className="text-white">$2,612</span>
+                              </div>
+                              <div>
+                                <span className="text-slate-400">当前价: </span>
+                                <span className="text-white">$2,567</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {stats.activeTrades > 2 && (
+                          <div className="bg-slate-700/30 rounded-lg p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                  <span className="text-white text-xs font-bold">S</span>
+                                </div>
+                                <div>
+                                  <p className="text-white font-semibold">SOL/USDT</p>
+                                  <p className="text-green-400 text-sm">做多 {tradingType === "contract" ? `${leverage[0]}x` : '现货'}</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-white">$1,980</p>
+                                <p className="text-green-400 text-sm">+$67.40</p>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <span className="text-slate-400">开仓价: </span>
+                                <span className="text-white">$95.33</span>
+                              </div>
+                              <div>
+                                <span className="text-slate-400">当前价: </span>
+                                <span className="text-white">$98.75</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {stats.activeTrades > 3 && (
+                          <div className="bg-slate-700/30 rounded-lg p-4">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                  <span className="text-white text-xs font-bold">A</span>
+                                </div>
+                                <div>
+                                  <p className="text-white font-semibold">ADA/USDT</p>
+                                  <p className="text-green-400 text-sm">做多 {tradingType === "contract" ? `${leverage[0]}x` : '现货'}</p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-white">$970</p>
+                                <p className="text-green-400 text-sm">+$23.40</p>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <span className="text-slate-400">开仓价: </span>
+                                <span className="text-white">$0.462</span>
+                              </div>
+                              <div>
+                                <span className="text-slate-400">当前价: </span>
+                                <span className="text-white">$0.485</span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </Card>
               </TabsContent>
 
