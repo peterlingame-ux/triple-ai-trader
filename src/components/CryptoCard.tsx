@@ -14,6 +14,24 @@ import dogecoin3dLogo from "@/assets/dogecoin-3d-logo.png";
 import avalanche3dLogo from "@/assets/avalanche-3d-logo.png";
 import chainlink3dLogo from "@/assets/chainlink-3d-logo.png";
 import uniswap3dLogo from "@/assets/uniswap-3d-logo.png";
+import litecoin3dLogo from "@/assets/litecoin-3d-logo.png";
+import cosmos3dLogo from "@/assets/cosmos-3d-logo.png";
+import icp3dLogo from "@/assets/icp-3d-logo.png";
+import near3dLogo from "@/assets/near-3d-logo.png";
+import aptos3dLogo from "@/assets/aptos-3d-logo.png";
+import fantom3dLogo from "@/assets/fantom-3d-logo.png";
+import algorand3dLogo from "@/assets/algorand-3d-logo.png";
+import vechain3dLogo from "@/assets/vechain-3d-logo.png";
+import stellar3dLogo from "@/assets/stellar-3d-logo.png";
+import filecoin3dLogo from "@/assets/filecoin-3d-logo.png";
+import mana3dLogo from "@/assets/mana-3d-logo.png";
+import sandbox3dLogo from "@/assets/sandbox-3d-logo.png";
+import cronos3dLogo from "@/assets/cronos-3d-logo.png";
+import shiba3dLogo from "@/assets/shiba-3d-logo.png";
+import loopring3dLogo from "@/assets/loopring-3d-logo.png";
+import enjin3dLogo from "@/assets/enjin-3d-logo.png";
+import bat3dLogo from "@/assets/bat-3d-logo.png";
+import zcash3dLogo from "@/assets/zcash-3d-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -43,25 +61,24 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
       'AVAX': avalanche3dLogo,
       'LINK': chainlink3dLogo,
       'UNI': uniswap3dLogo,
-      // 为其他货币使用在线3D图标
-      'LTC': `https://assets.coingecko.com/coins/images/2/large/litecoin.png`,
-      'ATOM': `https://assets.coingecko.com/coins/images/1481/large/cosmos_hub.png`,
-      'ICP': `https://assets.coingecko.com/coins/images/14495/large/Internet_Computer_logo.png`,
-      'NEAR': `https://assets.coingecko.com/coins/images/10365/large/near.jpg`,
-      'APT': `https://assets.coingecko.com/coins/images/26455/large/aptos_round.png`,
-      'FTM': `https://assets.coingecko.com/coins/images/4001/large/Fantom_round.png`,
-      'ALGO': `https://assets.coingecko.com/coins/images/4380/large/download.png`,
-      'VET': `https://assets.coingecko.com/coins/images/1167/large/VeChain-Logo-768x725.png`,
-      'XLM': `https://assets.coingecko.com/coins/images/100/large/Stellar_symbol_black_RGB.png`,
-      'FIL': `https://assets.coingecko.com/coins/images/12817/large/filecoin.png`,
-      'MANA': `https://assets.coingecko.com/coins/images/878/large/decentraland-mana.png`,
-      'SAND': `https://assets.coingecko.com/coins/images/12129/large/sandbox_logo.jpg`,
-      'CRO': `https://assets.coingecko.com/coins/images/7310/large/cro_token_logo.png`,
-      'SHIB': `https://assets.coingecko.com/coins/images/11939/large/shiba.png`,
-      'LRC': `https://assets.coingecko.com/coins/images/913/large/LRC.png`,
-      'ENJ': `https://assets.coingecko.com/coins/images/1102/large/enjin-coin-logo.png`,
-      'BAT': `https://assets.coingecko.com/coins/images/677/large/basic-attention-token.png`,
-      'ZEC': `https://assets.coingecko.com/coins/images/486/large/circle-zcash-color.png`
+      'LTC': litecoin3dLogo,
+      'ATOM': cosmos3dLogo,
+      'ICP': icp3dLogo,
+      'NEAR': near3dLogo,
+      'APT': aptos3dLogo,
+      'FTM': fantom3dLogo,
+      'ALGO': algorand3dLogo,
+      'VET': vechain3dLogo,
+      'XLM': stellar3dLogo,
+      'FIL': filecoin3dLogo,
+      'MANA': mana3dLogo,
+      'SAND': sandbox3dLogo,
+      'CRO': cronos3dLogo,
+      'SHIB': shiba3dLogo,
+      'LRC': loopring3dLogo,
+      'ENJ': enjin3dLogo,
+      'BAT': bat3dLogo,
+      'ZEC': zcash3dLogo
     };
     return logoMap[symbol] || null;
   };
