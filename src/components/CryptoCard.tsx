@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Coins } from "lucide-react";
+import { useLanguage } from "@/hooks/useLanguage";
 import bitcoin3dLogo from "@/assets/bitcoin-3d-logo.png";
 import ethereum3dLogo from "@/assets/ethereum-3d-logo.png";
 import cardano3dLogo from "@/assets/cardano-3d-logo.png";
@@ -105,6 +106,7 @@ interface CryptoCardProps {
 }
 
 export const CryptoCard = ({ symbol, name, price, change, changePercent, image, volume, marketCap }: CryptoCardProps) => {
+  const { t } = useLanguage();
   const isPositive = change >= 0;
   
   const getCrypto3DIcon = (symbol: string) => {
@@ -262,19 +264,19 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
       <div className="pt-3 border-t border-border/50 mt-4">
         <div className="grid grid-cols-2 gap-4 text-xs">
           <div>
-            <p className="text-muted-foreground mb-1">24h Volume</p>
+            <p className="text-muted-foreground mb-1">{t('crypto.volume24h')}</p>
             <p className="text-foreground font-mono font-medium">
               ${volume ? (volume / 1e9).toFixed(2) + 'B' : '2.5B'}
             </p>
           </div>
           <div>
-            <p className="text-muted-foreground mb-1">Market Cap</p>
+            <p className="text-muted-foreground mb-1">{t('crypto.marketCap')}</p>
             <p className="text-foreground font-mono font-medium">
               ${marketCap ? (marketCap / 1e9).toFixed(1) + 'B' : '45.2B'}
             </p>
           </div>
           <div>
-            <p className="text-muted-foreground mb-1">Circulating Supply</p>
+            <p className="text-muted-foreground mb-1">{t('crypto.circulatingSupply')}</p>
             <p className="text-foreground font-mono text-xs">
               {symbol === 'BTC' ? '19.7M BTC' : 
                symbol === 'ETH' ? '120.4M ETH' : 
@@ -283,7 +285,7 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
             </p>
           </div>
           <div>
-            <p className="text-muted-foreground mb-1">Market Rank</p>
+            <p className="text-muted-foreground mb-1">{t('crypto.marketRank')}</p>
             <p className="text-foreground font-mono font-medium">
               #{symbol === 'BTC' ? '1' : 
                  symbol === 'ETH' ? '2' : 

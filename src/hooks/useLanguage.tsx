@@ -172,6 +172,12 @@ const translations = {
     'advisors.macro.specialty': '全球策略分析师',
     'advisors.macro.expertise': '宏观策略',
     'advisors.coming_soon_status': '⏳ 即将到来',
+    
+    // 加密货币卡片翻译
+    'crypto.volume24h': '24小时交易量',
+    'crypto.marketCap': '市值',
+    'crypto.circulatingSupply': '流通供应量',
+    'crypto.marketRank': '市场排名',
     // Wallet translations
     'wallet.connect_title': '连接您的钱包',
     'wallet.select_description': '选择市场上最安全可靠的钱包开始交易和管理您的投资组合',

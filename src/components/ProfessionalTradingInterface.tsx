@@ -37,32 +37,32 @@ export const ProfessionalTradingInterface = () => {
     { name: 'MA20', value: `$${selectedCryptoData?.ma20.toFixed(2) || '42,856.79'}`, color: 'text-blue-400' },
     { name: 'MA50', value: `$${selectedCryptoData?.ma50.toFixed(2) || '39,724.15'}`, color: 'text-purple-400' },
     { name: 'Support', value: `$${selectedCryptoData?.support.toFixed(2) || '41,200.00'}`, color: 'text-green-400' },
-    { name: 'Resistance', value: `$${selectedCryptoData?.resistance.toFixed(2) || '45,800.00'}`, color: 'text-red-400' },
-    { name: '24h High', value: `$${selectedCryptoData?.high24h.toFixed(2) || '43,927.85'}`, color: 'text-green-300' },
-    { name: '24h Low', value: `$${selectedCryptoData?.low24h.toFixed(2) || '41,156.23'}`, color: 'text-red-300' },
-    { name: 'ATH', value: `$${selectedCryptoData?.ath.toFixed(2) || '69,000.00'}`, color: 'text-yellow-400' }
+    { name: '阻力位', value: `$${selectedCryptoData?.resistance.toFixed(2) || '45,800.00'}`, color: 'text-red-400' },
+    { name: '24小时最高', value: `$${selectedCryptoData?.high24h.toFixed(2) || '43,927.85'}`, color: 'text-green-300' },
+    { name: '24小时最低', value: `$${selectedCryptoData?.low24h.toFixed(2) || '41,156.23'}`, color: 'text-red-300' },
+    { name: '历史最高', value: `$${selectedCryptoData?.ath.toFixed(2) || '69,000.00'}`, color: 'text-yellow-400' }
   ];
 
   const marketMetrics = [
     { 
-      name: 'Market Cap', 
+      name: '市值', 
       value: `$${selectedCryptoData?.marketCap ? (selectedCryptoData.marketCap / 1e9).toFixed(1) + 'B' : '832.4B'}`,
       change: '+2.34%'
     },
     { 
-      name: '24h Volume', 
+      name: '24小时交易量', 
       value: `$${selectedCryptoData?.volume24h ? (selectedCryptoData.volume24h / 1e9).toFixed(1) + 'B' : '18.7B'}`,
       change: '+15.67%'
     },
     { 
-      name: 'Dominance', 
+      name: '市场占有率', 
       value: `${selectedCryptoData?.dominance?.toFixed(2) || '48.12'}%`,
       change: '-0.45%'
     },
     { 
-      name: 'Circulating Supply', 
+      name: '流通供应量', 
       value: selectedCrypto === 'BTC' ? '19.7M BTC' : selectedCrypto === 'ETH' ? '120.4M ETH' : '21M',
-      change: 'Fixed'
+      change: '固定'
     }
   ];
 

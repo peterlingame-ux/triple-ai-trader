@@ -438,8 +438,8 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     fetchCryptoData();
     fetchNewsData();
     toast({
-      title: "Data Refreshed",
-      description: "Latest crypto market data loaded",
+      title: "数据已刷新",
+      description: "最新加密货币市场数据已加载",
     });
   };
 
