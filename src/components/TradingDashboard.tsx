@@ -28,11 +28,12 @@ const aiAdvisors = [
     isSpecial: true
   },
   {
-    name: "Quantum Trader",
-    specialty: "Market Sentiment & News Analysis",
-    confidence: 73,
-    recommendation: "HOLD ADA, SELL SOL",
-    reasoning: "Recent regulatory clarity around Cardano creates positive sentiment. However, Solana network congestion issues may impact short-term performance. Market sentiment shifting towards utility tokens."
+    name: "巴菲特",
+    specialty: "Value Investing & Long-term Strategy",
+    confidence: 88,
+    recommendation: "HOLD BTC, BUY ETH",
+    reasoning: "Be fearful when others are greedy, and greedy when others are fearful. Bitcoin has shown resilience as digital gold. Ethereum's utility in smart contracts represents fundamental value. Focus on long-term wealth building, not short-term speculation.",
+    avatar: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png"
   },
   {
     name: "Macro Vision",
