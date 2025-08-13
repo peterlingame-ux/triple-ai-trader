@@ -220,7 +220,7 @@ export const AIOpportunityAlert = () => {
   const toggleMonitoring = () => {
     setIsMonitoring(!isMonitoring);
     toast({
-      title: isMonitoring ? "AI监控已暂停" : "AI监控已启动",
+      title: isMonitoring ? "最强大脑监控已暂停" : "最强大脑监控已启动",
       description: isMonitoring ? "不再检测高胜率机会" : "开始检测90%胜率机会",
     });
   };
