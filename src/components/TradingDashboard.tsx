@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
+import { CryptoAnalysisDialog } from "./CryptoAnalysisDialog";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
@@ -146,7 +147,7 @@ export const TradingDashboard = () => {
             <p className="text-amber-200/80 font-inter font-medium text-lg tracking-wide max-w-2xl mx-auto mb-6">
               {t('app.subtitle')}
             </p>
-            <AICommunicator />
+            <CryptoAnalysisDialog />
           </div>
         </div>
 

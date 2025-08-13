@@ -4,15 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity, 
-  DollarSign, Clock, Globe, LineChart, Zap, AlertTriangle, Search, Brain,
-  Lightbulb, Eye, ChevronRight, PieChart, Calendar, Shield, Target, X
-} from "lucide-react";
+import { MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity, DollarSign, Clock, Globe, LineChart, Zap, AlertTriangle } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useCryptoData } from "@/hooks/useCryptoData";
 import { useToast } from "@/hooks/use-toast";
 
 interface CryptoAnalytics {
@@ -67,20 +60,15 @@ interface AICommunicatorProps {
 export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicatorProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const { cryptoData: liveCryptoData } = useCryptoData();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState<Array<{role: 'user' | 'ai', content: string}>>([]);
   const [selectedCrypto, setSelectedCrypto] = useState<string>("BTC");
-  const [searchTerm, setSearchTerm] = useState('');
   const [timeframe, setTimeframe] = useState<string>("1D");
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // 预设的热门货币标签
-  const popularCryptos = ['BTC', 'ETH', 'SOL', 'ADA', 'DOT', 'LINK', 'AVAX', 'MATIC'];
-
-  // 使用实时数据或回退到模拟数据
-  const activeCryptoData = liveCryptoData.length > 0 ? liveCryptoData : (cryptoData.length > 0 ? cryptoData.slice(0, 8) : [
+  // Use passed data or fallback to mock data
+  const activeCryptoData = cryptoData.length > 0 ? cryptoData.slice(0, 3) : [
     {
       symbol: "BTC",
       name: "Bitcoin",
@@ -104,7 +92,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
       maxSupply: 21000000
     },
     {
-      symbol: "ETH", 
+      symbol: "ETH",
       name: "Ethereum",
       price: 4724.70,
       change24h: 3.65,
@@ -127,7 +115,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
     },
     {
       symbol: "SOL",
-      name: "Solana", 
+      name: "Solana",
       price: 98.75,
       change24h: 3.42,
       changePercent24h: 3.59,
@@ -147,7 +135,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
       totalSupply: 550000000,
       maxSupply: 0
     }
-  ]);
+  ];
 
   // Use passed news data or fallback to mock data
   const activeNewsData = newsData.length > 0 ? newsData : [
@@ -230,14 +218,12 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
   const generateCombinedResponse = (userMessage: string) => {
     const currentCrypto = activeCryptoData.find(c => c.symbol === selectedCrypto);
     const responses = [
-      `基于${currentCrypto?.name || selectedCrypto}当前的技术分析，价格为$${currentCrypto?.price.toFixed(4)}，24小时变动${currentCrypto?.changePercent24h.toFixed(2)}%。从图表形态来看，${currentCrypto?.changePercent24h > 0 ? '呈现上涨趋势，可以考虑适度建仓' : '存在下跌压力，建议控制风险'}。`,
-      `我分析了${currentCrypto?.name}的技术指标，RSI显示${currentCrypto?.rsi > 70 ? '超买状态，注意回调风险' : currentCrypto?.rsi < 30 ? '超卖区域，可能存在反弹机会' : '中性区间，可以观望'}。当前支撑位在$${currentCrypto?.support?.toFixed(4)}，阻力位在$${currentCrypto?.resistance?.toFixed(4)}。`,
-      `从市场数据来看，${currentCrypto?.name}市值排名较高，24小时最高价$${currentCrypto?.high24h?.toFixed(4)}，最低价$${currentCrypto?.low24h?.toFixed(4)}。建议关注成交量变化和市场情绪。`,
-      `${currentCrypto?.name}的技术面分析显示，MA20线在$${currentCrypto?.ma20?.toFixed(4)}，MA50线在$${currentCrypto?.ma50?.toFixed(4)}。价格${currentCrypto?.price > (currentCrypto?.ma20 || 0) ? '位于均线上方，技术面偏强' : '跌破均线，需要谨慎'}。`,
-      `基于当前市场环境，${currentCrypto?.name}的波动率较高，流动性良好。建议采用分批建仓的策略，设置合理的止损止盈位。`
+      `🚀 Elon: Based on ${selectedCrypto} RSI of ${currentCrypto?.rsi}, ${currentCrypto?.rsi > 70 ? 'overbought but still HODL! To the moon!' : 'good entry point for Mars funding!'}`,
+      `💰 Warren: ${selectedCrypto} trading at ${((currentCrypto?.price || 0) / (currentCrypto?.ma20 || 1) * 100 - 100).toFixed(1)}% ${currentCrypto?.price > currentCrypto?.ma20 ? 'above' : 'below'} MA20. ${currentCrypto?.price < currentCrypto?.ma20 ? 'Value opportunity emerging.' : 'Price reflects fair value.'}`,
+      `🔬 Bill: Technical analysis shows ${selectedCrypto} ${currentCrypto?.rsi > 50 ? 'gaining momentum' : 'consolidating'}. Focus on blockchain adoption fundamentals.`
     ];
     
-    return responses[Math.floor(Math.random() * responses.length)];
+    return `**Combined Analysis for ${selectedCrypto}:**\n\n${responses.join('\n\n')}\n\n**Unified Recommendation:** Current market conditions suggest ${currentCrypto?.changePercent24h > 0 ? 'continued positive momentum' : 'potential buying opportunity'} based on technical and fundamental analysis.`;
   };
 
   const getSelectedCryptoData = () => {
@@ -260,23 +246,6 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
     }
   };
 
-  const formatNumber = (num: number): string => {
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(2)}B`;
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(2)}M`;  
-    if (num >= 1e3) return `$${(num / 1e3).toFixed(2)}K`;
-    return `$${num.toFixed(2)}`;
-  };
-
-  const formatPercent = (num: number): string => {
-    return `${num >= 0 ? '+' : ''}${num.toFixed(2)}%`;
-  };
-
-  // 搜索过滤功能
-  const filteredCryptos = activeCryptoData.filter(crypto =>
-    crypto.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    crypto.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-  ).slice(0, 8);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -286,260 +255,291 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[1200px] bg-slate-900 border-slate-700 max-h-[95vh] p-0">
-        {/* Header */}
-        <DialogHeader className="p-6 pb-4 border-b border-slate-700">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-white flex items-center gap-2 font-orbitron text-xl">
-              <Bot className="w-6 h-6 text-blue-400" />
-              {t('language') === 'zh' ? 'SUPREME BRAIN - 高级交易分析' : 'SUPREME BRAIN - Advanced Trading Analytics'}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsOpen(false)}
-              className="text-slate-400 hover:text-white"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
+      <DialogContent className="sm:max-w-[95vw] bg-slate-900 border-slate-700 max-h-[95vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="text-white flex items-center gap-2 font-orbitron">
+            <Bot className="w-5 h-5" />
+            SUPREME BRAIN - Advanced Trading Analytics
+          </DialogTitle>
         </DialogHeader>
-
-        <div className="flex h-[calc(90vh-120px)]">
-          {/* Left Panel - AI Assistant */}
-          <div className="w-80 bg-slate-800/30 border-r border-slate-700 p-4 flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                <Brain className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-white font-semibold">AI 分析师</h3>
-                <p className="text-slate-400 text-sm">Ask for analysis on selected crypto with live market data</p>
-              </div>
-            </div>
-
-            {/* Crypto Search */}
-            <div className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                <Input
-                  placeholder={t('language') === 'zh' ? '搜索加密货币...' : 'Search cryptocurrencies...'}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-slate-700 border-slate-600 text-white text-sm"
-                />
-              </div>
-              
-              {searchTerm && (
-                <ScrollArea className="h-32 mt-2">
-                  <div className="space-y-1">
-                    {filteredCryptos.map((crypto) => (
-                      <Card 
-                        key={crypto.symbol}
-                        className="p-2 bg-slate-700/50 border-slate-600 hover:border-slate-500 cursor-pointer transition-all"
-                        onClick={() => {
-                          setSelectedCrypto(crypto.symbol);
-                          setSearchTerm('');
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-white text-sm font-medium">{crypto.name}</p>
-                            <p className="text-slate-400 text-xs">{crypto.symbol}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-white text-sm">${crypto.price.toFixed(4)}</p>
-                            <p className={`text-xs ${crypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                              {formatPercent(crypto.changePercent24h)}
-                            </p>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </ScrollArea>
-              )}
-            </div>
-
-            {/* AI Chat Messages */}
-            <ScrollArea className="flex-1 mb-4">
-              <div className="space-y-3">
-                {conversation.length === 0 && (
-                  <div className="text-slate-400 text-sm text-center py-8">
-                    <Lightbulb className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p>问我关于{selectedCrypto}的任何技术分析问题</p>
-                  </div>
-                )}
-                {conversation.map((msg, index) => (
+        
+        <div className="flex-1 flex gap-4 min-h-0">
+          {/* Left side - Conversation */}
+          <div className="w-1/3 flex flex-col space-y-4">
+            <div className="flex-1 bg-slate-800/50 rounded-lg p-4 overflow-y-auto space-y-3">
+              {conversation.length === 0 ? (
+                <div className="text-center text-slate-400 py-8">
+                  <Bot className="w-12 h-12 mx-auto mb-3 text-slate-500" />
+                  <p className="font-inter text-sm">Ask for analysis on selected crypto with live market data</p>
+                </div>
+              ) : (
+                conversation.map((msg, index) => (
                   <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] p-3 rounded-lg text-sm ${
+                    <div className={`max-w-[90%] p-3 rounded-lg text-xs ${
                       msg.role === 'user' 
                         ? 'bg-blue-600 text-white' 
-                        : 'bg-slate-700 text-slate-200'
+                        : 'bg-slate-700 text-slate-100'
                     }`}>
-                      {msg.content}
+                      <p className="font-inter whitespace-pre-line">{msg.content}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
-
-            {/* AI Chat Input */}
+                ))
+              )}
+            </div>
+            
             <div className="flex gap-2">
-              <Input
-                placeholder="询问技术分析..."
+              <input
+                type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                className="bg-slate-700 border-slate-600 text-white text-sm"
+                placeholder="Ask about technical analysis..."
+                className="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 font-inter"
               />
-              <Button
+              <Button 
                 onClick={handleSendMessage}
                 disabled={!message.trim()}
+                className="bg-blue-600 hover:bg-blue-700 px-3"
                 size="sm"
-                className="bg-blue-600 hover:bg-blue-700"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-3 h-3" />
               </Button>
             </div>
           </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 p-6">
-            {/* Crypto Selection Tabs */}
-            <div className="flex items-center gap-2 mb-6">
-              {popularCryptos.map((symbol) => {
-                const crypto = activeCryptoData.find(c => c.symbol === symbol);
-                if (!crypto) return null;
-                
-                return (
-                  <Button
-                    key={symbol}
-                    variant={selectedCrypto === symbol ? "default" : "outline"}
-                    onClick={() => setSelectedCrypto(symbol)}
-                    className={`${
-                      selectedCrypto === symbol
-                        ? 'bg-amber-600 text-white border-amber-600'
-                        : 'bg-slate-800/50 text-slate-300 border-slate-600 hover:border-slate-500'
-                    }`}
-                  >
-                    {symbol}
-                  </Button>
-                );
-              })}
-            </div>
+          {/* Right side - Advanced Analytics */}
+          <div className="flex-1 space-y-4">
+            <Tabs value={selectedCrypto} onValueChange={setSelectedCrypto} className="w-full">
+              <TabsList className="grid w-full grid-cols-3 bg-slate-800">
+                <TabsTrigger value="BTC" className="data-[state=active]:bg-orange-500/20">BTC</TabsTrigger>
+                <TabsTrigger value="ETH" className="data-[state=active]:bg-purple-500/20">ETH</TabsTrigger>
+                <TabsTrigger value="SOL" className="data-[state=active]:bg-purple-500/20">SOL</TabsTrigger>
+              </TabsList>
 
-            {/* Selected Crypto Header */}
-            <div className="grid grid-cols-3 gap-6 mb-6">
-              <Card className="p-4 bg-slate-800/30 border-slate-700">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-lg flex items-center justify-center text-white font-bold">
-                    {selectedCrypto}
-                  </div>
-                  <div>
-                    <h2 className="text-white text-xl font-bold">{selectedCrypto}</h2>
-                    <p className="text-slate-400">{activeCryptoData.find(c => c.symbol === selectedCrypto)?.name}</p>
-                  </div>
-                  <Badge className={`ml-auto ${
-                    (activeCryptoData.find(c => c.symbol === selectedCrypto)?.changePercent24h || 0) >= 0 
-                      ? 'bg-green-500/20 text-green-400 border-green-500/30' 
-                      : 'bg-red-500/20 text-red-400 border-red-500/30'
-                  }`}>
-                    {formatPercent(activeCryptoData.find(c => c.symbol === selectedCrypto)?.changePercent24h || 0)}
-                  </Badge>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-white text-2xl font-bold">${(activeCryptoData.find(c => c.symbol === selectedCrypto)?.price || 0).toFixed(6)}</p>
-                  <p className={`text-sm ${
-                    (activeCryptoData.find(c => c.symbol === selectedCrypto)?.change24h || 0) >= 0 ? 'text-green-400' : 'text-red-400'
-                  }`}>
-                    {(activeCryptoData.find(c => c.symbol === selectedCrypto)?.change24h || 0) >= 0 ? '+' : ''}${(activeCryptoData.find(c => c.symbol === selectedCrypto)?.change24h || 0).toFixed(2)}
-                  </p>
-                </div>
-              </Card>
-
-              <Card className="p-4 bg-slate-800/30 border-slate-700">
-                <h3 className="text-slate-400 text-sm mb-2">Price Chart</h3>
-                <div className="flex items-center gap-2 mb-4">
-                  {['1H', '1D', '1W', '1M'].map((period) => (
-                    <Button
-                      key={period}
-                      variant="ghost"
-                      size="sm"
-                      className={`text-xs ${period === timeframe ? 'bg-blue-600 text-white' : 'text-slate-400'}`}
-                      onClick={() => setTimeframe(period)}
-                    >
-                      {period}
-                    </Button>
-                  ))}
-                </div>
-                <div className="h-16 bg-slate-700/50 rounded flex items-center justify-center">
-                  <LineChart className="w-8 h-8 text-slate-500" />
-                  <span className="text-slate-500 text-sm ml-2">Interactive Chart ({timeframe})</span>
-                </div>
-                <p className="text-slate-400 text-xs mt-2">Candlestick data for {selectedCrypto}</p>
-              </Card>
-
-              <Card className="p-4 bg-slate-800/30 border-slate-700">
-                <h3 className="text-slate-400 text-sm mb-3">Technical Indicators</h3>
-                <div className="space-y-2">
-                  {['rsi', 'ma20', 'ma50', 'support', 'resistance', 'high24h', 'low24h', 'ath', 'atl'].map((indicator) => {
-                    const crypto = activeCryptoData.find(c => c.symbol === selectedCrypto);
-                    const value = crypto?.[indicator as keyof typeof crypto] || 0;
-                    return (
-                      <div key={indicator} className="flex justify-between text-sm">
-                        <span className="text-slate-400">{indicator.toUpperCase()}</span>
-                        <span className={`text-white ${
-                          indicator === 'support' ? 'text-green-400' : 
-                          indicator === 'resistance' ? 'text-red-400' : 
-                          indicator === 'ath' ? 'text-yellow-400' : 
-                          indicator === 'atl' ? 'text-blue-400' : 'text-white'
-                        }`}>
-                          {typeof value === 'number' ? (value < 1 ? value.toFixed(8) : value.toFixed(2)) : value}
-                        </span>
+              {cryptoData.length > 0 ? (
+                activeCryptoData.map((crypto) => (
+                <TabsContent key={crypto.symbol} value={crypto.symbol} className="space-y-4 mt-4">
+                  {/* Price Header */}
+                  <div className="bg-slate-800/50 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-2xl font-orbitron font-bold text-white">{crypto.symbol}</h3>
+                        <span className="text-slate-400 font-inter">{crypto.name}</span>
                       </div>
-                    );
-                  })}
+                      <div className={`flex items-center gap-2 ${crypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {crypto.changePercent24h >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+                        <span className="font-mono font-bold">{crypto.changePercent24h.toFixed(2)}%</span>
+                      </div>
+                    </div>
+                    <div className="flex items-baseline gap-4">
+                      <span className="text-3xl font-mono font-bold text-white">${crypto.price.toLocaleString()}</span>
+                      <span className={`font-mono ${crypto.changePercent24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {crypto.changePercent24h >= 0 ? '+' : ''}${crypto.change24h.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Chart and Data Grid */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* Chart Section */}
+                    <div className="col-span-2 bg-slate-800/50 rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-white font-inter font-semibold">Price Chart</h4>
+                        <div className="flex gap-1">
+                          {['1H', '1D', '1W', '1M'].map((tf) => (
+                            <Button
+                              key={tf}
+                              size="sm"
+                              variant={timeframe === tf ? "default" : "outline"}
+                              onClick={() => setTimeframe(tf)}
+                              className="text-xs px-2 py-1 h-6"
+                            >
+                              {tf}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+                      <div ref={chartRef} className="h-48 bg-slate-900 rounded border flex items-center justify-center">
+                        <div className="text-center text-slate-400">
+                          <LineChart className="w-12 h-12 mx-auto mb-2" />
+                          <p className="text-sm">Interactive Chart ({timeframe})</p>
+                          <p className="text-xs">Candlestick data for {crypto.symbol}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Technical Indicators */}
+                    <div className="bg-slate-800/50 rounded-lg p-4">
+                      <h4 className="text-white font-inter font-semibold mb-3">Technical Indicators</h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">RSI(14)</span>
+                          <span className={`font-mono ${crypto.rsi > 70 ? 'text-red-400' : crypto.rsi < 30 ? 'text-green-400' : 'text-yellow-400'}`}>
+                            {crypto.rsi}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">MA20</span>
+                          <span className="text-white font-mono">${crypto.ma20.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">MA50</span>
+                          <span className="text-white font-mono">${crypto.ma50.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Support</span>
+                          <span className="text-green-400 font-mono">${crypto.support.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Resistance</span>
+                          <span className="text-red-400 font-mono">${crypto.resistance.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">24h High</span>
+                          <span className="text-white font-mono">${crypto.high24h.toLocaleString()}</span>
+                        </div>
+                         <div className="flex justify-between">
+                           <span className="text-slate-400">24h Low</span>
+                           <span className="text-white font-mono">${crypto.low24h.toLocaleString()}</span>
+                         </div>
+                         <div className="flex justify-between">
+                           <span className="text-slate-400">ATH</span>
+                           <span className="text-yellow-400 font-mono">${crypto.ath.toLocaleString()}</span>
+                         </div>
+                         <div className="flex justify-between">
+                           <span className="text-slate-400">ATL</span>
+                           <span className="text-blue-400 font-mono">${crypto.atl}</span>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+
+                   {/* Enhanced Market Data Grid */}
+                   <div className="grid grid-cols-6 gap-3">
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Market Cap</p>
+                         <p className="text-white font-mono font-bold text-sm">${(crypto.marketCap / 1e9).toFixed(1)}B</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">24h Volume</p>
+                         <p className="text-white font-mono font-bold text-sm">${(crypto.volume24h / 1e9).toFixed(1)}B</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Dominance</p>
+                         <p className="text-white font-mono font-bold text-sm">{crypto.dominance}%</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Circulating</p>
+                         <p className="text-white font-mono font-bold text-sm">{(crypto.circulatingSupply / 1e6).toFixed(1)}M</p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Max Supply</p>
+                         <p className="text-white font-mono font-bold text-sm">
+                           {crypto.maxSupply === 0 ? '∞' : `${(crypto.maxSupply / 1e6).toFixed(1)}M`}
+                         </p>
+                       </div>
+                     </Card>
+                     <Card className="bg-slate-800/50 p-3 border-slate-700">
+                       <div className="text-center">
+                         <p className="text-slate-400 text-xs mb-1">Supply Ratio</p>
+                         <p className="text-white font-mono font-bold text-sm">
+                           {crypto.maxSupply === 0 ? 'N/A' : `${((crypto.circulatingSupply / crypto.maxSupply) * 100).toFixed(1)}%`}
+                         </p>
+                       </div>
+                     </Card>
+                   </div>
+
+                   {/* Professional Trading Signals */}
+                   <Card className="bg-slate-800/50 p-4 border-slate-700">
+                     <h4 className="text-white font-inter font-semibold mb-3 flex items-center gap-2">
+                       <Zap className="w-4 h-4 text-yellow-400" />
+                       AI Trading Signals
+                     </h4>
+                     <div className="grid grid-cols-3 gap-4 text-sm">
+                       <div className="text-center">
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                           crypto.rsi > 70 ? 'bg-red-500/20 text-red-400' : 
+                           crypto.rsi < 30 ? 'bg-green-500/20 text-green-400' : 
+                           'bg-yellow-500/20 text-yellow-400'
+                         }`}>
+                           <Activity className="w-3 h-3" />
+                           {crypto.rsi > 70 ? 'OVERBOUGHT' : crypto.rsi < 30 ? 'OVERSOLD' : 'NEUTRAL'}
+                         </div>
+                         <p className="text-slate-400 text-xs mt-1">RSI Signal</p>
+                       </div>
+                       <div className="text-center">
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                           crypto.price > crypto.ma20 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                         }`}>
+                           <TrendingUp className="w-3 h-3" />
+                           {crypto.price > crypto.ma20 ? 'BULLISH' : 'BEARISH'}
+                         </div>
+                         <p className="text-slate-400 text-xs mt-1">MA20 Trend</p>
+                       </div>
+                       <div className="text-center">
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                           crypto.price > crypto.support && crypto.price < crypto.resistance ? 'bg-blue-500/20 text-blue-400' : 
+                           crypto.price <= crypto.support ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
+                         }`}>
+                           <BarChart3 className="w-3 h-3" />
+                           {crypto.price > crypto.support && crypto.price < crypto.resistance ? 'RANGE' : 
+                            crypto.price <= crypto.support ? 'SUPPORT TEST' : 'BREAKOUT'}
+                         </div>
+                         <p className="text-slate-400 text-xs mt-1">S/R Level</p>
+                       </div>
+                      </div>
+                    </Card>
+
+                   {/* News Feed */}
+                   <div className="bg-slate-800/50 rounded-lg p-4">
+                     <div className="flex items-center gap-2 mb-3">
+                       <Globe className="w-4 h-4 text-blue-400" />
+                       <h4 className="text-white font-inter font-semibold">Market News</h4>
+                     </div>
+                     <div className="space-y-2 max-h-32 overflow-y-auto">
+                       {activeNewsData.map((news, index) => (
+                         <div key={index} className="flex items-start gap-3 p-2 bg-slate-700/50 rounded text-xs">
+                           <div className="flex-1">
+                             <p className="text-white font-medium">{news.title}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-slate-400">
+                                  {typeof news.source === 'string' ? news.source : news.source.name}
+                                </span>
+                                <span className="text-slate-500">•</span>
+                                <span className="text-slate-400">
+                                  {news.time || (news.publishedAt ? new Date(news.publishedAt).toLocaleTimeString() : 'Unknown')}
+                                </span>
+                              </div>
+                           </div>
+                           <div className="flex flex-col gap-1">
+                             <Badge className={`text-xs ${getSentimentColor(news.sentiment)}`}>
+                               {news.sentiment.toUpperCase()}
+                             </Badge>
+                             <Badge className={`text-xs ${getImpactBadge(news.impact)}`}>
+                               {news.impact.toUpperCase()}
+                             </Badge>
+                           </div>
+                         </div>
+                        ))}
+                      </div>
+                    </div>
+                </TabsContent>
+              ))
+              ) : (
+                <div className="text-center text-slate-400 py-8">
+                  <p>Loading real-time crypto data...</p>
                 </div>
-              </Card>
-            </div>
-
-            {/* Market Data Grid */}
-            <div className="grid grid-cols-6 gap-4 mb-6">
-              {[
-                { label: 'Market Cap', value: formatNumber(activeCryptoData.find(c => c.symbol === selectedCrypto)?.marketCap || 74700000000) },
-                { label: '24h Volume', value: formatNumber(activeCryptoData.find(c => c.symbol === selectedCrypto)?.volume24h || 9700000000) },
-                { label: 'Dominance', value: `${(activeCryptoData.find(c => c.symbol === selectedCrypto)?.dominance || 4.88).toFixed(2)}%` },
-                { label: 'Circulating Supply', value: `${((activeCryptoData.find(c => c.symbol === selectedCrypto)?.circulatingSupply || 555800000) / 1000000).toFixed(1)}M` },
-                { label: 'Max Supply', value: `${((activeCryptoData.find(c => c.symbol === selectedCrypto)?.maxSupply || 21000000) / 1000000).toFixed(1)}M` },
-                { label: 'Supply Ratio', value: '153.8%' }
-              ].map((item, index) => (
-                <Card key={index} className="p-3 bg-slate-800/30 border-slate-700 text-center">
-                  <p className="text-slate-400 text-xs mb-1">{item.label}</p>
-                  <p className="text-white font-semibold text-sm">{item.value}</p>
-                </Card>
-              ))}
-            </div>
-
-            {/* AI Chat Input at Bottom */}
-            <Card className="p-4 bg-slate-800/30 border-slate-700">
-              <div className="flex items-center gap-3">
-                <Input
-                  placeholder="Ask about technical analysis..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  className="flex-1 bg-slate-700 border-slate-600 text-white"
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={!message.trim()}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-            </Card>
+              )}
+            </Tabs>
           </div>
         </div>
       </DialogContent>
