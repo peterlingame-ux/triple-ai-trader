@@ -167,8 +167,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   const fetchCryptoData = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      // Fetch real-time crypto data
+      // Try to fetch real-time crypto data
       const response = await fetch('/functions/v1/crypto-data', {
         method: 'POST',
         headers: {
@@ -178,17 +179,21 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch crypto data');
+        throw new Error(`HTTP ${response.status}: Failed to fetch crypto data`);
       }
 
       const data = await response.json();
-      setCryptoData(data);
-      setError(null);
+      if (data && Array.isArray(data) && data.length > 0) {
+        setCryptoData(data);
+        console.log('Successfully loaded real-time crypto data');
+      } else {
+        throw new Error('Invalid data format received');
+      }
     } catch (err) {
-      console.error('Error fetching crypto data:', err);
-      setError('Failed to fetch real-time crypto data');
+      console.warn('API failed, using fallback data:', err);
+      setError('Using demo data - API temporarily unavailable');
       
-      // Fallback to mock data if API fails
+      // Always provide fallback data to ensure UI works
       const mockData: CryptoData[] = symbols.map((symbol, index) => ({
         symbol,
         name: getTokenName(symbol),
@@ -214,6 +219,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         resistance: Math.random() * 1100 + 100
       }));
       setCryptoData(mockData);
+      console.log('Fallback data loaded successfully');
     } finally {
       setLoading(false);
     }
