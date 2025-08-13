@@ -70,12 +70,13 @@ export const TradingDashboard = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header and Portfolio Section with Background */}
         <div 
-          className="p-8 rounded-lg bg-cover bg-center bg-no-repeat relative overflow-hidden"
+          className="p-8 rounded-lg bg-contain bg-center bg-no-repeat relative overflow-hidden min-h-[400px]"
           style={{
             backgroundImage: `url('/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png')`,
+            backgroundSize: 'contain',
           }}
         >
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40 backdrop-blur-[0.5px]"></div>
           
           {/* Header */}
           <div className="flex items-center justify-between mb-8 relative z-10">
