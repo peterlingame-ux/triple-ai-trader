@@ -2,6 +2,11 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Bitcoin, Coins, Zap, Circle, Hexagon, Triangle } from "lucide-react";
 import ethereumLogo from "@/assets/ethereum-real-logo.png";
+import bitcoinLogo from "@/assets/bitcoin-logo.png";
+import cardanoLogo from "@/assets/cardano-logo.png";
+import solanaLogo from "@/assets/solana-logo.png";
+import polkadotLogo from "@/assets/polkadot-logo.png";
+import polygonLogo from "@/assets/polygon-logo.png";
 
 interface CryptoCardProps {
   symbol: string;
@@ -16,33 +21,42 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent }: Crypt
   const isPositive = change >= 0;
   
   const getCryptoIcon = (symbol: string) => {
-    const iconMap = {
-      'BTC': Bitcoin,
-      'ETH': 'ethereum', // Special case for Ethereum
-      'ADA': Circle,
-      'SOL': Zap,
-      'DOT': Circle,
-      'MATIC': Triangle
+    const logoMap = {
+      'BTC': bitcoinLogo,
+      'ETH': ethereumLogo,
+      'ADA': cardanoLogo,
+      'SOL': solanaLogo,
+      'DOT': polkadotLogo,
+      'MATIC': polygonLogo
     };
-    return iconMap[symbol] || Coins;
+    return logoMap[symbol] || null;
   };
 
-  const IconComponent = getCryptoIcon(symbol);
+  const getCryptoColor = (symbol: string) => {
+    const colorMap = {
+      'BTC': 'bg-orange-500',
+      'ETH': 'bg-purple-600',
+      'ADA': 'bg-blue-500',
+      'SOL': 'bg-purple-500',
+      'DOT': 'bg-pink-500',
+      'MATIC': 'bg-purple-700'
+    };
+    return colorMap[symbol] || 'bg-gray-500';
+  };
+
+  const cryptoLogo = getCryptoIcon(symbol);
+  const bgColor = getCryptoColor(symbol);
   
   return (
     <Card className="p-6 bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700/50 hover:shadow-xl transition-all duration-300 rounded-xl">
       <div className="flex items-center justify-between">
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${
-            symbol === 'ETH' 
-              ? 'bg-gradient-to-br from-purple-600 to-blue-500' 
-              : 'bg-gradient-to-br from-amber-400 to-orange-500'
-          }`}>
-            {symbol === 'ETH' ? (
-              <img src={ethereumLogo} alt="Ethereum" className="w-6 h-6 drop-shadow-sm" />
+          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${bgColor}`}>
+            {cryptoLogo ? (
+              <img src={cryptoLogo} alt={`${name} logo`} className="w-7 h-7" />
             ) : (
-              <IconComponent className="w-5 h-5 text-white" />
+              <Coins className="w-6 h-6 text-white" />
             )}
           </div>
           <div>
