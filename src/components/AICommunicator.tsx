@@ -4,9 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity, DollarSign, Clock, Globe, LineChart, Zap, AlertTriangle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity, DollarSign, Clock, Globe, LineChart, Zap, AlertTriangle, Search } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
+import { getAllSupportedCryptos, getTokenName } from "@/hooks/useCryptoData";
 
 interface CryptoAnalytics {
   symbol: string;
@@ -66,6 +68,9 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
   const [selectedCrypto, setSelectedCrypto] = useState<string>("BTC");
   const [timeframe, setTimeframe] = useState<string>("1D");
   const chartRef = useRef<HTMLDivElement>(null);
+  
+  // Get all supported cryptocurrencies for selection
+  const allSupportedCryptos = getAllSupportedCryptos();
 
   // Use passed data or fallback to mock data
   const activeCryptoData = cryptoData.length > 0 ? cryptoData.slice(0, 3) : [
@@ -331,24 +336,54 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <BarChart3 className="w-5 h-5 text-accent" />
-                  <h3 className="font-semibold text-foreground">Asset Analysis</h3>
+                  <h3 className="font-semibold text-foreground">货币选择 & 分析</h3>
                 </div>
-                <div className="flex gap-2">
-                  {activeCryptoData.map((crypto) => (
-                    <Button
-                      key={crypto.symbol}
-                      variant={selectedCrypto === crypto.symbol ? "default" : "outline"}
-                      size="sm"
-                      className={`${
-                        selectedCrypto === crypto.symbol 
-                          ? 'bg-accent text-accent-foreground' 
-                          : 'bg-muted/20 border-border hover:bg-accent/20'
-                      }`}
-                      onClick={() => setSelectedCrypto(crypto.symbol)}
-                    >
-                      {crypto.symbol}
-                    </Button>
-                  ))}
+                <div className="flex items-center gap-4">
+                  <div className="flex gap-2">
+                    {activeCryptoData.slice(0, 3).map((crypto) => (
+                      <Button
+                        key={crypto.symbol}
+                        variant={selectedCrypto === crypto.symbol ? "default" : "outline"}
+                        size="sm"
+                        className={`${
+                          selectedCrypto === crypto.symbol 
+                            ? 'bg-accent text-accent-foreground' 
+                            : 'bg-muted/20 border-border hover:bg-accent/20'
+                        }`}
+                        onClick={() => setSelectedCrypto(crypto.symbol)}
+                      >
+                        {crypto.symbol}
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <div className="w-px h-6 bg-border"></div>
+                  
+                  {/* Comprehensive Crypto Selector */}
+                  <div className="flex items-center gap-2">
+                    <Search className="w-4 h-4 text-muted-foreground" />
+                    <Select value={selectedCrypto} onValueChange={setSelectedCrypto}>
+                      <SelectTrigger className="w-48 bg-muted/20 border-border">
+                        <SelectValue placeholder="选择货币..." />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-[300px] bg-background border-border">
+                        {allSupportedCryptos.map((crypto) => (
+                          <SelectItem 
+                            key={crypto.symbol} 
+                            value={crypto.symbol}
+                            className="hover:bg-muted/50"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-semibold text-accent">{crypto.symbol}</span>
+                              <span className="text-muted-foreground">•</span>
+                              <span className="text-sm">{crypto.name}</span>
+                              <span className="text-xs text-muted-foreground">({crypto.chineseName})</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </Card>
