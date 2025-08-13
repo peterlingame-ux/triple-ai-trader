@@ -69,16 +69,22 @@ export const TradingDashboard = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">
+        <div 
+          className="flex items-center justify-between p-8 rounded-lg bg-cover bg-center bg-no-repeat relative overflow-hidden"
+          style={{
+            backgroundImage: `url('/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png')`,
+          }}
+        >
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px]"></div>
+          <div className="relative z-10">
+            <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
               {t('app.title')}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-white/90 drop-shadow-md">
               {t('app.subtitle')}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 relative z-10">
             <LanguageSwitcher />
             <Badge variant="outline" className="px-3 py-1 bg-success/10 text-success border-success/30">
               <Zap className="w-3 h-3 mr-1" />
