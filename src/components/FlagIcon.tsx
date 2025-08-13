@@ -5,55 +5,31 @@ interface FlagIconProps {
 }
 
 export const FlagIcon = ({ countryCode, size = 'md', className = '' }: FlagIconProps) => {
-  const flagEmojis: Record<string, string> = {
-    'us': '🇺🇸', // United States
-    'cn': '🇨🇳', // China
-    'jp': '🇯🇵', // Japan
-    'kr': '🇰🇷', // South Korea
-    'es': '🇪🇸', // Spain
-    'fr': '🇫🇷', // France
-    'de': '🇩🇪', // Germany
-    'it': '🇮🇹', // Italy
-    'br': '🇧🇷', // Brazil
-    'pt': '🇵🇹', // Portugal
-    'ru': '🇷🇺', // Russia
-    'sa': '🇸🇦', // Saudi Arabia
-    'ae': '🇦🇪', // UAE
-    'in': '🇮🇳', // India
-    'th': '🇹🇭', // Thailand
-    'vn': '🇻🇳', // Vietnam
-    'tr': '🇹🇷', // Turkey
-    'nl': '🇳🇱', // Netherlands
-    'mx': '🇲🇽', // Mexico
-    'ca': '🇨🇦', // Canada
-    'au': '🇦🇺', // Australia
-    'gb': '🇬🇧', // United Kingdom
-  };
-
   const sizeClasses = {
-    sm: 'text-sm w-4 h-4',
-    md: 'text-base w-5 h-5', 
-    lg: 'text-lg w-6 h-6'
+    sm: 'w-4 h-3',
+    md: 'w-5 h-4', 
+    lg: 'w-6 h-5'
   };
 
-  const flag = flagEmojis[countryCode.toLowerCase()] || '🏳️';
+  const flagUrl = `https://flagcdn.com/${countryCode.toLowerCase()}.svg`;
 
-   return (
-     <div className="flex items-center gap-1">
-       <span 
-         className={`inline-flex items-center justify-center ${sizeClasses[size]} ${className}`}
-         role="img"
-         aria-label={`Flag of ${countryCode}`}
-         style={{
-           fontFamily: '"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "EmojiOne Color", sans-serif',
-           textRendering: 'optimizeLegibility',
-           filter: 'brightness(1.2) contrast(1.1)',
-           textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-           fontSize: size === 'lg' ? '1.25rem' : size === 'md' ? '1rem' : '0.875rem'
-         }}
-       >
-         {flag}
-       </span>
-     </div>
-   );
+  return (
+    <div className={`inline-flex items-center justify-center ${className}`}>
+      <img 
+        src={flagUrl}
+        alt={`Flag of ${countryCode}`}
+        className={`${sizeClasses[size]} rounded-sm object-cover border border-slate-600/30 shadow-sm`}
+        onError={(e) => {
+          // Fallback to a generic flag icon if the image fails to load
+          e.currentTarget.style.display = 'none';
+          e.currentTarget.parentElement!.innerHTML = `
+            <div class="${sizeClasses[size]} bg-slate-600/50 rounded-sm border border-slate-600/30 flex items-center justify-center">
+              <span class="text-xs text-slate-300 font-mono">${countryCode.toUpperCase()}</span>
+            </div>
+          `;
+        }}
+        loading="lazy"
+      />
+    </div>
+  );
 };

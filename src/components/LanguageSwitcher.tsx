@@ -46,7 +46,6 @@ export const LanguageSwitcher = () => {
            <div className="flex items-center gap-3">
              <Globe className="w-4 h-4 text-amber-400" />
              <FlagIcon countryCode={currentLang?.countryCode || 'us'} size="md" />
-             <span className="text-xs text-slate-400 font-mono">{(currentLang?.countryCode || 'us').toUpperCase()}</span>
              <span className="text-sm font-medium text-white hidden md:block">
                {currentLang?.nativeName}
              </span>
@@ -56,7 +55,7 @@ export const LanguageSwitcher = () => {
            </div>
         </SelectTrigger>
         
-        <SelectContent className="bg-slate-800/95 border-slate-600 max-h-80 overflow-y-auto backdrop-blur-md">
+        <SelectContent className="bg-slate-900/98 border-slate-600 max-h-80 overflow-y-auto backdrop-blur-md z-50 shadow-2xl">
           {Object.entries(groupedLanguages).map(([region, langs]) => (
             <div key={region}>
               <div className="px-3 py-2">
@@ -70,11 +69,8 @@ export const LanguageSwitcher = () => {
                   value={lang.code}
                   className="hover:bg-slate-700/80 focus:bg-slate-700/80 cursor-pointer py-3 transition-all duration-200"
                 >
-                   <div className="flex items-center gap-4 w-full">
-                     <div className="flex items-center gap-2">
-                       <FlagIcon countryCode={lang.countryCode} size="md" className="flex-shrink-0" />
-                       <span className="text-xs text-slate-500 font-mono">{lang.countryCode.toUpperCase()}</span>
-                     </div>
+                   <div className="flex items-center gap-3 w-full">
+                     <FlagIcon countryCode={lang.countryCode} size="md" className="flex-shrink-0" />
                      <div className="flex flex-col items-start flex-grow">
                        <span className="text-white font-medium text-sm">
                          {lang.nativeName}
