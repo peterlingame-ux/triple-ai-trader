@@ -77,16 +77,11 @@ const aiAdvisors = [
 ];
 
 export const TradingDashboard = () => {
-  console.log("TradingDashboard is rendering");
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  console.log("Crypto data length:", cryptoData.length);
-  console.log("Loading state:", loading);
-  console.log("Error state:", error);
   
   // Filter crypto data based on search query
   const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
