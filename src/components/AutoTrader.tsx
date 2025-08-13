@@ -38,11 +38,13 @@ import {
 import { useToast } from "@/hooks/use-toast";
 
 type TradingStrategy = 'conservative' | 'aggressive';
+type TradingType = 'spot' | 'futures' | 'options';
 
 interface TradingSignal {
   id: string;
   symbol: string;
   type: 'long' | 'short';
+  tradingType: TradingType;
   confidence: number;
   entry: number;
   stopLoss: number;
@@ -51,6 +53,10 @@ interface TradingSignal {
   timestamp: Date;
   status: 'pending' | 'executed' | 'closed';
   strategy: TradingStrategy;
+  leverage?: number;
+  expiryDate?: Date; // For options
+  strikePrice?: number; // For options
+  optionType?: 'call' | 'put'; // For options
   aiAnalysis: {
     technicalScore: number;
     fundamentalScore: number;
@@ -63,6 +69,7 @@ interface Position {
   id: string;
   symbol: string;
   type: 'long' | 'short';
+  tradingType: TradingType;
   entry: number;
   size: number;
   currentPrice: number;
@@ -75,11 +82,20 @@ interface Position {
   takeProfit: number;
   highestProfit: number;
   maxDrawdown: number;
+  leverage?: number;
+  margin?: number; // For leveraged trades
+  liquidationPrice?: number; // For futures
+  expiryDate?: Date; // For options
+  strikePrice?: number; // For options
+  optionType?: 'call' | 'put'; // For options
+  intrinsicValue?: number; // For options
+  timeValue?: number; // For options
 }
 
 interface AutoTraderConfig {
   enabled: boolean;
   strategy: TradingStrategy;
+  tradingType: TradingType;
   conservativeMinConfidence: number;
   aggressiveMinConfidence: number;
   maxPositions: number;
@@ -91,6 +107,12 @@ interface AutoTraderConfig {
   trailingStop: boolean;
   maxDailyLoss: number;
   autoReinvest: boolean;
+  // Trading type specific configs
+  leverage: number;
+  maxLeverage: number;
+  marginRatio: number; // For futures
+  optionStrategy: 'covered_call' | 'protective_put' | 'straddle' | 'strangle'; // For options
+  daysToExpiry: number; // For options
 }
 
 interface TradingStats {
@@ -109,6 +131,13 @@ interface TradingStats {
   };
   dailyPnL: number;
   monthlyPnL: number;
+  // Trading type specific stats
+  spotStats: { trades: number; winRate: number; avgProfit: number; };
+  futuresStats: { trades: number; winRate: number; avgProfit: number; totalMargin: number; };
+  optionsStats: { trades: number; winRate: number; avgProfit: number; premiumsPaid: number; };
+  leverageUsed: number;
+  maxDrawdown: number;
+  sharpeRatio: number;
 }
 
 export const AutoTrader = () => {
@@ -117,6 +146,7 @@ export const AutoTrader = () => {
   const [config, setConfig] = useState<AutoTraderConfig>({
     enabled: false,
     strategy: 'conservative',
+    tradingType: 'spot',
     conservativeMinConfidence: 90,
     aggressiveMinConfidence: 70,
     maxPositions: 5,
@@ -127,7 +157,12 @@ export const AutoTrader = () => {
     takeProfitPercent: 10,
     trailingStop: true,
     maxDailyLoss: 1000,
-    autoReinvest: true
+    autoReinvest: true,
+    leverage: 1,
+    maxLeverage: 100,
+    marginRatio: 0.1,
+    optionStrategy: 'covered_call',
+    daysToExpiry: 30
   });
 
   const [signals, setSignals] = useState<TradingSignal[]>([]);
@@ -139,12 +174,18 @@ export const AutoTrader = () => {
     conservativeStats: { trades: 32, winRate: 93.8, avgProfit: 156.5 },
     aggressiveStats: { trades: 16, winRate: 75.0, avgProfit: 89.2 },
     dailyPnL: 1247.89,
-    monthlyPnL: 15847.32
+    monthlyPnL: 15847.32,
+    spotStats: { trades: 18, winRate: 89.0, avgProfit: 120.5 },
+    futuresStats: { trades: 24, winRate: 83.3, avgProfit: 185.2, totalMargin: 8500 },
+    optionsStats: { trades: 6, winRate: 100, avgProfit: 340.8, premiumsPaid: 1250 },
+    leverageUsed: 3.2,
+    maxDrawdown: -2.8,
+    sharpeRatio: 2.15
   });
 
   const [tradingActivity, setTradingActivity] = useState<string[]>([]);
 
-  // Enhanced AI signal generation with different strategies
+  // Enhanced AI signal generation with different strategies and trading types
   useEffect(() => {
     if (!config.enabled) return;
 
@@ -164,10 +205,13 @@ export const AutoTrader = () => {
         : config.aggressiveMinConfidence;
 
       if (baseConfidence >= minConfidence && positions.length < config.maxPositions) {
-        const newSignal: TradingSignal = {
+        const leverage = config.tradingType === 'spot' ? 1 : config.leverage;
+        
+        let signal: TradingSignal = {
           id: Date.now().toString(),
           symbol,
           type,
+          tradingType: config.tradingType,
           confidence: baseConfidence,
           entry,
           stopLoss: type === 'long' 
@@ -176,10 +220,11 @@ export const AutoTrader = () => {
           takeProfit: type === 'long' 
             ? entry * (1 + config.takeProfitPercent / 100) 
             : entry * (1 - config.takeProfitPercent / 100),
-          reasoning: generateAIReasoning(symbol, type, baseConfidence, config.strategy),
+          reasoning: generateAIReasoning(symbol, type, baseConfidence, config.strategy, config.tradingType),
           timestamp: new Date(),
           status: 'pending',
           strategy: config.strategy,
+          leverage: leverage,
           aiAnalysis: {
             technicalScore: Math.floor(Math.random() * 30) + 70,
             fundamentalScore: Math.floor(Math.random() * 30) + 70,
@@ -188,16 +233,27 @@ export const AutoTrader = () => {
           }
         };
 
-        setSignals(prev => [newSignal, ...prev.slice(0, 9)]);
+        // Add options-specific fields
+        if (config.tradingType === 'options') {
+          const expiryDate = new Date();
+          expiryDate.setDate(expiryDate.getDate() + config.daysToExpiry);
+          
+          signal.expiryDate = expiryDate;
+          signal.strikePrice = entry * (type === 'long' ? 1.05 : 0.95);
+          signal.optionType = type === 'long' ? 'call' : 'put';
+        }
+
+        setSignals(prev => [signal, ...prev.slice(0, 9)]);
         
         // Add to activity log
+        const tradingTypeText = config.tradingType === 'spot' ? '现货' : config.tradingType === 'futures' ? '合约' : '期权';
         setTradingActivity(prev => [
-          `🤖 AI发现${config.strategy === 'conservative' ? '稳健' : '激进'}交易机会: ${symbol} ${type === 'long' ? '买入' : '卖空'} (置信度: ${baseConfidence}%)`,
+          `🤖 AI发现${config.strategy === 'conservative' ? '稳健' : '激进'}${tradingTypeText}交易机会: ${symbol} ${type === 'long' ? '买入' : '卖空'} ${leverage > 1 ? `${leverage}x杠杆` : ''} (置信度: ${baseConfidence}%)`,
           ...prev.slice(0, 19)
         ]);
         
         // Auto execute with delay
-        setTimeout(() => executeSignal(newSignal), 2000);
+        setTimeout(() => executeSignal(signal), 2000);
       }
     };
 
@@ -205,8 +261,8 @@ export const AutoTrader = () => {
     return () => clearInterval(interval);
   }, [config.enabled, config.strategy, config.conservativeMinConfidence, config.aggressiveMinConfidence, config.maxPositions, positions.length]);
 
-  const generateAIReasoning = (symbol: string, type: string, confidence: number, strategy: TradingStrategy): string => {
-    const reasons = [
+  const generateAIReasoning = (symbol: string, type: string, confidence: number, strategy: TradingStrategy, tradingType: TradingType): string => {
+    const baseReasons = [
       `${symbol}突破关键阻力位，成交量放大确认`,
       `多重技术指标共振，${type === 'long' ? '看涨' : '看跌'}信号强烈`,
       `市场情绪转换，资金流向显示明显${type === 'long' ? '买入' : '卖出'}压力`,
@@ -214,20 +270,44 @@ export const AutoTrader = () => {
       `基本面分析与技术面完美结合的交易机会`
     ];
     
+    const tradingTypeReasons = {
+      spot: '现货市场流动性充足，适合稳健布局',
+      futures: '期货合约价差机会明显，杠杆优势突出',
+      options: '隐含波动率偏低，时间价值衰减可控'
+    };
+    
     const strategyNote = strategy === 'conservative' 
       ? '稳健策略：风险控制优先，追求稳定收益'
       : '激进策略：追求高收益，承担相应风险';
     
-    return `${reasons[Math.floor(Math.random() * reasons.length)]}。${strategyNote}`;
+    return `${baseReasons[Math.floor(Math.random() * baseReasons.length)]}。${tradingTypeReasons[tradingType]}。${strategyNote}`;
   };
 
   const executeSignal = (signal: TradingSignal) => {
-    const positionSize = (config.virtualBalance * config.riskPerTrade) / 100;
+    let positionSize = (config.virtualBalance * config.riskPerTrade) / 100;
+    
+    // Apply leverage for futures
+    if (signal.tradingType === 'futures' && signal.leverage) {
+      positionSize *= signal.leverage;
+    }
+    
+    // Calculate margin for leveraged positions
+    const margin = signal.tradingType === 'futures' ? positionSize / (signal.leverage || 1) : positionSize;
+    
+    // Calculate liquidation price for futures
+    let liquidationPrice;
+    if (signal.tradingType === 'futures' && signal.leverage) {
+      const marginRatio = 1 / signal.leverage * 0.8; // 80% of full margin
+      liquidationPrice = signal.type === 'long' 
+        ? signal.entry * (1 - marginRatio)
+        : signal.entry * (1 + marginRatio);
+    }
     
     const newPosition: Position = {
       id: signal.id,
       symbol: signal.symbol,
       type: signal.type,
+      tradingType: signal.tradingType,
       entry: signal.entry,
       size: positionSize,
       currentPrice: signal.entry,
@@ -239,8 +319,23 @@ export const AutoTrader = () => {
       stopLoss: signal.stopLoss,
       takeProfit: signal.takeProfit,
       highestProfit: 0,
-      maxDrawdown: 0
+      maxDrawdown: 0,
+      leverage: signal.leverage,
+      margin: margin,
+      liquidationPrice: liquidationPrice,
+      expiryDate: signal.expiryDate,
+      strikePrice: signal.strikePrice,
+      optionType: signal.optionType
     };
+
+    // For options, calculate initial intrinsic and time value
+    if (signal.tradingType === 'options' && signal.strikePrice) {
+      const intrinsic = signal.optionType === 'call' 
+        ? Math.max(0, signal.entry - signal.strikePrice)
+        : Math.max(0, signal.strikePrice - signal.entry);
+      newPosition.intrinsicValue = intrinsic;
+      newPosition.timeValue = (positionSize / 100) - intrinsic; // Rough estimate
+    }
 
     setPositions(prev => [...prev, newPosition]);
     setSignals(prev => 
@@ -248,14 +343,16 @@ export const AutoTrader = () => {
     );
 
     // Add to activity log
+    const tradingTypeText = signal.tradingType === 'spot' ? '现货' : signal.tradingType === 'futures' ? '合约' : '期权';
+    const leverageText = signal.leverage && signal.leverage > 1 ? ` ${signal.leverage}x杠杆` : '';
     setTradingActivity(prev => [
-      `✅ 交易执行: ${signal.symbol} ${signal.type === 'long' ? '买入' : '卖空'} $${signal.entry.toLocaleString()} (${signal.strategy === 'conservative' ? '稳健' : '激进'}策略)`,
+      `✅ ${tradingTypeText}交易执行: ${signal.symbol} ${signal.type === 'long' ? '买入' : '卖空'} $${signal.entry.toLocaleString()}${leverageText} (${signal.strategy === 'conservative' ? '稳健' : '激进'}策略)`,
       ...prev.slice(0, 19)
     ]);
 
     toast({
       title: "AI自动交易执行",
-      description: `${signal.symbol} ${signal.type === 'long' ? '买入' : '卖空'} 订单已执行 (${signal.strategy === 'conservative' ? '稳健' : '激进'}策略)`,
+      description: `${signal.symbol} ${tradingTypeText} ${signal.type === 'long' ? '买入' : '卖空'} 订单已执行${leverageText}`,
     });
   };
 
@@ -374,7 +471,13 @@ export const AutoTrader = () => {
       conservativeStats: { trades: 32, winRate: 93.8, avgProfit: 156.5 },
       aggressiveStats: { trades: 16, winRate: 75.0, avgProfit: 89.2 },
       dailyPnL: 0,
-      monthlyPnL: 0
+      monthlyPnL: 0,
+      spotStats: { trades: 18, winRate: 89.0, avgProfit: 120.5 },
+      futuresStats: { trades: 24, winRate: 83.3, avgProfit: 185.2, totalMargin: 8500 },
+      optionsStats: { trades: 6, winRate: 100, avgProfit: 340.8, premiumsPaid: 1250 },
+      leverageUsed: 3.2,
+      maxDrawdown: -2.8,
+      sharpeRatio: 2.15
     });
     setTradingActivity(['🔄 虚拟账户已重置']);
     
@@ -443,39 +546,94 @@ export const AutoTrader = () => {
               </div>
               
               <div className="space-y-4">
-                <div>
-                  <label className="text-slate-300 text-sm mb-2 block">选择交易策略</label>
-                  <Select value={config.strategy} onValueChange={(value: TradingStrategy) => setConfig(prev => ({ ...prev, strategy: value }))}>
-                    <SelectTrigger className="bg-slate-700 border-slate-600">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="conservative">
-                        <div className="flex items-center gap-2">
-                          <Shield className="w-4 h-4 text-green-400" />
-                          稳健策略 (≥90%胜率)
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="aggressive">
-                        <div className="flex items-center gap-2">
-                          <Zap className="w-4 h-4 text-orange-400" />
-                          激进策略 (≥70%胜率)
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-slate-300 text-sm mb-2 block">交易策略</label>
+                    <Select value={config.strategy} onValueChange={(value: TradingStrategy) => setConfig(prev => ({ ...prev, strategy: value }))}>
+                      <SelectTrigger className="bg-slate-700 border-slate-600">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="conservative">
+                          <div className="flex items-center gap-2">
+                            <Shield className="w-4 h-4 text-green-400" />
+                            稳健策略 (≥90%胜率)
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="aggressive">
+                          <div className="flex items-center gap-2">
+                            <Zap className="w-4 h-4 text-orange-400" />
+                            激进策略 (≥70%胜率)
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <label className="text-slate-300 text-sm mb-2 block">交易类型</label>
+                    <Select value={config.tradingType} onValueChange={(value: TradingType) => setConfig(prev => ({ ...prev, tradingType: value }))}>
+                      <SelectTrigger className="bg-slate-700 border-slate-600">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="spot">
+                          <div className="flex items-center gap-2">
+                            <CircleDollarSign className="w-4 h-4 text-blue-400" />
+                            现货交易
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="futures">
+                          <div className="flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-purple-400" />
+                            合约交易
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="options">
+                          <div className="flex items-center gap-2">
+                            <Target className="w-4 h-4 text-yellow-400" />
+                            期权交易
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-2 text-xs">
+                {config.tradingType !== 'spot' && (
+                  <div>
+                    <label className="text-slate-300 text-sm mb-2 block">杠杆倍数: {config.leverage}x</label>
+                    <Slider
+                      value={[config.leverage]}
+                      onValueChange={(value) => setConfig(prev => ({ ...prev, leverage: value[0] }))}
+                      max={config.tradingType === 'futures' ? 100 : 50}
+                      min={1}
+                      step={1}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-xs text-slate-400 mt-1">
+                      <span>1x</span>
+                      <span>{config.tradingType === 'futures' ? '100x' : '50x'}</span>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="grid grid-cols-3 gap-2 text-xs">
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">当前策略</p>
+                    <p className="text-slate-400">策略</p>
                     <p className={`font-semibold ${config.strategy === 'conservative' ? 'text-green-400' : 'text-orange-400'}`}>
                       {strategyConfig.name}
                     </p>
                   </div>
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">最低置信度</p>
-                    <p className="text-white font-mono">{strategyConfig.minConfidence}%</p>
+                    <p className="text-slate-400">交易类型</p>
+                    <p className="text-white font-mono">
+                      {config.tradingType === 'spot' ? '现货' : config.tradingType === 'futures' ? '合约' : '期权'}
+                    </p>
+                  </div>
+                  <div className="text-center p-2 bg-slate-700/50 rounded">
+                    <p className="text-slate-400">杠杆</p>
+                    <p className="text-white font-mono">{config.leverage}x</p>
                   </div>
                 </div>
               </div>
