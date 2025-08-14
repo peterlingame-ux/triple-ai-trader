@@ -143,7 +143,7 @@ export const TradingDashboard = () => {
                   <Badge variant="outline" className="px-6 py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
                     <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
                     <Brain className="w-5 h-5 mr-2" />
-                    实时市场数据
+                    {t('status.live')}
                   </Badge>
                   <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </div>

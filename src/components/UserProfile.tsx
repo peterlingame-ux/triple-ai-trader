@@ -14,8 +14,10 @@ interface UserProfileData {
   avatar: string;
   initials: string;
 }
+import { useLanguage } from "@/hooks/useLanguage";
 
 export const UserProfile = () => {
+  const { t } = useLanguage();
   const [profileData, setProfileData] = useState<UserProfileData>({
     name: '',
     avatar: '',
@@ -64,8 +66,8 @@ export const UserProfile = () => {
     setIsEditing(false);
     
     toast({
-      title: "个人资料已保存",
-      description: "您的头像和姓名已成功更新",
+      title: t('profile.saved'),
+      description: t('profile.updated'),
     });
   };
 
@@ -176,10 +178,10 @@ export const UserProfile = () => {
           </Avatar>
           <div className="hidden sm:flex flex-col items-start">
             <span className="text-sm font-medium text-blue-300">
-              {profileData.name || '个人资料设置'}
+              {profileData.name || t('profile.settings')}
             </span>
             <span className="text-xs text-blue-400/70">
-              {profileData.name ? '个人资料' : '点击编辑'}
+              {profileData.name ? t('profile.personal') : t('profile.click_edit')}
             </span>
           </div>
           <Edit3 className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
@@ -190,7 +192,7 @@ export const UserProfile = () => {
         <DialogHeader>
           <DialogTitle className="text-foreground flex items-center gap-2">
             <User className="w-5 h-5" />
-            编辑个人资料
+            {t('profile.edit')}
           </DialogTitle>
         </DialogHeader>
 

@@ -18,12 +18,12 @@ const translations = {
     'portfolio.trades': 'Active Trades',
     'market.overview': 'Market Overview',
     'ai.advisors': 'SUPREME BRAIN',
+    'status.live': 'Real-time Market Data',
     'actions.title': 'Quick Actions',
     'actions.execute': 'Execute Trade',
     'actions.analysis': 'Portfolio Analysis',
     'actions.risk': 'Risk Assessment',
     'actions.alerts': 'Market Alerts',
-    'status.live': 'Live Market Data',
     'advisor.confidence': 'Confident',
     'advisor.recommendation': 'Recommendation',
     'advisor.analysis': 'AI Analysis',
@@ -304,7 +304,14 @@ const translations = {
     'wallet.argent.description': 'Smart contract wallet with social recovery support',
     'wallet.binance.description': 'Official Binance wallet with deep exchange integration',
     'wallet.okx.description': 'Web3 wallet by OKX exchange',
-    'wallet.connect_button': 'Connect {wallet}'
+    'wallet.connect_button': 'Connect {wallet}',
+    // User profile translations
+    'profile.settings': 'Profile Settings',
+    'profile.edit': 'Edit Profile',
+    'profile.personal': 'Personal Profile',
+    'profile.click_edit': 'Click to Edit',
+    'profile.saved': 'Profile Saved',
+    'profile.updated': 'Your avatar and name have been successfully updated'
   },
   zh: {
     'app.title': 'Meta BrainX',
@@ -599,7 +606,15 @@ const translations = {
     'wallet.argent.description': '支持社交恢复的智能合约钱包',
     'wallet.binance.description': '币安官方钱包，深度交易所集成',
     'wallet.okx.description': 'OKX交易所的Web3钱包',
-    'wallet.connect_button': '连接 {wallet}'
+    'wallet.connect_button': '连接 {wallet}',
+    
+    // User profile Chinese translations
+    'profile.settings': '个人资料设置',
+    'profile.edit': '编辑个人资料',
+    'profile.personal': '个人资料',
+    'profile.click_edit': '点击编辑',
+    'profile.saved': '个人资料已保存',
+    'profile.updated': '您的头像和姓名已成功更新'
   }
 };
 
