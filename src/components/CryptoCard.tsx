@@ -2,18 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Coins } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-// 3D Components
-import { 
-  BTC3DLogo, 
-  ETH3DLogo, 
-  BNB3DLogo, 
-  DOGE3DLogo, 
-  SOL3DLogo, 
-  ADA3DLogo, 
-  OKB3DLogo, 
-  PENGU3DLogo, 
-  Crypto3DIcon 
-} from "@/components/crypto3d";
+import { CryptoStaticIcon } from "./Static3DIconShowcase";
 
 interface CryptoCardProps {
   symbol: string;
@@ -36,26 +25,12 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 flex items-center justify-center">
-            {/* Real 3D Icons for major cryptocurrencies */}
-            {symbol === 'BTC' ? (
-              <BTC3DLogo size={64} />
-            ) : symbol === 'ETH' ? (
-              <ETH3DLogo size={64} />
-            ) : symbol === 'BNB' ? (
-              <BNB3DLogo size={64} />
-            ) : symbol === 'DOGE' ? (
-              <DOGE3DLogo size={64} />
-            ) : symbol === 'SOL' ? (
-              <SOL3DLogo size={64} />
-            ) : symbol === 'ADA' ? (
-              <ADA3DLogo size={64} />
-            ) : symbol === 'OKB' ? (
-              <OKB3DLogo size={64} />
-            ) : symbol === 'PENGU' ? (
-              <PENGU3DLogo size={64} />
-            ) : (
-              <Crypto3DIcon symbol={symbol} size={64} />
-            )}
+            <CryptoStaticIcon 
+              symbol={symbol} 
+              name={name} 
+              size={64} 
+              className="hover:scale-110 transition-transform duration-200"
+            />
           </div>
           <div>
             <h3 className="text-foreground font-bold text-lg font-orbitron tracking-wide">{symbol}</h3>

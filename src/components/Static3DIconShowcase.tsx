@@ -68,6 +68,37 @@ import BABYDOGEIcon from '@/assets/crypto-3d-icons/BABYDOGE-3d-icon.png';
 import OKBIcon from '@/assets/crypto-3d-icons/OKB-3d-icon.png';
 import PENGUIcon from '@/assets/crypto-3d-icons/PENGU-3d-icon.png';
 
+// Import additional new icons
+import BANDIcon from '@/assets/crypto-3d-icons/BAND-3d-icon.png';
+import KAVAIcon from '@/assets/crypto-3d-icons/KAVA-3d-icon.png';
+import KNCIcon from '@/assets/crypto-3d-icons/KNC-3d-icon.png';
+import UMAIcon from '@/assets/crypto-3d-icons/UMA-3d-icon.png';
+import RUNEIcon from '@/assets/crypto-3d-icons/RUNE-3d-icon.png';
+import TUSDIcon from '@/assets/crypto-3d-icons/TUSD-3d-icon.png';
+import AXSIcon from '@/assets/crypto-3d-icons/AXS-3d-icon.png';
+import IMXIcon from '@/assets/crypto-3d-icons/IMX-3d-icon.png';
+import FETIcon from '@/assets/crypto-3d-icons/FET-3d-icon.png';
+import RNDRIcon from '@/assets/crypto-3d-icons/RNDR-3d-icon.png';
+import INJIcon from '@/assets/crypto-3d-icons/INJ-3d-icon.png';
+import SEIIcon from '@/assets/crypto-3d-icons/SEI-3d-icon.png';
+import ARBIcon from '@/assets/crypto-3d-icons/ARB-3d-icon.png';
+import OPIcon from '@/assets/crypto-3d-icons/OP-3d-icon.png';
+import JASMYIcon from '@/assets/crypto-3d-icons/JASMY-3d-icon.png';
+import STXIcon from '@/assets/crypto-3d-icons/STX-3d-icon.png';
+import KASIcon from '@/assets/crypto-3d-icons/KAS-3d-icon.png';
+import FDUSDIcon from '@/assets/crypto-3d-icons/FDUSD-3d-icon.png';
+import RETHIcon from '@/assets/crypto-3d-icons/RETH-3d-icon.png';
+import MNTIcon from '@/assets/crypto-3d-icons/MNT-3d-icon.png';
+import SUIIcon from '@/assets/crypto-3d-icons/SUI-3d-icon.png';
+import JUPIcon from '@/assets/crypto-3d-icons/JUP-3d-icon.png';
+import WLDIcon from '@/assets/crypto-3d-icons/WLD-3d-icon.png';
+import BSVIcon from '@/assets/crypto-3d-icons/BSV-3d-icon.png';
+import XMRIcon from '@/assets/crypto-3d-icons/XMR-3d-icon.png';
+import LUNCIcon from '@/assets/crypto-3d-icons/LUNC-3d-icon.png';
+import USTCIcon from '@/assets/crypto-3d-icons/USTC-3d-icon.png';
+import DAIIcon from '@/assets/crypto-3d-icons/DAI-3d-icon.png';
+import CAKEIcon from '@/assets/crypto-3d-icons/CAKE-3d-icon.png';
+
 interface CryptoStaticIconProps {
   symbol: string;
   name: string;
@@ -138,6 +169,37 @@ const crypto3DIconMap: Record<string, string> = {
   BABYDOGE: BABYDOGEIcon,
   OKB: OKBIcon,
   PENGU: PENGUIcon,
+  
+  // Additional new icons
+  BAND: BANDIcon,
+  KAVA: KAVAIcon,
+  KNC: KNCIcon,
+  UMA: UMAIcon,
+  RUNE: RUNEIcon,
+  TUSD: TUSDIcon,
+  AXS: AXSIcon,
+  IMX: IMXIcon,
+  FET: FETIcon,
+  RNDR: RNDRIcon,
+  INJ: INJIcon,
+  SEI: SEIIcon,
+  ARB: ARBIcon,
+  OP: OPIcon,
+  JASMY: JASMYIcon,
+  STX: STXIcon,
+  KAS: KASIcon,
+  FDUSD: FDUSDIcon,
+  RETH: RETHIcon,
+  MNT: MNTIcon,
+  SUI: SUIIcon,
+  JUP: JUPIcon,
+  WLD: WLDIcon,
+  BSV: BSVIcon,
+  XMR: XMRIcon,
+  LUNC: LUNCIcon,
+  USTC: USTCIcon,
+  DAI: DAIIcon,
+  CAKE: CAKEIcon,
 };
 
 export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({ 
