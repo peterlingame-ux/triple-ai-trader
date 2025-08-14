@@ -1,10 +1,22 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  const { signOut, user } = useAuth();
+  const { signOut, user, isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">加载中...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -14,14 +26,25 @@ const Index = () => {
             Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <User className="h-4 w-4" />
-              {user?.email}
-            </div>
-            <Button variant="outline" size="sm" onClick={signOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <User className="h-4 w-4" />
+                  {user?.email}
+                </div>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  退出登录
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" size="sm">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  登录 / 注册
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </header>
