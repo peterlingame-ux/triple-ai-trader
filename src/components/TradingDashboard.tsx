@@ -8,11 +8,9 @@ import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useOptimizedCrypto, filterCryptoData } from "@/hooks/useOptimizedCrypto";
+import { useCryptoData } from "@/hooks/useCryptoData";
 import { CryptoSearch } from "./CryptoSearch";
-import { OptimizedCryptoCard } from "./optimized/OptimizedCryptoCard";
-import { OptimizedHeader } from "./optimized/OptimizedHeader";
-import { OptimizedPortfolioStats } from "./optimized/OptimizedPortfolioStats";
+import { CryptoCard } from "./CryptoCard";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
@@ -74,12 +72,16 @@ const aiAdvisors = [
 
 export const TradingDashboard = () => {
   const { t } = useLanguage();
-  const { cryptoData, newsData, loading, refreshData } = useOptimizedCrypto();
+  const { cryptoData, newsData, loading, refreshData } = useCryptoData();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
   // Filter crypto data based on search query
-  const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
+  const filteredCryptoData = searchQuery ? 
+    cryptoData.filter(crypto => 
+      crypto.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      crypto.name.toLowerCase().includes(searchQuery.toLowerCase())
+    ) : cryptoData;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -107,14 +109,18 @@ export const TradingDashboard = () => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Optimized Header */}
-        <OptimizedHeader />
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold text-white mb-4 font-orbitron tracking-wide">
+            Meta BrainX AI Trader
+          </h1>
+          <p className="text-xl text-gray-300 font-inter">
+            {t('app.subtitle')}
+          </p>
+        </div>
 
         {/* AI Opportunity Alert */}
         <AIOpportunityAlert />
-
-        {/* Optimized Portfolio Stats */}
-        <OptimizedPortfolioStats />
 
         {/* Crypto Cards Grid */}
         <div>
@@ -158,16 +164,13 @@ export const TradingDashboard = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(showAllCrypto ? filteredCryptoData : filteredCryptoData.slice(0, 6)).map((crypto) => (
-              <OptimizedCryptoCard
+              <CryptoCard
                 key={crypto.symbol}
                 symbol={crypto.symbol}
                 name={crypto.name}
                 price={crypto.price}
                 change={crypto.change24h}
                 changePercent={crypto.changePercent24h}
-                volume={crypto.volume24h}
-                marketCap={crypto.marketCap}
-                rank={crypto.marketCapRank}
               />
             ))}
           </div>
