@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { CompactCryptoCard } from "./CompactCryptoCard";
 
 interface CryptoData {
@@ -21,25 +21,71 @@ interface ProfessionalCryptoGridProps {
 export const ProfessionalCryptoGrid = memo<ProfessionalCryptoGridProps>(({ 
   cryptoData, 
   showAll, 
-  maxVisible = 8 
+  maxVisible = 6 
 }) => {
-  const displayData = showAll ? cryptoData : cryptoData.slice(0, maxVisible);
+  const [displayData, setDisplayData] = useState<CryptoData[]>([]);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (showAll !== undefined) {
+      setIsAnimating(true);
+      
+      // 添加短暂延迟来实现平滑过渡
+      const timer = setTimeout(() => {
+        const newData = showAll ? cryptoData : cryptoData.slice(0, maxVisible);
+        setDisplayData(newData);
+        setIsAnimating(false);
+      }, 150);
+
+      return () => clearTimeout(timer);
+    }
+  }, [cryptoData, showAll, maxVisible]);
+
+  // 初始化数据
+  useEffect(() => {
+    if (!showAll && cryptoData.length > 0) {
+      setDisplayData(cryptoData.slice(0, maxVisible));
+    } else if (showAll) {
+      setDisplayData(cryptoData);
+    }
+  }, [cryptoData, showAll, maxVisible]);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-3">
-      {displayData.map((crypto) => (
-        <CompactCryptoCard
-          key={crypto.symbol}
-          symbol={crypto.symbol}
-          name={crypto.name}
-          price={crypto.price}
-          change={crypto.change24h}
-          changePercent={crypto.changePercent24h}
-          image={crypto.image}
-          volume={crypto.volume24h}
-          marketCap={crypto.marketCap}
-        />
-      ))}
+    <div className="relative">
+      <div 
+        className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-3 transition-all duration-300 ${
+          isAnimating ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100'
+        }`}
+      >
+        {displayData.map((crypto, index) => (
+          <div 
+            key={crypto.symbol}
+            className="animate-fade-in"
+            style={{ 
+              animationDelay: `${index * 50}ms`,
+              animationFillMode: 'both'
+            }}
+          >
+            <CompactCryptoCard
+              symbol={crypto.symbol}
+              name={crypto.name}
+              price={crypto.price}
+              change={crypto.change24h}
+              changePercent={crypto.changePercent24h}
+              image={crypto.image}
+              volume={crypto.volume24h}
+              marketCap={crypto.marketCap}
+            />
+          </div>
+        ))}
+      </div>
+      
+      {/* 加载动画遮罩 */}
+      {isAnimating && (
+        <div className="absolute inset-0 bg-background/20 backdrop-blur-[2px] rounded-lg flex items-center justify-center z-10">
+          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 });

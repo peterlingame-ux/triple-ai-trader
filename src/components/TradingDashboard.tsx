@@ -84,7 +84,7 @@ export const TradingDashboard = () => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
-  const [showAllCrypto, setShowAllCrypto] = useState(false);
+  const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
   
   // Memoize filtered crypto data for performance
@@ -186,7 +186,7 @@ export const TradingDashboard = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
             <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
               <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              {t('market.overview')}
+              市场概览
               {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
@@ -197,14 +197,14 @@ export const TradingDashboard = () => {
                 className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30 text-xs sm:text-sm whitespace-nowrap"
               >
                 <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                {t('button.refresh')}
+                刷新数据
               </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setShowAllCrypto(!showAllCrypto)}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
               >
-                {showAllCrypto ? t('button.show_top') : t('button.all_categories')}
+                {showAllCrypto ? '收起显示' : '全部分类'}
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
               </Button>
             </div>
@@ -224,8 +224,25 @@ export const TradingDashboard = () => {
                   <ProfessionalCryptoGrid 
                     cryptoData={filteredCryptoData} 
                     showAll={showAllCrypto}
-                    maxVisible={93}
+                    maxVisible={6}
                   />
+                  
+                  {/* 货币计数和折叠状态显示 */}
+                  <div className="flex items-center justify-between mt-4 px-2">
+                    <div className="text-sm text-muted-foreground">
+                      显示 {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} / {filteredCryptoData.length} 种货币
+                    </div>
+                    {filteredCryptoData.length > 6 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowAllCrypto(!showAllCrypto)}
+                        className="text-primary hover:text-primary/80 text-xs sm:text-sm"
+                      >
+                        {showAllCrypto ? '收起' : `查看全部 ${filteredCryptoData.length} 个`}
+                      </Button>
+                    )}
+                  </div>
           
           {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-8 sm:py-12">
