@@ -19,7 +19,7 @@ import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
-import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
+import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 
@@ -221,11 +221,11 @@ export const TradingDashboard = () => {
             />
           </div>
           
-          <OptimizedCryptoGrid 
-            cryptoData={filteredCryptoData}
-            showAll={showAllCrypto}
-            maxVisible={6}
-          />
+                  <ProfessionalCryptoGrid 
+                    cryptoData={filteredCryptoData} 
+                    showAll={showAllCrypto}
+                    maxVisible={8}
+                  />
           
           {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-8 sm:py-12">
