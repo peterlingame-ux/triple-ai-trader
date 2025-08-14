@@ -2,11 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 
- * Meta BrainX Optimized Design System
- * All colors are HSL format for better theming
- * Optimized for performance and consistency
- */
+/* Meta BrainX Crypto Trading Dashboard Design System
+All colors MUST be HSL.
+*/
 
 @layer base {
   :root {
@@ -116,33 +114,5 @@
 
   body {
     @apply bg-background text-foreground;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Optimize font loading for better performance */
-  html {
-    font-display: swap;
-  }
-
-  /* Optimize scrolling performance */
-  * {
-    scroll-behavior: smooth;
-  }
-}
-
-@layer utilities {
-  /* Performance optimized utilities */
-  .will-change-transform {
-    will-change: transform;
-  }
-  
-  .gpu-accelerated {
-    transform: translateZ(0);
-  }
-  
-  .optimize-animations {
-    backface-visibility: hidden;
-    perspective: 1000px;
   }
 }

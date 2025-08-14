@@ -1,8 +1,9 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
+import { AIAdvisor } from "./AIAdvisor";
 import { ElonProfile } from "./ElonProfile";
 import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
@@ -17,10 +18,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
-import { IconGeneratorDialog } from "./IconGeneratorDialog";
-import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
-import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
-import { BarChart3, Brain, RefreshCw } from "lucide-react";
+import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw, Wallet, Bot } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -86,23 +84,20 @@ export const TradingDashboard = () => {
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Memoize filtered crypto data for performance
-  const filteredCryptoData = useMemo(() => 
-    filterCryptoData(cryptoData, searchQuery), 
-    [cryptoData, searchQuery]
-  );
+  // Filter crypto data based on search query
+  const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
 
   // Get portfolio data from either wallet or auto-trader
-  const portfolioData = useMemo(() => getPortfolioData(), [getPortfolioData]);
+  const portfolioData = getPortfolioData();
   const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
-  const handleSearch = useCallback((query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
-  }, []);
+  };
 
-  const handleClearSearch = useCallback(() => {
+  const handleClearSearch = () => {
     setSearchQuery("");
-  }, []);
+  };
 
   return (
     <div className="min-h-screen relative p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
@@ -175,7 +170,69 @@ export const TradingDashboard = () => {
         <AIOpportunityAlert />
 
         {/* Portfolio Overview with Dynamic Data Source */}
-        <OptimizedPortfolioCards portfolioData={portfolioData} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="p-6 bg-gradient-crypto border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                {source === 'wallet' ? (
+                  <Wallet className="w-6 h-6 text-accent" />
+                ) : (
+                  <Bot className="w-6 h-6 text-accent" />
+                )}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground font-inter">
+                    {source === 'wallet' ? t('wallet.real') : t('wallet.virtual')}
+                  </p>
+                  {source === 'autotrader' && (
+                    <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">
+                      {t('wallet.ai_virtual_badge')}
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-2xl font-bold text-accent font-mono tracking-wider">
+                  ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-crypto border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.change')}</p>
+                  {source === 'wallet' && (
+                    <Badge variant="outline" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
+                      实时
+                    </Badge>
+                  )}
+                </div>
+                <p className={`text-2xl font-bold font-mono tracking-wider ${dailyChange >= 0 ? 'text-success' : 'text-destructive'}`}>
+                  {dailyChange >= 0 ? '+' : ''}${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-crypto border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground font-inter">
+                  {source === 'wallet' ? '持仓交易' : t('portfolio.trades')}
+                </p>
+                <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
+              </div>
+            </div>
+          </Card>
+        </div>
 
         {/* Crypto Cards Grid */}
         <div>
@@ -186,7 +243,6 @@ export const TradingDashboard = () => {
               {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2">
-              <IconGeneratorDialog />
               <Button 
                 variant="outline" 
                 onClick={refreshData}
@@ -218,11 +274,21 @@ export const TradingDashboard = () => {
             />
           </div>
           
-          <OptimizedCryptoGrid 
-            cryptoData={filteredCryptoData}
-            showAll={showAllCrypto}
-            maxVisible={6}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {(showAllCrypto ? filteredCryptoData : filteredCryptoData.slice(0, 6)).map((crypto) => (
+              <CryptoCard
+                key={crypto.symbol}
+                symbol={crypto.symbol}
+                name={crypto.name}
+                price={crypto.price}
+                change={crypto.change24h}
+                changePercent={crypto.changePercent24h}
+                image={crypto.image}
+                volume={crypto.volume24h}
+                marketCap={crypto.marketCap}
+              />
+            ))}
+          </div>
           
           {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-12">
