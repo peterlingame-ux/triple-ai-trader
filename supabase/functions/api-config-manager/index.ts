@@ -30,7 +30,18 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(jwt);
     
     if (authError || !user) {
-      throw new Error('Unauthorized');
+      console.error('Auth error:', authError);
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Unauthorized - Please log in to configure API settings',
+          needsLogin: true
+        }),
+        { 
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
 
     const userId = user.id;

@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Shield, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Shield, CheckCircle, XCircle, Loader2, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SecureAPIConfigProps {
   title: string;
@@ -26,6 +27,7 @@ export function SecureAPIConfig({
   hasSecretKey = true,
   onConfigChange 
 }: SecureAPIConfigProps) {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [apiKey, setApiKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
@@ -36,8 +38,10 @@ export function SecureAPIConfig({
   const { toast } = useToast();
 
   useEffect(() => {
-    checkConfiguration();
-  }, []);
+    if (isAuthenticated) {
+      checkConfiguration();
+    }
+  }, [isAuthenticated]);
 
   const checkConfiguration = async () => {
     try {
@@ -91,11 +95,22 @@ export function SecureAPIConfig({
       // Test connection after saving
       testConnection();
     } catch (error: any) {
-      toast({
-        title: "Save Error",
-        description: error.message || "Failed to save configuration",
-        variant: "destructive"
-      });
+      console.error('Save config error:', error);
+      
+      // Handle specific error cases
+      if (error.message?.includes('Unauthorized') || error.message?.includes('needsLogin')) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to save API configuration",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Save Error",
+          description: error.message || "Failed to save configuration",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -120,12 +135,23 @@ export function SecureAPIConfig({
         variant: data.success ? "default" : "destructive"
       });
     } catch (error: any) {
+      console.error('Test connection error:', error);
       setConnectionStatus('error');
-      toast({
-        title: "Test Failed",
-        description: error.message || "Failed to test connection",
-        variant: "destructive"
-      });
+      
+      // Handle specific error cases
+      if (error.message?.includes('Unauthorized') || error.message?.includes('needsLogin')) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to test the connection",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Test Failed",
+          description: error.message || "Failed to test connection",
+          variant: "destructive"
+        });
+      }
     }
   };
 
@@ -170,6 +196,62 @@ export function SecureAPIConfig({
           <Badge variant="secondary">Not Configured</Badge>;
     }
   };
+
+  // Show loading state while checking auth
+  if (authLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="w-5 h-5" />
+            {title} Configuration
+          </CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-6">
+            <Loader2 className="w-6 h-6 animate-spin mr-2" />
+            Loading...
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Show login required state if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                {title} Configuration
+              </CardTitle>
+              <CardDescription>{description}</CardDescription>
+            </div>
+            <Badge variant="secondary">Login Required</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              请先登录才能配置API凭据。登录后您可以安全地存储和管理您的API密钥。
+            </AlertDescription>
+          </Alert>
+          
+          <Alert>
+            <Shield className="h-4 w-4" />
+            <AlertDescription>
+              🔒 登录后，您的API密钥将被加密并安全存储在Supabase中。它们永远不会存储在您的浏览器中或以明文传输。
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
