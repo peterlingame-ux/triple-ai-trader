@@ -38,7 +38,6 @@ const MetaBrainXShape = () => {
         color="#ffd700"
         anchorX="left"
         anchorY="middle"
-        font="/fonts/inter-bold.woff"
       >
         Meta
       </Text>
@@ -103,7 +102,6 @@ const MetaBrainXShape = () => {
         color="#ffd700"
         anchorX="left"
         anchorY="middle"
-        font="/fonts/inter-bold.woff"
       >
         BrainX
       </Text>
@@ -139,15 +137,15 @@ const MetaBrainXShape = () => {
           key={i}
           args={[0.02, 6, 6]}
           position={[
-            (Math.random() - 0.5) * 5,
-            (Math.random() - 0.5) * 2,
-            (Math.random() - 0.5) * 3
+            ((i % 5) - 2) * 1.2,
+            ((Math.floor(i / 5) % 2) - 0.5) * 1.5,
+            ((Math.floor(i / 10) % 2) - 0.5) * 2
           ]}
         >
           <meshStandardMaterial 
             color="#ffeb3b" 
             emissive="#ffc107"
-            emissiveIntensity={Math.random() * 0.8 + 0.2}
+            emissiveIntensity={0.5}
           />
         </Sphere>
       ))}
@@ -195,7 +193,6 @@ export const MetaBrainX3DLogo: React.FC<{ size?: number }> = ({ size = 200 }) =>
           penumbra={0.2} 
           intensity={0.8} 
           color="#ffd700"
-          target-position={[0, 0, 0]}
         />
         
         <MetaBrainXShape />
