@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings, Brain, BarChart3, Activity, Globe, Save, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface AIModelConfig {
   provider: 'openai' | 'claude' | 'perplexity' | 'custom';
@@ -70,6 +71,7 @@ const configDescriptions = {
 };
 
 export const AIConfigPanel = ({ config, onUpdateConfig }: AIConfigPanelProps) => {
+  const { t } = useLanguage();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [showApiKeys, setShowApiKeys] = useState({
@@ -249,7 +251,7 @@ export const AIConfigPanel = ({ config, onUpdateConfig }: AIConfigPanelProps) =>
           className="bg-muted/20 border-border hover:bg-accent/20"
         >
           <Settings className="w-4 h-4 mr-2" />
-          AI配置
+          {t('ai.config')}
         </Button>
       </DialogTrigger>
       
@@ -257,7 +259,7 @@ export const AIConfigPanel = ({ config, onUpdateConfig }: AIConfigPanelProps) =>
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-3 font-orbitron text-xl">
             <Brain className="w-6 h-6 text-accent" />
-            AI分析模型配置
+            {t('ai.model_config')}
           </DialogTitle>
         </DialogHeader>
         

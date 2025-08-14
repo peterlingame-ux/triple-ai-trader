@@ -571,7 +571,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                         <div className="col-span-3">
                           <Card className="bg-gradient-crypto border-border p-4 h-96">
                             <div className="flex items-center justify-between mb-4">
-                              <h4 className="text-foreground font-inter font-semibold">K线图表 & 技术指标</h4>
+                              <h4 className="text-foreground font-inter font-semibold">{t('ai.kline_chart')}</h4>
                               <div className="flex gap-1 flex-wrap">
                                 {['1m', '5m', '15m', '30m', '1H', '4H', '1D', '1W', '1M', '3M', '6M', '1Y'].map((tf) => (
                                   <Button
@@ -624,8 +624,8 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                                 <div className="flex-1 flex items-center justify-center">
                                   <div className="text-center text-muted-foreground">
                                     <LineChart className="w-20 h-20 mx-auto mb-3 text-accent/50" />
-                                    <p className="text-lg font-semibold">专业K线图表 ({timeframe})</p>
-                                    <p className="text-sm">实时价格数据 + 技术指标叠加</p>
+                                    <p className="text-lg font-semibold">{t('ai.professional_kline')} ({timeframe})</p>
+                                    <p className="text-sm">{t('ai.realtime_data')}</p>
                                     <div className="mt-3 flex items-center justify-center gap-4 text-xs">
                                       <span className="flex items-center gap-1">
                                         <div className="w-3 h-3 bg-accent rounded"></div>
@@ -683,12 +683,12 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                           <Card className="bg-gradient-crypto border-border p-4 h-96">
                             <h4 className="text-foreground font-inter font-semibold mb-4 flex items-center gap-2">
                               <Activity className="w-4 h-4 text-accent" />
-                              技术指标面板
+                              {t('ai.technical_panel')}
                             </h4>
                             <div className="space-y-3 text-sm overflow-y-auto">
                               {/* 基础技术指标 */}
                               <div className="space-y-2">
-                                <h5 className="text-xs font-semibold text-accent mb-2">基础指标</h5>
+                                <h5 className="text-xs font-semibold text-accent mb-2">{t('ai.basic_indicators')}</h5>
                                 <div className="flex justify-between items-center">
                                   <span className="text-muted-foreground">RSI(14)</span>
                                   <span className={`font-mono font-bold ${currentCrypto.rsi > 70 ? 'text-destructive' : currentCrypto.rsi < 30 ? 'text-success' : 'text-accent'}`}>
@@ -707,7 +707,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
 
                               {/* 移动平均线 */}
                               <div className="space-y-2 pt-2 border-t border-border/50">
-                                <h5 className="text-xs font-semibold text-accent mb-2">移动平均线</h5>
+                                <h5 className="text-xs font-semibold text-accent mb-2">{t('ai.moving_averages')}</h5>
                                 <div className="flex justify-between items-center">
                                   <span className="text-muted-foreground">MA5</span>
                                   <span className="text-foreground font-mono">${(currentCrypto.price * 0.995).toFixed(2)}</span>
