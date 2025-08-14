@@ -22,31 +22,7 @@ import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
-// Mock data for crypto prices - expanded dataset
-const mockCryptoData = [
-  { symbol: "BTC", name: "Bitcoin", price: 43250, change: 1245.50, changePercent: 2.97 },
-  { symbol: "ETH", name: "Ethereum", price: 2567, change: -45.30, changePercent: -1.73 },
-  { symbol: "ADA", name: "Cardano", price: 0.485, change: 0.023, changePercent: 4.98 },
-  { symbol: "SOL", name: "Solana", price: 98.75, change: 3.42, changePercent: 3.59 },
-  { symbol: "DOT", name: "Polkadot", price: 7.23, change: -0.18, changePercent: -2.43 },
-  { symbol: "MATIC", name: "Polygon", price: 0.89, change: 0.065, changePercent: 7.88 },
-];
-
-const allCryptoData = [
-  ...mockCryptoData,
-  { symbol: "BNB", name: "Binance Coin", price: 315.67, change: 12.45, changePercent: 4.12 },
-  { symbol: "XRP", name: "Ripple", price: 0.634, change: -0.021, changePercent: -3.20 },
-  { symbol: "DOGE", name: "Dogecoin", price: 0.078, change: 0.004, changePercent: 5.41 },
-  { symbol: "AVAX", name: "Avalanche", price: 36.78, change: 1.89, changePercent: 5.42 },
-  { symbol: "LINK", name: "Chainlink", price: 14.23, change: -0.67, changePercent: -4.50 },
-  { symbol: "UNI", name: "Uniswap", price: 6.45, change: 0.34, changePercent: 5.57 },
-  { symbol: "LTC", name: "Litecoin", price: 73.45, change: -2.12, changePercent: -2.81 },
-  { symbol: "ATOM", name: "Cosmos", price: 8.67, change: 0.45, changePercent: 5.48 },
-  { symbol: "ICP", name: "Internet Computer", price: 5.23, change: -0.23, changePercent: -4.21 },
-  { symbol: "NEAR", name: "NEAR Protocol", price: 2.34, change: 0.12, changePercent: 5.41 },
-  { symbol: "APT", name: "Aptos", price: 8.90, change: 0.67, changePercent: 8.13 },
-  { symbol: "FTM", name: "Fantom", price: 0.445, change: 0.023, changePercent: 5.46 },
-];
+// Removed duplicate mock data - using centralized data from useCryptoData hook
 
 
 export const TradingDashboard = () => {
@@ -128,10 +104,7 @@ export const TradingDashboard = () => {
               {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
                 <Button 
-                  onClick={() => {
-                    console.log("AI控制中心 button clicked");
-                    setShowAIControlCenter(true);
-                  }}
+                  onClick={() => setShowAIControlCenter(true)}
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600"
                 >
                   <Brain className="w-4 h-4 mr-2" />

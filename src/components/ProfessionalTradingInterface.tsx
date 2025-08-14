@@ -71,7 +71,9 @@ export const ProfessionalTradingInterface = () => {
   const handleAnalysisSubmit = () => {
     if (analysisQuery.trim()) {
       // Here we would integrate with AI analysis
-      console.log('Analyzing:', analysisQuery);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Analyzing:', analysisQuery);
+      }
       setAnalysisQuery('');
     }
   };

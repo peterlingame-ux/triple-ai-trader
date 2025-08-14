@@ -90,11 +90,13 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
   const handleMultiAIAnalysis = async () => {
     if (!analysisQuery.trim()) return;
     
-    console.log("Starting multi-AI analysis with:", {
-      query: analysisQuery,
-      crypto: selectedCrypto,
-      aiConfigs: aiConfigs
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log("Starting multi-AI analysis with:", {
+        query: analysisQuery,
+        crypto: selectedCrypto,
+        aiConfigs: aiConfigs
+      });
+    }
   };
 
   const AIConfigurationPanel = () => (
