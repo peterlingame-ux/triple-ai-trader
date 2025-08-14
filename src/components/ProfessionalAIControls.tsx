@@ -57,7 +57,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: Profe
                 </div>
               </Card>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0">
+            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true}>
               <AICommunicator cryptoData={cryptoData} newsData={newsData} />
             </DialogContent>
           </Dialog>
@@ -80,7 +80,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: Profe
                 </div>
               </Card>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0">
+            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true}>
               <AutoTrader />
             </DialogContent>
           </Dialog>
