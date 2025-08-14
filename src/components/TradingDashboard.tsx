@@ -18,6 +18,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
+import { IconGeneratorDialog } from "./IconGeneratorDialog";
 import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw, Wallet, Bot } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
@@ -243,6 +244,7 @@ export const TradingDashboard = () => {
               {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2">
+              <IconGeneratorDialog />
               <Button 
                 variant="outline" 
                 onClick={refreshData}
