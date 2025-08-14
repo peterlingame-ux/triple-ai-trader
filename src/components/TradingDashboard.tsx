@@ -20,7 +20,7 @@ import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
-import { ProfessionalCryptoModal } from "./ProfessionalCryptoModal";
+import { AIControlCenter } from "./AIControlCenter";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -55,7 +55,7 @@ export const TradingDashboard = () => {
   const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
-  const [showProfessionalModal, setShowProfessionalModal] = useState(false);
+  const [showAIControlCenter, setShowAIControlCenter] = useState(false);
   
   // Memoize filtered crypto data for performance
   const filteredCryptoData = useMemo(() => 
@@ -128,11 +128,11 @@ export const TradingDashboard = () => {
               {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
                 <Button 
-                  onClick={() => setShowProfessionalModal(true)}
+                  onClick={() => setShowAIControlCenter(true)}
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600"
                 >
                   <Brain className="w-4 h-4 mr-2" />
-                  实时分析
+                  AI控制中心
                 </Button>
                 <UserProfile />
                 <WalletConnector />
@@ -229,10 +229,10 @@ export const TradingDashboard = () => {
           )}
         </div>
 
-        {/* Professional Crypto Analysis Modal */}
-        <ProfessionalCryptoModal 
-          open={showProfessionalModal} 
-          onOpenChange={setShowProfessionalModal} 
+        {/* AI Control Center Modal */}
+        <AIControlCenter 
+          open={showAIControlCenter} 
+          onOpenChange={setShowAIControlCenter} 
         />
 
         {/* AI Advisors Section - Three Column Grid */}
