@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { MessageSquare, Bot, Zap, CircleDollarSign, Brain, Activity, Settings, TrendingUp } from "lucide-react";
+import { MessageSquare, Bot, Zap, CircleDollarSign, Brain, Activity, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
@@ -15,8 +14,42 @@ interface ProfessionalAIControlsProps {
 
 export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: ProfessionalAIControlsProps) => {
   const { t } = useLanguage();
-  const [activeDialog, setActiveDialog] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
+  // 如果有活跃的区域，显示对应的组件
+  if (activeSection === 'communicate') {
+    return (
+      <div className="space-y-4">
+        <Button 
+          variant="outline" 
+          onClick={() => setActiveSection(null)}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          返回AI控制中心
+        </Button>
+        <AICommunicator cryptoData={cryptoData} newsData={newsData} />
+      </div>
+    );
+  }
+
+  if (activeSection === 'autotrader') {
+    return (
+      <div className="space-y-4">
+        <Button 
+          variant="outline" 
+          onClick={() => setActiveSection(null)}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          返回AI控制中心
+        </Button>
+        <AutoTrader />
+      </div>
+    );
+  }
+
+  // 默认显示控制面板
   return (
     <Card className="bg-gradient-to-r from-slate-900/95 via-blue-950/90 to-slate-900/95 border-border/50 backdrop-blur-xl">
       <div className="p-6">
@@ -40,56 +73,42 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: Profe
         {/* Control Buttons Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* AI Communication Panel */}
-          <Dialog open={activeDialog === 'communicate'} onOpenChange={(open) => setActiveDialog(open ? 'communicate' : null)}>
-            <DialogTrigger asChild>
-              <Card className="p-6 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-purple-500/5 border-purple-500/20 hover:border-purple-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform duration-300">
-                    <MessageSquare className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.start_communicate')}</h4>
-                    <p className="text-xs text-muted-foreground">{t('ai.communicate_desc')}</p>
-                  </div>
-                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-purple-400" />
-                  </div>
-                </div>
-              </Card>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true} onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
-              <DialogHeader className="sr-only">
-                <DialogTitle>{t('ai.start_communicate')}</DialogTitle>
-              </DialogHeader>
-              <AICommunicator cryptoData={cryptoData} newsData={newsData} />
-            </DialogContent>
-          </Dialog>
+          <Card 
+            className="p-6 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-purple-500/5 border-purple-500/20 hover:border-purple-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 group"
+            onClick={() => setActiveSection('communicate')}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform duration-300">
+                <MessageSquare className="w-6 h-6 text-purple-400" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.start_communicate')}</h4>
+                <p className="text-xs text-muted-foreground">{t('ai.communicate_desc')}</p>
+              </div>
+              <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <Bot className="w-4 h-4 text-purple-400" />
+              </div>
+            </div>
+          </Card>
 
           {/* AI Auto Trading Panel */}
-          <Dialog open={activeDialog === 'autotrader'} onOpenChange={(open) => setActiveDialog(open ? 'autotrader' : null)}>
-            <DialogTrigger asChild>
-              <Card className="p-6 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-500/5 border-green-500/20 hover:border-green-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center border border-green-500/30 group-hover:scale-110 transition-transform duration-300">
-                    <CircleDollarSign className="w-6 h-6 text-green-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.auto_trading')}</h4>
-                    <p className="text-xs text-muted-foreground">{t('ai.auto_trading_desc')}</p>
-                  </div>
-                  <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                    <Zap className="w-4 h-4 text-green-400" />
-                  </div>
-                </div>
-              </Card>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true} onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
-              <DialogHeader className="sr-only">
-                <DialogTitle>{t('ai.auto_trading')}</DialogTitle>
-              </DialogHeader>
-              <AutoTrader />
-            </DialogContent>
-          </Dialog>
+          <Card 
+            className="p-6 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-500/5 border-green-500/20 hover:border-green-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10 group"
+            onClick={() => setActiveSection('autotrader')}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center border border-green-500/30 group-hover:scale-110 transition-transform duration-300">
+                <CircleDollarSign className="w-6 h-6 text-green-400" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.auto_trading')}</h4>
+                <p className="text-xs text-muted-foreground">{t('ai.auto_trading_desc')}</p>
+              </div>
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                <Zap className="w-4 h-4 text-green-400" />
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Stats Row */}
