@@ -64,6 +64,8 @@ import FLOKIIcon from '@/assets/crypto-3d-icons/FLOKI-3d-icon.png';
 import BABYDOGEIcon from '@/assets/crypto-3d-icons/BABYDOGE-3d-icon.png';
 import OKBIcon from '@/assets/crypto-3d-icons/OKB-3d-icon.png';
 import PENGUIcon from '@/assets/crypto-3d-icons/PENGU-3d-icon.png';
+import TURBOIcon from '@/assets/crypto-3d-icons/TURBO-3d-icon.png';
+import TRUMPIcon from '@/assets/crypto-3d-icons/TRUMP-3d-icon.png';
 
 interface CryptoStaticIconProps {
   symbol: string;
@@ -135,6 +137,8 @@ const crypto3DIconMap: Record<string, string> = {
   BABYDOGE: BABYDOGEIcon,
   OKB: OKBIcon,
   PENGU: PENGUIcon,
+  TURBO: TURBOIcon,
+  TRUMP: TRUMPIcon,
 };
 
 export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({ 
@@ -212,6 +216,10 @@ export const Static3DIconShowcase: React.FC = () => {
     // Exchange tokens
     { symbol: 'OKB', name: 'OKB' },
     { symbol: 'PENGU', name: 'Pudgy Penguins' },
+    
+    // New tokens
+    { symbol: 'TURBO', name: 'Turbo' },
+    { symbol: 'TRUMP', name: 'TrumpCoin' },
   ];
 
   return (
