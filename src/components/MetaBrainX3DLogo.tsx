@@ -38,7 +38,6 @@ const MetaBrainXShape = () => {
         color="#ffd700"
         anchorX="left"
         anchorY="middle"
-        font="/fonts/inter-bold.woff"
       >
         Meta
       </Text>
@@ -103,7 +102,6 @@ const MetaBrainXShape = () => {
         color="#ffd700"
         anchorX="left"
         anchorY="middle"
-        font="/fonts/inter-bold.woff"
       >
         BrainX
       </Text>
