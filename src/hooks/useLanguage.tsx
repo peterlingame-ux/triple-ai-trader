@@ -153,6 +153,8 @@ const translations = {
     'trading.spot_short': 'Spot',
     'trading.futures_short': 'Futures',
     'trading.strategy_short': 'Strategy',
+    'trading.trades_count': 'Trades Count',
+    'trading.avg_profit': 'Avg Profit',
     
     // 自动交易器翻译
     'autotrader.stopped': 'AI Auto Trading Stopped',
@@ -608,6 +610,8 @@ const translations = {
     'trading.spot_short': '现货',
     'trading.futures_short': '合约',
     'trading.strategy_short': '策略',
+    'trading.trades_count': '交易次数',
+    'trading.avg_profit': '平均盈利',
     'ai.brain_detection': '最强大脑自动检测',
     'ai.monitor_opportunities': '监控90%胜率机会',
     'ai.last_check': '上次检查:',

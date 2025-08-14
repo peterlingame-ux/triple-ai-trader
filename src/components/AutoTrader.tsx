@@ -719,8 +719,8 @@ export const AutoTrader = () => {
 
   const getStrategyConfig = () => {
     return config.strategy === 'conservative' 
-      ? { minConfidence: config.conservativeMinConfidence, color: 'green', name: '稳健策略' }
-      : { minConfidence: config.aggressiveMinConfidence, color: 'orange', name: '激进策略' };
+      ? { minConfidence: config.conservativeMinConfidence, color: 'green', name: t('trading.conservative_strategy') }
+      : { minConfidence: config.aggressiveMinConfidence, color: 'orange', name: t('trading.aggressive_strategy') };
   };
 
   const strategyConfig = getStrategyConfig();
@@ -951,16 +951,16 @@ export const AutoTrader = () => {
               <div className="space-y-3">
                 <div className="p-3 bg-green-500/10 rounded border border-green-500/20">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-green-400 font-medium">稳健策略</span>
-                    <Badge className="bg-green-500/20 text-green-400">93.8%胜率</Badge>
+                    <span className="text-green-400 font-medium">{t('trading.conservative_strategy')}</span>
+                    <Badge className="bg-green-500/20 text-green-400">93.8%{t('ai.win_rate')}</Badge>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <p className="text-slate-400">交易次数</p>
+                       <p className="text-slate-400">{t('trading.trades_count')}</p>
                       <p className="text-white">{stats.conservativeStats.trades}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400">平均盈利</p>
+                       <p className="text-slate-400">{t('trading.avg_profit')}</p>
                       <p className="text-green-400">+${stats.conservativeStats.avgProfit}</p>
                     </div>
                   </div>
@@ -968,16 +968,16 @@ export const AutoTrader = () => {
                 
                 <div className="p-3 bg-orange-500/10 rounded border border-orange-500/20">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-orange-400 font-medium">激进策略</span>
-                    <Badge className="bg-orange-500/20 text-orange-400">75.0%胜率</Badge>
+                    <span className="text-orange-400 font-medium">{t('trading.aggressive_strategy')}</span>
+                    <Badge className="bg-orange-500/20 text-orange-400">75.0%{t('ai.win_rate')}</Badge>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <p className="text-slate-400">交易次数</p>
+                      <p className="text-slate-400">{t('trading.trades_count')}</p>
                       <p className="text-white">{stats.aggressiveStats.trades}</p>
                     </div>
                     <div>
-                      <p className="text-slate-400">平均盈利</p>
+                      <p className="text-slate-400">{t('trading.avg_profit')}</p>
                       <p className="text-orange-400">+${stats.aggressiveStats.avgProfit}</p>
                     </div>
                   </div>
