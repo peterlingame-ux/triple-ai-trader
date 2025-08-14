@@ -12,7 +12,7 @@ import { SuperBrainDetection } from "./SuperBrainDetection";
 // Import avatars
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
 import warrenAvatar from "@/assets/warren-buffett-cartoon-avatar.png";
-import billAvatar from "@/assets/bill-gates-avatar.jpg";
+import billAvatar from "@/assets/bill-gates-cartoon-avatar.png";
 
 interface AIControlCenterProps {
   open: boolean;
