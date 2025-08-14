@@ -248,30 +248,51 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
     setAiLoading(true);
     
     try {
-      // 直接使用OpenAI Edge Function进行分析
+      // 获取当前选择的加密货币数据
       const currentCrypto = getSelectedCryptoData();
       
+      // 清理和验证数据，去掉无效字段
+      const cleanCryptoData = {
+        symbol: currentCrypto.symbol,
+        name: currentCrypto.name,
+        price: Number(currentCrypto.price) || 0,
+        changePercent24h: Number(currentCrypto.changePercent24h) || 0,
+        volume24h: Number(currentCrypto.volume24h) || 0,
+        marketCap: Number(currentCrypto.marketCap) || 0,
+        rsi: Number(currentCrypto.rsi) || 50,
+        ma20: Number(currentCrypto.ma20) || 0,
+        ma50: Number(currentCrypto.ma50) || 0,
+        support: Number(currentCrypto.support) || 0,
+        resistance: Number(currentCrypto.resistance) || 0
+      };
+
+      // 清理新闻数据，只保留有效字段
+      const cleanNewsData = activeNewsData.slice(0, 3).map(news => ({
+        title: String(news.title || ''),
+        sentiment: String(news.sentiment || 'neutral')
+      })).filter(news => news.title.length > 0);
+
       let analysisPrompt = `作为专业的加密货币分析师，请基于以下数据分析用户问题：
 
 用户问题：${message}
 
-当前选择的加密货币：${selectedCrypto} (${currentCrypto.name})
-当前价格：$${currentCrypto.price.toLocaleString()}
-24小时变化：${currentCrypto.changePercent24h > 0 ? '+' : ''}${currentCrypto.changePercent24h.toFixed(2)}%
-成交量：$${(currentCrypto.volume24h / 1e9).toFixed(2)}B
-市值：$${(currentCrypto.marketCap / 1e9).toFixed(2)}B
-RSI：${currentCrypto.rsi}
-MA20：$${currentCrypto.ma20.toLocaleString()}
-MA50：$${currentCrypto.ma50.toLocaleString()}
-支撑位：$${currentCrypto.support.toLocaleString()}
-阻力位：$${currentCrypto.resistance.toLocaleString()}
+当前选择的加密货币：${cleanCryptoData.symbol} (${cleanCryptoData.name})
+当前价格：$${cleanCryptoData.price.toLocaleString()}
+24小时变化：${cleanCryptoData.changePercent24h > 0 ? '+' : ''}${cleanCryptoData.changePercent24h.toFixed(2)}%
+成交量：$${(cleanCryptoData.volume24h / 1e9).toFixed(2)}B
+市值：$${(cleanCryptoData.marketCap / 1e9).toFixed(2)}B
+RSI：${cleanCryptoData.rsi}
+MA20：$${cleanCryptoData.ma20.toLocaleString()}
+MA50：$${cleanCryptoData.ma50.toLocaleString()}
+支撑位：$${cleanCryptoData.support.toLocaleString()}
+阻力位：$${cleanCryptoData.resistance.toLocaleString()}
 
 最新市场新闻情绪：
-${activeNewsData.slice(0, 3).map(news => `• ${news.title} (${news.sentiment})`).join('\n')}
+${cleanNewsData.map(news => `• ${news.title} (${news.sentiment})`).join('\n')}
 
 请提供专业、详细的分析建议，包括技术面、基本面和新闻情绪分析。`;
 
-      // 调用OpenAI Edge Function
+      // 调用OpenAI Edge Function，只发送必要的数据
       const { data, error } = await supabase.functions.invoke('openai-chat', {
         body: { 
           prompt: analysisPrompt,
@@ -281,13 +302,14 @@ ${activeNewsData.slice(0, 3).map(news => `• ${news.title} (${news.sentiment})`
 
       let aiResponse = "";
       if (error) {
+        console.error('OpenAI API error:', error);
         throw error;
       }
 
-      if (data.success) {
+      if (data?.success) {
         aiResponse = data.response;
       } else {
-        throw new Error(data.error || 'OpenAI分析失败');
+        throw new Error(data?.error || 'OpenAI分析失败');
       }
       
       newConversation.push({ role: 'ai' as const, content: aiResponse });
@@ -297,17 +319,18 @@ ${activeNewsData.slice(0, 3).map(news => `• ${news.title} (${news.sentiment})`
       const currentCrypto = getSelectedCryptoData();
       const fallbackResponse = generateOpenAIStyleResponse(message, currentCrypto);
       newConversation.push({ role: 'ai' as const, content: fallbackResponse });
+      
+      toast({
+        title: "AI分析",
+        description: "使用本地分析引擎提供分析结果",
+        variant: "default"
+      });
     } finally {
       setAiLoading(false);
     }
     
     setConversation(newConversation);
     setMessage("");
-    
-    toast({
-      title: "OpenAI分析完成",
-      description: "已使用OpenAI模型完成专业分析",
-    });
   };
 
   const generateOpenAIStyleResponse = (userMessage: string, crypto: CryptoAnalytics) => {
