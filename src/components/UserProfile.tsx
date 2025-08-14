@@ -165,27 +165,32 @@ export const UserProfile = () => {
   return (
     <Dialog open={isEditing} onOpenChange={setIsEditing}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          className="group flex items-center gap-3 px-4 py-2.5 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 hover:from-blue-600/30 hover:to-indigo-600/30 text-blue-400 border-blue-500/30 backdrop-blur-sm transition-all duration-300 hover-scale shadow-lg hover:shadow-blue-500/25"
-          onClick={() => setIsEditing(true)}
-        >
-          <Avatar className="w-8 h-8 ring-2 ring-blue-500/30 ring-offset-2 ring-offset-transparent transition-all duration-300 group-hover:ring-blue-400/50">
-            <AvatarImage src={profileData.avatar} alt={profileData.name} className="object-cover" />
-            <AvatarFallback className="bg-gradient-to-br from-blue-500/20 to-indigo-500/20 text-blue-400 text-sm font-semibold">
-              {profileData.initials || <User className="w-4 h-4" />}
-            </AvatarFallback>
-          </Avatar>
-          <div className="hidden sm:flex flex-col items-start">
-            <span className="text-sm font-medium text-blue-300">
-              {profileData.name || t('profile.settings')}
-            </span>
-            <span className="text-xs text-blue-400/70">
-              {profileData.name ? t('profile.personal') : t('profile.click_edit')}
-            </span>
+        <div className="group cursor-pointer">
+          <div className="flex items-center gap-4 px-5 py-3 bg-gradient-to-r from-slate-800/40 to-slate-700/40 backdrop-blur-xl rounded-2xl border border-white/10 hover:border-accent/30 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-accent/20">
+            <div className="relative">
+              <Avatar className="w-12 h-12 ring-2 ring-accent/30 ring-offset-2 ring-offset-transparent transition-all duration-300 group-hover:ring-accent/50 shadow-lg">
+                <AvatarImage src={profileData.avatar} alt={profileData.name} className="object-cover" />
+                <AvatarFallback className="bg-gradient-to-br from-accent/30 to-accent/20 text-accent text-lg font-bold">
+                  {profileData.initials || <User className="w-6 h-6" />}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center shadow-lg">
+                <Edit3 className="w-3 h-3 text-accent-foreground" />
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="text-base font-semibold text-accent truncate">
+                  {profileData.name || 'LINYUAN'}
+                </h3>
+                <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+              </div>
+              <p className="text-sm text-accent/70 truncate">
+                个人资料
+              </p>
+            </div>
           </div>
-          <Edit3 className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
-        </Button>
+        </div>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md bg-slate-800 border-slate-700">

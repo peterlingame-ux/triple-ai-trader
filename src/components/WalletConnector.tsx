@@ -313,38 +313,56 @@ export const WalletConnector = () => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          className={`group flex items-center gap-3 px-4 py-2.5 backdrop-blur-sm transition-all duration-300 hover-scale shadow-lg ${
+        <div className="group cursor-pointer">
+          <div className={`flex items-center gap-4 px-5 py-3 backdrop-blur-xl rounded-2xl border transition-all duration-300 hover:scale-[1.02] shadow-xl ${
             isWalletConnected 
-              ? 'bg-gradient-to-r from-green-600/20 to-emerald-600/20 hover:from-green-600/30 hover:to-emerald-600/30 text-green-400 border-green-500/30 hover:shadow-green-500/25' 
-              : 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 hover:from-purple-600/30 hover:to-pink-600/30 text-purple-400 border-purple-500/30 hover:shadow-purple-500/25'
+              ? 'bg-gradient-to-r from-emerald-800/40 to-green-700/40 border-emerald-500/30 hover:border-emerald-400/50 hover:shadow-emerald-500/20' 
+              : 'bg-gradient-to-r from-purple-800/40 to-indigo-700/40 border-purple-500/30 hover:border-purple-400/50 hover:shadow-purple-500/20'
           }`}
           onClick={isWalletConnected ? disconnect : () => setIsOpen(true)}
-        >
-          {isWalletConnected ? (
-            <>
-              <div className="relative">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-pulse"></div>
+          >
+            <div className="relative">
+              {isWalletConnected ? (
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-green-500/20 flex items-center justify-center shadow-lg">
+                  <CheckCircle className="w-7 h-7 text-emerald-400" />
+                </div>
+              ) : (
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/30 to-indigo-500/20 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Wallet className="w-7 h-7 text-purple-400" />
+                </div>
+              )}
+              <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center shadow-lg ${
+                isWalletConnected ? 'bg-emerald-400' : 'bg-purple-400'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${
+                  isWalletConnected ? 'bg-emerald-900 animate-pulse' : 'bg-purple-900'
+                }`}></div>
               </div>
-              <div className="hidden sm:flex flex-col items-start">
-                <span className="text-sm font-medium text-green-400">已连接</span>
-                <span className="text-xs text-green-400/70">
-                  {walletAddress ? formatAddress(walletAddress) : '钱包'}
-                </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className={`text-base font-semibold truncate ${
+                  isWalletConnected ? 'text-emerald-400' : 'text-purple-400'
+                }`}>
+                  {isWalletConnected ? '已连接钱包' : '连接钱包'}
+                </h3>
+                {isWalletConnected && (
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                )}
               </div>
-            </>
-          ) : (
-            <>
-              <Wallet className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-              <div className="hidden sm:flex flex-col items-start">
-                <span className="text-sm font-medium">{t('wallet.connect_wallet')}</span>
-                <span className="text-xs text-purple-400/70">{t('wallet.multiple_options')}</span>
-              </div>
-            </>
-          )}
-        </Button>
+              <p className={`text-sm truncate ${
+                isWalletConnected 
+                  ? 'text-emerald-400/70' 
+                  : 'text-purple-400/70'
+              }`}>
+                {isWalletConnected 
+                  ? (walletAddress ? formatAddress(walletAddress) : '钱包地址') 
+                  : '多种选择'
+                }
+              </p>
+            </div>
+          </div>
+        </div>
       </DialogTrigger>
       
       <DialogContent className="sm:max-w-[900px] bg-slate-900 border-slate-700 max-h-[90vh] overflow-y-auto">

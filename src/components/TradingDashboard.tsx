@@ -155,15 +155,11 @@ export const TradingDashboard = () => {
                 </div>
               </div>
               
-              {/* Right Section - User Controls - Mobile: Horizontal Scroll */}
-              <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto">
-                <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/5 shadow-lg whitespace-nowrap">
-                  <UserProfile />
-                  <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-                  <WalletConnector />
-                  <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-                  <LanguageSwitcher />
-                </div>
+              {/* Right Section - User Controls - Professional Cards Layout */}
+              <div className="flex items-center gap-3 overflow-x-auto">
+                <UserProfile />
+                <WalletConnector />
+                <LanguageSwitcher />
               </div>
             </div>
           </div>

@@ -42,24 +42,27 @@ export const LanguageSwitcher = () => {
   return (
     <div className="relative">
       <Select value={language} onValueChange={(value) => setLanguage(value as any)}>
-        <SelectTrigger className="group w-auto min-w-[160px] bg-gradient-to-r from-green-600/20 to-teal-600/20 hover:from-green-600/30 hover:to-teal-600/30 border-green-500/30 hover:border-green-400/50 transition-all duration-300 backdrop-blur-sm hover-scale shadow-lg hover:shadow-green-500/25">
-           <div className="flex items-center gap-3">
+        <SelectTrigger className="group w-auto min-w-[180px] border-0 bg-gradient-to-r from-teal-800/40 to-green-700/40 backdrop-blur-xl rounded-2xl transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-teal-500/20 hover:from-teal-700/50 hover:to-green-600/50">
+           <div className="flex items-center gap-4 px-2 py-1">
              <div className="relative">
-               <Globe className="w-5 h-5 text-green-400 group-hover:rotate-12 transition-transform duration-300" />
-               <div className="absolute -inset-1 bg-green-400/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500/30 to-green-500/20 flex items-center justify-center shadow-lg">
+                 <Globe className="w-7 h-7 text-teal-400 group-hover:rotate-12 transition-transform duration-300" />
+               </div>
+               <div className="absolute -bottom-1 -right-1">
+                 <FlagIcon countryCode={currentLang?.countryCode || 'us'} size="sm" className="ring-2 ring-teal-400/50 rounded-sm shadow-lg" />
+               </div>
              </div>
-             <FlagIcon countryCode={currentLang?.countryCode || 'us'} size="md" className="ring-1 ring-green-500/30 rounded-sm" />
-             <div className="hidden sm:flex flex-col items-start">
-               <span className="text-sm font-medium text-green-400">
-                 {currentLang?.nativeName}
-               </span>
-               <span className="text-xs text-green-400/70">
-                 {t('language.switch')}
-               </span>
+             <div className="flex-1 min-w-0">
+               <div className="flex items-center gap-2 mb-1">
+                 <h3 className="text-base font-semibold text-teal-400 truncate">
+                   中文
+                 </h3>
+                 <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+               </div>
+               <p className="text-sm text-teal-400/70 truncate">
+                 语言切换
+               </p>
              </div>
-             <span className="text-sm font-medium text-green-400 sm:hidden">
-               {currentLang?.code.toUpperCase()}
-             </span>
            </div>
         </SelectTrigger>
         
