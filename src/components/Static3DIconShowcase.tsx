@@ -66,6 +66,11 @@ import OKBIcon from '@/assets/crypto-3d-icons/OKB-3d-icon.png';
 import PENGUIcon from '@/assets/crypto-3d-icons/PENGU-3d-icon.png';
 import TURBOIcon from '@/assets/crypto-3d-icons/TURBO-3d-icon.png';
 import TRUMPIcon from '@/assets/crypto-3d-icons/TRUMP-3d-icon.png';
+import XMRIcon from '@/assets/crypto-3d-icons/XMR-3d-icon.png';
+import LUNCIcon from '@/assets/crypto-3d-icons/LUNC-3d-icon.png';
+import USTCIcon from '@/assets/crypto-3d-icons/USTC-3d-icon.png';
+import DAIIcon from '@/assets/crypto-3d-icons/DAI-3d-icon.png';
+import CAKEIcon from '@/assets/crypto-3d-icons/CAKE-3d-icon.png';
 
 interface CryptoStaticIconProps {
   symbol: string;
@@ -139,6 +144,11 @@ const crypto3DIconMap: Record<string, string> = {
   PENGU: PENGUIcon,
   TURBO: TURBOIcon,
   TRUMP: TRUMPIcon,
+  XMR: XMRIcon,
+  LUNC: LUNCIcon,
+  USTC: USTCIcon,
+  DAI: DAIIcon,
+  CAKE: CAKEIcon,
 };
 
 export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({ 
@@ -213,13 +223,18 @@ export const Static3DIconShowcase: React.FC = () => {
     { symbol: 'FLOKI', name: 'FLOKI' },
     { symbol: 'BABYDOGE', name: 'Baby Doge Coin' },
     
-    // Exchange tokens
+    // Exchange tokens & New tokens
     { symbol: 'OKB', name: 'OKB' },
     { symbol: 'PENGU', name: 'Pudgy Penguins' },
-    
-    // New tokens
     { symbol: 'TURBO', name: 'Turbo' },
     { symbol: 'TRUMP', name: 'TrumpCoin' },
+    
+    // Privacy & Stablecoins
+    { symbol: 'XMR', name: 'Monero' },
+    { symbol: 'DAI', name: 'DAI' },
+    { symbol: 'LUNC', name: 'Terra Luna Classic' },
+    { symbol: 'USTC', name: 'TerraClassicUSD' },
+    { symbol: 'CAKE', name: 'PancakeSwap' },
   ];
 
   return (
