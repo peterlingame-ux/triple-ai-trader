@@ -20,7 +20,7 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
   const isPositive = change >= 0;
   
   return (
-    <Card className="p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 rounded-xl">
+    <Card className="p-6 bg-card border-border hover:shadow-lg transition-all duration-300 rounded-xl">
       <div className="flex items-center justify-between">
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
