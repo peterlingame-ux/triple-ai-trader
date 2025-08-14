@@ -93,6 +93,10 @@ import meme3dLogo from "@/assets/meme-3d-logo.png";
 import wojak3dLogo from "@/assets/wojak-3d-logo.png";
 import turbo3dLogo from "@/assets/turbo-3d-logo.png";
 import ladys3dLogo from "@/assets/ladys-3d-logo.png";
+// 3D Components
+import { OKB3DLogo } from "@/components/OKB3DLogo";
+import { PENGU3DLogo } from "@/components/PENGU3DLogo";
+import { Crypto3DIcon } from "@/components/Crypto3DIcon";
 
 interface CryptoCardProps {
   symbol: string;
@@ -214,7 +218,12 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 flex items-center justify-center">
-            {crypto3DLogo ? (
+            {/* Special 3D Icons for OKB and PENGU */}
+            {symbol === 'OKB' ? (
+              <OKB3DLogo size={64} />
+            ) : symbol === 'PENGU' ? (
+              <PENGU3DLogo size={64} />
+            ) : crypto3DLogo ? (
               <img 
                 src={crypto3DLogo} 
                 alt={`${name} logo`} 
@@ -228,8 +237,11 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
                   if (fallback) fallback.style.display = 'flex';
                 }}
               />
-            ) : null}
-            <div className="fallback-icon w-16 h-16 flex items-center justify-center" style={{ display: crypto3DLogo ? 'none' : 'flex' }}>
+            ) : (
+              // Use generic 3D icon for any other currencies
+              <Crypto3DIcon symbol={symbol} size={64} />
+            )}
+            <div className="fallback-icon w-16 h-16 flex items-center justify-center" style={{ display: 'none' }}>
               <Coins className="w-16 h-16 text-accent" />
             </div>
           </div>

@@ -56,7 +56,9 @@ const DEFAULT_SYMBOLS = [
   "RVN", "ZIL", "ICX", "ONT", "QTUM", "WAVES", "SC", "DGB", "LSK", "ARK",
   "NANO", "IOST", "ZEN", "MAID", "REP", "KMD", "DCR", "STRAT", "NXT", "SYS",
   // 新兴和热门币种
-  "PEPE", "BONK", "WIF", "FLOKI", "BABYDOGE", "SAFE", "MEME", "WOJAK", "TURBO", "LADYS", "TRUMP"
+  "PEPE", "BONK", "WIF", "FLOKI", "BABYDOGE", "SAFE", "MEME", "WOJAK", "TURBO", "LADYS", "TRUMP",
+  // 新增币种
+  "OKB", "PENGU"
 ];
 
 // 加密货币名称映射（中英文）
@@ -155,7 +157,10 @@ const CRYPTO_NAMES = {
   "WOJAK": { name: "Wojak", cn: "沃伊扎克" },
   "TURBO": { name: "Turbo", cn: "涡轮币" },
   "LADYS": { name: "Milady", cn: "女士币" },
-  "TRUMP": { name: "TrumpCoin", cn: "特朗普币" }
+  "TRUMP": { name: "TrumpCoin", cn: "特朗普币" },
+  // 新增币种
+  "OKB": { name: "OKB", cn: "欧易币" },
+  "PENGU": { name: "Pudgy Penguins", cn: "胖企鹅" }
 };
 
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
@@ -167,7 +172,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         'BTC': 43000, 'ETH': 2500, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 300,
         'XRP': 0.6, 'ADA': 0.5, 'SOL': 100, 'DOGE': 0.08, 'MATIC': 0.9,
         'DOT': 7, 'AVAX': 35, 'LINK': 14, 'LTC': 70, 'UNI': 6,
-        'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4
+        'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4,
+        // 新增币种价格
+        'OKB': 45, 'PENGU': 0.035
       };
       
       const basePrice = basePrices[symbol] || (Math.random() * 10 + 1);
@@ -332,7 +339,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
           'BTC': 43000, 'ETH': 2500, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 300,
           'XRP': 0.6, 'ADA': 0.5, 'SOL': 100, 'DOGE': 0.08, 'MATIC': 0.9,
           'DOT': 7, 'AVAX': 35, 'LINK': 14, 'LTC': 70, 'UNI': 6,
-          'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4
+          'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4,
+          // 新增币种价格
+          'OKB': 45, 'PENGU': 0.035
         };
         
         const basePrice = basePrices[symbol] || (Math.random() * 10 + 1);
