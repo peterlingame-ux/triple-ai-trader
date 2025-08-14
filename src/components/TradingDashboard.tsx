@@ -132,7 +132,7 @@ export const TradingDashboard = () => {
                     Meta BrainX
                   </h1>
                   <p className="text-lg text-slate-300 font-inter font-medium tracking-wide">
-                    3合1终极大脑让赚钱更简单
+                    {t('app.subtitle')}
                   </p>
                 </div>
               </div>
