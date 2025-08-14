@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -81,9 +81,9 @@ export const ProfessionalCryptoModal = ({ open, onOpenChange }: ProfessionalCryp
               <X className="w-5 h-5" />
             </Button>
           </DialogTitle>
-          <p className="text-slate-400 text-sm mt-2">
+          <DialogDescription className="text-slate-400 text-sm mt-2">
             融合三重AI智能分析，为您提供最专业的加密货币投资决策支持
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex-1 p-6 pt-2 overflow-auto">
