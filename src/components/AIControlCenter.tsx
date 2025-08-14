@@ -10,7 +10,7 @@ import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, 
 import { SuperBrainDetection } from "./SuperBrainDetection";
 
 // Import avatars
-import elonAvatar from "@/assets/elon-musk-avatar.jpg";
+import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
 import warrenAvatar from "@/assets/warren-buffett-avatar.jpg";
 import billAvatar from "@/assets/bill-gates-avatar.jpg";
 
