@@ -1071,6 +1071,101 @@ const translations = {
     'profile.updated': 'あなたのアバターと名前が正常に更新されました',
 
     'language.switch': '言語切替'
+  },
+  es: {
+    'autotrader.button': 'IA Auto Dinero',
+    'autotrader.title': 'Sistema IA Auto Dinero - Trading Inteligente Multi-Modelo',
+    'trading.strategy': 'Estrategia de Trading',
+    'trading.type': 'Tipo de Trading',
+    'trading.conservative_strategy': 'Estrategia Conservadora',
+    'trading.aggressive_strategy': 'Estrategia Agresiva',
+    'trading.spot_short': 'Spot',
+    'trading.futures_short': 'Futuros',
+    'trading.trades_count': 'Número de Operaciones',
+    'trading.avg_profit': 'Ganancia Promedio',
+    'trading.advanced_settings': 'Configuración Avanzada de Parámetros',
+    'trading.risk_per_trade': 'Riesgo por Operación',
+    'trading.stop_loss_ratio': 'Ratio Stop Loss',
+    'trading.take_profit_ratio': 'Ratio Take Profit',
+    'trading.trailing_stop': 'Stop Dinámico',
+    'trading.auto_reinvest': 'Reinversión Automática',
+    'ai.signal_analysis': 'Análisis Inteligente de Señales IA',
+    'ai.analyzing_market': 'IA está realizando análisis profundo del mercado...',
+    'ai.position_management': 'Gestión Inteligente de Posiciones',
+    'trading.no_positions': 'Sin Posiciones',
+    'trading.auto_discover': 'IA descubrirá y ejecutará automáticamente oportunidades de trading',
+    'ai.trading_report': 'Reporte de Análisis de Trading IA',
+    'ai.detailed_data': 'Los datos de análisis detallados se mostrarán aquí',
+    'ai.includes_analysis': 'Incluye curvas de beneficio, análisis de riesgo, comparación de estrategias, etc.',
+    'language.switch': 'Cambio de Idioma'
+  },
+  ko: {
+    'autotrader.button': 'AI 자동 머니',
+    'autotrader.title': 'AI 자동 머니 시스템 - 멀티 모델 스마트 트레이딩',
+    'trading.strategy': '거래 전략',
+    'trading.type': '거래 유형',
+    'trading.conservative_strategy': '보수적 전략',
+    'trading.aggressive_strategy': '공격적 전략',
+    'trading.spot_short': '현물',
+    'trading.futures_short': '선물',
+    'trading.trades_count': '거래 횟수',
+    'trading.avg_profit': '평균 수익',
+    'language.switch': '언어 전환'
+  },
+  fr: {
+    'autotrader.button': 'IA Auto Argent',
+    'trading.strategy': 'Stratégie de Trading',
+    'language.switch': 'Changement de Langue'
+  },
+  de: {
+    'autotrader.button': 'KI Auto Geld',
+    'trading.strategy': 'Trading-Strategie',
+    'language.switch': 'Sprachwechsel'
+  },
+  it: {
+    'autotrader.button': 'IA Auto Denaro',
+    'trading.strategy': 'Strategia di Trading',
+    'language.switch': 'Cambio Lingua'
+  },
+  pt: {
+    'autotrader.button': 'IA Auto Dinheiro',
+    'trading.strategy': 'Estratégia de Trading',
+    'language.switch': 'Mudança de Idioma'
+  },
+  ru: {
+    'autotrader.button': 'ИИ Авто Деньги',
+    'trading.strategy': 'Торговая Стратегия',
+    'language.switch': 'Смена Языка'
+  },
+  ar: {
+    'autotrader.button': 'المال التلقائي بالذكاء الاصطناعي',
+    'trading.strategy': 'استراتيجية التداول',
+    'language.switch': 'تغيير اللغة'
+  },
+  hi: {
+    'autotrader.button': 'AI ऑटो मनी',
+    'trading.strategy': 'ट्रेडिंग रणनीति',
+    'language.switch': 'भाषा बदलाव'
+  },
+  th: {
+    'autotrader.button': 'AI Auto Money',
+    'trading.strategy': 'กลยุทธ์การเทรด',
+    'language.switch': 'เปลี่ยนภาษา'
+  },
+  vi: {
+    'autotrader.button': 'AI Auto Money',
+    'trading.strategy': 'Chiến Lược Giao Dịch',
+    'language.switch': 'Chuyển Đổi Ngôn Ngữ'
+  },
+  tr: {
+    'autotrader.button': 'AI Otomatik Para',
+    'trading.strategy': 'İşlem Stratejisi',
+    'language.switch': 'Dil Değiştir'
+  },
+  nl: {
+    'autotrader.button': 'AI Auto Geld',
+    'trading.strategy': 'Trading Strategie',
+    'language.switch': 'Taal Wisselen'
   }
 };
 
