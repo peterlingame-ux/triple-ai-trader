@@ -99,6 +99,30 @@ import USTCIcon from '@/assets/crypto-3d-icons/USTC-3d-icon.png';
 import DAIIcon from '@/assets/crypto-3d-icons/DAI-3d-icon.png';
 import CAKEIcon from '@/assets/crypto-3d-icons/CAKE-3d-icon.png';
 
+// Import missing cryptocurrency icons that were shown in user screenshots
+import TURBOIcon from '@/assets/crypto-3d-icons/TURBO-3d-icon.png';
+import TRUMPIcon from '@/assets/crypto-3d-icons/TRUMP-3d-icon.png';
+import MEMEIcon from '@/assets/crypto-3d-icons/MEME-3d-icon.png';
+import WOJAKIcon from '@/assets/crypto-3d-icons/WOJAK-3d-icon.png';
+import LADYSIcon from '@/assets/crypto-3d-icons/LADYS-3d-icon.png';
+import DCRIcon from '@/assets/crypto-3d-icons/DCR-3d-icon.png';
+import STRATIcon from '@/assets/crypto-3d-icons/STRAT-3d-icon.png';
+import NXTIcon from '@/assets/crypto-3d-icons/NXT-3d-icon.png';
+import SYSIcon from '@/assets/crypto-3d-icons/SYS-3d-icon.png';
+import ZENIcon from '@/assets/crypto-3d-icons/ZEN-3d-icon.png';
+import MAIDIcon from '@/assets/crypto-3d-icons/MAID-3d-icon.png';
+import REPIcon from '@/assets/crypto-3d-icons/REP-3d-icon.png';
+import KMDIcon from '@/assets/crypto-3d-icons/KMD-3d-icon.png';
+import SCIcon from '@/assets/crypto-3d-icons/SC-3d-icon.png';
+import DGBIcon from '@/assets/crypto-3d-icons/DGB-3d-icon.png';
+import LSKIcon from '@/assets/crypto-3d-icons/LSK-3d-icon.png';
+import ARKIcon from '@/assets/crypto-3d-icons/ARK-3d-icon.png';
+import SAFEIcon from '@/assets/crypto-3d-icons/SAFE-3d-icon.png';
+import NANOIcon from '@/assets/crypto-3d-icons/NANO-3d-icon.png';
+import IOSTIcon from '@/assets/crypto-3d-icons/IOST-3d-icon.png';
+import QTUMIcon from '@/assets/crypto-3d-icons/QTUM-3d-icon.png';
+import WAVESIcon from '@/assets/crypto-3d-icons/WAVES-3d-icon.png';
+
 interface CryptoStaticIconProps {
   symbol: string;
   name: string;
@@ -200,6 +224,30 @@ const crypto3DIconMap: Record<string, string> = {
   USTC: USTCIcon,
   DAI: DAIIcon,
   CAKE: CAKEIcon,
+  
+  // Add missing cryptocurrencies from user screenshots
+  TURBO: TURBOIcon,
+  TRUMP: TRUMPIcon,
+  MEME: MEMEIcon,
+  WOJAK: WOJAKIcon,
+  LADYS: LADYSIcon,
+  DCR: DCRIcon,
+  STRAT: STRATIcon,
+  NXT: NXTIcon,
+  SYS: SYSIcon,
+  ZEN: ZENIcon,
+  MAID: MAIDIcon,
+  REP: REPIcon,
+  KMD: KMDIcon,
+  SC: SCIcon,
+  DGB: DGBIcon,
+  LSK: LSKIcon,
+  ARK: ARKIcon,
+  SAFE: SAFEIcon,
+  NANO: NANOIcon,
+  IOST: IOSTIcon,
+  QTUM: QTUMIcon,
+  WAVES: WAVESIcon,
 };
 
 export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({ 
