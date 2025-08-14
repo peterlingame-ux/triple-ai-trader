@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, MessageCircle, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -82,7 +83,9 @@ export function OpenAIChat() {
         {response && (
           <div className="mt-4 p-4 bg-secondary/50 rounded-lg border">
             <h4 className="font-medium mb-2">AI Response:</h4>
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{response}</p>
+            <ScrollArea className="h-64 w-full">
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap pr-4">{response}</p>
+            </ScrollArea>
           </div>
         )}
       </CardContent>
