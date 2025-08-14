@@ -13,6 +13,7 @@ import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
 import { UserProfile } from "./UserProfile";
+import { OpenAIChat } from "./OpenAIChat";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
@@ -289,6 +290,11 @@ export const TradingDashboard = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* AI Chat Section */}
+        <div className="mb-8">
+          <OpenAIChat />
         </div>
 
         {/* Upcoming Advisors Section */}
