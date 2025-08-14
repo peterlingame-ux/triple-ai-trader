@@ -9,9 +9,10 @@ import { AutoTrader } from "./AutoTrader";
 interface ProfessionalAIControlsProps {
   cryptoData?: any[];
   newsData?: any[];
+  onOpenAIControlCenter?: () => void;
 }
 
-export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: ProfessionalAIControlsProps) => {
+export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenAIControlCenter }: ProfessionalAIControlsProps) => {
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -53,10 +54,30 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: Profe
           </Badge>
         </div>
 
-        {/* Control Button - Single Auto Trading Panel */}
-        <div className="flex justify-center">
+        {/* Control Buttons - Side by Side Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* AI Control Center Panel */}
           <Card 
-            className="p-6 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-500/5 border-green-500/20 hover:border-green-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10 group max-w-md w-full"
+            className="p-6 bg-gradient-to-br from-yellow-500/10 via-orange-500/10 to-yellow-500/5 border-yellow-500/20 hover:border-yellow-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/10 group"
+            onClick={onOpenAIControlCenter}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center border border-yellow-500/30 group-hover:scale-110 transition-transform duration-300">
+                <Brain className="w-6 h-6 text-yellow-400" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-foreground font-inter mb-1">AI控制中心</h4>
+                <p className="text-xs text-muted-foreground">配置您的AI分析接口，管理实时分析功能</p>
+              </div>
+              <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                <Brain className="w-4 h-4 text-yellow-400" />
+              </div>
+            </div>
+          </Card>
+
+          {/* AI Auto Trading Panel */}
+          <Card 
+            className="p-6 bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-green-500/5 border-green-500/20 hover:border-green-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10 group"
             onClick={() => setActiveSection('autotrader')}
           >
             <div className="flex items-center gap-4">

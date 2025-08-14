@@ -47,7 +47,15 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGri
   return (
     <div className="space-y-6">
       {/* Professional AI Controls */}
-      <ProfessionalAIControls cryptoData={cryptoData} newsData={newsData} />
+      <ProfessionalAIControls 
+        cryptoData={cryptoData} 
+        newsData={newsData}
+        onOpenAIControlCenter={() => {
+          // This will be handled by the parent TradingDashboard component
+          const event = new CustomEvent('openAIControlCenter');
+          window.dispatchEvent(event);
+        }}
+      />
 
       {/* Section Header */}
       <div className="flex items-center justify-between">

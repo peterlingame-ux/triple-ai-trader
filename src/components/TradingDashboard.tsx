@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,18 @@ export const TradingDashboard = () => {
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
+
+  // Listen for AI Control Center open events
+  useEffect(() => {
+    const handleOpenAIControlCenter = () => {
+      setShowAIControlCenter(true);
+    };
+
+    window.addEventListener('openAIControlCenter', handleOpenAIControlCenter);
+    return () => {
+      window.removeEventListener('openAIControlCenter', handleOpenAIControlCenter);
+    };
+  }, []);
   
   // Memoize filtered crypto data for performance
   const filteredCryptoData = useMemo(() => 
@@ -103,13 +115,6 @@ export const TradingDashboard = () => {
               
               {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
-                <Button 
-                  onClick={() => setShowAIControlCenter(true)}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600"
-                >
-                  <Brain className="w-4 h-4 mr-2" />
-                  AI控制中心
-                </Button>
                 <UserProfile />
                 <WalletConnector />
                 <LanguageSwitcher />
