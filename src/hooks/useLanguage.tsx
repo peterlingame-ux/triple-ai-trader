@@ -6,7 +6,7 @@ interface LanguageContextType {
   language: Language;
   currentLanguage: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string>) => string;
 }
 
 const translations = {
@@ -114,6 +114,11 @@ const translations = {
     'ai.stop_monitoring': 'No longer detecting high win rate opportunities',
     'ai.start_detecting': 'Start detecting 90% win rate opportunities',
     'ai.monitoring_active': 'Monitoring active, no 90% win rate opportunities found...',
+    'ai.confidence_discovered': '🚀 High Win Rate Opportunity Discovered!',
+    'ai.buy_opportunity': 'Buy Opportunity',
+    'ai.sell_opportunity': 'Sell Opportunity',
+    'ai.win_rate': 'Win Rate',
+    'ai.price_analysis': 'Price Analysis',
     
     // 自动交易器翻译
     'autotrader.stopped': 'AI Auto Trading Stopped',
@@ -529,7 +534,11 @@ const translations = {
     // 语言切换器翻译
     'language.switch': '语言切换',
     
-    // AI机会检测翻译
+    'ai.confidence_discovered': '🚀 高胜率机会发现!',
+    'ai.buy_opportunity': '买入机会',
+    'ai.sell_opportunity': '卖出机会',
+    'ai.win_rate': '胜率',
+    'ai.price_analysis': '价格分析',
     'ai.brain_detection': '最强大脑自动检测',
     'ai.monitor_opportunities': '监控90%胜率机会',
     'ai.last_check': '上次检查:',
@@ -624,9 +633,17 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('zh');
 
-  const t = (key: string): string => {
-    const translation = translations[language]?.[key];
-    return translation || key;
+  const t = (key: string, params?: Record<string, string>): string => {
+    let translation = translations[language]?.[key] || key;
+    
+    // Handle parameter substitution
+    if (params) {
+      Object.entries(params).forEach(([param, value]) => {
+        translation = translation.replace(`{${param}}`, value);
+      });
+    }
+    
+    return translation;
   };
 
   return (

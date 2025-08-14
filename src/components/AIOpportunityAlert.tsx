@@ -18,6 +18,7 @@ interface OpportunityAlert {
 }
 
 export const AIOpportunityAlert = () => {
+  const { t } = useLanguage();
   const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [isMonitoring, setIsMonitoring] = useState(true);
   const [lastCheck, setLastCheck] = useState<Date>(new Date());
@@ -29,7 +30,6 @@ export const AIOpportunityAlert = () => {
     loading 
   } = useAIAnalysis();
   const { cryptoData, newsData } = useCryptoData();
-  const { t } = useLanguage();
 
   // 监控AI分析结果
   useEffect(() => {
@@ -117,7 +117,7 @@ export const AIOpportunityAlert = () => {
               id: alertId,
               symbol: crypto.symbol,
               confidence: avgConfidence,
-              analysis: `价格分析: ${priceAnalysis.confidence}% (${priceAnalysis.analysis.substring(0, 50)}...) | 技术分析: ${technicalAnalysis.confidence}% (${technicalAnalysis.analysis.substring(0, 50)}...) | 情绪分析: ${sentimentAnalysis.confidence}% (${sentimentAnalysis.analysis.substring(0, 50)}...)`,
+              analysis: `${t('ai.price_analysis')}: ${priceAnalysis.confidence}% (${priceAnalysis.analysis.substring(0, 50)}...) | ${t('ai.technical_analysis')}: ${technicalAnalysis.confidence}% (${technicalAnalysis.analysis.substring(0, 50)}...) | ${t('ai.sentiment_analysis')}: ${sentimentAnalysis.confidence}% (${sentimentAnalysis.analysis.substring(0, 50)}...)`,
               timestamp: new Date(),
               type: crypto.changePercent24h > 0 ? 'buy' : 'sell'
             };
@@ -126,8 +126,8 @@ export const AIOpportunityAlert = () => {
 
             // 显示Toast通知
             toast({
-              title: "🚀 高胜率机会发现!",
-              description: `${crypto.symbol} 检测到 ${avgConfidence.toFixed(1)}% 胜率机会`,
+              title: t('ai.confidence_discovered'),
+              description: `${crypto.symbol} ${t('ai.opportunity_detected')} ${avgConfidence.toFixed(1)}% ${t('ai.win_rate')}`,
               duration: 10000,
             });
           }
@@ -285,10 +285,10 @@ export const AIOpportunityAlert = () => {
                         : 'bg-red-500/20 text-red-400 border-red-500/30'
                     }`}
                   >
-                    {alert.type === 'buy' ? '买入机会' : '卖出机会'}
+                    {alert.type === 'buy' ? t('ai.buy_opportunity') : t('ai.sell_opportunity')}
                   </Badge>
                   <Badge variant="outline" className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
-                    {alert.confidence.toFixed(1)}% 胜率
+                    {alert.confidence.toFixed(1)}% {t('ai.win_rate')}
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
