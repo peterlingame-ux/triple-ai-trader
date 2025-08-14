@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
-import { AICommunicator } from "./AICommunicator";
+
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
