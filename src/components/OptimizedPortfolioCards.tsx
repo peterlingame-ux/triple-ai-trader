@@ -44,7 +44,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-sm font-semibold text-muted-foreground">
-                    {source === 'wallet' ? '真实钱包' : 'AI虚拟投资组合'}
+                    {source === 'wallet' ? t('wallet.real') : t('portfolio.ai_virtual')}
                   </h3>
                   {source === 'autotrader' && (
                     <Badge className="text-xs bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 border-blue-500/30 px-2 py-0.5">
@@ -52,7 +52,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground/70">总价值</p>
+                <p className="text-xs text-muted-foreground/70">{t('portfolio.total_value')}</p>
               </div>
             </div>
           </div>
@@ -64,7 +64,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
             <div className="flex items-center gap-2">
               <CircleDollarSign className="w-3 h-3 text-muted-foreground/60" />
               <p className="text-xs text-muted-foreground/60">
-                {source === 'wallet' ? '实时同步' : '模拟交易'}
+                {source === 'wallet' ? t('portfolio.real_time_sync') : t('portfolio.simulated_trading')}
               </p>
             </div>
           </div>
@@ -95,14 +95,14 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-sm font-semibold text-muted-foreground">24小时变化</h3>
+                  <h3 className="text-sm font-semibold text-muted-foreground">{t('portfolio.daily_change')}</h3>
                   {source === 'wallet' && (
                     <Badge className="text-xs bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-green-300 border-green-500/30 px-2 py-0.5">
-                      实时
+                      {t('portfolio.real_time')}
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground/70">盈亏金额</p>
+                <p className="text-xs text-muted-foreground/70">{t('portfolio.profit_loss')}</p>
               </div>
             </div>
           </div>
@@ -143,9 +143,9 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-sm font-semibold text-muted-foreground">活跃交易</h3>
+                  <h3 className="text-sm font-semibold text-muted-foreground">{t('portfolio.active_trades')}</h3>
                 </div>
-                <p className="text-xs text-muted-foreground/70">当前持仓</p>
+                <p className="text-xs text-muted-foreground/70">{t('portfolio.current_holdings')}</p>
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
                 activeTrades > 0 ? 'bg-primary animate-pulse' : 'bg-muted-foreground/30'
               }`} />
               <p className="text-xs text-muted-foreground/60">
-                {activeTrades > 0 ? '正在交易' : '暂无交易'}
+                {activeTrades > 0 ? t('portfolio.currently_trading') : t('portfolio.no_trades')}
               </p>
             </div>
           </div>

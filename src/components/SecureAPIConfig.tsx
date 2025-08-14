@@ -238,14 +238,14 @@ export function SecureAPIConfig({
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              请先登录才能配置API凭据。登录后您可以安全地存储和管理您的API密钥。
+              Please log in first to configure API credentials. After logging in, you can securely store and manage your API keys.
             </AlertDescription>
           </Alert>
           
           <Alert>
             <Shield className="h-4 w-4" />
             <AlertDescription>
-              🔒 登录后，您的API密钥将被加密并安全存储在Supabase中。它们永远不会存储在您的浏览器中或以明文传输。
+              🔒 After logging in, your API keys will be encrypted and securely stored in Supabase. They will never be stored in your browser or transmitted in plain text.
             </AlertDescription>
           </Alert>
         </CardContent>

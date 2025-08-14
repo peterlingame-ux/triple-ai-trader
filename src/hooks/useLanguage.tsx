@@ -40,6 +40,7 @@ const translations = {
      'portfolio.no_trades': 'No Trades',
      'portfolio.simulated_trading': 'Simulated Trading',
      'portfolio.real_time_sync': 'Real-time Sync',
+     'portfolio.real_time': 'Real-time',
      'portfolio.currently_trading': 'Currently Trading',
      
      'ai.communicate': 'Start Communication',
