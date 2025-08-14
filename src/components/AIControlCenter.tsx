@@ -9,6 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
 import { SuperBrainDetection } from "./SuperBrainDetection";
 
+// Import avatars
+import elonAvatar from "@/assets/elon-musk-avatar.jpg";
+import warrenAvatar from "@/assets/warren-buffett-avatar.jpg";
+import billAvatar from "@/assets/bill-gates-avatar.jpg";
+
 interface AIControlCenterProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -115,19 +120,19 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${aiConfigs.openai.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+              <img src={elonAvatar} alt="Elon Musk" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
               <div className="text-sm text-white font-medium">新闻分析引擎</div>
-              <div className="text-xs text-slate-400">OpenAI GPT</div>
+              <div className="text-xs text-slate-400">Elon Musk</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${aiConfigs.claude.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+              <img src={warrenAvatar} alt="Warren Buffett" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
               <div className="text-sm text-white font-medium">技术分析引擎</div>
-              <div className="text-xs text-slate-400">Claude AI</div>
+              <div className="text-xs text-slate-400">Warren Buffett</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${aiConfigs.grok.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+              <img src={billAvatar} alt="Bill Gates" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
               <div className="text-sm text-white font-medium">大数据分析引擎</div>
-              <div className="text-xs text-slate-400">Grok AI</div>
+              <div className="text-xs text-slate-400">Bill Gates</div>
             </div>
           </div>
         </div>
@@ -135,17 +140,17 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
 
       {/* AI Configuration Cards */}
       <div className="space-y-6">
-        {/* OpenAI Configuration */}
+        {/* Elon Musk Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Bot className="w-6 h-6 text-blue-400" />
+              <img src={elonAvatar} alt="Elon Musk" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">OpenAI API Configuration</h3>
+                <h3 className="text-lg font-semibold text-white">Elon Musk 分析配置</h3>
                 <Badge variant="outline" className="text-blue-400 border-blue-400/20 mt-1">新闻分析引擎</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">用于新闻情感分析和市场情绪评估</p>
+            <p className="text-sm text-slate-400 mb-4">马斯克风格的创新思维分析和市场情绪评估</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -158,14 +163,14 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 OpenAI 分析引擎</span>
+                <span className="text-sm text-slate-300">启用 Elon Musk 分析引擎</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">API Key</label>
                   <Input
-                    placeholder="输入您的 OpenAI API Key"
+                    placeholder="输入您的 API Key (基于 OpenAI)"
                     type="password"
                     value={aiConfigs.openai.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -203,17 +208,17 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
           </div>
         </Card>
 
-        {/* Claude Configuration */}
+        {/* Warren Buffett Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Zap className="w-6 h-6 text-purple-400" />
+              <img src={warrenAvatar} alt="Warren Buffett" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Claude API Configuration</h3>
+                <h3 className="text-lg font-semibold text-white">Warren Buffett 分析配置</h3>
                 <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">技术分析引擎</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">用于深度技术指标分析和图表模式识别</p>
+            <p className="text-sm text-slate-400 mb-4">价值投资大师的深度技术指标分析和长期投资判断</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -226,14 +231,14 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Claude 分析引擎</span>
+                <span className="text-sm text-slate-300">启用 Warren Buffett 分析引擎</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">API Key</label>
                   <Input
-                    placeholder="输入您的 Claude API Key"
+                    placeholder="输入您的 API Key (基于 Claude)"
                     type="password"
                     value={aiConfigs.claude.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -271,17 +276,17 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
           </div>
         </Card>
 
-        {/* Grok Configuration */}
+        {/* Bill Gates Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <TrendingUpIcon className="w-6 h-6 text-green-400" />
+              <img src={billAvatar} alt="Bill Gates" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Grok API Configuration</h3>
+                <h3 className="text-lg font-semibold text-white">Bill Gates 分析配置</h3>
                 <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">大数据分析引擎</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">用于实时搜索和智能数据分析的前沿AI模型</p>
+            <p className="text-sm text-slate-400 mb-4">科技巨头的数据驱动分析和全球市场洞察</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -294,14 +299,14 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Grok 分析引擎</span>
+                <span className="text-sm text-slate-300">启用 Bill Gates 分析引擎</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">API Key</label>
                   <Input
-                    placeholder="输入您的 Grok API Key"
+                    placeholder="输入您的 API Key (基于 Grok)"
                     type="password"
                     value={aiConfigs.grok.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -352,19 +357,19 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
             {/* AI Status Indicators */}
             <div className="space-y-2 mb-4">
               <div className="flex items-center gap-2 text-xs">
-                <div className={`w-2 h-2 rounded-full ${aiConfigs.openai.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+                <img src={elonAvatar} alt="Elon Musk" className="w-4 h-4 rounded-full object-cover" />
                 <span className="text-slate-300">新闻分析引擎</span>
-                <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/20">OpenAI</Badge>
+                <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/20">Elon Musk</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <div className={`w-2 h-2 rounded-full ${aiConfigs.claude.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+                <img src={warrenAvatar} alt="Warren Buffett" className="w-4 h-4 rounded-full object-cover" />
                 <span className="text-slate-300">技术分析引擎</span>
-                <Badge variant="outline" className="text-xs text-purple-400 border-purple-400/20">Claude</Badge>
+                <Badge variant="outline" className="text-xs text-purple-400 border-purple-400/20">Warren Buffett</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <div className={`w-2 h-2 rounded-full ${aiConfigs.grok.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+                <img src={billAvatar} alt="Bill Gates" className="w-4 h-4 rounded-full object-cover" />
                 <span className="text-slate-300">大数据分析引擎</span>
-                <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Grok</Badge>
+                <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Bill Gates</Badge>
               </div>
             </div>
             
