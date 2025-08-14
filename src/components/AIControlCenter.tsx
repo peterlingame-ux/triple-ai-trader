@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
+import { SuperBrainDetection } from "./SuperBrainDetection";
 
 interface AIControlCenterProps {
   open: boolean;
@@ -663,7 +664,7 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
 
         <div className="flex-1 p-6 pt-2 overflow-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
-            <TabsList className="grid grid-cols-2 bg-slate-800/50 border-slate-700 mb-6">
+            <TabsList className="grid grid-cols-3 bg-slate-800/50 border-slate-700 mb-6">
               <TabsTrigger 
                 value="dashboard" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
@@ -675,8 +676,15 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                 value="analysis" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
               >
-                <Brain className="w-4 h-4 mr-2" />
+                <Activity className="w-4 h-4 mr-2" />
                 实时分析
+              </TabsTrigger>
+              <TabsTrigger 
+                value="superbrain" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
+              >
+                <Brain className="w-4 h-4 mr-2" />
+                最强大脑检测
               </TabsTrigger>
             </TabsList>
 
@@ -686,6 +694,10 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
 
             <TabsContent value="analysis" className="mt-0 h-full">
               <RealTimeAnalysisPanel />
+            </TabsContent>
+
+            <TabsContent value="superbrain" className="mt-0 h-full">
+              <SuperBrainDetection />
             </TabsContent>
           </Tabs>
         </div>
