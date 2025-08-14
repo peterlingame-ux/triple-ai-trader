@@ -17,7 +17,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
-import { IconGeneratorDialog } from "./IconGeneratorDialog";
+
 import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
@@ -186,7 +186,6 @@ export const TradingDashboard = () => {
               {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-              <IconGeneratorDialog />
               <Button 
                 variant="outline" 
                 onClick={refreshData}
