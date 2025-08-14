@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { formatPrice, formatVolume, formatMarketCap } from "@/utils/cryptoDataUtils";
+import { Binance3DIcon } from "./Binance3DIcon";
 
 interface CompactCryptoCardProps {
   symbol: string;
@@ -29,11 +30,16 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   
   return (
     <Card className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
-      {/* Header - Symbol & Price */}
+      {/* Header - 3D Icon, Symbol & Price */}
       <div className="flex items-center justify-between mb-2">
-        <div>
-          <h3 className="text-foreground font-semibold text-sm font-mono tracking-wider">{symbol}</h3>
-          <p className="text-muted-foreground text-[10px] font-medium truncate">{name}</p>
+        <div className="flex items-center gap-2">
+          <div className="flex-shrink-0">
+            <Binance3DIcon symbol={symbol} size={28} animated={true} />
+          </div>
+          <div>
+            <h3 className="text-foreground font-semibold text-sm font-mono tracking-wider">{symbol}</h3>
+            <p className="text-muted-foreground text-[10px] font-medium truncate">{name}</p>
+          </div>
         </div>
         
         {/* Price */}
