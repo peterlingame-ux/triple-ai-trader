@@ -145,4 +145,37 @@
     backface-visibility: hidden;
     perspective: 1000px;
   }
+
+  /* Optimized scroll behavior */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Memory efficient animations */
+  .efficient-hover {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .efficient-hover:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Optimized shadows */
+  .shadow-efficient {
+    box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Container queries for responsive design */
+  @container (min-width: 768px) {
+    .responsive-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @container (min-width: 1024px) {
+    .responsive-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 }

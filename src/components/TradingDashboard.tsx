@@ -1,26 +1,27 @@
-import { useState, useCallback, useMemo } from "react";
-import { Card } from "@/components/ui/card";
+import { useState, useCallback, useMemo, memo, lazy, Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CryptoCard } from "./CryptoCard";
-import { ElonProfile } from "./ElonProfile";
-import { WarrenProfile } from "./WarrenProfile";
-import { BillProfile } from "./BillProfile";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
-import { AICommunicator } from "./AICommunicator";
-import { AutoTrader } from "./AutoTrader";
-import { UpcomingAdvisors } from "./UpcomingAdvisors";
-import { AIOpportunityAlert } from "./AIOpportunityAlert";
 import { UserProfile } from "./UserProfile";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
+import { useOptimizedCrypto } from "@/hooks/useOptimizedCrypto";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
-import { IconGeneratorDialog } from "./IconGeneratorDialog";
 import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
+
+// Lazy load heavy components for better performance
+const AIOpportunityAlert = lazy(() => import("./AIOpportunityAlert").then(module => ({ default: module.AIOpportunityAlert })));
+const AICommunicator = lazy(() => import("./AICommunicator").then(module => ({ default: module.AICommunicator })));
+const AutoTrader = lazy(() => import("./AutoTrader").then(module => ({ default: module.AutoTrader })));
+const UpcomingAdvisors = lazy(() => import("./UpcomingAdvisors").then(module => ({ default: module.UpcomingAdvisors })));
+const ElonProfile = lazy(() => import("./ElonProfile").then(module => ({ default: module.ElonProfile })));
+const WarrenProfile = lazy(() => import("./WarrenProfile").then(module => ({ default: module.WarrenProfile })));
+const BillProfile = lazy(() => import("./BillProfile").then(module => ({ default: module.BillProfile })));
+const IconGeneratorDialog = lazy(() => import("./IconGeneratorDialog").then(module => ({ default: module.IconGeneratorDialog })));
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -79,22 +80,32 @@ const aiAdvisors = [
   }
 ];
 
-export const TradingDashboard = () => {
+const TradingDashboard = memo(() => {
   const { t } = useLanguage();
-  const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
-  const { getPortfolioData, isWalletConnected } = useWalletData();
+  const { 
+    cryptoData, 
+    newsData, 
+    loading, 
+    error, 
+    refreshData,
+    topCryptos,
+    trendingCryptos 
+  } = useOptimizedCrypto();
+  const { getPortfolioData } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Memoize filtered crypto data for performance
-  const filteredCryptoData = useMemo(() => 
-    filterCryptoData(cryptoData, searchQuery), 
-    [cryptoData, searchQuery]
-  );
+  // Memoize expensive operations
+  const filteredCryptoData = useMemo(() => {
+    if (!searchQuery.trim()) return cryptoData;
+    const query = searchQuery.toLowerCase();
+    return cryptoData.filter(crypto => 
+      crypto.symbol.toLowerCase().includes(query) ||
+      crypto.name.toLowerCase().includes(query)
+    );
+  }, [cryptoData, searchQuery]);
 
-  // Get portfolio data from either wallet or auto-trader
   const portfolioData = useMemo(() => getPortfolioData(), [getPortfolioData]);
-  const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
@@ -102,6 +113,14 @@ export const TradingDashboard = () => {
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery("");
+  }, []);
+
+  const handleRefresh = useCallback(() => {
+    refreshData();
+  }, [refreshData]);
+
+  const toggleShowAll = useCallback(() => {
+    setShowAllCrypto(prev => !prev);
   }, []);
 
   return (
@@ -172,7 +191,9 @@ export const TradingDashboard = () => {
         </div>
 
         {/* AI Opportunity Alert */}
-        <AIOpportunityAlert />
+        <Suspense fallback={<Skeleton className="h-32 w-full rounded-xl" />}>
+          <AIOpportunityAlert />
+        </Suspense>
 
         {/* Portfolio Overview with Dynamic Data Source */}
         <OptimizedPortfolioCards portfolioData={portfolioData} />
@@ -186,19 +207,22 @@ export const TradingDashboard = () => {
               {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2">
-              <IconGeneratorDialog />
+              <Suspense fallback={<Skeleton className="h-10 w-20 rounded-md" />}>
+                <IconGeneratorDialog />
+              </Suspense>
               <Button 
                 variant="outline" 
-                onClick={refreshData}
+                onClick={handleRefresh}
                 size="sm"
                 className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30"
+                disabled={loading}
               >
-                <RefreshCw className="w-4 h-4 mr-1" />
+                <RefreshCw className={`w-4 h-4 mr-1 ${loading ? 'animate-spin' : ''}`} />
                 {t('button.refresh')}
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => setShowAllCrypto(!showAllCrypto)}
+                onClick={toggleShowAll}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6"
               >
                 {showAllCrypto ? t('button.show_top') : t('button.all_categories')}
@@ -244,13 +268,20 @@ export const TradingDashboard = () => {
               {t('ai.advisors')}
             </h2>
             <div className="flex items-center gap-2">
-              <AICommunicator cryptoData={cryptoData} newsData={newsData} />
-              <AutoTrader />
+              <Suspense fallback={<Skeleton className="h-10 w-24 rounded-md" />}>
+                <AICommunicator cryptoData={cryptoData} newsData={newsData} />
+              </Suspense>
+              <Suspense fallback={<Skeleton className="h-10 w-20 rounded-md" />}>
+                <AutoTrader />
+              </Suspense>
             </div>
           </div>
           <div className="space-y-6">
             {aiAdvisors.map((advisor, index) => (
-              <div key={index}>
+              <Suspense 
+                key={index} 
+                fallback={<Skeleton className="h-48 w-full rounded-xl" />}
+              >
                 {advisor.name === 'Elon Musk' && (
                   <ElonProfile
                     name={advisor.name}
@@ -284,15 +315,21 @@ export const TradingDashboard = () => {
                     isSpecial={advisor.isSpecial}
                   />
                 )}
-              </div>
+              </Suspense>
             ))}
           </div>
         </div>
 
         {/* Upcoming Advisors Section */}
-        <UpcomingAdvisors />
+        <Suspense fallback={<Skeleton className="h-64 w-full rounded-xl" />}>
+          <UpcomingAdvisors />
+        </Suspense>
       </div>
       </div>
     </div>
   );
-};
+});
+
+TradingDashboard.displayName = "TradingDashboard";
+
+export default TradingDashboard;

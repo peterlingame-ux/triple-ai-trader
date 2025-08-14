@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, TrendingUp, Wallet, Bot } from "lucide-react";
@@ -19,9 +19,31 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
   const { t } = useLanguage();
   const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
+  // Memoize formatted values to prevent re-calculation
+  const formattedTotalValue = useMemo(() => 
+    totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+    [totalValue]
+  );
+
+  const formattedDailyChange = useMemo(() => 
+    dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+    [dailyChange]
+  );
+
+  const changeColorClass = useMemo(() => 
+    dailyChange >= 0 ? 'text-success' : 'text-destructive',
+    [dailyChange]
+  );
+
+  const changePrefix = useMemo(() => 
+    dailyChange >= 0 ? '+' : '',
+    [dailyChange]
+  );
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card className="p-6 bg-gradient-crypto border-border">
+      {/* Portfolio Value Card */}
+      <Card className="p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 optimize-animations">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
             {source === 'wallet' ? (
@@ -42,13 +64,14 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
               )}
             </div>
             <p className="text-2xl font-bold text-accent font-mono tracking-wider">
-              ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              ${formattedTotalValue}
             </p>
           </div>
         </div>
       </Card>
 
-      <Card className="p-6 bg-gradient-crypto border-border">
+      {/* Daily Change Card */}
+      <Card className="p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 optimize-animations">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center">
             <TrendingUp className="w-6 h-6 text-success" />
@@ -62,14 +85,15 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
                 </Badge>
               )}
             </div>
-            <p className={`text-2xl font-bold font-mono tracking-wider ${dailyChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-              {dailyChange >= 0 ? '+' : ''}${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <p className={`text-2xl font-bold font-mono tracking-wider ${changeColorClass}`}>
+              {changePrefix}${formattedDailyChange}
             </p>
           </div>
         </div>
       </Card>
 
-      <Card className="p-6 bg-gradient-crypto border-border">
+      {/* Active Trades Card */}
+      <Card className="p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 optimize-animations">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
             <BarChart3 className="w-6 h-6 text-primary-foreground" />
