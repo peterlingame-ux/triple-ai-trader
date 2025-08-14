@@ -8,46 +8,49 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Crypto-themed color palette */
-    --background: 210 100% 6%;
-    --foreground: 45 100% 90%;
+    /* Enhanced crypto-themed color palette */
+    --background: 220 25% 4%;
+    --foreground: 45 100% 92%;
 
-    --card: 210 50% 8%;
-    --card-foreground: 45 100% 90%;
+    --card: 220 25% 6%;
+    --card-foreground: 45 100% 92%;
 
-    --popover: 210 50% 8%;
-    --popover-foreground: 45 100% 90%;
+    --popover: 220 25% 6%;
+    --popover-foreground: 45 100% 92%;
 
-    --primary: 210 100% 15%;
-    --primary-foreground: 45 100% 90%;
+    --primary: 220 40% 18%;
+    --primary-foreground: 45 100% 92%;
 
-    --secondary: 210 40% 12%;
-    --secondary-foreground: 45 100% 85%;
+    --secondary: 220 30% 10%;
+    --secondary-foreground: 45 90% 88%;
 
-    --muted: 210 30% 10%;
-    --muted-foreground: 45 50% 70%;
+    --muted: 220 25% 8%;
+    --muted-foreground: 45 40% 65%;
 
-    --accent: 45 100% 60%;
-    --accent-foreground: 210 100% 6%;
+    --accent: 45 100% 65%;
+    --accent-foreground: 220 25% 4%;
 
-    --success: 120 60% 50%;
-    --success-foreground: 210 100% 6%;
+    --success: 142 70% 45%;
+    --success-foreground: 220 25% 4%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 220 25% 4%;
 
-    --border: 210 30% 15%;
-    --input: 210 30% 12%;
-    --ring: 45 100% 60%;
+    --border: 220 25% 12%;
+    --input: 220 25% 10%;
+    --ring: 45 100% 65%;
 
-    /* Gradients */
-    --gradient-crypto: linear-gradient(135deg, hsl(210, 100%, 15%), hsl(210, 80%, 25%));
-    --gradient-gold: linear-gradient(135deg, hsl(45, 100%, 60%), hsl(45, 90%, 70%));
-    --gradient-ai: linear-gradient(135deg, hsl(210, 60%, 20%), hsl(250, 60%, 25%));
+    /* Enhanced gradients for better visual hierarchy */
+    --gradient-crypto: linear-gradient(135deg, hsl(220, 40%, 18%), hsl(220, 35%, 25%));
+    --gradient-gold: linear-gradient(135deg, hsl(45, 100%, 65%), hsl(45, 95%, 75%));
+    --gradient-ai: linear-gradient(135deg, hsl(220, 45%, 20%), hsl(260, 50%, 28%));
+    --gradient-success: linear-gradient(135deg, hsl(142, 70%, 45%), hsl(142, 60%, 55%));
+    --gradient-error: linear-gradient(135deg, hsl(0, 75%, 55%), hsl(0, 65%, 65%));
 
-    /* Shadows */
-    --shadow-crypto: 0 10px 30px -10px hsl(210 100% 15% / 0.3);
-    --shadow-glow: 0 0 40px hsl(45 100% 60% / 0.2);
+    /* Enhanced shadows with better depth */
+    --shadow-crypto: 0 8px 32px -8px hsl(220 40% 18% / 0.4);
+    --shadow-glow: 0 0 32px hsl(45 100% 65% / 0.3);
+    --shadow-soft: 0 4px 16px -4px hsl(220 25% 4% / 0.3);
 
     --radius: 0.75rem;
 

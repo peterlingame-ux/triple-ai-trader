@@ -1,24 +1,19 @@
-import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CryptoCard } from "./CryptoCard";
-import { AIAdvisor } from "./AIAdvisor";
 import { ElonProfile } from "./ElonProfile";
 import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
-import { LanguageSwitcher } from "./LanguageSwitcher";
-import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
-import { UserProfile } from "./UserProfile";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
-import { useWalletData } from "@/hooks/useWalletData";
+import { useOptimizedCrypto, filterCryptoData } from "@/hooks/useOptimizedCrypto";
 import { CryptoSearch } from "./CryptoSearch";
-import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw, Wallet, Bot } from "lucide-react";
+import { OptimizedCryptoCard } from "./optimized/OptimizedCryptoCard";
+import { OptimizedHeader } from "./optimized/OptimizedHeader";
+import { OptimizedPortfolioStats } from "./optimized/OptimizedPortfolioStats";
+import { BarChart3, Brain, RefreshCw } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -79,17 +74,12 @@ const aiAdvisors = [
 
 export const TradingDashboard = () => {
   const { t } = useLanguage();
-  const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
-  const { getPortfolioData, isWalletConnected } = useWalletData();
+  const { cryptoData, newsData, loading, refreshData } = useOptimizedCrypto();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
   // Filter crypto data based on search query
   const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
-
-  // Get portfolio data from either wallet or auto-trader
-  const portfolioData = getPortfolioData();
-  const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -117,122 +107,14 @@ export const TradingDashboard = () => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Professional Header Design */}
-        <div className="relative">
-          {/* Background with enhanced glassmorphism */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl"></div>
-          
-          {/* Content */}
-          <div className="relative px-10 py-8">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-              {/* Left Section - Brand */}
-              <div className="flex items-center gap-8">
-                <div className="space-y-2">
-                  <h1 className="text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
-                    Meta BrainX
-                  </h1>
-                  <p className="text-lg text-slate-300 font-inter font-medium tracking-wide">
-                    {t('app.subtitle')}
-                  </p>
-                </div>
-              </div>
-              
-              {/* Center Section - Status Indicator */}
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <Badge variant="outline" className="px-6 py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
-                    <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
-                    <Brain className="w-5 h-5 mr-2" />
-                    {t('status.live')}
-                  </Badge>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-              </div>
-              
-              {/* Right Section - User Controls */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 backdrop-blur-sm rounded-xl border border-white/5 shadow-lg">
-                  <UserProfile />
-                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-                  <WalletConnector />
-                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-                  <LanguageSwitcher />
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Subtle bottom accent */}
-          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-sm"></div>
-        </div>
+        {/* Optimized Header */}
+        <OptimizedHeader />
 
         {/* AI Opportunity Alert */}
         <AIOpportunityAlert />
 
-        {/* Portfolio Overview with Dynamic Data Source */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="p-6 bg-gradient-crypto border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                {source === 'wallet' ? (
-                  <Wallet className="w-6 h-6 text-accent" />
-                ) : (
-                  <Bot className="w-6 h-6 text-accent" />
-                )}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-muted-foreground font-inter">
-                    {source === 'wallet' ? t('wallet.real') : t('wallet.virtual')}
-                  </p>
-                  {source === 'autotrader' && (
-                    <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">
-                      {t('wallet.ai_virtual_badge')}
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-2xl font-bold text-accent font-mono tracking-wider">
-                  ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-crypto border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-success" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.change')}</p>
-                  {source === 'wallet' && (
-                    <Badge variant="outline" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
-                      实时
-                    </Badge>
-                  )}
-                </div>
-                <p className={`text-2xl font-bold font-mono tracking-wider ${dailyChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-                  {dailyChange >= 0 ? '+' : ''}${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-crypto border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground font-inter">
-                  {source === 'wallet' ? '持仓交易' : t('portfolio.trades')}
-                </p>
-                <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
-              </div>
-            </div>
-          </Card>
-        </div>
+        {/* Optimized Portfolio Stats */}
+        <OptimizedPortfolioStats />
 
         {/* Crypto Cards Grid */}
         <div>
@@ -276,16 +158,16 @@ export const TradingDashboard = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(showAllCrypto ? filteredCryptoData : filteredCryptoData.slice(0, 6)).map((crypto) => (
-              <CryptoCard
+              <OptimizedCryptoCard
                 key={crypto.symbol}
                 symbol={crypto.symbol}
                 name={crypto.name}
                 price={crypto.price}
                 change={crypto.change24h}
                 changePercent={crypto.changePercent24h}
-                image={crypto.image}
                 volume={crypto.volume24h}
                 marketCap={crypto.marketCap}
+                rank={crypto.marketCapRank}
               />
             ))}
           </div>
