@@ -179,7 +179,7 @@ export const AIOpportunityAlert = () => {
       // 返回模拟结果
       const confidence = Math.floor(Math.random() * 26) + 70; // 70-95%
       return {
-        analysis: `由于API配置问题，显示模拟分析结果。建议配置真实AI API密钥以获得准确分析。`,
+        analysis: t('ai.api_config_error'),
         confidence
       };
     }

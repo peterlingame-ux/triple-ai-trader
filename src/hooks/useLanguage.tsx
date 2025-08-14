@@ -120,6 +120,7 @@ const translations = {
     'ai.sell_opportunity': 'Sell Opportunity',
     'ai.win_rate': 'Win Rate',
     'ai.price_analysis': 'Price Analysis',
+    'ai.api_config_error': 'Due to API configuration issues, showing simulated analysis results. It is recommended to configure real AI API keys for accurate analysis.',
     
     // 自动交易器翻译
     'autotrader.stopped': 'AI Auto Trading Stopped',
@@ -541,6 +542,7 @@ const translations = {
     'ai.sell_opportunity': '卖出机会',
     'ai.win_rate': '胜率',
     'ai.price_analysis': '价格分析',
+    'ai.api_config_error': '由于API配置问题，显示模拟分析结果。建议配置真实AI API密钥以获得准确分析。',
     'ai.brain_detection': '最强大脑自动检测',
     'ai.monitor_opportunities': '监控90%胜率机会',
     'ai.last_check': '上次检查:',
