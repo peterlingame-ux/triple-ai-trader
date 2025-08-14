@@ -1,11 +1,14 @@
 import React from 'react';
 import { SecureAPIConfig } from './SecureAPIConfig';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export function BinanceAPIConfig() {
+  const { t } = useLanguage();
+  
   return (
     <SecureAPIConfig
-      title="Binance API"
-      description="Configure your Binance API credentials for secure trading data access"
+      title={t('binance.api_config')}
+      description={t('binance.config_description')}
       apiKeyLabel="API Key"
       secretKeyLabel="Secret Key"
       hasSecretKey={true}

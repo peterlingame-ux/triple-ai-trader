@@ -9,6 +9,7 @@ import { Eye, EyeOff, Shield, CheckCircle, XCircle, Loader2, AlertTriangle } fro
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface SecureAPIConfigProps {
   title: string;
@@ -27,6 +28,7 @@ export function SecureAPIConfig({
   hasSecretKey = true,
   onConfigChange 
 }: SecureAPIConfigProps) {
+  const { t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [apiKey, setApiKey] = useState('');
   const [secretKey, setSecretKey] = useState('');
@@ -231,21 +233,21 @@ export function SecureAPIConfig({
               </CardTitle>
               <CardDescription>{description}</CardDescription>
             </div>
-            <Badge variant="secondary">Login Required</Badge>
+            <Badge variant="secondary">{t('binance.login_required')}</Badge>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              Please log in first to configure API credentials. After logging in, you can securely store and manage your API keys.
+              {t('binance.login_first')}
             </AlertDescription>
           </Alert>
           
           <Alert>
             <Shield className="h-4 w-4" />
             <AlertDescription>
-              🔒 After logging in, your API keys will be encrypted and securely stored in Supabase. They will never be stored in your browser or transmitted in plain text.
+              {t('binance.api_secure_storage')}
             </AlertDescription>
           </Alert>
         </CardContent>

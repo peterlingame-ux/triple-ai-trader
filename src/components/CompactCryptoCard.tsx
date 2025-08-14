@@ -67,13 +67,13 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
       <div className="pt-2 border-t border-border/30">
         <div className="flex justify-between items-center text-[10px]">
           <div className="text-center">
-            <p className="text-muted-foreground mb-1">Vol</p>
+            <p className="text-muted-foreground mb-1">{t('crypto.vol')}</p>
             <p className="text-foreground font-mono font-medium">
               ${formatVolume(volume)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-muted-foreground mb-1">MCap</p>
+            <p className="text-muted-foreground mb-1">{t('crypto.mcap')}</p>
             <p className="text-foreground font-mono font-medium">
               ${formatMarketCap(marketCap)}
             </p>
