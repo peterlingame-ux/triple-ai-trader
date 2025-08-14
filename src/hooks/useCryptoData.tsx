@@ -313,8 +313,35 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     try {
       setLoading(true);
       
-      // 暂时跳过API调用，直接使用模拟数据以提高性能
-      console.log('使用模拟数据，避免404错误导致的性能问题');
+      // 优先尝试币安API，然后是预留的crypto-data接口
+      const binanceConfig = getBinanceConfig();
+      
+      if (binanceConfig.isConfigured) {
+        // 使用币安API获取数据
+        const binanceData = await fetchFromBinanceAPI(binanceConfig);
+        if (binanceData.length > 0) {
+          setCryptoData(binanceData);
+          setError(null);
+          return;
+        }
+      }
+      
+      // 回退到预留的API接口
+      const response = await fetch('/functions/v1/crypto-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbols, source: 'binance' })
+      });
+
+      if (response.ok) {
+        const apiData = await response.json();
+        setCryptoData(apiData);
+        setError(null);
+        return;
+      }
+      
+      // 最终回退到模拟数据
+      console.log('使用模拟数据，币安API接口预留中');
       
       // 生成更合理的模拟数据
       const mockData: CryptoData[] = symbols.map((symbol, index) => {
@@ -361,11 +388,73 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
           resistance: Math.round(high24h * 1.02 * 100000) / 100000
         };
       });
-      
       setCryptoData(mockData);
-      setError('API接口已预留，当前使用模拟数据');
+      setError('币安API接口已预留，当前使用模拟数据');
+    } catch (err) {
+      console.error('Crypto data fetch error:', err);
+      setCryptoData(generateMockData(symbols));
+      setError('网络错误，使用模拟数据');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 获取币安API配置
+  const getBinanceConfig = () => {
+    try {
+      const config = localStorage.getItem('binance_api_config');
+      return config ? JSON.parse(config) : { isConfigured: false };
+    } catch {
+      return { isConfigured: false };
+    }
+  };
+
+  // 币安API数据获取
+  const fetchFromBinanceAPI = async (config: any): Promise<CryptoData[]> => {
+    try {
+      const response = await fetch('/functions/v1/binance-api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symbols,
+          apiKey: config.apiKey,
+          secretKey: config.secretKey,
+          testnet: config.testnet
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.map((item: any) => ({
+          symbol: item.symbol,
+          name: getTokenName(item.symbol),
+          price: parseFloat(item.price),
+          change24h: parseFloat(item.priceChange),
+          changePercent24h: parseFloat(item.priceChangePercent),
+          volume24h: parseFloat(item.volume),
+          high24h: parseFloat(item.highPrice),
+          low24h: parseFloat(item.lowPrice),
+          marketCap: parseFloat(item.price) * parseFloat(item.volume), // 简化计算
+          marketCapRank: 0, // 币安API不提供排名
+          circulatingSupply: 0,
+          totalSupply: 0,
+          maxSupply: 0,
+          ath: parseFloat(item.highPrice) * 1.2, // 估算
+          atl: parseFloat(item.lowPrice) * 0.8, // 估算
+          image: `https://assets.coingecko.com/coins/images/1/large/${item.symbol.toLowerCase()}.png`,
+          dominance: item.symbol === 'BTC' ? 45 : Math.random() * 5,
+          rsi: 30 + Math.random() * 40, // 需要技术指标API
+          ma20: parseFloat(item.price) * 0.99,
+          ma50: parseFloat(item.price) * 0.97,
+          support: parseFloat(item.lowPrice) * 0.98,
+          resistance: parseFloat(item.highPrice) * 1.02
+        }));
+      }
+      
+      return [];
+    } catch (error) {
+      console.error('Binance API fetch error:', error);
+      return [];
     }
   };
 

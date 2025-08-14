@@ -17,7 +17,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
-
+import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
@@ -176,6 +176,9 @@ export const TradingDashboard = () => {
 
         {/* Portfolio Overview with Dynamic Data Source */}
         <OptimizedPortfolioCards portfolioData={portfolioData} />
+
+        {/* 币安API配置 */}
+        <BinanceAPIConfig />
 
         {/* Crypto Cards Grid */}
         <div>
