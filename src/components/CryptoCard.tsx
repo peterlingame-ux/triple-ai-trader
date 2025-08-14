@@ -94,6 +94,12 @@ import wojak3dLogo from "@/assets/wojak-3d-logo.png";
 import turbo3dLogo from "@/assets/turbo-3d-logo.png";
 import ladys3dLogo from "@/assets/ladys-3d-logo.png";
 // 3D Components
+import { BTC3DLogo } from "@/components/BTC3DLogo";
+import { ETH3DLogo } from "@/components/ETH3DLogo";
+import { BNB3DLogo } from "@/components/BNB3DLogo";
+import { DOGE3DLogo } from "@/components/DOGE3DLogo";
+import { SOL3DLogo } from "@/components/SOL3DLogo";
+import { ADA3DLogo } from "@/components/ADA3DLogo";
 import { OKB3DLogo } from "@/components/OKB3DLogo";
 import { PENGU3DLogo } from "@/components/PENGU3DLogo";
 import { Crypto3DIcon } from "@/components/Crypto3DIcon";
@@ -218,8 +224,20 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 flex items-center justify-center">
-            {/* Special 3D Icons for OKB and PENGU */}
-            {symbol === 'OKB' ? (
+            {/* Real 3D Icons for major cryptocurrencies */}
+            {symbol === 'BTC' ? (
+              <BTC3DLogo size={64} />
+            ) : symbol === 'ETH' ? (
+              <ETH3DLogo size={64} />
+            ) : symbol === 'BNB' ? (
+              <BNB3DLogo size={64} />
+            ) : symbol === 'DOGE' ? (
+              <DOGE3DLogo size={64} />
+            ) : symbol === 'SOL' ? (
+              <SOL3DLogo size={64} />
+            ) : symbol === 'ADA' ? (
+              <ADA3DLogo size={64} />
+            ) : symbol === 'OKB' ? (
               <OKB3DLogo size={64} />
             ) : symbol === 'PENGU' ? (
               <PENGU3DLogo size={64} />
