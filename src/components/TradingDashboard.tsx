@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
-import { AIAdvisor } from "./AIAdvisor";
 import { ElonProfile } from "./ElonProfile";
 import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
@@ -18,7 +17,10 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
-import { BarChart3, Brain, DollarSign, TrendingUp, Zap, RefreshCw, Wallet, Bot } from "lucide-react";
+import { IconGeneratorDialog } from "./IconGeneratorDialog";
+import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
+import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
+import { BarChart3, Brain, RefreshCw } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -84,78 +86,81 @@ export const TradingDashboard = () => {
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Filter crypto data based on search query
-  const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
+  // Memoize filtered crypto data for performance
+  const filteredCryptoData = useMemo(() => 
+    filterCryptoData(cryptoData, searchQuery), 
+    [cryptoData, searchQuery]
+  );
 
   // Get portfolio data from either wallet or auto-trader
-  const portfolioData = getPortfolioData();
+  const portfolioData = useMemo(() => getPortfolioData(), [getPortfolioData]);
   const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
-  const handleSearch = (query: string) => {
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-  };
+  }, []);
 
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setSearchQuery("");
-  };
+  }, []);
 
   return (
-    <div className="min-h-screen relative p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
-      {/* Simplified background elements for better performance */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute top-10 left-10 w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
-          <span className="text-accent text-lg font-bold">₿</span>
+    <div className="min-h-screen relative p-3 sm:p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
+      {/* Simplified background elements for better mobile performance */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 sm:opacity-30">
+        <div className="absolute top-6 sm:top-10 left-6 sm:left-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-sm sm:text-lg font-bold">₿</span>
         </div>
-        <div className="absolute top-32 right-20 w-6 h-6 rounded-full bg-accent/15 flex items-center justify-center">
-          <span className="text-accent text-sm font-bold">Ξ</span>
+        <div className="absolute top-20 sm:top-32 right-12 sm:right-20 w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-accent/15 flex items-center justify-center">
+          <span className="text-accent text-xs sm:text-sm font-bold">Ξ</span>
         </div>
-        <div className="absolute bottom-1/3 right-10 w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-          <span className="text-accent text-lg font-bold">$</span>
+        <div className="absolute bottom-1/3 right-6 sm:right-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-base sm:text-lg font-bold">$</span>
         </div>
       </div>
       
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Professional Header Design */}
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-8">
+        {/* Professional Header Design - Mobile Optimized */}
         <div className="relative">
           {/* Background with enhanced glassmorphism */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl"></div>
           
           {/* Content */}
-          <div className="relative px-10 py-8">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          <div className="relative px-4 sm:px-10 py-4 sm:py-8">
+            <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
               {/* Left Section - Brand */}
-              <div className="flex items-center gap-8">
-                <div className="space-y-2">
-                  <h1 className="text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
+              <div className="flex items-center gap-4 sm:gap-8">
+                <div className="space-y-1 sm:space-y-2">
+                  <h1 className="text-3xl sm:text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
                     Meta BrainX
                   </h1>
-                  <p className="text-lg text-slate-300 font-inter font-medium tracking-wide">
+                  <p className="text-sm sm:text-lg text-slate-300 font-inter font-medium tracking-wide">
                     {t('app.subtitle')}
                   </p>
                 </div>
               </div>
               
-              {/* Center Section - Status Indicator */}
-              <div className="flex items-center gap-4">
+              {/* Center Section - Status Indicator - Mobile: Full Width */}
+              <div className="flex items-center justify-center sm:justify-start gap-4">
                 <div className="relative">
-                  <Badge variant="outline" className="px-6 py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
-                    <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
-                    <Brain className="w-5 h-5 mr-2" />
+                  <Badge variant="outline" className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full mr-2 sm:mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <Brain className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                     {t('status.live')}
                   </Badge>
                   <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
               
-              {/* Right Section - User Controls */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 backdrop-blur-sm rounded-xl border border-white/5 shadow-lg">
+              {/* Right Section - User Controls - Mobile: Horizontal Scroll */}
+              <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto">
+                <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 backdrop-blur-sm rounded-lg sm:rounded-xl border border-white/5 shadow-lg whitespace-nowrap">
                   <UserProfile />
-                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+                  <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
                   <WalletConnector />
-                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+                  <div className="w-px h-6 sm:h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
                   <LanguageSwitcher />
                 </div>
               </div>
@@ -170,101 +175,40 @@ export const TradingDashboard = () => {
         <AIOpportunityAlert />
 
         {/* Portfolio Overview with Dynamic Data Source */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="p-6 bg-gradient-crypto border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                {source === 'wallet' ? (
-                  <Wallet className="w-6 h-6 text-accent" />
-                ) : (
-                  <Bot className="w-6 h-6 text-accent" />
-                )}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-muted-foreground font-inter">
-                    {source === 'wallet' ? t('wallet.real') : t('wallet.virtual')}
-                  </p>
-                  {source === 'autotrader' && (
-                    <Badge variant="outline" className="text-xs bg-blue-500/20 text-blue-400 border-blue-500/30">
-                      {t('wallet.ai_virtual_badge')}
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-2xl font-bold text-accent font-mono tracking-wider">
-                  ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-crypto border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-success/20 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-success" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-muted-foreground font-inter">{t('portfolio.change')}</p>
-                  {source === 'wallet' && (
-                    <Badge variant="outline" className="text-xs bg-green-500/20 text-green-400 border-green-500/30">
-                      实时
-                    </Badge>
-                  )}
-                </div>
-                <p className={`text-2xl font-bold font-mono tracking-wider ${dailyChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-                  {dailyChange >= 0 ? '+' : ''}${dailyChange.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-crypto border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground font-inter">
-                  {source === 'wallet' ? '持仓交易' : t('portfolio.trades')}
-                </p>
-                <p className="text-2xl font-bold text-foreground font-mono tracking-wider">{activeTrades}</p>
-              </div>
-            </div>
-          </Card>
-        </div>
+        <OptimizedPortfolioCards portfolioData={portfolioData} />
 
         {/* Crypto Cards Grid */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <BarChart3 className="w-6 h-6" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
               {t('market.overview')}
-              {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
+              {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+              <IconGeneratorDialog />
               <Button 
                 variant="outline" 
                 onClick={refreshData}
                 size="sm"
-                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30"
+                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30 text-xs sm:text-sm whitespace-nowrap"
               >
-                <RefreshCw className="w-4 h-4 mr-1" />
+                <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                 {t('button.refresh')}
               </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setShowAllCrypto(!showAllCrypto)}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-6"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
               >
                 {showAllCrypto ? t('button.show_top') : t('button.all_categories')}
-                <BarChart3 className="w-4 h-4 ml-2" />
+                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
               </Button>
             </div>
           </div>
           
-          {/* Search Component */}
-          <div className="mb-6">
+          {/* Search Component - Mobile Optimized */}
+          <div className="mb-4 sm:mb-6">
             <CryptoSearch
               onSearch={handleSearch}
               onClearSearch={handleClearSearch}
@@ -274,25 +218,15 @@ export const TradingDashboard = () => {
             />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(showAllCrypto ? filteredCryptoData : filteredCryptoData.slice(0, 6)).map((crypto) => (
-              <CryptoCard
-                key={crypto.symbol}
-                symbol={crypto.symbol}
-                name={crypto.name}
-                price={crypto.price}
-                change={crypto.change24h}
-                changePercent={crypto.changePercent24h}
-                image={crypto.image}
-                volume={crypto.volume24h}
-                marketCap={crypto.marketCap}
-              />
-            ))}
-          </div>
+          <OptimizedCryptoGrid 
+            cryptoData={filteredCryptoData}
+            showAll={showAllCrypto}
+            maxVisible={6}
+          />
           
           {filteredCryptoData.length === 0 && searchQuery && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg">
+            <div className="text-center py-8 sm:py-12">
+              <p className="text-muted-foreground text-base sm:text-lg">
                 {t('search.not_found')} "{searchQuery}" {t('search.try_other')}
               </p>
               <p className="text-muted-foreground/70 text-sm mt-2">
@@ -302,19 +236,19 @@ export const TradingDashboard = () => {
           )}
         </div>
 
-        {/* AI Advisors Section */}
+        {/* AI Advisors Section - Mobile Optimized */}
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <Brain className="w-6 h-6" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2 sm:gap-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+              <Brain className="w-5 h-5 sm:w-6 sm:h-6" />
               {t('ai.advisors')}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
               <AICommunicator cryptoData={cryptoData} newsData={newsData} />
               <AutoTrader />
             </div>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {aiAdvisors.map((advisor, index) => (
               <div key={index}>
                 {advisor.name === 'Elon Musk' && (
