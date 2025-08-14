@@ -11,7 +11,7 @@ import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
 import { UserProfile } from "./UserProfile";
-import { OpenAIChat } from "./OpenAIChat";
+
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
