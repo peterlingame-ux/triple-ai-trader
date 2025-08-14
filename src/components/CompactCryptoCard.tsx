@@ -2,7 +2,6 @@ import { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { CryptoStaticIcon } from "./Static3DIconShowcase";
 import { formatPrice, formatVolume, formatMarketCap } from "@/utils/cryptoDataUtils";
 
 interface CompactCryptoCardProps {
@@ -30,21 +29,11 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   
   return (
     <Card className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
-      {/* Header - Icon, Symbol & Price */}
+      {/* Header - Symbol & Price */}
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <CryptoStaticIcon 
-              symbol={symbol} 
-              name={name} 
-              size={32}
-              className="group-hover:scale-110 transition-transform duration-200"
-            />
-          </div>
-          <div>
-            <h3 className="text-foreground font-semibold text-sm font-mono tracking-wider">{symbol}</h3>
-            <p className="text-muted-foreground text-[10px] font-medium truncate max-w-16">{name}</p>
-          </div>
+        <div>
+          <h3 className="text-foreground font-semibold text-sm font-mono tracking-wider">{symbol}</h3>
+          <p className="text-muted-foreground text-[10px] font-medium truncate">{name}</p>
         </div>
         
         {/* Price */}
