@@ -222,13 +222,7 @@ export const TradingDashboard = () => {
 
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2 sm:gap-0">
-            <div className="w-full sm:w-auto flex items-center gap-2 overflow-x-auto">
-              <AICommunicator cryptoData={cryptoData} newsData={newsData} />
-              <AutoTrader />
-            </div>
-          </div>
-          <AIAdvisorsGrid />
+          <AIAdvisorsGrid cryptoData={cryptoData} newsData={newsData} />
         </div>
 
         {/* AI Chat Section */}

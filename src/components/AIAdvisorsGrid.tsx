@@ -1,6 +1,7 @@
 import { ElonProfile } from "./ElonProfile";
 import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
+import { ProfessionalAIControls } from "./ProfessionalAIControls";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Brain } from "lucide-react";
 
@@ -35,11 +36,19 @@ const aiAdvisors = [
   }
 ];
 
-export const AIAdvisorsGrid = () => {
+interface AIAdvisorsGridProps {
+  cryptoData?: any[];
+  newsData?: any[];
+}
+
+export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGridProps) => {
   const { t } = useLanguage();
 
   return (
     <div className="space-y-6">
+      {/* Professional AI Controls */}
+      <ProfessionalAIControls cryptoData={cryptoData} newsData={newsData} />
+
       {/* Section Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
