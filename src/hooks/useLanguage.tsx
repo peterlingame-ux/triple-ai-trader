@@ -55,6 +55,8 @@ const translations = {
      'button.refresh': 'Refresh Data',
      'button.show_top': 'Show Top 6',
      'button.all_categories': 'All Categories',
+     'button.collapse': 'Collapse',
+     'button.view_all': 'View All',
     'search.placeholder': 'Search cryptocurrencies (e.g.: Bitcoin, BTC)...',
     'search.clear': 'Clear Search',
     'search.showing': 'Showing',

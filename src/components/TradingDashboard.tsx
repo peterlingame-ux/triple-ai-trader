@@ -182,7 +182,7 @@ export const TradingDashboard = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
             <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
               <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              市场概览
+              {t('market.overview')}
               {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
@@ -193,14 +193,14 @@ export const TradingDashboard = () => {
                 className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30 text-xs sm:text-sm whitespace-nowrap"
               >
                 <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                刷新数据
+                {t('button.refresh')}
               </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setShowAllCrypto(!showAllCrypto)}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
               >
-                {showAllCrypto ? '收起显示' : '全部分类'}
+                {showAllCrypto ? t('button.collapse') : t('button.all_categories')}
                 <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
               </Button>
             </div>
@@ -226,7 +226,7 @@ export const TradingDashboard = () => {
                   {/* 货币计数和折叠状态显示 */}
                   <div className="flex items-center justify-between mt-4 px-2">
                     <div className="text-sm text-muted-foreground">
-                      显示 {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} / {filteredCryptoData.length} 种货币
+                      {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
                     </div>
                     {filteredCryptoData.length > 6 && (
                       <Button
@@ -235,7 +235,7 @@ export const TradingDashboard = () => {
                         onClick={() => setShowAllCrypto(!showAllCrypto)}
                         className="text-primary hover:text-primary/80 text-xs sm:text-sm"
                       >
-                        {showAllCrypto ? '收起' : `查看全部 ${filteredCryptoData.length} 个`}
+                        {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
                       </Button>
                     )}
                   </div>

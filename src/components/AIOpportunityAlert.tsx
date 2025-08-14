@@ -250,9 +250,9 @@ export const AIOpportunityAlert = () => {
               <Brain className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">🧠 最强大脑AI检测</h3>
+              <h3 className="font-semibold text-foreground">🧠 {t('ai.brain_detection')}</h3>
               <p className="text-sm text-muted-foreground">
-                监控90%胜率交易机会 • 最后检测: {lastCheck.toLocaleTimeString()}
+                {t('ai.monitor_opportunities')} • {t('ai.last_check')} {lastCheck.toLocaleTimeString()}
               </p>
             </div>
           </div>
