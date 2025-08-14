@@ -313,27 +313,10 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     try {
       setLoading(true);
       
-      // 尝试从API获取真实数据
-      const response = await fetch('/functions/v1/crypto-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ symbols }),
-      });
-
-      if (response.ok) {
-        const apiData = await response.json();
-        setCryptoData(apiData);
-        setError(null);
-      } else {
-        // API失败时使用模拟数据
-        throw new Error(`API响应错误: ${response.status}`);
-      }
-    } catch (err) {
-      console.log('使用模拟数据，API接口预留供后期接入真实数据');
+      // 暂时跳过API调用，直接使用模拟数据以提高性能
+      console.log('使用模拟数据，避免404错误导致的性能问题');
       
-      // 生成更合理的模拟数据作为备用
+      // 生成更合理的模拟数据
       const mockData: CryptoData[] = symbols.map((symbol, index) => {
         const basePrices: Record<string, number> = {
           'BTC': 43000, 'ETH': 2500, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 300,
@@ -474,15 +457,15 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     fetchCryptoData();
     fetchNewsData();
 
-    // Set up less aggressive updates to improve performance
+    // 大幅减少更新频率以提高性能
     const interval = setInterval(() => {
       fetchCryptoData();
-    }, 60000); // 1 minute instead of 30 seconds
+    }, 300000); // 5分钟更新一次
 
-    // Update news every 10 minutes instead of 5
+    // 新闻每30分钟更新
     const newsInterval = setInterval(() => {
       fetchNewsData();
-    }, 600000);
+    }, 1800000);
 
     return () => {
       clearInterval(interval);
