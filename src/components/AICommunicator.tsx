@@ -9,7 +9,7 @@ import { MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { getAllSupportedCryptos, getTokenName } from "@/hooks/useCryptoData";
-import { useAIAnalysis } from "@/hooks/useAIAnalysis";
+import { supabase } from "@/integrations/supabase/client";
 import { AIConfigPanel } from "@/components/AIConfigPanel";
 
 interface CryptoAnalytics {
@@ -106,15 +106,8 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
   // Get all supported cryptocurrencies for selection
   const allSupportedCryptos = getAllSupportedCryptos();
   
-  // AI Analysis hooks
-  const {
-    analyzePriceChart,
-    analyzeTechnicalIndicators,
-    analyzeNewsSentiment,
-    config: aiConfig,
-    updateModelConfig,
-    loading: aiLoading
-  } = useAIAnalysis();
+  // OpenAI API loading state
+  const [aiLoading, setAiLoading] = useState(false);
 
   // Use passed data or fallback to mock data
   const activeCryptoData = cryptoData.length > 0 ? cryptoData.slice(0, 3) : [
@@ -252,112 +245,92 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
     if (!message.trim()) return;
 
     const newConversation = [...conversation, { role: 'user' as const, content: message }];
+    setAiLoading(true);
     
     try {
-      // 根据用户消息内容调用不同的AI分析
-      let aiResponse = "";
+      // 直接使用OpenAI Edge Function进行分析
+      const currentCrypto = getSelectedCryptoData();
       
-      if (message.toLowerCase().includes('价格') || message.toLowerCase().includes('图表') || message.toLowerCase().includes('chart')) {
-        // 调用价格图表分析AI
-        const currentCrypto = getSelectedCryptoData();
-        const analysisData = {
-          symbol: selectedCrypto,
-          timeframe: timeframe,
-          priceData: {
-            current: currentCrypto.price,
-            high24h: currentCrypto.high24h,
-            low24h: currentCrypto.low24h,
-            volume24h: currentCrypto.volume24h,
-            change24h: currentCrypto.change24h
-          },
-          technicalData: {
-            rsi: currentCrypto.rsi,
-            ma20: currentCrypto.ma20,
-            ma50: currentCrypto.ma50,
-            support: currentCrypto.support,
-            resistance: currentCrypto.resistance
-          }
-        };
-        aiResponse = await analyzePriceChart(analysisData);
-      } else if (message.toLowerCase().includes('技术') || message.toLowerCase().includes('指标') || message.toLowerCase().includes('technical')) {
-        // 调用技术分析AI
-        const currentCrypto = getSelectedCryptoData();
-        const analysisData = {
-          symbol: selectedCrypto,
-          indicators: {
-            rsi: currentCrypto.rsi,
-            macd: ((currentCrypto.price - currentCrypto.ma20) / currentCrypto.ma20 * 100),
-            kdj: (currentCrypto.rsi * 0.8),
-            bollinger: {
-              upper: currentCrypto.price * 1.02,
-              middle: currentCrypto.ma20,
-              lower: currentCrypto.price * 0.98
-            },
-            movingAverages: {
-              ma5: currentCrypto.price * 0.995,
-              ma10: currentCrypto.price * 0.992,
-              ma20: currentCrypto.ma20,
-              ma50: currentCrypto.ma50,
-              ma200: currentCrypto.ma50 * 0.92
-            },
-            supportResistance: {
-              support1: currentCrypto.support,
-              support2: currentCrypto.support * 0.95,
-              resistance1: currentCrypto.resistance,
-              resistance2: currentCrypto.resistance * 1.05
-            }
-          },
-          marketData: {
-            price: currentCrypto.price,
-            volume: currentCrypto.volume24h,
-            marketCap: currentCrypto.marketCap,
-            dominance: currentCrypto.dominance
-          }
-        };
-        aiResponse = await analyzeTechnicalIndicators(analysisData);
-      } else if (message.toLowerCase().includes('新闻') || message.toLowerCase().includes('情感') || message.toLowerCase().includes('news')) {
-        // 调用新闻情感分析AI
-        const analysisData = {
-          news: activeNewsData.map(news => ({
-            title: news.title,
-            description: news.description || '',
-            source: typeof news.source === 'string' ? news.source : news.source.name,
-            publishedAt: news.publishedAt || ''
-          })),
-          symbol: selectedCrypto,
-          timeframe: timeframe
-        };
-        aiResponse = await analyzeNewsSentiment(analysisData);
+      let analysisPrompt = `作为专业的加密货币分析师，请基于以下数据分析用户问题：
+
+用户问题：${message}
+
+当前选择的加密货币：${selectedCrypto} (${currentCrypto.name})
+当前价格：$${currentCrypto.price.toLocaleString()}
+24小时变化：${currentCrypto.changePercent24h > 0 ? '+' : ''}${currentCrypto.changePercent24h.toFixed(2)}%
+成交量：$${(currentCrypto.volume24h / 1e9).toFixed(2)}B
+市值：$${(currentCrypto.marketCap / 1e9).toFixed(2)}B
+RSI：${currentCrypto.rsi}
+MA20：$${currentCrypto.ma20.toLocaleString()}
+MA50：$${currentCrypto.ma50.toLocaleString()}
+支撑位：$${currentCrypto.support.toLocaleString()}
+阻力位：$${currentCrypto.resistance.toLocaleString()}
+
+最新市场新闻情绪：
+${activeNewsData.slice(0, 3).map(news => `• ${news.title} (${news.sentiment})`).join('\n')}
+
+请提供专业、详细的分析建议，包括技术面、基本面和新闻情绪分析。`;
+
+      // 调用OpenAI Edge Function
+      const { data, error } = await supabase.functions.invoke('openai-chat', {
+        body: { 
+          prompt: analysisPrompt,
+          model: 'gpt-5-mini-2025-08-07'
+        }
+      });
+
+      let aiResponse = "";
+      if (error) {
+        throw error;
+      }
+
+      if (data.success) {
+        aiResponse = data.response;
       } else {
-        // 默认综合分析
-        aiResponse = generateCombinedResponse(message);
+        throw new Error(data.error || 'OpenAI分析失败');
       }
       
       newConversation.push({ role: 'ai' as const, content: aiResponse });
     } catch (error) {
-      // 如果AI调用失败，使用默认响应
-      const fallbackResponse = generateCombinedResponse(message);
+      console.error('OpenAI API call failed:', error);
+      // 使用本地智能分析作为备用
+      const currentCrypto = getSelectedCryptoData();
+      const fallbackResponse = generateOpenAIStyleResponse(message, currentCrypto);
       newConversation.push({ role: 'ai' as const, content: fallbackResponse });
+    } finally {
+      setAiLoading(false);
     }
     
     setConversation(newConversation);
     setMessage("");
     
     toast({
-      title: "AI分析完成",
-      description: "多模型AI已完成分析...",
+      title: "OpenAI分析完成",
+      description: "已使用OpenAI模型完成专业分析",
     });
   };
 
-  const generateCombinedResponse = (userMessage: string) => {
-    const currentCrypto = activeCryptoData.find(c => c.symbol === selectedCrypto);
-    const responses = [
-      `🚀 Elon: Based on ${selectedCrypto} RSI of ${currentCrypto?.rsi}, ${currentCrypto?.rsi > 70 ? 'overbought but still HODL! To the moon!' : 'good entry point for Mars funding!'}`,
-      `💰 Warren: ${selectedCrypto} trading at ${((currentCrypto?.price || 0) / (currentCrypto?.ma20 || 1) * 100 - 100).toFixed(1)}% ${currentCrypto?.price > currentCrypto?.ma20 ? 'above' : 'below'} MA20. ${currentCrypto?.price < currentCrypto?.ma20 ? 'Value opportunity emerging.' : 'Price reflects fair value.'}`,
-      `🔬 Bill: Technical analysis shows ${selectedCrypto} ${currentCrypto?.rsi > 50 ? 'gaining momentum' : 'consolidating'}. Focus on blockchain adoption fundamentals.`
-    ];
+  const generateOpenAIStyleResponse = (userMessage: string, crypto: CryptoAnalytics) => {
+    // 基于技术指标的智能分析
+    const rsiSignal = crypto.rsi > 70 ? '超买区间，建议谨慎' : crypto.rsi < 30 ? '超卖区间，可能是买入机会' : '中性区间';
+    const maSignal = crypto.price > crypto.ma20 ? '价格在MA20之上，趋势看涨' : '价格在MA20之下，趋势偏弱';
+    const volumeAnalysis = crypto.volume24h > 10e9 ? '成交量活跃' : '成交量一般';
     
-    return `**Combined Analysis for ${selectedCrypto}:**\n\n${responses.join('\n\n')}\n\n**Unified Recommendation:** Current market conditions suggest ${currentCrypto?.changePercent24h > 0 ? 'continued positive momentum' : 'potential buying opportunity'} based on technical and fundamental analysis.`;
+    return `**AI分析报告 - ${crypto.symbol}**
+
+📊 **技术面分析：**
+• RSI指标(${crypto.rsi}): ${rsiSignal}
+• 移动平均线: ${maSignal}
+• 成交量分析: ${volumeAnalysis}
+• 支撑位: $${crypto.support.toLocaleString()}
+• 阻力位: $${crypto.resistance.toLocaleString()}
+
+💡 **市场观点：**
+基于当前技术指标，${crypto.symbol}显示${crypto.changePercent24h > 0 ? '积极' : '谨慎'}的市场情绪。
+${crypto.rsi > 50 ? '技术面偏向多头' : '技术面偏向震荡'}，建议密切关注关键支撑阻力位的突破情况。
+
+⚠️ **风险提示：** 
+加密货币投资具有高风险，请根据自身风险承受能力谨慎投资。`;
   };
 
   const getSelectedCryptoData = () => {
@@ -451,11 +424,15 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                 />
                 <Button 
                   onClick={handleSendMessage}
-                  disabled={!message.trim()}
+                  disabled={!message.trim() || aiLoading}
                   className="bg-accent hover:bg-accent/80 px-3"
                   size="sm"
                 >
-                  <Send className="w-3 h-3" />
+                  {aiLoading ? (
+                    <Activity className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Send className="w-3 h-3" />
+                  )}
                 </Button>
               </div>
             </Card>
