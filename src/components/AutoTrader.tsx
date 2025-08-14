@@ -804,7 +804,7 @@ export const AutoTrader = () => {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-slate-300 text-sm mb-2 block">交易策略</label>
+                    <label className="text-slate-300 text-sm mb-2 block">{t('trading.strategy')}</label>
                     <Select value={config.strategy} onValueChange={(value: TradingStrategy) => setConfig(prev => ({ ...prev, strategy: value }))}>
                       <SelectTrigger className="bg-slate-700 border-slate-600">
                         <SelectValue />
@@ -813,13 +813,13 @@ export const AutoTrader = () => {
                         <SelectItem value="conservative">
                           <div className="flex items-center gap-2">
                             <Shield className="w-4 h-4 text-green-400" />
-                            稳健策略 (≥90%胜率)
+                            {t('trading.conservative_strategy')} (≥90%{t('ai.win_rate')})
                           </div>
                         </SelectItem>
                         <SelectItem value="aggressive">
                           <div className="flex items-center gap-2">
                             <Zap className="w-4 h-4 text-orange-400" />
-                            激进策略 (≥70%胜率)
+                            {t('trading.aggressive_strategy')} (≥70%{t('ai.win_rate')})
                           </div>
                         </SelectItem>
                       </SelectContent>
@@ -827,7 +827,7 @@ export const AutoTrader = () => {
                   </div>
                   
                   <div>
-                    <label className="text-slate-300 text-sm mb-2 block">交易类型</label>
+                    <label className="text-slate-300 text-sm mb-2 block">{t('trading.type')}</label>
                     <Select value={config.tradingType} onValueChange={(value: TradingType) => setConfig(prev => ({ ...prev, tradingType: value }))}>
                       <SelectTrigger className="bg-slate-700 border-slate-600">
                         <SelectValue />
@@ -836,13 +836,13 @@ export const AutoTrader = () => {
                         <SelectItem value="spot">
                           <div className="flex items-center gap-2">
                             <CircleDollarSign className="w-4 h-4 text-blue-400" />
-                            现货交易
+                            {t('trading.spot')}
                           </div>
                         </SelectItem>
                         <SelectItem value="futures">
                           <div className="flex items-center gap-2">
                             <TrendingUp className="w-4 h-4 text-purple-400" />
-                            合约交易
+                            {t('trading.futures')}
                           </div>
                         </SelectItem>
                       </SelectContent>
@@ -852,7 +852,7 @@ export const AutoTrader = () => {
                 
                 {config.tradingType !== 'spot' && (
                   <div>
-                    <label className="text-slate-300 text-sm mb-2 block">杠杆倍数: {config.leverage}x</label>
+                    <label className="text-slate-300 text-sm mb-2 block">{t('trading.leverage')}: {config.leverage}x</label>
                     <Slider
                       value={[config.leverage]}
                       onValueChange={(value) => setConfig(prev => ({ ...prev, leverage: value[0] }))}
@@ -870,19 +870,19 @@ export const AutoTrader = () => {
                 
                 <div className="grid grid-cols-3 gap-2 text-xs">
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">策略</p>
+                    <p className="text-slate-400">{t('trading.strategy_short')}</p>
                     <p className={`font-semibold ${config.strategy === 'conservative' ? 'text-green-400' : 'text-orange-400'}`}>
                       {strategyConfig.name}
                     </p>
                   </div>
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">交易类型</p>
+                    <p className="text-slate-400">{t('trading.type')}</p>
                     <p className="text-white font-mono">
-                      {config.tradingType === 'spot' ? '现货' : '合约'}
+                      {config.tradingType === 'spot' ? t('trading.spot_short') : t('trading.futures_short')}
                     </p>
                   </div>
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">杠杆</p>
+                    <p className="text-slate-400">{t('trading.leverage')}</p>
                     <p className="text-white font-mono">{config.leverage}x</p>
                   </div>
                 </div>
