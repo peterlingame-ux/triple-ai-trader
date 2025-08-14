@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CryptoCard } from "./CryptoCard";
 import { ElonProfile } from "./ElonProfile";
 import { WarrenProfile } from "./WarrenProfile";
 import { BillProfile } from "./BillProfile";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
+import { UserProfile } from "./UserProfile";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useOptimizedCrypto, filterCryptoData } from "@/hooks/useOptimizedCrypto";
+import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
+import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
-import { OptimizedCryptoCard } from "./optimized/OptimizedCryptoCard";
-import { OptimizedHeader } from "./optimized/OptimizedHeader";
-import { OptimizedPortfolioStats } from "./optimized/OptimizedPortfolioStats";
+import { IconGeneratorDialog } from "./IconGeneratorDialog";
+import { OptimizedCryptoGrid } from "./OptimizedCryptoGrid";
+import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 
 // Mock data for crypto prices - expanded dataset
@@ -74,20 +81,28 @@ const aiAdvisors = [
 
 export const TradingDashboard = () => {
   const { t } = useLanguage();
-  const { cryptoData, newsData, loading, refreshData } = useOptimizedCrypto();
+  const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
+  const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Filter crypto data based on search query
-  const filteredCryptoData = filterCryptoData(cryptoData, searchQuery);
+  // Memoize filtered crypto data for performance
+  const filteredCryptoData = useMemo(() => 
+    filterCryptoData(cryptoData, searchQuery), 
+    [cryptoData, searchQuery]
+  );
 
-  const handleSearch = (query: string) => {
+  // Get portfolio data from either wallet or auto-trader
+  const portfolioData = useMemo(() => getPortfolioData(), [getPortfolioData]);
+  const { totalValue, dailyChange, activeTrades, source } = portfolioData;
+
+  const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-  };
+  }, []);
 
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setSearchQuery("");
-  };
+  }, []);
 
   return (
     <div className="min-h-screen relative p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
@@ -107,14 +122,60 @@ export const TradingDashboard = () => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Optimized Header */}
-        <OptimizedHeader />
+        {/* Professional Header Design */}
+        <div className="relative">
+          {/* Background with enhanced glassmorphism */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-2xl border border-white/5 shadow-2xl"></div>
+          
+          {/* Content */}
+          <div className="relative px-10 py-8">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              {/* Left Section - Brand */}
+              <div className="flex items-center gap-8">
+                <div className="space-y-2">
+                  <h1 className="text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
+                    Meta BrainX
+                  </h1>
+                  <p className="text-lg text-slate-300 font-inter font-medium tracking-wide">
+                    {t('app.subtitle')}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Center Section - Status Indicator */}
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <Badge variant="outline" className="px-6 py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
+                    <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <Brain className="w-5 h-5 mr-2" />
+                    {t('status.live')}
+                  </Badge>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </div>
+              
+              {/* Right Section - User Controls */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-slate-800/60 to-slate-700/60 backdrop-blur-sm rounded-xl border border-white/5 shadow-lg">
+                  <UserProfile />
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+                  <WalletConnector />
+                  <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+                  <LanguageSwitcher />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Subtle bottom accent */}
+          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-sm"></div>
+        </div>
 
         {/* AI Opportunity Alert */}
         <AIOpportunityAlert />
 
-        {/* Optimized Portfolio Stats */}
-        <OptimizedPortfolioStats />
+        {/* Portfolio Overview with Dynamic Data Source */}
+        <OptimizedPortfolioCards portfolioData={portfolioData} />
 
         {/* Crypto Cards Grid */}
         <div>
@@ -125,6 +186,7 @@ export const TradingDashboard = () => {
               {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
             </h2>
             <div className="flex items-center gap-2">
+              <IconGeneratorDialog />
               <Button 
                 variant="outline" 
                 onClick={refreshData}
@@ -156,21 +218,11 @@ export const TradingDashboard = () => {
             />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(showAllCrypto ? filteredCryptoData : filteredCryptoData.slice(0, 6)).map((crypto) => (
-              <OptimizedCryptoCard
-                key={crypto.symbol}
-                symbol={crypto.symbol}
-                name={crypto.name}
-                price={crypto.price}
-                change={crypto.change24h}
-                changePercent={crypto.changePercent24h}
-                volume={crypto.volume24h}
-                marketCap={crypto.marketCap}
-                rank={crypto.marketCapRank}
-              />
-            ))}
-          </div>
+          <OptimizedCryptoGrid 
+            cryptoData={filteredCryptoData}
+            showAll={showAllCrypto}
+            maxVisible={6}
+          />
           
           {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-12">

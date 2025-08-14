@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Coins } from "lucide-react";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoStaticIcon } from "./Static3DIconShowcase";
+import { formatPrice, formatVolume, formatMarketCap, getCirculatingSupply, getMarketRank } from "@/utils/cryptoDataUtils";
 
 interface CryptoCardProps {
   symbol: string;
@@ -15,7 +16,7 @@ interface CryptoCardProps {
   marketCap?: number;
 }
 
-export const CryptoCard = ({ symbol, name, price, change, changePercent, image, volume, marketCap }: CryptoCardProps) => {
+export const CryptoCard = memo<CryptoCardProps>(({ symbol, name, price, change, changePercent, image, volume, marketCap }) => {
   const { t } = useLanguage();
   const isPositive = change >= 0;
   
@@ -52,7 +53,7 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
       {/* Price Section */}
       <div className="mt-4 space-y-1">
         <p className="text-2xl font-bold text-foreground font-mono tracking-wider">
-          ${price.toLocaleString(undefined, { minimumFractionDigits: price < 1 ? 3 : 0, maximumFractionDigits: price < 1 ? 3 : 0 })}
+          ${formatPrice(price)}
         </p>
         <p className={`text-sm font-medium font-mono ${isPositive ? 'text-success' : 'text-destructive'}`}>
           {isPositive ? '+' : ''}${Math.abs(change).toFixed(2)}
@@ -65,36 +66,31 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
           <div>
             <p className="text-muted-foreground mb-1">{t('crypto.volume24h')}</p>
             <p className="text-foreground font-mono font-medium">
-              ${volume ? (volume / 1e9).toFixed(2) + 'B' : '2.5B'}
+              ${formatVolume(volume)}
             </p>
           </div>
           <div>
             <p className="text-muted-foreground mb-1">{t('crypto.marketCap')}</p>
             <p className="text-foreground font-mono font-medium">
-              ${marketCap ? (marketCap / 1e9).toFixed(1) + 'B' : '45.2B'}
+              ${formatMarketCap(marketCap)}
             </p>
           </div>
           <div>
             <p className="text-muted-foreground mb-1">{t('crypto.circulatingSupply')}</p>
             <p className="text-foreground font-mono text-xs">
-              {symbol === 'BTC' ? '19.7M BTC' : 
-               symbol === 'ETH' ? '120.4M ETH' : 
-               symbol === 'ADA' ? '35.0B ADA' :
-               '1.2B ' + symbol}
+              {getCirculatingSupply(symbol)}
             </p>
           </div>
           <div>
             <p className="text-muted-foreground mb-1">{t('crypto.marketRank')}</p>
             <p className="text-foreground font-mono font-medium">
-              #{symbol === 'BTC' ? '1' : 
-                 symbol === 'ETH' ? '2' : 
-                 symbol === 'BNB' ? '4' :
-                 symbol === 'XRP' ? '5' :
-                 Math.floor(Math.random() * 50) + 6}
+              #{getMarketRank(symbol)}
             </p>
           </div>
         </div>
       </div>
     </Card>
   );
-};
+});
+
+CryptoCard.displayName = "CryptoCard";

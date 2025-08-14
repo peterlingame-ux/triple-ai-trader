@@ -1,13 +1,7 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
 
 const Index = () => {
-  console.log("Index page rendering...");
-  
-  return (
-    <div>
-      <TradingDashboard />
-    </div>
-  );
+  return <TradingDashboard />;
 };
 
 export default Index;
