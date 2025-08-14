@@ -3,7 +3,7 @@ import { useToast } from '@/hooks/use-toast';
 
 // AI模型配置接口
 interface AIModelConfig {
-  provider: 'openai' | 'claude' | 'perplexity' | 'custom';
+  provider: 'openai' | 'claude' | 'perplexity' | 'grok' | 'custom';
   model: string;
   apiKey: string;
   apiUrl?: string;
@@ -35,8 +35,8 @@ const DEFAULT_CONFIG: AIAnalysisConfig = {
     maxTokens: 1500
   },
   newsSentiment: {
-    provider: 'perplexity',
-    model: 'llama-3.1-sonar-large-128k-online',
+    provider: 'grok',
+    model: 'grok-2-beta',
     apiKey: '',
     temperature: 0.1,
     maxTokens: 800
@@ -209,6 +209,31 @@ export const useAIAnalysis = () => {
           });
           break;
 
+        case 'grok':
+          response = await fetch('https://api.x.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${modelConfig.apiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: modelConfig.model,
+              messages: [
+                {
+                  role: 'system',
+                  content: prompt
+                },
+                {
+                  role: 'user',
+                  content: JSON.stringify(context)
+                }
+              ],
+              temperature: modelConfig.temperature,
+              max_tokens: modelConfig.maxTokens
+            }),
+          });
+          break;
+
         case 'custom':
           if (!modelConfig.apiUrl) {
             throw new Error('自定义API需要提供apiUrl');
@@ -243,6 +268,7 @@ export const useAIAnalysis = () => {
       switch (modelConfig.provider) {
         case 'openai':
         case 'perplexity':
+        case 'grok':
           return data.choices[0].message.content;
         case 'claude':
           return data.content[0].text;

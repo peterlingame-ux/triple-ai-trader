@@ -22,7 +22,7 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
   const [aiConfigs, setAiConfigs] = useState({
     openai: { enabled: false, apiKey: "", model: "gpt-4o-mini" },
     claude: { enabled: false, apiKey: "", model: "claude-3-5-sonnet-20241022" },
-    perplexity: { enabled: false, apiKey: "", model: "llama-3.1-sonar-small-128k-online" }
+    grok: { enabled: false, apiKey: "", model: "grok-beta" }
   });
 
   const cryptoOptions = [
@@ -125,9 +125,9 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
               <div className="text-xs text-slate-400">Claude AI</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${aiConfigs.perplexity.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+              <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${aiConfigs.grok.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
               <div className="text-sm text-white font-medium">大数据分析引擎</div>
-              <div className="text-xs text-slate-400">Perplexity AI</div>
+              <div className="text-xs text-slate-400">Grok AI</div>
             </div>
           </div>
         </div>
@@ -271,42 +271,42 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
           </div>
         </Card>
 
-        {/* Perplexity Configuration */}
+        {/* Grok Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <TrendingUpIcon className="w-6 h-6 text-green-400" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Perplexity API Configuration</h3>
+                <h3 className="text-lg font-semibold text-white">Grok API Configuration</h3>
                 <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">大数据分析引擎</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">用于实时搜索和综合市场数据分析</p>
+            <p className="text-sm text-slate-400 mb-4">用于实时搜索和智能数据分析的前沿AI模型</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  checked={aiConfigs.perplexity.enabled}
+                  checked={aiConfigs.grok.enabled}
                   onChange={(e) => setAiConfigs(prev => ({
                     ...prev,
-                    perplexity: { ...prev.perplexity, enabled: e.target.checked }
+                    grok: { ...prev.grok, enabled: e.target.checked }
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Perplexity 分析引擎</span>
+                <span className="text-sm text-slate-300">启用 Grok 分析引擎</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">API Key</label>
                   <Input
-                    placeholder="输入您的 Perplexity API Key"
+                    placeholder="输入您的 Grok API Key"
                     type="password"
-                    value={aiConfigs.perplexity.apiKey}
+                    value={aiConfigs.grok.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
                       ...prev,
-                      perplexity: { ...prev.perplexity, apiKey: e.target.value }
+                      grok: { ...prev.grok, apiKey: e.target.value }
                     }))}
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
@@ -314,19 +314,19 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">模型选择</label>
                   <Select
-                    value={aiConfigs.perplexity.model}
+                    value={aiConfigs.grok.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
                       ...prev,
-                      perplexity: { ...prev.perplexity, model: value }
+                      grok: { ...prev.grok, model: value }
                     }))}
                   >
                     <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="llama-3.1-sonar-small-128k-online">Llama 3.1 Sonar Small</SelectItem>
-                      <SelectItem value="llama-3.1-sonar-large-128k-online">Llama 3.1 Sonar Large</SelectItem>
-                      <SelectItem value="llama-3.1-sonar-huge-128k-online">Llama 3.1 Sonar Huge</SelectItem>
+                      <SelectItem value="grok-beta">Grok Beta</SelectItem>
+                      <SelectItem value="grok-2-beta">Grok-2 Beta</SelectItem>
+                      <SelectItem value="grok-2-vision-beta">Grok-2 Vision Beta</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -362,9 +362,9 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                 <Badge variant="outline" className="text-xs text-purple-400 border-purple-400/20">Claude</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <div className={`w-2 h-2 rounded-full ${aiConfigs.perplexity.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
+                <div className={`w-2 h-2 rounded-full ${aiConfigs.grok.enabled ? 'bg-green-400' : 'bg-gray-500'}`}></div>
                 <span className="text-slate-300">大数据分析引擎</span>
-                <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Perplexity</Badge>
+                <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Grok</Badge>
               </div>
             </div>
             

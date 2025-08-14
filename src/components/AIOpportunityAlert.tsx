@@ -159,10 +159,10 @@ export const AIOpportunityAlert = () => {
     try {
       // AI配置 - 使用高质量模型确保准确性
       const config = {
-        provider: type === 'price_chart' ? 'openai' : type === 'technical_analysis' ? 'claude' : 'perplexity',
+        provider: type === 'price_chart' ? 'openai' : type === 'technical_analysis' ? 'claude' : 'grok',
         model: type === 'price_chart' ? 'gpt-4o' : 
                type === 'technical_analysis' ? 'claude-3-5-sonnet-20241022' : 
-               'llama-3.1-sonar-large-128k-online',
+               'grok-2-beta',
         apiKey: '', // 从Supabase secrets中获取
         temperature: type === 'price_chart' ? 0.2 : type === 'technical_analysis' ? 0.1 : 0.1,
         maxTokens: type === 'price_chart' ? 1000 : type === 'technical_analysis' ? 1500 : 800
