@@ -989,12 +989,12 @@ export const AutoTrader = () => {
             <Card className="p-4 bg-slate-800/50 border-slate-700">
               <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
                 <Settings className="w-4 h-4" />
-                高级参数设置
+                {t('trading.advanced_settings')}
               </h3>
               
               <div className="space-y-3">
                 <div>
-                  <label className="text-slate-400 text-sm">单笔风险 ({config.riskPerTrade}%)</label>
+                  <label className="text-slate-400 text-sm">{t('trading.risk_per_trade')} ({config.riskPerTrade}%)</label>
                   <Slider
                     value={[config.riskPerTrade]}
                     onValueChange={(value) => setConfig(prev => ({ ...prev, riskPerTrade: value[0] }))}
@@ -1006,7 +1006,7 @@ export const AutoTrader = () => {
                 </div>
                 
                 <div>
-                  <label className="text-slate-400 text-sm">止损比例 ({config.stopLossPercent}%)</label>
+                  <label className="text-slate-400 text-sm">{t('trading.stop_loss_ratio')} ({config.stopLossPercent}%)</label>
                   <Slider
                     value={[config.stopLossPercent]}
                     onValueChange={(value) => setConfig(prev => ({ ...prev, stopLossPercent: value[0] }))}
@@ -1018,7 +1018,7 @@ export const AutoTrader = () => {
                 </div>
                 
                 <div>
-                  <label className="text-slate-400 text-sm">止盈比例 ({config.takeProfitPercent}%)</label>
+                  <label className="text-slate-400 text-sm">{t('trading.take_profit_ratio')} ({config.takeProfitPercent}%)</label>
                   <Slider
                     value={[config.takeProfitPercent]}
                     onValueChange={(value) => setConfig(prev => ({ ...prev, takeProfitPercent: value[0] }))}
@@ -1030,7 +1030,7 @@ export const AutoTrader = () => {
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">移动止损</span>
+                  <span className="text-slate-400 text-sm">{t('trading.trailing_stop')}</span>
                   <Switch
                     checked={config.trailingStop}
                     onCheckedChange={(checked) => setConfig(prev => ({ ...prev, trailingStop: checked }))}
@@ -1038,7 +1038,7 @@ export const AutoTrader = () => {
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">自动复投</span>
+                  <span className="text-slate-400 text-sm">{t('trading.auto_reinvest')}</span>
                   <Switch
                     checked={config.autoReinvest}
                     onCheckedChange={(checked) => setConfig(prev => ({ ...prev, autoReinvest: checked }))}
@@ -1091,14 +1091,14 @@ export const AutoTrader = () => {
                 <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
                   <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-purple-400" />
-                    AI智能信号分析
+                    {t('ai.signal_analysis')}
                   </h4>
                   
                   <div className="max-h-80 overflow-y-auto space-y-3">
                     {signals.length === 0 ? (
                       <div className="text-center text-slate-400 py-8">
                         <Brain className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                        <p>AI正在深度分析市场...</p>
+                        <p>{t('ai.analyzing_market')}</p>
                       </div>
                     ) : (
                       signals.map((signal) => (
@@ -1160,15 +1160,15 @@ export const AutoTrader = () => {
                 <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
                   <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
                     <BarChart3 className="w-4 h-4 text-green-400" />
-                    智能持仓管理 ({positions.filter(p => p.status === 'open').length})
+                    {t('ai.position_management')} ({positions.filter(p => p.status === 'open').length})
                   </h4>
                   
                   <div className="max-h-80 overflow-y-auto space-y-3">
                     {positions.filter(p => p.status === 'open').length === 0 ? (
                       <div className="text-center text-slate-400 py-8">
                         <DollarSign className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                        <p>暂无持仓</p>
-                        <p className="text-sm">AI将自动发现并执行交易机会</p>
+                        <p>{t('trading.no_positions')}</p>
+                        <p className="text-sm">{t('trading.auto_discover')}</p>
                       </div>
                     ) : (
                       positions.filter(p => p.status === 'open').map((position) => (
@@ -1244,7 +1244,7 @@ export const AutoTrader = () => {
                             </Badge>
                             {config.trailingStop && (
                               <Badge className="bg-yellow-500/20 text-yellow-400">
-                                移动止损
+                                {t('trading.trailing_stop')}
                               </Badge>
                             )}
                           </div>
@@ -1258,11 +1258,11 @@ export const AutoTrader = () => {
               {/* Analytics Dashboard */}
               <TabsContent value="analytics" className="space-y-3 mt-4">
                 <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
-                  <h4 className="text-white font-semibold mb-3">AI交易分析报告</h4>
+                  <h4 className="text-white font-semibold mb-3">{t('ai.trading_report')}</h4>
                   <div className="text-center text-slate-400 py-8">
                     <BarChart3 className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                    <p>详细分析数据将在此显示</p>
-                    <p className="text-sm">包括收益曲线、风险分析、策略对比等</p>
+                    <p>{t('ai.detailed_data')}</p>
+                    <p className="text-sm">{t('ai.includes_analysis')}</p>
                   </div>
                 </Card>
               </TabsContent>
