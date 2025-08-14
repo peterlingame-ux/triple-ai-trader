@@ -437,8 +437,22 @@ const translations = {
     'advisor.recommendation': '推荐',
     'advisor.analysis': 'AI分析',
     'advisor.detailed': '获取详细分析',
-    'advisor.featured': '⭐ 精选',
-    'ai.communicate': '开始沟通',
+     'advisor.featured': '⭐ 精选',
+     
+     // Portfolio card specific translations
+     'portfolio.ai_virtual': 'AI虚拟投资组合',
+     'portfolio.total_value': '总价值',
+     'portfolio.daily_change': '日变化',
+     'portfolio.profit_loss': '盈亏金额',
+     'portfolio.active_trades': '活跃交易',
+     'portfolio.current_holdings': '当前持仓',
+     'portfolio.no_trades': '无交易',
+     'portfolio.simulated_trading': '模拟交易',
+     'portfolio.real_time_sync': '实时同步',
+     'portfolio.real_time': '实时',
+     'portfolio.currently_trading': '正在交易',
+     
+     'ai.communicate': '开始沟通',
     'wallet.connect': '连接钱包',
     'wallet.real': '真实钱包',
     'wallet.virtual': 'AI虚拟投资组合',
@@ -508,13 +522,15 @@ const translations = {
     'bill.specialty': '科技创新与慈善投资',
     
     // 加密货币卡片翻译
-    'crypto.volume24h': '24小时交易量',
-    'crypto.marketCap': '市值',
-    'crypto.circulatingSupply': '流通供应量',
-    'crypto.marketRank': '市场排名',
-    'crypto.marketDominance': '市场占有率',
-    'crypto.maxSupply': '最大供应量',
-    'crypto.supplyRatio': '供应比率',
+     'crypto.volume24h': '24小时交易量',
+     'crypto.marketCap': '市值',
+     'crypto.circulatingSupply': '流通供应量',
+     'crypto.marketRank': '市场排名',
+     'crypto.marketDominance': '市场占有率',
+     'crypto.maxSupply': '最大供应量',
+     'crypto.supplyRatio': '供应比率',
+     'crypto.vol': '成交量',
+     'crypto.mcap': '市值',
 
     // 3D图标展示翻译
     'showcase.title': '真实3D立体静态大图标展示',
@@ -749,7 +765,15 @@ const translations = {
     'autotrader.ai_standby': 'AI系统待命中...',
     'autotrader.start_to_view': '启动自动交易以查看实时动态',
     
-    // Wallet translations for Chinese
+     
+     // Binance API Configuration translations
+     'binance.api_config': 'Binance API配置',
+     'binance.config_description': '配置您的Binance API凭证以安全访问交易数据',
+     'binance.login_required': '需要登录',
+     'binance.login_first': '请先登录以配置API凭证。登录后，您可以安全地存储和管理您的API密钥。',
+     'binance.api_secure_storage': '登录后，您的API密钥将被加密并安全存储在Supabase中。它们永远不会存储在您的浏览器中或以明文传输。',
+     
+     // Wallet translations for Chinese
     'wallet.connect_title': '连接钱包',
     'wallet.select_description': '选择最安全可靠的钱包开始交易和管理您的投资组合',
     'wallet.connected': '已连接',
