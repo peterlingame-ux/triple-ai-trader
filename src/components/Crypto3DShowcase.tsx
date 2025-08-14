@@ -1,14 +1,16 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { BTC3DLogo } from '@/components/BTC3DLogo';
-import { ETH3DLogo } from '@/components/ETH3DLogo';
-import { BNB3DLogo } from '@/components/BNB3DLogo';
-import { DOGE3DLogo } from '@/components/DOGE3DLogo';
-import { SOL3DLogo } from '@/components/SOL3DLogo';
-import { ADA3DLogo } from '@/components/ADA3DLogo';
-import { OKB3DLogo } from '@/components/OKB3DLogo';
-import { PENGU3DLogo } from '@/components/PENGU3DLogo';
-import { Crypto3DIcon } from '@/components/Crypto3DIcon';
+import { 
+  BTC3DLogo, 
+  ETH3DLogo, 
+  BNB3DLogo, 
+  DOGE3DLogo, 
+  SOL3DLogo, 
+  ADA3DLogo, 
+  OKB3DLogo, 
+  PENGU3DLogo, 
+  Crypto3DIcon 
+} from '@/components/crypto3d';
 
 export const Crypto3DShowcase: React.FC = () => {
   const showcaseCoins = [
