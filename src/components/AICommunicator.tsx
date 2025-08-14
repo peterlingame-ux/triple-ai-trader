@@ -395,10 +395,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
             <Bot className="w-6 h-6 text-accent" />
             {t('ai.title')}
             <div className="flex items-center gap-2 ml-auto">
-              <AIConfigPanel 
-                config={aiConfig}
-                onUpdateConfig={updateModelConfig}
-              />
+              <AIConfigPanel />
               <Badge variant="outline" className="bg-accent/20 text-accent border-accent/50">
                 <Activity className="w-3 h-3 mr-1" />
                 {t('ai.live_analytics')}

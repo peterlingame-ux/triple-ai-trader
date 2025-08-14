@@ -38,6 +38,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_api_configs: {
+        Row: {
+          config_data: Json
+          created_at: string
+          id: string
+          service: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          config_data: Json
+          created_at?: string
+          id?: string
+          service: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          config_data?: Json
+          created_at?: string
+          id?: string
+          service?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
