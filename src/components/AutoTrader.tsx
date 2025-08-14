@@ -785,7 +785,7 @@ export const AutoTrader = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white font-semibold flex items-center gap-2">
                   <Target className="w-4 h-4" />
-                  交易策略控制
+                  {t('autotrader.strategy_control')}
                 </h3>
                 <div className="flex items-center gap-2">
                   <Switch
@@ -893,12 +893,12 @@ export const AutoTrader = () => {
             <Card className="p-4 bg-gradient-to-br from-blue-900/30 to-purple-900/30 border-blue-500/30">
               <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
                 <CircleDollarSign className="w-4 h-4 text-blue-400" />
-                虚拟交易账户
+                {t('autotrader.virtual_account')}
               </h3>
               
               <div className="space-y-3">
                 <div className="text-center p-3 bg-slate-800/50 rounded-lg">
-                  <p className="text-slate-400 text-sm">总资产</p>
+                  <p className="text-slate-400 text-sm">{t('autotrader.total_assets')}</p>
                   <p className="text-2xl font-bold text-white font-mono">
                     ${(config.virtualBalance + stats.totalPnL).toLocaleString()}
                   </p>
@@ -910,22 +910,22 @@ export const AutoTrader = () => {
                 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="text-center p-2 bg-green-500/10 rounded border border-green-500/20">
-                    <p className="text-green-400">今日盈亏</p>
+                    <p className="text-green-400">{t('autotrader.daily_pnl')}</p>
                     <p className="text-white font-mono">+${stats.dailyPnL.toLocaleString()}</p>
                   </div>
                   <div className="text-center p-2 bg-blue-500/10 rounded border border-blue-500/20">
-                    <p className="text-blue-400">月度盈亏</p>
+                    <p className="text-blue-400">{t('autotrader.monthly_pnl')}</p>
                     <p className="text-white font-mono">+${stats.monthlyPnL.toLocaleString()}</p>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">总胜率</p>
+                    <p className="text-slate-400">{t('autotrader.win_rate')}</p>
                     <p className="text-white font-mono">{stats.winRate.toFixed(1)}%</p>
                   </div>
                   <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">总交易</p>
+                    <p className="text-slate-400">{t('autotrader.total_trades')}</p>
                     <p className="text-white font-mono">{stats.totalTrades}</p>
                   </div>
                 </div>
@@ -936,7 +936,7 @@ export const AutoTrader = () => {
                   onClick={resetVirtualAccount}
                   className="w-full"
                 >
-                  重置账户
+                  {t('autotrader.reset_account')}
                 </Button>
               </div>
             </Card>
@@ -945,7 +945,7 @@ export const AutoTrader = () => {
             <Card className="p-4 bg-slate-800/50 border-slate-700">
               <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
                 <Award className="w-4 h-4 text-yellow-400" />
-                策略表现对比
+                {t('autotrader.strategy_performance')}
               </h3>
               
               <div className="space-y-3">
@@ -1052,10 +1052,10 @@ export const AutoTrader = () => {
           <div className="flex-1 space-y-4">
             <Tabs defaultValue="activity" className="w-full">
               <TabsList className="grid w-full grid-cols-4 bg-slate-800">
-                <TabsTrigger value="activity">实时动态</TabsTrigger>
-                <TabsTrigger value="signals">AI信号</TabsTrigger>
-                <TabsTrigger value="positions">持仓管理</TabsTrigger>
-                <TabsTrigger value="analytics">数据分析</TabsTrigger>
+                <TabsTrigger value="activity">{t('autotrader.realtime_activity')}</TabsTrigger>
+                <TabsTrigger value="signals">{t('autotrader.ai_signals')}</TabsTrigger>
+                <TabsTrigger value="positions">{t('autotrader.position_management')}</TabsTrigger>
+                <TabsTrigger value="analytics">{t('autotrader.data_analysis')}</TabsTrigger>
               </TabsList>
               
               {/* Real-time Trading Activity */}
