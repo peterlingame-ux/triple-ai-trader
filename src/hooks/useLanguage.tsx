@@ -129,6 +129,9 @@ const translations = {
     'ai.technical_panel': 'Technical Indicators Panel',
     'ai.basic_indicators': 'Basic Indicators',
     'ai.moving_averages': 'Moving Averages',
+    'autotrader.button': 'AI Auto Money',
+    'autotrader.title': 'AI Auto Money System - Multi-Model Smart Trading',
+    'autotrader.ai_analysis_active': 'AI Analysis Active',
     
     // 自动交易器翻译
     'autotrader.stopped': 'AI Auto Trading Stopped',
@@ -565,6 +568,9 @@ const translations = {
     'ai.technical_panel': '技术指标面板',
     'ai.basic_indicators': '基础指标',
     'ai.moving_averages': '移动平均线',
+    'autotrader.button': 'AI自动赚钱',
+    'autotrader.title': 'AI自动赚钱系统 - 多模型智能交易',
+    'autotrader.ai_analysis_active': 'AI分析活跃',
     'ai.brain_detection': '最强大脑自动检测',
     'ai.monitor_opportunities': '监控90%胜率机会',
     'ai.last_check': '上次检查:',

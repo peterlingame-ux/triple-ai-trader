@@ -730,7 +730,7 @@ export const AutoTrader = () => {
       <DialogTrigger asChild>
         <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-orbitron tracking-wide px-6 py-2 relative">
           <Bot className="w-4 h-4 mr-2" />
-          AI自动赚钱
+          {t('autotrader.button')}
           {config.enabled && (
             <div className="absolute -top-1 -right-1">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
@@ -739,7 +739,7 @@ export const AutoTrader = () => {
           {Object.keys(aiAnalysisResults).length > 0 && (
             <Badge variant="outline" className="ml-2 bg-accent/20 text-accent border-accent/50">
               <Brain className="w-3 h-3 mr-1" />
-              AI分析活跃
+              {t('autotrader.ai_analysis_active')}
             </Badge>
           )}
         </Button>
@@ -749,7 +749,7 @@ export const AutoTrader = () => {
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-3 font-orbitron text-xl">
             <Bot className="w-6 h-6 text-emerald-400" />
-            AI自动赚钱系统 - 多模型智能交易
+            {t('autotrader.title')}
             <div className="flex items-center gap-2 ml-auto">
               {aiLoading.priceChart && (
                 <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/50">
