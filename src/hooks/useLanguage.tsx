@@ -158,6 +158,9 @@ const translations = {
     'crypto.marketCap': 'Market Cap',
     'crypto.circulatingSupply': 'Circulating Supply',
     'crypto.marketRank': 'Market Rank',
+    'crypto.marketDominance': 'Market Dominance',
+    'crypto.maxSupply': 'Max Supply',
+    'crypto.supplyRatio': 'Supply Ratio',
     
     // AI advisor detailed information translations
     'advisor.netWorth': 'Personal Net Worth',
@@ -421,6 +424,9 @@ const translations = {
     'crypto.marketCap': '市值',
     'crypto.circulatingSupply': '流通供应量',
     'crypto.marketRank': '市场排名',
+    'crypto.marketDominance': '市场占有率',
+    'crypto.maxSupply': '最大供应量',
+    'crypto.supplyRatio': '供应比率',
     
     // AI顾问详细信息翻译
     'advisor.netWorth': '个人净资产',

@@ -807,31 +807,31 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                       <div className="grid grid-cols-6 gap-3">
                         <Card className="bg-gradient-crypto border-border p-3">
                           <div className="text-center">
-                            <p className="text-muted-foreground text-xs mb-1">市值</p>
+                            <p className="text-muted-foreground text-xs mb-1">{t('crypto.marketCap')}</p>
                             <p className="text-foreground font-mono font-bold text-sm">${(currentCrypto.marketCap / 1e9).toFixed(1)}B</p>
                           </div>
                         </Card>
                         <Card className="bg-gradient-crypto border-border p-3">
                           <div className="text-center">
-                            <p className="text-muted-foreground text-xs mb-1">24小时交易量</p>
+                            <p className="text-muted-foreground text-xs mb-1">{t('crypto.volume24h')}</p>
                             <p className="text-foreground font-mono font-bold text-sm">${(currentCrypto.volume24h / 1e9).toFixed(1)}B</p>
                           </div>
                         </Card>
                         <Card className="bg-gradient-crypto border-border p-3">
                           <div className="text-center">
-                            <p className="text-muted-foreground text-xs mb-1">市场占有率</p>
+                            <p className="text-muted-foreground text-xs mb-1">{t('crypto.marketDominance')}</p>
                             <p className="text-foreground font-mono font-bold text-sm">{currentCrypto.dominance.toFixed(1)}%</p>
                           </div>
                         </Card>
                         <Card className="bg-gradient-crypto border-border p-3">
                           <div className="text-center">
-                            <p className="text-muted-foreground text-xs mb-1">流通供应量</p>
+                            <p className="text-muted-foreground text-xs mb-1">{t('crypto.circulatingSupply')}</p>
                             <p className="text-foreground font-mono font-bold text-sm">{(currentCrypto.circulatingSupply / 1e6).toFixed(1)}M</p>
                           </div>
                         </Card>
                         <Card className="bg-gradient-crypto border-border p-3">
                           <div className="text-center">
-                            <p className="text-muted-foreground text-xs mb-1">最大供应量</p>
+                            <p className="text-muted-foreground text-xs mb-1">{t('crypto.maxSupply')}</p>
                             <p className="text-foreground font-mono font-bold text-sm">
                               {currentCrypto.maxSupply === 0 ? '∞' : `${(currentCrypto.maxSupply / 1e6).toFixed(1)}M`}
                             </p>
@@ -839,7 +839,7 @@ export const AICommunicator = ({ cryptoData = [], newsData = [] }: AICommunicato
                         </Card>
                         <Card className="bg-gradient-crypto border-border p-3">
                           <div className="text-center">
-                            <p className="text-muted-foreground text-xs mb-1">供应比率</p>
+                            <p className="text-muted-foreground text-xs mb-1">{t('crypto.supplyRatio')}</p>
                             <p className="text-foreground font-mono font-bold text-sm">
                               {currentCrypto.maxSupply === 0 ? '不适用' : `${((currentCrypto.circulatingSupply / currentCrypto.maxSupply) * 100).toFixed(1)}%`}
                             </p>
