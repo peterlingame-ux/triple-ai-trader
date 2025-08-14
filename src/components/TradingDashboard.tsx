@@ -128,7 +128,10 @@ export const TradingDashboard = () => {
               {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
                 <Button 
-                  onClick={() => setShowAIControlCenter(true)}
+                  onClick={() => {
+                    console.log("AI控制中心 button clicked");
+                    setShowAIControlCenter(true);
+                  }}
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600"
                 >
                   <Brain className="w-4 h-4 mr-2" />
