@@ -220,16 +220,6 @@ export const TradingDashboard = () => {
           )}
         </div>
 
-        {/* AI Advisors Section - Three Column Grid */}
-        <div className="mb-6">
-          <AIAdvisorsGrid cryptoData={cryptoData} newsData={newsData} />
-        </div>
-
-        {/* AI Chat Section */}
-        <div className="mb-8">
-          <OpenAIChat />
-        </div>
-
         {/* Upcoming Advisors Section */}
         <UpcomingAdvisors />
       </div>
