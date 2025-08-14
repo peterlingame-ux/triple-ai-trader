@@ -12,5 +12,4 @@ export { PENGU3DLogo } from '@/components/PENGU3DLogo';
 export { Crypto3DIcon } from '@/components/Crypto3DIcon';
 
 // Export utility components
-export { CryptoShape } from './CryptoShapes';
 export { getCryptoColors, cryptoColors } from './CryptoColors';
