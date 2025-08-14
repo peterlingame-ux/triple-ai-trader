@@ -2,8 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Coins } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-// Static 3D Icons
-import { CryptoStaticIcon } from "@/components/Static3DIconShowcase";
+import { CryptoStaticIcon } from "./Static3DIconShowcase";
 
 interface CryptoCardProps {
   symbol: string;
@@ -26,8 +25,12 @@ export const CryptoCard = ({ symbol, name, price, change, changePercent, image, 
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 flex items-center justify-center">
-            {/* High-quality static 3D Icons */}
-            <CryptoStaticIcon symbol={symbol} name={name} size={64} />
+            <CryptoStaticIcon 
+              symbol={symbol} 
+              name={name} 
+              size={64} 
+              className="hover:scale-110 transition-transform duration-200"
+            />
           </div>
           <div>
             <h3 className="text-foreground font-bold text-lg font-orbitron tracking-wide">{symbol}</h3>

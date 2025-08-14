@@ -1,5 +1,8 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/hooks/useLanguage';
+import { ArrowLeft, Home } from 'lucide-react';
 
 // Import all generated 3D static icons
 import BTCIcon from '@/assets/crypto-3d-icons/BTC-3d-icon.png';
@@ -64,35 +67,37 @@ import FLOKIIcon from '@/assets/crypto-3d-icons/FLOKI-3d-icon.png';
 import BABYDOGEIcon from '@/assets/crypto-3d-icons/BABYDOGE-3d-icon.png';
 import OKBIcon from '@/assets/crypto-3d-icons/OKB-3d-icon.png';
 import PENGUIcon from '@/assets/crypto-3d-icons/PENGU-3d-icon.png';
-import TURBOIcon from '@/assets/crypto-3d-icons/TURBO-3d-icon.png';
-import TRUMPIcon from '@/assets/crypto-3d-icons/TRUMP-3d-icon.png';
+
+// Import additional new icons
+import BANDIcon from '@/assets/crypto-3d-icons/BAND-3d-icon.png';
+import KAVAIcon from '@/assets/crypto-3d-icons/KAVA-3d-icon.png';
+import KNCIcon from '@/assets/crypto-3d-icons/KNC-3d-icon.png';
+import UMAIcon from '@/assets/crypto-3d-icons/UMA-3d-icon.png';
+import RUNEIcon from '@/assets/crypto-3d-icons/RUNE-3d-icon.png';
+import TUSDIcon from '@/assets/crypto-3d-icons/TUSD-3d-icon.png';
+import AXSIcon from '@/assets/crypto-3d-icons/AXS-3d-icon.png';
+import IMXIcon from '@/assets/crypto-3d-icons/IMX-3d-icon.png';
+import FETIcon from '@/assets/crypto-3d-icons/FET-3d-icon.png';
+import RNDRIcon from '@/assets/crypto-3d-icons/RNDR-3d-icon.png';
+import INJIcon from '@/assets/crypto-3d-icons/INJ-3d-icon.png';
+import SEIIcon from '@/assets/crypto-3d-icons/SEI-3d-icon.png';
+import ARBIcon from '@/assets/crypto-3d-icons/ARB-3d-icon.png';
+import OPIcon from '@/assets/crypto-3d-icons/OP-3d-icon.png';
+import JASMYIcon from '@/assets/crypto-3d-icons/JASMY-3d-icon.png';
+import STXIcon from '@/assets/crypto-3d-icons/STX-3d-icon.png';
+import KASIcon from '@/assets/crypto-3d-icons/KAS-3d-icon.png';
+import FDUSDIcon from '@/assets/crypto-3d-icons/FDUSD-3d-icon.png';
+import RETHIcon from '@/assets/crypto-3d-icons/RETH-3d-icon.png';
+import MNTIcon from '@/assets/crypto-3d-icons/MNT-3d-icon.png';
+import SUIIcon from '@/assets/crypto-3d-icons/SUI-3d-icon.png';
+import JUPIcon from '@/assets/crypto-3d-icons/JUP-3d-icon.png';
+import WLDIcon from '@/assets/crypto-3d-icons/WLD-3d-icon.png';
+import BSVIcon from '@/assets/crypto-3d-icons/BSV-3d-icon.png';
 import XMRIcon from '@/assets/crypto-3d-icons/XMR-3d-icon.png';
 import LUNCIcon from '@/assets/crypto-3d-icons/LUNC-3d-icon.png';
 import USTCIcon from '@/assets/crypto-3d-icons/USTC-3d-icon.png';
 import DAIIcon from '@/assets/crypto-3d-icons/DAI-3d-icon.png';
 import CAKEIcon from '@/assets/crypto-3d-icons/CAKE-3d-icon.png';
-
-// New cryptocurrency icons
-import MEMEIcon from '@/assets/crypto-3d-icons/MEME-3d-icon.png';
-import WOJAKIcon from '@/assets/crypto-3d-icons/WOJAK-3d-icon.png';
-import LADYSIcon from '@/assets/crypto-3d-icons/LADYS-3d-icon.png';
-import SAFEIcon from '@/assets/crypto-3d-icons/SAFE-3d-icon.png';
-import DCRIcon from '@/assets/crypto-3d-icons/DCR-3d-icon.png';
-import STRATIcon from '@/assets/crypto-3d-icons/STRAT-3d-icon.png';
-import NXTIcon from '@/assets/crypto-3d-icons/NXT-3d-icon.png';
-import SYSIcon from '@/assets/crypto-3d-icons/SYS-3d-icon.png';
-import ZENIcon from '@/assets/crypto-3d-icons/ZEN-3d-icon.png';
-import MAIDIcon from '@/assets/crypto-3d-icons/MAID-3d-icon.png';
-import REPIcon from '@/assets/crypto-3d-icons/REP-3d-icon.png';
-import KMDIcon from '@/assets/crypto-3d-icons/KMD-3d-icon.png';
-import LSKIcon from '@/assets/crypto-3d-icons/LSK-3d-icon.png';
-import ARKIcon from '@/assets/crypto-3d-icons/ARK-3d-icon.png';
-import NANOIcon from '@/assets/crypto-3d-icons/NANO-3d-icon.png';
-import IOSTIcon from '@/assets/crypto-3d-icons/IOST-3d-icon.png';
-import QTUMIcon from '@/assets/crypto-3d-icons/QTUM-3d-icon.png';
-import WAVESIcon from '@/assets/crypto-3d-icons/WAVES-3d-icon.png';
-import SCIcon from '@/assets/crypto-3d-icons/SC-3d-icon.png';
-import DGBIcon from '@/assets/crypto-3d-icons/DGB-3d-icon.png';
 
 interface CryptoStaticIconProps {
   symbol: string;
@@ -164,35 +169,37 @@ const crypto3DIconMap: Record<string, string> = {
   BABYDOGE: BABYDOGEIcon,
   OKB: OKBIcon,
   PENGU: PENGUIcon,
-  TURBO: TURBOIcon,
-  TRUMP: TRUMPIcon,
+  
+  // Additional new icons
+  BAND: BANDIcon,
+  KAVA: KAVAIcon,
+  KNC: KNCIcon,
+  UMA: UMAIcon,
+  RUNE: RUNEIcon,
+  TUSD: TUSDIcon,
+  AXS: AXSIcon,
+  IMX: IMXIcon,
+  FET: FETIcon,
+  RNDR: RNDRIcon,
+  INJ: INJIcon,
+  SEI: SEIIcon,
+  ARB: ARBIcon,
+  OP: OPIcon,
+  JASMY: JASMYIcon,
+  STX: STXIcon,
+  KAS: KASIcon,
+  FDUSD: FDUSDIcon,
+  RETH: RETHIcon,
+  MNT: MNTIcon,
+  SUI: SUIIcon,
+  JUP: JUPIcon,
+  WLD: WLDIcon,
+  BSV: BSVIcon,
   XMR: XMRIcon,
   LUNC: LUNCIcon,
   USTC: USTCIcon,
   DAI: DAIIcon,
   CAKE: CAKEIcon,
-  
-  // New cryptocurrency icons
-  MEME: MEMEIcon,
-  WOJAK: WOJAKIcon,
-  LADYS: LADYSIcon,
-  SAFE: SAFEIcon,
-  DCR: DCRIcon,
-  STRAT: STRATIcon,
-  NXT: NXTIcon,
-  SYS: SYSIcon,
-  ZEN: ZENIcon,
-  MAID: MAIDIcon,
-  REP: REPIcon,
-  KMD: KMDIcon,
-  LSK: LSKIcon,
-  ARK: ARKIcon,
-  NANO: NANOIcon,
-  IOST: IOSTIcon,
-  QTUM: QTUMIcon,
-  WAVES: WAVESIcon,
-  SC: SCIcon,
-  DGB: DGBIcon,
 };
 
 export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({ 
@@ -226,6 +233,8 @@ export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({
 };
 
 export const Static3DIconShowcase: React.FC = () => {
+  const { t } = useLanguage();
+  
   const showcaseTokens = [
     // Major cryptocurrencies
     { symbol: 'BTC', name: 'Bitcoin' },
@@ -267,54 +276,42 @@ export const Static3DIconShowcase: React.FC = () => {
     { symbol: 'FLOKI', name: 'FLOKI' },
     { symbol: 'BABYDOGE', name: 'Baby Doge Coin' },
     
-    // Exchange tokens & New tokens
+    // Exchange tokens
     { symbol: 'OKB', name: 'OKB' },
     { symbol: 'PENGU', name: 'Pudgy Penguins' },
-    { symbol: 'TURBO', name: 'Turbo' },
-    { symbol: 'TRUMP', name: 'TrumpCoin' },
-    
-    // Privacy & Stablecoins
-    { symbol: 'XMR', name: 'Monero' },
-    { symbol: 'DAI', name: 'DAI' },
-    { symbol: 'LUNC', name: 'Terra Luna Classic' },
-    { symbol: 'USTC', name: 'TerraClassicUSD' },
-    { symbol: 'CAKE', name: 'PancakeSwap' },
-    
-    // Additional Meme Coins
-    { symbol: 'MEME', name: 'Memecoin' },
-    { symbol: 'WOJAK', name: 'Wojak' },
-    { symbol: 'LADYS', name: 'Milady' },
-    
-    // Platform Tokens
-    { symbol: 'SAFE', name: 'SafeMoon' },
-    { symbol: 'DCR', name: 'Decred' },
-    { symbol: 'STRAT', name: 'Stratis' },
-    { symbol: 'NXT', name: 'NXT' },
-    { symbol: 'SYS', name: 'Syscoin' },
-    { symbol: 'ZEN', name: 'Horizen' },
-    { symbol: 'MAID', name: 'MaidSafeCoin' },
-    { symbol: 'REP', name: 'Augur' },
-    { symbol: 'KMD', name: 'Komodo' },
-    { symbol: 'LSK', name: 'Lisk' },
-    { symbol: 'ARK', name: 'Ark' },
-    { symbol: 'NANO', name: 'Nano' },
-    { symbol: 'IOST', name: 'IOST' },
-    { symbol: 'QTUM', name: 'Qtum' },
-    { symbol: 'WAVES', name: 'Waves' },
-    { symbol: 'SC', name: 'Siacoin' },
-    { symbol: 'DGB', name: 'DigiByte' },
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-foreground mb-4">
-          真实3D立体静态大图标展示
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          高质量3D渲染的加密货币静态图标，每个都有独特的设计和材质效果
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900">
+      <div className="container mx-auto px-4 py-8">
+        {/* Navigation Header */}
+        <div className="flex items-center justify-between mb-8">
+          <Button
+            variant="outline"
+            onClick={() => window.location.href = '/'}
+            className="flex items-center gap-2 bg-gradient-crypto border-border text-foreground hover:bg-secondary"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t('showcase.back_to_dashboard')}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => window.location.href = '/'}
+            className="flex items-center gap-2 bg-accent/20 border-accent/30 text-accent hover:bg-accent/30"
+          >
+            <Home className="w-4 h-4" />
+            {t('showcase.home')}
+          </Button>
+        </div>
+
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            {t('showcase.title')}
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            {t('showcase.description')}
+          </p>
+        </div>
 
       {/* Large showcase grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-12">
@@ -339,34 +336,35 @@ export const Static3DIconShowcase: React.FC = () => {
       {/* Features */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30">
-          <h3 className="text-xl font-bold text-blue-400 mb-4">高质量3D渲染</h3>
+          <h3 className="text-xl font-bold text-blue-400 mb-4">{t('showcase.quality.title')}</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>• 真实的3D立体效果</li>
-            <li>• 高分辨率512x512像素</li>
-            <li>• 精细的材质和光照</li>
-            <li>• 专业级视觉效果</li>
+            <li>• {t('showcase.quality.feature1')}</li>
+            <li>• {t('showcase.quality.feature2')}</li>
+            <li>• {t('showcase.quality.feature3')}</li>
+            <li>• {t('showcase.quality.feature4')}</li>
           </ul>
         </Card>
 
         <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/30">
-          <h3 className="text-xl font-bold text-purple-400 mb-4">独特设计风格</h3>
+          <h3 className="text-xl font-bold text-purple-400 mb-4">{t('showcase.design.title')}</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>• 每个币种独特造型</li>
-            <li>• 反映品牌特色元素</li>
-            <li>• 现代科技美学</li>
-            <li>• 金属质感设计</li>
+            <li>• {t('showcase.design.feature1')}</li>
+            <li>• {t('showcase.design.feature2')}</li>
+            <li>• {t('showcase.design.feature3')}</li>
+            <li>• {t('showcase.design.feature4')}</li>
           </ul>
         </Card>
 
         <Card className="p-6 bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/30">
-          <h3 className="text-xl font-bold text-green-400 mb-4">完整支持</h3>
+          <h3 className="text-xl font-bold text-green-400 mb-4">{t('showcase.support.title')}</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>• 支持93种加密货币</li>
-            <li>• 包含所有主流币种</li>
-            <li>• DeFi和Meme币专项</li>
-            <li>• 可扩展架构设计</li>
+            <li>• {t('showcase.support.feature1')}</li>
+            <li>• {t('showcase.support.feature2')}</li>
+            <li>• {t('showcase.support.feature3')}</li>
+            <li>• {t('showcase.support.feature4')}</li>
           </ul>
         </Card>
+      </div>
       </div>
     </div>
   );
