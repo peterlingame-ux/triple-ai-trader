@@ -9,7 +9,7 @@ import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
-import { AIOpportunityAlert } from "./AIOpportunityAlert";
+// import { AIOpportunityAlert } from "./AIOpportunityAlert"; // Temporarily disabled
 import { UserProfile } from "./UserProfile";
 
 import { useLanguage } from "@/hooks/useLanguage";
@@ -137,8 +137,8 @@ export const TradingDashboard = () => {
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-sm"></div>
         </div>
 
-        {/* AI Opportunity Alert */}
-        <AIOpportunityAlert />
+        {/* AI Opportunity Alert - Temporarily disabled due to API issues */}
+        {/* <AIOpportunityAlert /> */}
 
         {/* Portfolio Overview with Dynamic Data Source */}
         <OptimizedPortfolioCards portfolioData={portfolioData} />
