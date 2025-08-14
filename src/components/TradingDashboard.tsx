@@ -224,7 +224,7 @@ export const TradingDashboard = () => {
                   <ProfessionalCryptoGrid 
                     cryptoData={filteredCryptoData} 
                     showAll={showAllCrypto}
-                    maxVisible={8}
+                    maxVisible={93}
                   />
           
           {filteredCryptoData.length === 0 && searchQuery && (
