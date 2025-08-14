@@ -57,7 +57,10 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: Profe
                 </div>
               </Card>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true}>
+            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true} onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+              <DialogHeader className="sr-only">
+                <DialogTitle>{t('ai.start_communicate')}</DialogTitle>
+              </DialogHeader>
               <AICommunicator cryptoData={cryptoData} newsData={newsData} />
             </DialogContent>
           </Dialog>
@@ -80,7 +83,10 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [] }: Profe
                 </div>
               </Card>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true}>
+            <DialogContent className="sm:max-w-[98vw] sm:max-h-[98vh] p-0" hideCloseButton={true} onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
+              <DialogHeader className="sr-only">
+                <DialogTitle>{t('ai.auto_trading')}</DialogTitle>
+              </DialogHeader>
               <AutoTrader />
             </DialogContent>
           </Dialog>
