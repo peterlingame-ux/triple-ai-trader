@@ -72,6 +72,28 @@ import USTCIcon from '@/assets/crypto-3d-icons/USTC-3d-icon.png';
 import DAIIcon from '@/assets/crypto-3d-icons/DAI-3d-icon.png';
 import CAKEIcon from '@/assets/crypto-3d-icons/CAKE-3d-icon.png';
 
+// New cryptocurrency icons
+import MEMEIcon from '@/assets/crypto-3d-icons/MEME-3d-icon.png';
+import WOJAKIcon from '@/assets/crypto-3d-icons/WOJAK-3d-icon.png';
+import LADYSIcon from '@/assets/crypto-3d-icons/LADYS-3d-icon.png';
+import SAFEIcon from '@/assets/crypto-3d-icons/SAFE-3d-icon.png';
+import DCRIcon from '@/assets/crypto-3d-icons/DCR-3d-icon.png';
+import STRATIcon from '@/assets/crypto-3d-icons/STRAT-3d-icon.png';
+import NXTIcon from '@/assets/crypto-3d-icons/NXT-3d-icon.png';
+import SYSIcon from '@/assets/crypto-3d-icons/SYS-3d-icon.png';
+import ZENIcon from '@/assets/crypto-3d-icons/ZEN-3d-icon.png';
+import MAIDIcon from '@/assets/crypto-3d-icons/MAID-3d-icon.png';
+import REPIcon from '@/assets/crypto-3d-icons/REP-3d-icon.png';
+import KMDIcon from '@/assets/crypto-3d-icons/KMD-3d-icon.png';
+import LSKIcon from '@/assets/crypto-3d-icons/LSK-3d-icon.png';
+import ARKIcon from '@/assets/crypto-3d-icons/ARK-3d-icon.png';
+import NANOIcon from '@/assets/crypto-3d-icons/NANO-3d-icon.png';
+import IOSTIcon from '@/assets/crypto-3d-icons/IOST-3d-icon.png';
+import QTUMIcon from '@/assets/crypto-3d-icons/QTUM-3d-icon.png';
+import WAVESIcon from '@/assets/crypto-3d-icons/WAVES-3d-icon.png';
+import SCIcon from '@/assets/crypto-3d-icons/SC-3d-icon.png';
+import DGBIcon from '@/assets/crypto-3d-icons/DGB-3d-icon.png';
+
 interface CryptoStaticIconProps {
   symbol: string;
   name: string;
@@ -149,6 +171,28 @@ const crypto3DIconMap: Record<string, string> = {
   USTC: USTCIcon,
   DAI: DAIIcon,
   CAKE: CAKEIcon,
+  
+  // New cryptocurrency icons
+  MEME: MEMEIcon,
+  WOJAK: WOJAKIcon,
+  LADYS: LADYSIcon,
+  SAFE: SAFEIcon,
+  DCR: DCRIcon,
+  STRAT: STRATIcon,
+  NXT: NXTIcon,
+  SYS: SYSIcon,
+  ZEN: ZENIcon,
+  MAID: MAIDIcon,
+  REP: REPIcon,
+  KMD: KMDIcon,
+  LSK: LSKIcon,
+  ARK: ARKIcon,
+  NANO: NANOIcon,
+  IOST: IOSTIcon,
+  QTUM: QTUMIcon,
+  WAVES: WAVESIcon,
+  SC: SCIcon,
+  DGB: DGBIcon,
 };
 
 export const CryptoStaticIcon: React.FC<CryptoStaticIconProps> = ({ 
@@ -235,6 +279,30 @@ export const Static3DIconShowcase: React.FC = () => {
     { symbol: 'LUNC', name: 'Terra Luna Classic' },
     { symbol: 'USTC', name: 'TerraClassicUSD' },
     { symbol: 'CAKE', name: 'PancakeSwap' },
+    
+    // Additional Meme Coins
+    { symbol: 'MEME', name: 'Memecoin' },
+    { symbol: 'WOJAK', name: 'Wojak' },
+    { symbol: 'LADYS', name: 'Milady' },
+    
+    // Platform Tokens
+    { symbol: 'SAFE', name: 'SafeMoon' },
+    { symbol: 'DCR', name: 'Decred' },
+    { symbol: 'STRAT', name: 'Stratis' },
+    { symbol: 'NXT', name: 'NXT' },
+    { symbol: 'SYS', name: 'Syscoin' },
+    { symbol: 'ZEN', name: 'Horizen' },
+    { symbol: 'MAID', name: 'MaidSafeCoin' },
+    { symbol: 'REP', name: 'Augur' },
+    { symbol: 'KMD', name: 'Komodo' },
+    { symbol: 'LSK', name: 'Lisk' },
+    { symbol: 'ARK', name: 'Ark' },
+    { symbol: 'NANO', name: 'Nano' },
+    { symbol: 'IOST', name: 'IOST' },
+    { symbol: 'QTUM', name: 'Qtum' },
+    { symbol: 'WAVES', name: 'Waves' },
+    { symbol: 'SC', name: 'Siacoin' },
+    { symbol: 'DGB', name: 'DigiByte' },
   ];
 
   return (
