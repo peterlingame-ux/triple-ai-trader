@@ -1,16 +1,8 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { 
-  BTC3DLogo, 
-  ETH3DLogo, 
-  BNB3DLogo, 
-  DOGE3DLogo, 
-  SOL3DLogo, 
-  ADA3DLogo, 
-  OKB3DLogo, 
-  PENGU3DLogo, 
-  Crypto3DIcon 
-} from '@/components/crypto3d';
+import { OKB3DLogo } from '@/components/OKB3DLogo';
+import { PENGU3DLogo } from '@/components/PENGU3DLogo';
+import { Crypto3DIcon } from '@/components/Crypto3DIcon';
 
 export const Crypto3DShowcase: React.FC = () => {
   const showcaseCoins = [
@@ -24,18 +16,6 @@ export const Crypto3DShowcase: React.FC = () => {
 
   const renderCrypto3D = (symbol: string) => {
     switch (symbol) {
-      case 'BTC':
-        return <BTC3DLogo size={80} />;
-      case 'ETH':
-        return <ETH3DLogo size={80} />;
-      case 'BNB':
-        return <BNB3DLogo size={80} />;
-      case 'DOGE':
-        return <DOGE3DLogo size={80} />;
-      case 'SOL':
-        return <SOL3DLogo size={80} />;
-      case 'ADA':
-        return <ADA3DLogo size={80} />;
       case 'OKB':
         return <OKB3DLogo size={80} />;
       case 'PENGU':
