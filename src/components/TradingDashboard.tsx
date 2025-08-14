@@ -20,6 +20,7 @@ import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
+import { ProfessionalCryptoAnalysis } from "./ProfessionalCryptoAnalysis";
 
 // Mock data for crypto prices - expanded dataset
 const mockCryptoData = [
@@ -220,14 +221,12 @@ export const TradingDashboard = () => {
           )}
         </div>
 
+        {/* Professional Crypto Analysis Interface */}
+        <ProfessionalCryptoAnalysis />
+
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
           <AIAdvisorsGrid cryptoData={cryptoData} newsData={newsData} />
-        </div>
-
-        {/* AI Chat Section */}
-        <div className="mb-8">
-          <OpenAIChat />
         </div>
 
         {/* Upcoming Advisors Section */}
