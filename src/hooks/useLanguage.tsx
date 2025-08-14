@@ -93,16 +93,62 @@ const translations = {
     'news.time.hour_ago': 'hour ago',
     'news.time.hours_ago': 'hours ago',
     
-    // 钱包连接器翻译
+    // Wallet connector translations
     'wallet.connect_wallet': 'Connect Wallet',
     'wallet.multiple_options': 'Multiple Options',
+    'wallet.connected': 'Connected',
+    'wallet.address_short': 'Wallet Address',
     'wallet.security_notice': 'Security Notice',
     'wallet.security_warning': 'By connecting your wallet, you agree to our terms of service. Please ensure you only connect your wallet in a secure network environment and keep your private keys and mnemonic phrases safe. Always download wallet applications from official sources.',
     
-    // 语言切换器翻译
+    // Language switcher translations
     'language.switch': 'Language Switch',
     
-    // AI机会检测翻译
+    // Profile translations
+    'profile.personal': 'Personal Profile',
+    'profile.settings': 'Profile Settings',
+    'profile.edit': 'Edit Profile',
+    'profile.click_edit': 'Click to Edit',
+    'profile.saved': 'Profile Saved',
+    'profile.updated': 'Your avatar and name have been successfully updated',
+    
+    // Wallet category translations
+    'wallet.category.all': 'All Wallets',
+    'wallet.category.browser': 'Browser Extension',
+    'wallet.category.mobile': 'Mobile',
+    'wallet.category.hardware': 'Hardware',
+    'wallet.category.institutional': 'Institutional',
+    
+    // Wallet security levels
+    'wallet.security.high': 'High Security',
+    'wallet.security.very_high': 'Very High Security',
+    'wallet.security.extreme': 'Extreme Security',
+    
+    // Wallet status and actions
+    'wallet.recommended': 'Recommended',
+    'wallet.installed': 'Installed',
+    'wallet.market_share': 'Market Share',
+    'wallet.supported_platforms': 'Supported Platforms',
+    'wallet.key_features': 'Key Features',
+    'wallet.more_platforms': '+{count} more',
+    'wallet.more_features': '+{count} more',
+    'wallet.connect_button': 'Connect {wallet}',
+    'wallet.connection_success': 'Wallet Connected',
+    'wallet.connection_success_desc': 'Successfully connected to {wallet}',
+    'wallet.connection_failed': 'Connection Failed',
+    'wallet.connection_failed_desc': 'Failed to connect wallet. Please try again.',
+    'wallet.disconnected': 'Wallet Disconnected',
+    'wallet.disconnected_desc': 'Your wallet has been disconnected.',
+    'wallet.address_copied': 'Address Copied',
+    'wallet.address_copied_desc': 'Wallet address has been copied to clipboard.',
+    'wallet.connect_title': 'Connect Wallet',
+    'wallet.select_description': 'Choose the most secure and reliable wallet to start trading and managing your portfolio',
+    'wallet.address': 'Wallet Address:',
+    'wallet.network': 'Network:',
+    'wallet.view_explorer': 'View in Block Explorer',
+    'wallet.disconnect': 'Disconnect',
+    
+    // AI opportunity detection translations
     'ai.brain_detection': 'Supreme Brain Auto Detection',
     'ai.monitor_opportunities': 'Monitor 90% Win Rate Opportunities',
     'ai.last_check': 'Last Check:',
@@ -332,37 +378,6 @@ const translations = {
     'upcoming.skills.trump.3': 'Real Estate Development',
     'upcoming.skills.trump.4': 'Media Operations',
 
-    // Wallet translations
-    'wallet.connect_title': 'Connect Your Wallet',
-    'wallet.select_description': 'Choose the most secure and reliable wallet to start trading and managing your portfolio',
-    'wallet.connected': 'Connected',
-    'wallet.address': 'Wallet Address:',
-    'wallet.network': 'Network:',
-    'wallet.view_explorer': 'View in Block Explorer',
-    'wallet.disconnect': 'Disconnect',
-    'wallet.connection_success': 'Wallet Connected Successfully',
-    'wallet.connection_success_desc': 'Successfully connected to {wallet} - Now displaying real portfolio data',
-    'wallet.connection_failed': 'Connection Failed',
-    'wallet.connection_failed_desc': 'Wallet connection failed, please try again',
-    'wallet.disconnected': 'Wallet Disconnected',
-    'wallet.disconnected_desc': 'Successfully disconnected wallet - Switched back to AI virtual trading data',
-    'wallet.address_copied': 'Address Copied',
-    'wallet.address_copied_desc': 'Wallet address copied to clipboard',
-    'wallet.category.all': 'All Wallets',
-    'wallet.category.browser': 'Browser Extensions',
-    'wallet.category.mobile': 'Mobile Apps',
-    'wallet.category.hardware': 'Hardware Wallets',
-    'wallet.category.institutional': 'Institutional',
-    'wallet.security.extreme': 'Extreme Security',
-    'wallet.security.very_high': 'Very High Security',
-    'wallet.security.high': 'High Security',
-    'wallet.market_share': 'Market Share',
-    'wallet.supported_platforms': 'Supported Platforms:',
-    'wallet.key_features': 'Key Features:',
-    'wallet.more_platforms': '+{count} more',
-    'wallet.more_features': '+{count} more',
-    'wallet.recommended': 'Recommended',
-    'wallet.installed': 'Installed',
     // Wallet descriptions
     'wallet.metamask.description': 'The world\'s most popular Ethereum wallet with extensive DApp support',
     'wallet.coinbase.description': 'Self-custody wallet by Coinbase with institutional-grade security',
@@ -377,15 +392,7 @@ const translations = {
     'wallet.gnosis.description': 'Multi-signature wallet designed for institutions and teams',
     'wallet.argent.description': 'Smart contract wallet with social recovery support',
     'wallet.binance.description': 'Official Binance wallet with deep exchange integration',
-    'wallet.okx.description': 'Web3 wallet by OKX exchange',
-    'wallet.connect_button': 'Connect {wallet}',
-    // User profile translations
-    'profile.settings': 'Profile Settings',
-    'profile.edit': 'Edit Profile',
-    'profile.personal': 'Personal Profile',
-    'profile.click_edit': 'Click to Edit',
-    'profile.saved': 'Profile Saved',
-    'profile.updated': 'Your avatar and name have been successfully updated'
+    'wallet.okx.description': 'Web3 wallet by OKX exchange'
   },
   zh: {
     'app.title': 'Meta BrainX',

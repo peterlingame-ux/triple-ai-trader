@@ -55,12 +55,12 @@ export const LanguageSwitcher = () => {
              <div className="flex-1 min-w-0">
                <div className="flex items-center gap-2 mb-1">
                  <h3 className="text-base font-semibold text-teal-400 truncate">
-                   中文
+                   {currentLang?.nativeName || 'English'}
                  </h3>
                  <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
                </div>
                <p className="text-sm text-teal-400/70 truncate">
-                 语言切换
+                 {t('language.switch')}
                </p>
              </div>
            </div>

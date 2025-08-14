@@ -186,7 +186,7 @@ export const UserProfile = () => {
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
               </div>
               <p className="text-sm text-accent/70 truncate">
-                个人资料
+                {t('profile.personal')}
               </p>
             </div>
           </div>

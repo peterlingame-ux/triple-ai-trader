@@ -344,7 +344,7 @@ export const WalletConnector = () => {
                 <h3 className={`text-base font-semibold truncate ${
                   isWalletConnected ? 'text-emerald-400' : 'text-purple-400'
                 }`}>
-                  {isWalletConnected ? '已连接钱包' : '连接钱包'}
+                  {isWalletConnected ? t('wallet.connected') : t('wallet.connect_wallet')}
                 </h3>
                 {isWalletConnected && (
                   <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
@@ -356,8 +356,8 @@ export const WalletConnector = () => {
                   : 'text-purple-400/70'
               }`}>
                 {isWalletConnected 
-                  ? (walletAddress ? formatAddress(walletAddress) : '钱包地址') 
-                  : '多种选择'
+                  ? (walletAddress ? formatAddress(walletAddress) : t('wallet.address_short')) 
+                  : t('wallet.multiple_options')
                 }
               </p>
             </div>
