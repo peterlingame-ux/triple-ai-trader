@@ -275,7 +275,7 @@ ${activeNewsData.slice(0, 3).map(news => `• ${news.title} (${news.sentiment})`
       const { data, error } = await supabase.functions.invoke('openai-chat', {
         body: { 
           prompt: analysisPrompt,
-          model: 'gpt-5-mini-2025-08-07'
+          model: 'gpt-4o-mini'
         }
       });
 

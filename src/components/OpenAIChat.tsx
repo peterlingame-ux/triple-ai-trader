@@ -19,7 +19,10 @@ export function OpenAIChat() {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('openai-chat', {
-        body: { prompt }
+        body: { 
+          prompt,
+          model: 'gpt-4o-mini'
+        }
       });
 
       if (error) {
