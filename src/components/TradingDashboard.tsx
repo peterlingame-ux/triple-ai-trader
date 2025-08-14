@@ -3,14 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
-import { ElonProfile } from "./ElonProfile";
-import { WarrenProfile } from "./WarrenProfile";
-import { BillProfile } from "./BillProfile";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
 import { AICommunicator } from "./AICommunicator";
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
+import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
 import { AIOpportunityAlert } from "./AIOpportunityAlert";
 import { UserProfile } from "./UserProfile";
 import { OpenAIChat } from "./OpenAIChat";
@@ -49,36 +47,6 @@ const allCryptoData = [
   { symbol: "FTM", name: "Fantom", price: 0.445, change: 0.023, changePercent: 5.46 },
 ];
 
-// Mock AI advisors data
-const aiAdvisors = [
-  {
-    name: "Elon Musk",
-    specialty: "elon.specialty",
-    confidence: 94,
-    recommendation: "BUY DOGE, BTC",
-    reasoning: "mars.missions.funding", // 使用翻译键
-    avatar: "/lovable-uploads/9cc92493-5e50-470d-9543-d2fe07d350f6.png",
-    isSpecial: true
-  },
-  {
-    name: "Warren Buffett",
-    specialty: "warren.specialty",
-    confidence: 88,
-    recommendation: "HOLD BTC, BUY ETH",
-    reasoning: "warren.investment.philosophy", // 使用翻译键
-    avatar: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png",
-    isSpecial: true
-  },
-  {
-    name: "Bill Gates",
-    specialty: "bill.specialty",
-    confidence: 92,
-    recommendation: "BUY ETH, HOLD MATIC",
-    reasoning: "bill.blockchain.evolution", // 使用翻译键
-    avatar: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png",
-    isSpecial: true
-  }
-];
 
 export const TradingDashboard = () => {
   const { t } = useLanguage();
@@ -252,57 +220,15 @@ export const TradingDashboard = () => {
           )}
         </div>
 
-        {/* AI Advisors Section - Mobile Optimized */}
-        <div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-2 sm:gap-0">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <Brain className="w-5 h-5 sm:w-6 sm:h-6" />
-              {t('ai.advisors')}
-            </h2>
-            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+        {/* AI Advisors Section - Three Column Grid */}
+        <div className="mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-2 sm:gap-0">
+            <div className="w-full sm:w-auto flex items-center gap-2 overflow-x-auto">
               <AICommunicator cryptoData={cryptoData} newsData={newsData} />
               <AutoTrader />
             </div>
           </div>
-          <div className="space-y-4 sm:space-y-6">
-            {aiAdvisors.map((advisor, index) => (
-              <div key={index}>
-                {advisor.name === 'Elon Musk' && (
-                  <ElonProfile
-                    name={advisor.name}
-                    specialty={t(advisor.specialty)}
-                    confidence={advisor.confidence}
-                    recommendation={advisor.recommendation}
-                    reasoning={t('elon.current.analysis')}
-                    avatar={advisor.avatar}
-                    isSpecial={advisor.isSpecial}
-                  />
-                )}
-                {advisor.name === 'Warren Buffett' && (
-                  <WarrenProfile
-                    name={advisor.name}
-                    specialty={t(advisor.specialty)}
-                    confidence={advisor.confidence}
-                    recommendation={advisor.recommendation}
-                    reasoning={t('warren.current.analysis')}
-                    avatar={advisor.avatar}
-                    isSpecial={advisor.isSpecial}
-                  />
-                )}
-                {advisor.name === 'Bill Gates' && (
-                  <BillProfile
-                    name={advisor.name}
-                    specialty={t(advisor.specialty)}
-                    confidence={advisor.confidence}
-                    recommendation={advisor.recommendation}
-                    reasoning={t('bill.current.analysis')}
-                    avatar={advisor.avatar}
-                    isSpecial={advisor.isSpecial}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+          <AIAdvisorsGrid />
         </div>
 
         {/* AI Chat Section */}
