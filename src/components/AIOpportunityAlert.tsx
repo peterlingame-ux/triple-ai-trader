@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAIAnalysis } from '@/hooks/useAIAnalysis';
 import { useCryptoData } from '@/hooks/useCryptoData';
+import { useLanguage } from '@/hooks/useLanguage';
 import { AlertTriangle, TrendingUp, Brain, X, Bell } from 'lucide-react';
 
 interface OpportunityAlert {
@@ -28,6 +29,7 @@ export const AIOpportunityAlert = () => {
     loading 
   } = useAIAnalysis();
   const { cryptoData, newsData } = useCryptoData();
+  const { t } = useLanguage();
 
   // 监控AI分析结果
   useEffect(() => {
@@ -220,8 +222,8 @@ export const AIOpportunityAlert = () => {
   const toggleMonitoring = () => {
     setIsMonitoring(!isMonitoring);
     toast({
-      title: isMonitoring ? "最强大脑监控已暂停" : "最强大脑监控已启动",
-      description: isMonitoring ? "不再检测高胜率机会" : "开始检测90%胜率机会",
+      title: isMonitoring ? t('ai.monitoring_paused') : t('ai.monitoring_started'),
+      description: isMonitoring ? t('ai.stop_monitoring') : t('ai.start_detecting'),
     });
   };
 
@@ -235,9 +237,9 @@ export const AIOpportunityAlert = () => {
               <Brain className="w-5 h-5 text-purple-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">最强大脑自动检测</h3>
+              <h3 className="font-semibold text-foreground">{t('ai.brain_detection')}</h3>
               <p className="text-sm text-muted-foreground">
-                监控90%胜率机会 • 上次检查: {lastCheck.toLocaleTimeString()}
+                {t('ai.monitor_opportunities')} • {t('ai.last_check')} {lastCheck.toLocaleTimeString()}
               </p>
             </div>
           </div>
@@ -246,7 +248,7 @@ export const AIOpportunityAlert = () => {
               variant={isMonitoring ? "default" : "secondary"} 
               className={isMonitoring ? "bg-green-500/20 text-green-400" : ""}
             >
-              {isMonitoring ? "监控中" : "已暂停"}
+              {isMonitoring ? t('ai.monitoring') : t('ai.paused')}
             </Badge>
             <Button
               variant="outline"
@@ -255,7 +257,7 @@ export const AIOpportunityAlert = () => {
               className="bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border-purple-500/30"
             >
               <Bell className={`w-4 h-4 mr-1 ${isMonitoring ? 'animate-pulse' : ''}`} />
-              {isMonitoring ? "暂停" : "启动"}
+              {isMonitoring ? t('ai.pause') : t('ai.start')}
             </Button>
           </div>
         </div>
@@ -314,7 +316,7 @@ export const AIOpportunityAlert = () => {
           <div className="text-center">
             <AlertTriangle className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-muted-foreground">
-              正在监控中，暂无90%胜率机会...
+              {t('ai.monitoring_active')}
             </p>
           </div>
         </Card>

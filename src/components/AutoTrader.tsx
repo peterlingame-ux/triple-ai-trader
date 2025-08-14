@@ -38,6 +38,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAIAnalysis } from "@/hooks/useAIAnalysis";
 import { useCryptoData } from "@/hooks/useCryptoData";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useWalletData } from "@/hooks/useWalletData";
 
 type TradingStrategy = 'conservative' | 'aggressive';
@@ -135,6 +136,7 @@ interface TradingStats {
 export const AutoTrader = () => {
   const { toast } = useToast();
   const { cryptoData, newsData } = useCryptoData();
+  const { t } = useLanguage();
   const { updateAutoTraderData } = useWalletData();
   const {
     analyzePriceChart,
@@ -630,7 +632,7 @@ export const AutoTrader = () => {
 
   const toggleAutoTrader = () => {
     setConfig(prev => ({ ...prev, enabled: !prev.enabled }));
-    const message = config.enabled ? "AI自动交易已停止" : `AI自动交易已启动 (${config.strategy === 'conservative' ? '稳健' : '激进'}策略)`;
+    const message = config.enabled ? t('autotrader.stopped') : `${t('autotrader.started')} (${config.strategy === 'conservative' ? t('autotrader.conservative_strategy') : t('autotrader.aggressive_strategy')})`;
     
     setTradingActivity(prev => [
       `⚡ ${message}`,
@@ -639,7 +641,7 @@ export const AutoTrader = () => {
     
     toast({
       title: message,
-      description: config.enabled ? "系统已暂停所有自动交易" : "系统正在智能分析市场机会",
+      description: config.enabled ? t('autotrader.system_paused') : t('autotrader.system_analyzing'),
     });
   };
 
@@ -1061,7 +1063,7 @@ export const AutoTrader = () => {
                 <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
                   <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
                     <Activity className="w-4 h-4 text-blue-400" />
-                    AI实时交易动态
+                    {t('autotrader.live_activity')}
                     <Badge className="bg-blue-500/20 text-blue-400 text-xs animate-pulse">LIVE</Badge>
                   </h4>
                   
@@ -1069,8 +1071,8 @@ export const AutoTrader = () => {
                     {tradingActivity.length === 0 ? (
                       <div className="text-center text-slate-400 py-8">
                         <Bot className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                        <p>AI系统待命中...</p>
-                        <p className="text-sm">启动自动交易以查看实时动态</p>
+                        <p>{t('autotrader.ai_standby')}</p>
+                        <p className="text-sm">{t('autotrader.start_to_view')}</p>
                       </div>
                     ) : (
                       tradingActivity.map((activity, index) => (

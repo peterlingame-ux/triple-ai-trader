@@ -339,8 +339,8 @@ export const WalletConnector = () => {
             <>
               <Wallet className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
               <div className="hidden sm:flex flex-col items-start">
-                <span className="text-sm font-medium">连接钱包</span>
-                <span className="text-xs text-purple-400/70">多种选择</span>
+                <span className="text-sm font-medium">{t('wallet.connect_wallet')}</span>
+                <span className="text-xs text-purple-400/70">{t('wallet.multiple_options')}</span>
               </div>
             </>
           )}
@@ -534,9 +534,9 @@ export const WalletConnector = () => {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5" />
                 <div className="text-sm">
-                  <p className="text-amber-400 font-medium mb-1">安全提示</p>
+                  <p className="text-amber-400 font-medium mb-1">{t('wallet.security_notice')}</p>
                   <p className="text-amber-200/80">
-                    连接钱包即表示您同意我们的服务条款。请确保只在安全的网络环境下连接钱包，并妥善保管您的私钥和助记词。始终从官方渠道下载钱包应用。
+                    {t('wallet.security_warning')}
                   </p>
                 </div>
               </div>

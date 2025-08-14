@@ -8,7 +8,7 @@ import { Globe, ChevronDown } from "lucide-react";
 import { FlagIcon } from "./FlagIcon";
 
 export const LanguageSwitcher = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
@@ -54,7 +54,7 @@ export const LanguageSwitcher = () => {
                  {currentLang?.nativeName}
                </span>
                <span className="text-xs text-green-400/70">
-                 语言切换
+                 {t('language.switch')}
                </span>
              </div>
              <span className="text-sm font-medium text-green-400 sm:hidden">

@@ -92,6 +92,47 @@ const translations = {
     'news.time.hour_ago': 'hour ago',
     'news.time.hours_ago': 'hours ago',
     
+    // 钱包连接器翻译
+    'wallet.connect_wallet': 'Connect Wallet',
+    'wallet.multiple_options': 'Multiple Options',
+    'wallet.security_notice': 'Security Notice',
+    'wallet.security_warning': 'By connecting your wallet, you agree to our terms of service. Please ensure you only connect your wallet in a secure network environment and keep your private keys and mnemonic phrases safe. Always download wallet applications from official sources.',
+    
+    // 语言切换器翻译
+    'language.switch': 'Language Switch',
+    
+    // AI机会检测翻译
+    'ai.brain_detection': 'Supreme Brain Auto Detection',
+    'ai.monitor_opportunities': 'Monitor 90% Win Rate Opportunities',
+    'ai.last_check': 'Last Check:',
+    'ai.monitoring': 'Monitoring',
+    'ai.paused': 'Paused',
+    'ai.pause': 'Pause',
+    'ai.start': 'Start',
+    'ai.monitoring_paused': 'Supreme Brain monitoring paused',
+    'ai.monitoring_started': 'Supreme Brain monitoring started',
+    'ai.stop_monitoring': 'No longer detecting high win rate opportunities',
+    'ai.start_detecting': 'Start detecting 90% win rate opportunities',
+    'ai.monitoring_active': 'Monitoring active, no 90% win rate opportunities found...',
+    
+    // 自动交易器翻译
+    'autotrader.stopped': 'AI Auto Trading Stopped',
+    'autotrader.started': 'AI Auto Trading Started',
+    'autotrader.conservative_strategy': 'Conservative Strategy',
+    'autotrader.aggressive_strategy': 'Aggressive Strategy',
+    'autotrader.conservative': 'Conservative',
+    'autotrader.aggressive': 'Aggressive',
+    'autotrader.strategy': 'Strategy',
+    'autotrader.system_paused': 'System has paused all auto trading',
+    'autotrader.system_analyzing': 'System is intelligently analyzing market opportunities',
+    'autotrader.ai_standby': 'AI system on standby...',
+    'autotrader.start_to_view': 'Start auto trading to view real-time activity',
+    'autotrader.strategy_control': 'Trading Strategy Control',
+    'autotrader.conservative_desc': 'Conservative Strategy (≥90% Win Rate)',
+    'autotrader.aggressive_desc': 'Aggressive Strategy (≥70% Win Rate)',
+    'autotrader.strategy_performance': 'Strategy Performance Comparison',
+    'autotrader.live_activity': 'AI Real-time Trading Activity',
+    
     // Three advisors specialty translations
     'elon.specialty': 'Visionary Tech & Market Disruption',
     'warren.specialty': 'Value Investing & Long-term Wealth Building',
@@ -471,6 +512,47 @@ const translations = {
     'advisors.macro.specialty': '全球策略分析师',
     'advisors.macro.expertise': '宏观策略',
     'advisors.coming_soon_status': '⏳ 即将到来',
+    
+    // 钱包连接器翻译
+    'wallet.connect_wallet': '连接钱包',
+    'wallet.multiple_options': '多种选择',
+    'wallet.security_notice': '安全提示',
+    'wallet.security_warning': '连接钱包即表示您同意我们的服务条款。请确保只在安全的网络环境下连接钱包，并妥善保管您的私钥和助记词。始终从官方渠道下载钱包应用。',
+    
+    // 语言切换器翻译
+    'language.switch': '语言切换',
+    
+    // AI机会检测翻译
+    'ai.brain_detection': '最强大脑自动检测',
+    'ai.monitor_opportunities': '监控90%胜率机会',
+    'ai.last_check': '上次检查:',
+    'ai.monitoring': '监控中',
+    'ai.paused': '已暂停',
+    'ai.pause': '暂停',
+    'ai.start': '启动',
+    'ai.monitoring_paused': '最强大脑监控已暂停',
+    'ai.monitoring_started': '最强大脑监控已启动',
+    'ai.stop_monitoring': '不再检测高胜率机会',
+    'ai.start_detecting': '开始检测90%胜率机会',
+    'ai.monitoring_active': '正在监控中，暂无90%胜率机会...',
+    
+    // 自动交易器翻译
+    'autotrader.stopped': 'AI自动交易已停止',
+    'autotrader.started': 'AI自动交易已启动',
+    'autotrader.conservative_strategy': '稳健策略',
+    'autotrader.aggressive_strategy': '激进策略',
+    'autotrader.conservative': '稳健',
+    'autotrader.aggressive': '激进',
+    'autotrader.strategy': '策略',
+    'autotrader.system_paused': '系统已暂停所有自动交易',
+    'autotrader.system_analyzing': '系统正在智能分析市场机会',
+    'autotrader.ai_standby': 'AI系统待命中...',
+    'autotrader.start_to_view': '启动自动交易以查看实时动态',
+    'autotrader.strategy_control': '交易策略控制',
+    'autotrader.conservative_desc': '稳健策略 (≥90%胜率)',
+    'autotrader.aggressive_desc': '激进策略 (≥70%胜率)',
+    'autotrader.strategy_performance': '策略表现对比',
+    'autotrader.live_activity': 'AI实时交易动态',
     
     // Wallet translations for Chinese
     'wallet.connect_title': '连接钱包',
