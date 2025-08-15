@@ -146,7 +146,7 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
           <Zap className="w-8 h-8 text-yellow-400" />
         </div>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          三个顶级AI模型协同分析，只在胜率达到90%以上时提醒您最佳交易时机
+          六个顶级AI模型协同分析，只在胜率达到90%以上时提醒您最佳交易时机
         </p>
       </div>
 
@@ -202,7 +202,7 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
           </div>
 
           {/* AI Status Grid */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
               <CheckCircle className="w-6 h-6 text-blue-400 mx-auto mb-2" />
               <div className="text-sm text-white font-medium">价格图表分析</div>
@@ -220,6 +220,24 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
               <div className="text-sm text-white font-medium">市场情绪分析</div>
               <div className="text-xs text-green-400">Perplexity分析新闻情绪</div>
               <Badge variant="outline" className="mt-2 text-green-400 border-green-400/20">API已预留</Badge>
+            </div>
+            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
+              <CheckCircle className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+              <div className="text-sm text-white font-medium">区块链分析</div>
+              <div className="text-xs text-amber-400">Vitalik分析区块链数据</div>
+              <Badge variant="outline" className="mt-2 text-amber-400 border-amber-400/20">API已预留</Badge>
+            </div>
+            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
+              <CheckCircle className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
+              <div className="text-sm text-white font-medium">DeFi分析</div>
+              <div className="text-xs text-cyan-400">Justin分析DeFi协议</div>
+              <Badge variant="outline" className="mt-2 text-cyan-400 border-cyan-400/20">API已预留</Badge>
+            </div>
+            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
+              <CheckCircle className="w-6 h-6 text-orange-400 mx-auto mb-2" />
+              <div className="text-sm text-white font-medium">政策分析</div>
+              <div className="text-xs text-orange-400">Trump分析政策影响</div>
+              <Badge variant="outline" className="mt-2 text-orange-400 border-orange-400/20">API已预留</Badge>
             </div>
           </div>
         </div>
