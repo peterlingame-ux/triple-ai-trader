@@ -421,7 +421,7 @@ const translations = {
   },
   zh: {
     'app.title': 'Meta BrainX',
-    'app.subtitle': '3合1终极大脑让赚钱更简单',
+    'app.subtitle': '终极大脑让赚钱更简单',
     'portfolio.total': '总投资组合',
     'portfolio.change': '24小时变化',
     'portfolio.trades': '活跃交易',
