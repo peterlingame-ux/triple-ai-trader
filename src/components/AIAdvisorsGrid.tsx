@@ -121,12 +121,19 @@ const aiAdvisors = [
 interface AIAdvisorsGridProps {
   cryptoData?: CryptoData[];
   newsData?: NewsArticle[];
+  activationStates?: Record<string, boolean>;
+  onActivationChange?: (states: Record<string, boolean>) => void;
 }
 
-export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGridProps) => {
+export const AIAdvisorsGrid = ({ 
+  cryptoData = [], 
+  newsData = [], 
+  activationStates: externalActivationStates,
+  onActivationChange 
+}: AIAdvisorsGridProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [activationStates, setActivationStates] = useState<Record<string, boolean>>({
+  const [localActivationStates, setLocalActivationStates] = useState<Record<string, boolean>>({
     "Elon Musk": true,
     "Warren Buffett": true,
     "Bill Gates": true,
@@ -135,14 +142,24 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGri
     "Donald Trump": true
   });
 
+  // Use external activation states if provided, otherwise use local state
+  const activationStates = externalActivationStates || localActivationStates;
+  const setActivationStates = onActivationChange || setLocalActivationStates;
+
   const handleActivationToggle = (name: string, isActive: boolean) => {
-    setActivationStates(prev => ({
-      ...prev,
+    const updatedStates = {
+      ...activationStates,
       [name]: isActive
-    }));
+    };
+    
+    if (onActivationChange) {
+      onActivationChange(updatedStates);
+    } else {
+      setLocalActivationStates(updatedStates);
+    }
     
     toast({
-      title: isActive ? "顾问已激活" : "顾问已停用",
+      title: isActive ? "顾问已激活" : "顾问已停用", 
       description: `${name} ${isActive ? '现在已激活并将提供投资建议' : '已停用，不再提供投资建议'}`,
       duration: 3000,
     });
