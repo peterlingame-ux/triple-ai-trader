@@ -9,6 +9,14 @@ interface LanguageContextType {
   t: (key: string, params?: Record<string, string>) => string;
 }
 
+// Create the context with a default value
+const LanguageContext = createContext<LanguageContextType>({
+  language: 'zh',
+  currentLanguage: 'zh',
+  setLanguage: () => {},
+  t: (key: string) => key,
+});
+
 const translations = {
   en: {
     'app.title': 'Meta BrainX',
@@ -2690,8 +2698,8 @@ const translations = {
   }
 };
 
-// Create default context
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+// Create context - remove duplicate definition
+// const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('zh');
@@ -2723,7 +2731,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
