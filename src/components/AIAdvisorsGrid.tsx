@@ -121,9 +121,10 @@ const aiAdvisors = [
 interface AIAdvisorsGridProps {
   cryptoData?: CryptoData[];
   newsData?: NewsArticle[];
+  onActivationChange?: (states: Record<string, boolean>) => void;
 }
 
-export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGridProps) => {
+export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationChange }: AIAdvisorsGridProps) => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [activationStates, setActivationStates] = useState<Record<string, boolean>>({
@@ -136,10 +137,12 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGri
   });
 
   const handleActivationToggle = (name: string, isActive: boolean) => {
-    setActivationStates(prev => ({
-      ...prev,
+    const newStates = {
+      ...activationStates,
       [name]: isActive
-    }));
+    };
+    setActivationStates(newStates);
+    onActivationChange?.(newStates);
     
     toast({
       title: isActive ? "顾问已激活" : "顾问已停用",

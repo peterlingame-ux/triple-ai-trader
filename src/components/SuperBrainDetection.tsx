@@ -7,11 +7,52 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import { CryptoData, OpportunityAlert } from "@/types/api";
 
+// AI advisors data
+const aiAdvisors = [
+  {
+    name: "Elon Musk",
+    avatar: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png",
+    backgroundColor: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
+    accentColor: "text-blue-300",
+  },
+  {
+    name: "Warren Buffett", 
+    avatar: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png",
+    backgroundColor: "bg-gradient-to-br from-amber-900 via-yellow-900 to-orange-800",
+    accentColor: "text-amber-300",
+  },
+  {
+    name: "Bill Gates",
+    avatar: "/lovable-uploads/a11e3b1a-1c1c-403b-910c-bd42820384c4.png", 
+    backgroundColor: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-800",
+    accentColor: "text-emerald-300",
+  },
+  {
+    name: "Vitalik Buterin",
+    avatar: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png",
+    backgroundColor: "bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-800", 
+    accentColor: "text-violet-300",
+  },
+  {
+    name: "Justin Sun",
+    avatar: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png",
+    backgroundColor: "bg-gradient-to-br from-rose-900 via-pink-900 to-red-800",
+    accentColor: "text-rose-300", 
+  },
+  {
+    name: "Donald Trump",
+    avatar: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png",
+    backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
+    accentColor: "text-yellow-300",
+  }
+];
+
 interface SuperBrainDetectionProps {
   cryptoData?: CryptoData[];
+  advisorStates?: Record<string, boolean>;
 }
 
-export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) => {
+export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBrainDetectionProps) => {
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
@@ -190,44 +231,54 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
             </div>
           </div>
 
-          {/* AI Status Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
-              <CheckCircle className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-              <div className="text-sm text-white font-medium">价格图表分析</div>
-              <div className="text-xs text-blue-400">GPT-4o分析价格趋势</div>
-              <Badge variant="outline" className="mt-2 text-blue-400 border-blue-400/20">API已预留</Badge>
-            </div>
-            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
-              <CheckCircle className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-              <div className="text-sm text-white font-medium">技术指标分析</div>
-              <div className="text-xs text-purple-400">Claude-3.5分析技术指标</div>
-              <Badge variant="outline" className="mt-2 text-purple-400 border-purple-400/20">API已预留</Badge>
-            </div>
-            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
-              <CheckCircle className="w-6 h-6 text-green-400 mx-auto mb-2" />
-              <div className="text-sm text-white font-medium">市场情绪分析</div>
-              <div className="text-xs text-green-400">Perplexity分析新闻情绪</div>
-              <Badge variant="outline" className="mt-2 text-green-400 border-green-400/20">API已预留</Badge>
-            </div>
-            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
-              <CheckCircle className="w-6 h-6 text-amber-400 mx-auto mb-2" />
-              <div className="text-sm text-white font-medium">区块链分析</div>
-              <div className="text-xs text-amber-400">Vitalik分析区块链数据</div>
-              <Badge variant="outline" className="mt-2 text-amber-400 border-amber-400/20">API已预留</Badge>
-            </div>
-            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
-              <CheckCircle className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
-              <div className="text-sm text-white font-medium">DeFi分析</div>
-              <div className="text-xs text-cyan-400">Justin分析DeFi协议</div>
-              <Badge variant="outline" className="mt-2 text-cyan-400 border-cyan-400/20">API已预留</Badge>
-            </div>
-            <div className="text-center p-4 bg-slate-700/30 rounded-lg border border-slate-600/30">
-              <CheckCircle className="w-6 h-6 text-orange-400 mx-auto mb-2" />
-              <div className="text-sm text-white font-medium">政策分析</div>
-              <div className="text-xs text-orange-400">Trump分析政策影响</div>
-              <Badge variant="outline" className="mt-2 text-orange-400 border-orange-400/20">API已预留</Badge>
-            </div>
+          {/* AI Advisors Status Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            {aiAdvisors.map((advisor, index) => {
+              const isActive = advisorStates[advisor.name] !== false; // 默认为激活状态
+              return (
+                <div 
+                  key={advisor.name} 
+                  className={`text-center p-4 rounded-lg border transition-all duration-300 ${
+                    isActive 
+                      ? advisor.backgroundColor + ' border-white/20' 
+                      : 'bg-gray-600/30 border-gray-600/30 grayscale'
+                  }`}
+                >
+                  <div className="relative mb-3">
+                    <div className={`w-12 h-12 rounded-full mx-auto mb-2 overflow-hidden ${
+                      isActive ? '' : 'opacity-50'
+                    }`}>
+                      <img 
+                        src={advisor.avatar} 
+                        alt={advisor.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full ${
+                      isActive ? 'bg-green-400' : 'bg-gray-500'
+                    } border-2 border-white shadow-lg`}>
+                      {isActive ? (
+                        <CheckCircle className="w-3 h-3 text-white" />
+                      ) : (
+                        <XCircle className="w-3 h-3 text-white" />
+                      )}
+                    </div>
+                  </div>
+                  <div className={`text-sm font-medium mb-1 ${
+                    isActive ? 'text-white' : 'text-gray-400'
+                  }`}>
+                    {advisor.name}
+                  </div>
+                  <Badge variant="outline" className={`text-xs ${
+                    isActive 
+                      ? advisor.accentColor + ' border-current/20' 
+                      : 'text-gray-500 border-gray-500/20'
+                  }`}>
+                    {isActive ? '激活中' : '未激活'}
+                  </Badge>
+                </div>
+              );
+            })}
           </div>
         </div>
       </Card>

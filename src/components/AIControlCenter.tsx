@@ -21,9 +21,10 @@ import trumpAvatar from "@/assets/donald-trump-cartoon-avatar.png";
 interface AIControlCenterProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  advisorStates?: Record<string, boolean>;
 }
 
-export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) => {
+export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AIControlCenterProps) => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
@@ -931,7 +932,7 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
             </TabsContent>
 
             <TabsContent value="superbrain" className="mt-0 h-full">
-              <SuperBrainDetection />
+              <SuperBrainDetection advisorStates={advisorStates} />
             </TabsContent>
           </Tabs>
         </div>

@@ -32,6 +32,7 @@ export const TradingDashboard = () => {
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
+  const [advisorStates, setAdvisorStates] = useState<Record<string, boolean>>({});
 
   // Listen for AI Control Center open events
   useEffect(() => {
@@ -213,12 +214,17 @@ export const TradingDashboard = () => {
         {/* AI Control Center Modal */}
         <AIControlCenter 
           open={showAIControlCenter} 
-          onOpenChange={setShowAIControlCenter} 
+          onOpenChange={setShowAIControlCenter}
+          advisorStates={advisorStates}
         />
 
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
-          <AIAdvisorsGrid cryptoData={cryptoData} newsData={newsData} />
+          <AIAdvisorsGrid 
+            cryptoData={cryptoData} 
+            newsData={newsData} 
+            onActivationChange={setAdvisorStates}
+          />
         </div>
 
         {/* Upcoming Advisors Section */}
