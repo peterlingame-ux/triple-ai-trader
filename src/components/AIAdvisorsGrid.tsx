@@ -1,6 +1,4 @@
-import { ElonProfile } from "./ElonProfile";
-import { WarrenProfile } from "./WarrenProfile";
-import { BillProfile } from "./BillProfile";
+import { CompactAdvisorCard } from "./CompactAdvisorCard";
 import { ProfessionalAIControls } from "./ProfessionalAIControls";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Brain } from "lucide-react";
@@ -12,8 +10,11 @@ const aiAdvisors = [
     specialty: "elon.specialty",
     confidence: 94,
     recommendation: "BUY DOGE, BTC",
-    reasoning: "elon.current.analysis",
-    avatar: "/lovable-uploads/9cc92493-5e50-470d-9543-d2fe07d350f6.png",
+    netWorth: "$219.2 Billion",
+    avatar: "/lovable-uploads/efc313aa-5268-413f-bb28-d1bf3b1f6f9f.png",
+    backgroundColor: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
+    borderColor: "border-blue-500/30",
+    accentColor: "text-blue-300",
     isSpecial: true
   },
   {
@@ -21,8 +22,11 @@ const aiAdvisors = [
     specialty: "warren.specialty",
     confidence: 88,
     recommendation: "HOLD BTC, BUY ETH",
-    reasoning: "warren.current.analysis",
-    avatar: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png",
+    netWorth: "$118.3 Billion",
+    avatar: "/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png",
+    backgroundColor: "bg-gradient-to-br from-amber-900 via-yellow-900 to-orange-800",
+    borderColor: "border-amber-500/30",
+    accentColor: "text-amber-300",
     isSpecial: true
   },
   {
@@ -30,9 +34,48 @@ const aiAdvisors = [
     specialty: "bill.specialty",
     confidence: 92,
     recommendation: "BUY ETH, HOLD MATIC",
-    reasoning: "bill.current.analysis",
+    netWorth: "$128.6 Billion",
     avatar: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png",
+    backgroundColor: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-800",
+    borderColor: "border-emerald-500/30",
+    accentColor: "text-emerald-300",
     isSpecial: true
+  },
+  {
+    name: "Jeff Bezos",
+    specialty: "ecommerce.innovation",
+    confidence: 89,
+    recommendation: "BUY AWS, AMZN",
+    netWorth: "$177.5 Billion",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    backgroundColor: "bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-800",
+    borderColor: "border-purple-500/30",
+    accentColor: "text-purple-300",
+    isSpecial: false
+  },
+  {
+    name: "Mark Cuban",
+    specialty: "sports.tech.investment",
+    confidence: 85,
+    recommendation: "BUY BTC, ETH",
+    netWorth: "$5.4 Billion",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    backgroundColor: "bg-gradient-to-br from-red-900 via-orange-900 to-yellow-800",
+    borderColor: "border-red-500/30",
+    accentColor: "text-red-300",
+    isSpecial: false
+  },
+  {
+    name: "Ray Dalio",
+    specialty: "hedge.fund.strategy",
+    confidence: 91,
+    recommendation: "DIVERSIFY, GOLD",
+    netWorth: "$19.1 Billion",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face",
+    backgroundColor: "bg-gradient-to-br from-gray-900 via-slate-900 to-zinc-800",
+    borderColor: "border-gray-500/30",
+    accentColor: "text-gray-300",
+    isSpecial: false
   }
 ];
 
@@ -65,40 +108,23 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGri
         </h2>
       </div>
 
-      {/* Three Column Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {/* Elon Musk */}
-        <ElonProfile
-          name={aiAdvisors[0].name}
-          specialty={t(aiAdvisors[0].specialty)}
-          confidence={aiAdvisors[0].confidence}
-          recommendation={aiAdvisors[0].recommendation}
-          reasoning={t(aiAdvisors[0].reasoning)}
-          avatar={aiAdvisors[0].avatar}
-          isSpecial={aiAdvisors[0].isSpecial}
-        />
-
-        {/* Warren Buffett */}
-        <WarrenProfile
-          name={aiAdvisors[1].name}
-          specialty={t(aiAdvisors[1].specialty)}
-          confidence={aiAdvisors[1].confidence}
-          recommendation={aiAdvisors[1].recommendation}
-          reasoning={t(aiAdvisors[1].reasoning)}
-          avatar={aiAdvisors[1].avatar}
-          isSpecial={aiAdvisors[1].isSpecial}
-        />
-
-        {/* Bill Gates */}
-        <BillProfile
-          name={aiAdvisors[2].name}
-          specialty={t(aiAdvisors[2].specialty)}
-          confidence={aiAdvisors[2].confidence}
-          recommendation={aiAdvisors[2].recommendation}
-          reasoning={t(aiAdvisors[2].reasoning)}
-          avatar={aiAdvisors[2].avatar}
-          isSpecial={aiAdvisors[2].isSpecial}
-        />
+      {/* Six Column Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {aiAdvisors.map((advisor, index) => (
+          <CompactAdvisorCard
+            key={index}
+            name={advisor.name}
+            specialty={advisor.specialty}
+            confidence={advisor.confidence}
+            recommendation={advisor.recommendation}
+            netWorth={advisor.netWorth}
+            avatar={advisor.avatar}
+            backgroundColor={advisor.backgroundColor}
+            borderColor={advisor.borderColor}
+            accentColor={advisor.accentColor}
+            isSpecial={advisor.isSpecial}
+          />
+        ))}
       </div>
     </div>
   );
