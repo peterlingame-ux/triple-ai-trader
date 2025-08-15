@@ -26,7 +26,7 @@ interface AIControlCenterProps {
 }
 
 export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AIControlCenterProps) => {
-  const { t } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
@@ -94,12 +94,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
   ];
 
   const sampleQuestions = [
-    "USDT的技术走势如何?",
-    "我现在应该买入还是卖出?",
-    "分析当前市场趋势",
-    `${selectedCrypto}未来1周的价格预测是什么?`,
-    `基于技术指标，${selectedCrypto}的支撑位和阻力位在哪里?`,
-    `当前市场情绪对${selectedCrypto}有什么影响?`
+    t('ai.question1'),
+    t('ai.question2'), 
+    t('ai.question3'),
+    `${selectedCrypto}${currentLanguage === 'zh' ? '未来1周的价格预测是什么?' : ' price prediction for next week?'}`,
+    `${currentLanguage === 'zh' ? '基于技术指标，' : 'Based on technical indicators, what are the '}${selectedCrypto}${currentLanguage === 'zh' ? '的支撑位和阻力位在哪里?' : ' support and resistance levels?'}`,
+    `${currentLanguage === 'zh' ? '当前市场情绪对' : 'How does current market sentiment affect '}${selectedCrypto}${currentLanguage === 'zh' ? '有什么影响?' : '?'}`
   ];
 
   const handleMultiAIAnalysis = async () => {
@@ -657,7 +657,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="p-6">
               <div className="flex items-center gap-4 mb-4">
                 <BarChart3 className="w-5 h-5 text-yellow-400" />
-                <span className="text-white font-medium">货币选择 & 分析</span>
+                <span className="text-white font-medium">{t('ai.control_center.currency_selection')}</span>
               </div>
               
               {/* Quick Selection Buttons */}
@@ -734,15 +734,15 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
           <TabsList className="grid grid-cols-3 bg-slate-800/50 border-slate-700">
             <TabsTrigger value="chart" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black">
               <BarChart3 className="w-4 h-4 mr-2" />
-              价格图表
+              {t('ai.control_center.price_chart')}
             </TabsTrigger>
             <TabsTrigger value="technical" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black">
               <Activity className="w-4 h-4 mr-2" />
-              技术分析
+              {t('ai.control_center.technical_analysis')}
             </TabsTrigger>
             <TabsTrigger value="news" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black">
               <Newspaper className="w-4 h-4 mr-2" />
-              新闻情绪
+              {t('ai.control_center.news_sentiment')}
             </TabsTrigger>
           </TabsList>
 
@@ -753,7 +753,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-6">
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">K线图表 & 技术指标</h3>
+                        <h3 className="text-lg font-semibold text-white mb-2">{t('ai.control_center.chart_title')}</h3>
                         <div className="flex items-center gap-2 text-sm text-slate-400">
                           <span>BTC/USDT</span>
                           <span>O: $43744.68149762</span>
@@ -784,8 +784,8 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                     <div className="h-80 bg-slate-700/30 rounded-lg flex items-center justify-center">
                       <div className="text-center">
                         <BarChart3 className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                        <p className="text-slate-400 text-lg font-medium">专业K线图表 ({selectedTimeframe})</p>
-                        <p className="text-slate-500 text-sm mt-2">实时价格走势与技术指标分析</p>
+                        <p className="text-slate-400 text-lg font-medium">{t('ai.control_center.professional_chart')} ({selectedTimeframe})</p>
+                        <p className="text-slate-500 text-sm mt-2">{t('ai.control_center.realtime_analysis')}</p>
                       </div>
                     </div>
                   </div>
@@ -797,12 +797,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-6">
                       <Activity className="w-5 h-5 text-yellow-400" />
-                      <h3 className="text-lg font-semibold text-white">技术指标面板</h3>
+                      <h3 className="text-lg font-semibold text-white">{t('ai.control_center.technical_panel')}</h3>
                     </div>
 
                     <div className="space-y-4">
                       <div>
-                        <h4 className="text-yellow-400 text-sm font-medium mb-3">基础指标</h4>
+                        <h4 className="text-yellow-400 text-sm font-medium mb-3">{t('ai.control_center.basic_indicators')}</h4>
                         <div className="space-y-3">
                           {technicalIndicators.map((indicator, index) => (
                             <div key={index} className="flex justify-between items-center">
@@ -816,7 +816,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                       </div>
 
                       <div className="pt-4 border-t border-slate-700">
-                        <h4 className="text-yellow-400 text-sm font-medium mb-3">移动均线</h4>
+                        <h4 className="text-yellow-400 text-sm font-medium mb-3">{t('ai.control_center.moving_averages')}</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <span className="text-slate-300 text-sm">MA5</span>
@@ -838,12 +838,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
           <TabsContent value="technical" className="mt-6">
             <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">技术分析</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">{t('ai.control_center.technical_analysis')}</h3>
                 <div className="h-96 bg-slate-700/30 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <Activity className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                    <p className="text-slate-400 text-lg">深度技术分析报告</p>
-                    <p className="text-slate-500 text-sm mt-2">AI驱动的技术指标分析</p>
+                    <p className="text-slate-400 text-lg">{t('ai.control_center.deep_technical_report')}</p>
+                    <p className="text-slate-500 text-sm mt-2">{t('ai.control_center.ai_technical_analysis')}</p>
                   </div>
                 </div>
               </div>
@@ -853,12 +853,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
           <TabsContent value="news" className="mt-6">
             <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">新闻情绪分析</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">{t('ai.control_center.news_sentiment')}</h3>
                 <div className="h-96 bg-slate-700/30 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <Newspaper className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                    <p className="text-slate-400 text-lg">实时新闻情绪分析</p>
-                    <p className="text-slate-500 text-sm mt-2">基于AI的市场情绪监控</p>
+                    <p className="text-slate-400 text-lg">{t('ai.control_center.realtime_news')}</p>
+                    <p className="text-slate-500 text-sm mt-2">{t('ai.control_center.ai_sentiment')}</p>
                   </div>
                 </div>
               </div>
