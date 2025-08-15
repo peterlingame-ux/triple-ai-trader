@@ -84,7 +84,7 @@ const aiAdvisors = [
     confidence: 87,
     recommendation: "BUY TRX, USDD",
     netWorth: "$1.1 Billion",
-    avatar: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face",
+    avatar: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png",
     backgroundColor: "bg-gradient-to-br from-rose-900 via-pink-900 to-red-800",
     borderColor: "border-rose-500/30",
     accentColor: "text-rose-300",
