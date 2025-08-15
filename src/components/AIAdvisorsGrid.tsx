@@ -137,6 +137,25 @@ const aiAdvisors = [
     mainAchievements: ["以太坊联合创始人", "智能合约先驱", "区块链布道者", "加密朋克精神领袖"],
     currentHoldings: ["ETH", "各类DeFi代币", "公共物品基金"],
     tags: ["智能合约", "DeFi", "Web3"]
+  },
+  {
+    name: "Justin Sun",
+    specialty: "TRON生态与营销",
+    confidence: 87,
+    recommendation: "BUY TRX, USDD",
+    netWorth: "$1.1 Billion",
+    avatar: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop&crop=face",
+    backgroundColor: "bg-gradient-to-br from-rose-900 via-pink-900 to-red-800",
+    borderColor: "border-rose-500/30",
+    accentColor: "text-rose-300",
+    isSpecial: false,
+    investmentStyle: "营销驱动增长",
+    historicalReturn: "+890%",
+    riskLevel: "极高",
+    famousQuote: "在加密货币世界中，营销和技术同样重要。",
+    mainAchievements: ["TRON创始人", "火币全球顾问委员会", "天价NFT收藏家", "加密营销大师"],
+    currentHoldings: ["TRX", "USDD", "BTT", "NFT收藏"],
+    tags: ["TRON", "营销", "DeFi"]
   }
 ];
 
