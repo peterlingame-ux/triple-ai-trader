@@ -118,6 +118,25 @@ const aiAdvisors = [
     mainAchievements: ["桥水基金创始人", "原则作者", "宏观经济专家", "全球最大对冲基金"],
     currentHoldings: ["黄金", "债券", "多元化"],
     tags: ["宏观", "原则", "风险平价"]
+  },
+  {
+    name: "Vitalik Buterin",
+    specialty: "区块链与以太坊",
+    confidence: 96,
+    recommendation: "BUY ETH, STAKE ETH",
+    netWorth: "$400 Million",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face",
+    backgroundColor: "bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-800",
+    borderColor: "border-violet-500/30",
+    accentColor: "text-violet-300",
+    isSpecial: true,
+    investmentStyle: "去中心化未来",
+    historicalReturn: "+1,200%",
+    riskLevel: "高",
+    famousQuote: "区块链不仅仅是金融革命，更是去中心化协调的新范式。",
+    mainAchievements: ["以太坊联合创始人", "智能合约先驱", "区块链布道者", "加密朋克精神领袖"],
+    currentHoldings: ["ETH", "各类DeFi代币", "公共物品基金"],
+    tags: ["智能合约", "DeFi", "Web3"]
   }
 ];
 
