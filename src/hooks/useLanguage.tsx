@@ -20,7 +20,7 @@ const LanguageContext = createContext<LanguageContextType>({
 const translations = {
   en: {
     'app.title': 'Meta BrainX',
-    'app.subtitle': '3-IN-1 Ultimate Brain Making Money Easier',
+    'app.subtitle': '3-IN-1 Ultimate Brain Makes Money Easier',
     'portfolio.total': 'Total Portfolio',
     'portfolio.change': '24h Change',
     'portfolio.trades': 'Active Trades',
