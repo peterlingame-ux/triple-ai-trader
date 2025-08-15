@@ -30,7 +30,7 @@ const aiAdvisors = [
     confidence: 88,
     recommendation: "HOLD BTC, BUY ETH",
     netWorth: "$118.3 Billion",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    avatar: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png",
     backgroundColor: "bg-gradient-to-br from-amber-900 via-yellow-900 to-orange-800",
     borderColor: "border-amber-500/30",
     accentColor: "text-amber-300",
