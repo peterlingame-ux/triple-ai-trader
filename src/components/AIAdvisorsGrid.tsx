@@ -48,7 +48,7 @@ const aiAdvisors = [
     confidence: 92,
     recommendation: "BUY ETH, HOLD MATIC",
     netWorth: "$128.6 Billion",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    avatar: "/lovable-uploads/a11e3b1a-1c1c-403b-910c-bd42820384c4.png",
     backgroundColor: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-800",
     borderColor: "border-emerald-500/30",
     accentColor: "text-emerald-300",
