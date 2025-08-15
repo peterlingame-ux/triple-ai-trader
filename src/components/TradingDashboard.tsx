@@ -29,7 +29,6 @@ export const TradingDashboard = () => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
-  const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
 
@@ -153,14 +152,6 @@ export const TradingDashboard = () => {
                 <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                 {t('button.refresh')}
               </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setShowAllCrypto(!showAllCrypto)}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
-              >
-                {showAllCrypto ? t('button.collapse') : t('button.all_categories')}
-                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
-              </Button>
             </div>
           </div>
           
@@ -176,29 +167,12 @@ export const TradingDashboard = () => {
           </div>
           
                   <ProfessionalCryptoGrid 
-                    cryptoData={filteredCryptoData} 
-                    showAll={showAllCrypto}
-                    maxVisible={6}
+                    cryptoData={filteredCryptoData}
+                    showAll={true}
+                    maxVisible={filteredCryptoData.length}
                   />
                   
-                  {/* 货币计数和折叠状态显示 */}
-                  <div className="flex items-center justify-between mt-4 px-2">
-                    <div className="text-sm text-muted-foreground">
-                      {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
-                    </div>
-                    {filteredCryptoData.length > 6 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowAllCrypto(!showAllCrypto)}
-                        className="text-primary hover:text-primary/80 text-xs sm:text-sm"
-                      >
-                        {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
-                      </Button>
-                    )}
-                  </div>
-          
-          {filteredCryptoData.length === 0 && searchQuery && (
+                  {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-8 sm:py-12">
               <p className="text-muted-foreground text-base sm:text-lg">
                 {t('search.not_found')} "{searchQuery}" {t('search.try_other')}
