@@ -48,7 +48,7 @@ export const CompactAdvisorCard = ({
         <div className="absolute top-2 right-2 z-10">
           <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/50 px-2 py-0.5 text-xs">
             <Award className="w-2 h-2 mr-1" />
-            {t('advisor.featured')}
+            正在使用中
           </Badge>
         </div>
       )}
