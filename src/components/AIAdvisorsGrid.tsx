@@ -88,7 +88,7 @@ const aiAdvisors = [
     backgroundColor: "bg-gradient-to-br from-rose-900 via-pink-900 to-red-800",
     borderColor: "border-rose-500/30",
     accentColor: "text-rose-300",
-    isSpecial: false,
+    isSpecial: true,
     investmentStyle: "营销驱动增长",
     historicalReturn: "+890%",
     famousQuote: "在加密货币世界中，营销和技术同样重要。",
