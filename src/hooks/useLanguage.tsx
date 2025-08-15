@@ -2848,6 +2848,11 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const t = (key: string, params?: Record<string, string>): string => {
     let translation = translations[language]?.[key] || key;
     
+    // Debug: Log missing translations
+    if (translation === key && !translations[language]?.[key]) {
+      console.log(`Missing translation for key: "${key}" in language: "${language}"`);
+    }
+    
     // Handle parameter substitution
     if (params) {
       Object.entries(params).forEach(([param, value]) => {
