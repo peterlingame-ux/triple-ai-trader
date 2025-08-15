@@ -102,7 +102,7 @@ const aiAdvisors = [
     confidence: 93,
     recommendation: "BUY REAL ESTATE, GOLD",
     netWorth: "$2.6 Billion",
-    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face",
+    avatar: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png",
     backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
     borderColor: "border-yellow-500/30",
     accentColor: "text-yellow-300",
