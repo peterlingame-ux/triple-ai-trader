@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Zap, Brain, TrendingUp, TrendingDown, AlertTriangle, Play, Pause, Settings, CheckCircle, XCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoData, OpportunityAlert } from "@/types/api";
 
 // AI advisors data
@@ -59,6 +60,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   const [showAlert, setShowAlert] = useState(false);
   const [currentAlert, setCurrentAlert] = useState<OpportunityAlert | null>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   // Mock API call - 预留接口
   const performSuperBrainAnalysis = async () => {
@@ -172,11 +174,11 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Brain className="w-8 h-8 text-yellow-400" />
-          <h2 className="text-3xl font-bold text-white">最强大脑自动检测</h2>
+          <h2 className="text-3xl font-bold text-white">{t('ai.supreme_brain_detection')}</h2>
           <Zap className="w-8 h-8 text-yellow-400" />
         </div>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          六个顶级AI模型协同分析，只在胜率达到90%以上时提醒您最佳交易时机
+          {t('ai.six_models_analysis')}
         </p>
       </div>
 
@@ -274,7 +276,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       ? advisor.accentColor + ' border-current/20' 
                       : 'text-gray-500 border-gray-500/20'
                   }`}>
-                    {isActive ? '激活中' : '未激活'}
+                    {isActive ? t('activation.activated') : t('activation.deactivated')}
                   </Badge>
                 </div>
               );

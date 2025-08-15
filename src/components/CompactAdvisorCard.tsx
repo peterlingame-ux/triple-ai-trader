@@ -94,7 +94,7 @@ export const CompactAdvisorCard = ({
             <span className={`tracking-wide ${
               isActive ? 'text-white' : 'text-gray-300'
             }`}>
-              {isActive ? t('activation.activated') || '激活中' : t('activation.deactivated') || '未激活'}
+              {isActive ? t('activation.activated') : t('activation.deactivated')}
             </span>
           </button>
           {/* Glow Effect - only when active */}

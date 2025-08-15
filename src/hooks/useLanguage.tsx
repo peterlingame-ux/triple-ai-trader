@@ -258,6 +258,10 @@ const translations = {
     'auth.login_register': 'Login / Register',
     'auth.logout': 'Logout',
     'auth.loading': 'Loading...',
+    
+    // Supreme Brain Detection translations  
+    'ai.supreme_brain_detection': 'Supreme Brain Auto Detection',
+    'ai.six_models_analysis': 'Six top AI models collaborate to analyze, only alert you for optimal trading opportunities when win rate reaches 90%+',
 
     // AI opportunity detection translations - Enhanced
       'ai.brain_detection': 'Supreme Brain AI Detection',
@@ -400,8 +404,8 @@ const translations = {
     'advisors.trump.tags': ["Real Estate", "Branding", "Politics"],
     
     // Activation toast messages
-    'activation.activated': 'Advisor Activated',
-    'activation.deactivated': 'Advisor Deactivated',
+    'activation.activated': 'Active',
+    'activation.deactivated': 'Inactive',
     'activation.activated_desc': 'is now activated and will provide investment advice',
     'activation.deactivated_desc': 'is deactivated and will no longer provide investment advice',
     
@@ -615,6 +619,10 @@ const translations = {
      'auth.login_register': '登录 / 注册',
      'auth.logout': '退出登录',
      'auth.loading': '加载中...',
+     
+     // 最强大脑检测翻译
+     'ai.supreme_brain_detection': '最强大脑自动检测',
+     'ai.six_models_analysis': '六个顶级AI模型协同分析，只在胜率达到90%以上时提醒您最佳交易时机',
     'wallet.connect': '连接钱包',
     'wallet.real': '真实钱包',
     'wallet.virtual': 'AI虚拟投资组合',
@@ -978,8 +986,8 @@ const translations = {
     'advisors.trump.tags': ["房地产", "品牌", "政治"],
     
     // 激活吐司消息
-    'activation.activated': '顾问已激活',
-    'activation.deactivated': '顾问已停用',
+    'activation.activated': '激活中',
+    'activation.deactivated': '未激活',
     'activation.activated_desc': '现在已激活并将提供投资建议',
     'activation.deactivated_desc': '已停用，不再提供投资建议',
     
