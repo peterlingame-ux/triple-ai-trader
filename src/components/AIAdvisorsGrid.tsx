@@ -1,6 +1,7 @@
 import { CompactAdvisorCard } from "./CompactAdvisorCard";
 import { ProfessionalAIControls } from "./ProfessionalAIControls";
 import { useLanguage } from "@/hooks/useLanguage";
+import trumpAvatar from "../assets/trump-avatar.jpg";
 import { Brain } from "lucide-react";
 
 // AI advisors data
@@ -156,6 +157,25 @@ const aiAdvisors = [
     mainAchievements: ["TRON创始人", "火币全球顾问委员会", "天价NFT收藏家", "加密营销大师"],
     currentHoldings: ["TRX", "USDD", "BTT", "NFT收藏"],
     tags: ["TRON", "营销", "DeFi"]
+  },
+  {
+    name: "Donald Trump",
+    specialty: "房地产与品牌投资",
+    confidence: 93,
+    recommendation: "BUY REAL ESTATE, GOLD",
+    netWorth: "$2.6 Billion",
+    avatar: trumpAvatar,
+    backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
+    borderColor: "border-yellow-500/30",
+    accentColor: "text-yellow-300",
+    isSpecial: true,
+    investmentStyle: "品牌价值驱动",
+    historicalReturn: "+156%",
+    riskLevel: "中高",
+    famousQuote: "我们要让美国再次伟大，让投资再次伟大！",
+    mainAchievements: ["特朗普集团主席", "美国第45任总统", "房地产大亨", "品牌授权专家"],
+    currentHoldings: ["房地产", "特朗普NFT", "黄金", "Trump Media"],
+    tags: ["房地产", "品牌", "政治"]
   }
 ];
 
