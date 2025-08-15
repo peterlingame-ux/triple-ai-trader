@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, TrendingUp, Target, Quote, Star, Power } from "lucide-react";
 import { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface CompactAdvisorCardProps {
   name: string;
@@ -43,6 +44,7 @@ export const CompactAdvisorCard = ({
   onActivationToggle
 }: CompactAdvisorCardProps) => {
   const [isActive, setIsActive] = useState(isSpecial || false);
+  const { t } = useLanguage();
 
   const handleActivationToggle = () => {
     const newActiveState = !isActive;
@@ -89,8 +91,10 @@ export const CompactAdvisorCard = ({
                 : 'bg-gray-400'
             }`}></div>
             <Power className="w-3 h-3" />
-            <span className="tracking-wide">
-              {isActive ? '激活中' : '未激活'}
+            <span className={`tracking-wide ${
+              isActive ? 'text-white' : 'text-gray-300'
+            }`}>
+              {isActive ? t('activation.activated') || '激活中' : t('activation.deactivated') || '未激活'}
             </span>
           </button>
           {/* Glow Effect - only when active */}
@@ -147,7 +151,9 @@ export const CompactAdvisorCard = ({
                 ? 'bg-white/5 border-white/10' 
                 : 'bg-gray-600/20 border-gray-500/20'
             }`}>
-              <span className={`block mb-1 ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>投资风格</span>
+              <span className={`block mb-1 ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
+                {t('labels.investmentStyle') || '投资风格'}
+              </span>
               <span className={`font-semibold text-xs ${
                 isActive ? accentColor : 'text-gray-400'
               }`}>{investmentStyle}</span>
@@ -157,7 +163,9 @@ export const CompactAdvisorCard = ({
                 ? 'bg-white/5 border-white/10' 
                 : 'bg-gray-600/20 border-gray-500/20'
             }`}>
-              <span className={`block mb-1 ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>历史回报</span>
+              <span className={`block mb-1 ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
+                {t('labels.historicalReturn') || '历史回报'}
+              </span>
               <span className={`font-bold flex items-center gap-1 text-xs ${
                 isActive ? 'text-emerald-400' : 'text-gray-400'
               }`}>
@@ -185,7 +193,9 @@ export const CompactAdvisorCard = ({
             <div className="text-center">
               <p className={`text-xs font-medium mb-0.5 ${
                 isActive ? 'text-emerald-200' : 'text-gray-400'
-              }`}>个人净资产</p>
+              }`}>
+                {t('labels.netWorth') || '个人净资产'}
+              </p>
               <p className={`text-sm font-bold tracking-wide ${
                 isActive ? 'text-emerald-400' : 'text-gray-300'
               }`}>{netWorth}</p>
@@ -232,7 +242,9 @@ export const CompactAdvisorCard = ({
             <Target className={`w-3 h-3 ${isActive ? 'text-gray-400' : 'text-gray-500'}`} />
             <span className={`text-xs font-medium ${
               isActive ? 'text-gray-300' : 'text-gray-500'
-            }`}>主要持仓</span>
+            }`}>
+              {t('labels.mainHoldings') || '主要持仓'}
+            </span>
           </div>
           <div className="flex flex-wrap gap-1">
             {currentHoldings.slice(0, 3).map((holding, index) => (
@@ -258,7 +270,7 @@ export const CompactAdvisorCard = ({
               : 'bg-gradient-to-r from-gray-600/50 to-gray-500/50 text-gray-300 border-gray-500/20 hover:from-gray-600/70 hover:to-gray-500/70'
           }`}>
             <Star className="w-3 h-3" />
-            <span>{confidence}% 信心度</span>
+            <span>{confidence}% {t('labels.confidence') || '信心度'}</span>
           </button>
           <button className={`w-full py-2.5 px-4 rounded-lg text-xs font-semibold backdrop-blur-sm transition-all duration-300 border ${
             isActive 

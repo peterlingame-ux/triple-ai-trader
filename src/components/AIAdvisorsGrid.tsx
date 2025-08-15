@@ -6,11 +6,11 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { CryptoData, NewsArticle } from "@/types/api";
 
-// AI advisors data
-const aiAdvisors = [
+// AI advisors data with i18n support
+const getAiAdvisorsData = (language: string) => [
   {
     name: "Elon Musk",
-    specialty: "远见科技与市场颠覆",
+    specialty: language === 'zh' ? "远见科技与市场颠覆" : "Visionary Technology & Market Disruption",
     confidence: 94,
     recommendation: "BUY DOGE, BTC",
     netWorth: "$219.2 Billion",
@@ -19,16 +19,16 @@ const aiAdvisors = [
     borderColor: "border-blue-500/30",
     accentColor: "text-blue-300",
     isSpecial: true,
-    investmentStyle: "颠覆性创新",
+    investmentStyle: language === 'zh' ? "颠覆性创新" : "Disruptive Innovation",
     historicalReturn: "+340%",
-    famousQuote: "当其他人都谨慎时，要大胆；当其他人都大胆时，要谨慎。",
-    mainAchievements: ["SpaceX CEO", "Tesla创始人", "世界首富", "可重复火箭技术"],
+    famousQuote: language === 'zh' ? "当其他人都谨慎时，要大胆；当其他人都大胆时，要谨慎。" : "When others are cautious, be bold; when others are bold, be cautious.",
+    mainAchievements: language === 'zh' ? ["SpaceX CEO", "Tesla创始人", "世界首富", "可重复火箭技术"] : ["SpaceX CEO", "Tesla Founder", "Richest Person", "Reusable Rocket Technology"],
     currentHoldings: ["DOGE", "BTC", "TSLA"],
-    tags: ["火星殖民", "电动汽车", "AI"]
+    tags: language === 'zh' ? ["火星殖民", "电动汽车", "AI"] : ["Mars Colonization", "Electric Vehicles", "AI"]
   },
   {
     name: "Warren Buffett",
-    specialty: "价值投资与长期财富建设",
+    specialty: language === 'zh' ? "价值投资与长期财富建设" : "Value Investing & Long-term Wealth Building",
     confidence: 88,
     recommendation: "HOLD BTC, BUY ETH",
     netWorth: "$118.3 Billion",
@@ -37,16 +37,16 @@ const aiAdvisors = [
     borderColor: "border-amber-500/30",
     accentColor: "text-amber-300",
     isSpecial: true,
-    investmentStyle: "价值投资",
+    investmentStyle: language === 'zh' ? "价值投资" : "Value Investing",
     historicalReturn: "+20.1%",
-    famousQuote: "在别人贪婪时恐惧，在别人恐惧时贪婪。",
-    mainAchievements: ["伯克希尔CEO", "投资教父", "慈善家", "奥马哈先知"],
+    famousQuote: language === 'zh' ? "在别人贪婪时恐惧，在别人恐惧时贪婪。" : "Be fearful when others are greedy, and greedy when others are fearful.",
+    mainAchievements: language === 'zh' ? ["伯克希尔CEO", "投资教父", "慈善家", "奥马哈先知"] : ["Berkshire CEO", "Investment Guru", "Philanthropist", "Oracle of Omaha"],
     currentHoldings: ["BRK.A", "AAPL", "KO"],
-    tags: ["价值投资", "长期持有", "基本面"]
+    tags: language === 'zh' ? ["价值投资", "长期持有", "基本面"] : ["Value Investing", "Long-term Holding", "Fundamentals"]
   },
   {
     name: "Bill Gates",
-    specialty: "科技创新与慈善投资",
+    specialty: language === 'zh' ? "科技创新与慈善投资" : "Technology Innovation & Philanthropic Investment",
     confidence: 92,
     recommendation: "BUY ETH, HOLD MATIC",
     netWorth: "$128.6 Billion",
@@ -55,16 +55,16 @@ const aiAdvisors = [
     borderColor: "border-emerald-500/30",
     accentColor: "text-emerald-300",
     isSpecial: true,
-    investmentStyle: "科技创新",
+    investmentStyle: language === 'zh' ? "科技创新" : "Tech Innovation",
     historicalReturn: "+28.5%",
-    famousQuote: "成功是一个糟糕的老师，它会让聪明人觉得自己不会失败。",
-    mainAchievements: ["微软创始人", "盖茨基金会", "慈善事业", "全球健康倡导者"],
-    currentHoldings: ["MSFT", "ETH", "清洁能源"],
-    tags: ["慈善", "健康", "教育"]
+    famousQuote: language === 'zh' ? "成功是一个糟糕的老师，它会让聪明人觉得自己不会失败。" : "Success is a lousy teacher. It seduces smart people into thinking they can't lose.",
+    mainAchievements: language === 'zh' ? ["微软创始人", "盖茨基金会", "慈善事业", "全球健康倡导者"] : ["Microsoft Founder", "Gates Foundation", "Philanthropy", "Global Health Advocate"],
+    currentHoldings: ["MSFT", "ETH", language === 'zh' ? "清洁能源" : "Clean Energy"],
+    tags: language === 'zh' ? ["慈善", "健康", "教育"] : ["Philanthropy", "Health", "Education"]
   },
   {
     name: "Vitalik Buterin",
-    specialty: "区块链与去中心化",
+    specialty: language === 'zh' ? "区块链与去中心化" : "Blockchain & Decentralization",
     confidence: 96,
     recommendation: "BUY ETH, STAKE ETH",
     netWorth: "$400 Million",
@@ -73,16 +73,16 @@ const aiAdvisors = [
     borderColor: "border-violet-500/30",
     accentColor: "text-violet-300",
     isSpecial: true,
-    investmentStyle: "去中心化未来",
+    investmentStyle: language === 'zh' ? "去中心化未来" : "Decentralized Future",
     historicalReturn: "+1,200%",
-    famousQuote: "区块链不仅仅是金融革命，更是去中心化协调的新范式。",
-    mainAchievements: ["以太坊联合创始人", "智能合约先驱", "区块链布道者", "加密朋克精神领袖"],
-    currentHoldings: ["ETH", "各类DeFi代币", "公共物品基金"],
-    tags: ["智能合约", "DeFi", "Web3"]
+    famousQuote: language === 'zh' ? "区块链不仅仅是金融革命，更是去中心化协调的新范式。" : "Blockchain is not just a financial revolution, but a new paradigm for decentralized coordination.",
+    mainAchievements: language === 'zh' ? ["以太坊联合创始人", "智能合约先驱", "区块链布道者", "加密朋克精神领袖"] : ["Ethereum Co-founder", "Smart Contract Pioneer", "Blockchain Evangelist", "Crypto Punk Leader"],
+    currentHoldings: ["ETH", language === 'zh' ? "各类DeFi代币" : "Various DeFi Tokens", language === 'zh' ? "公共物品基金" : "Public Goods Fund"],
+    tags: language === 'zh' ? ["智能合约", "DeFi", "Web3"] : ["Smart Contracts", "DeFi", "Web3"]
   },
   {
     name: "Justin Sun",
-    specialty: "TRON生态与营销",
+    specialty: language === 'zh' ? "TRON生态与营销" : "TRON Ecosystem & Marketing",
     confidence: 87,
     recommendation: "BUY TRX, USDD",
     netWorth: "$1.1 Billion",
@@ -91,16 +91,16 @@ const aiAdvisors = [
     borderColor: "border-rose-500/30",
     accentColor: "text-rose-300",
     isSpecial: true,
-    investmentStyle: "营销驱动增长",
+    investmentStyle: language === 'zh' ? "营销驱动增长" : "Marketing-Driven Growth",
     historicalReturn: "+890%",
-    famousQuote: "在加密货币世界中，营销和技术同样重要。",
-    mainAchievements: ["TRON创始人", "火币全球顾问委员会", "天价NFT收藏家", "加密营销大师"],
-    currentHoldings: ["TRX", "USDD", "BTT", "NFT收藏"],
-    tags: ["TRON", "营销", "DeFi"]
+    famousQuote: language === 'zh' ? "在加密货币世界中，营销和技术同样重要。" : "In the crypto world, marketing and technology are equally important.",
+    mainAchievements: language === 'zh' ? ["TRON创始人", "火币全球顾问委员会", "天价NFT收藏家", "加密营销大师"] : ["TRON Founder", "Huobi Global Advisory", "Expensive NFT Collector", "Crypto Marketing Master"],
+    currentHoldings: ["TRX", "USDD", "BTT", language === 'zh' ? "NFT收藏" : "NFT Collection"],
+    tags: language === 'zh' ? ["TRON", "营销", "DeFi"] : ["TRON", "Marketing", "DeFi"]
   },
   {
     name: "Donald Trump",
-    specialty: "房地产与品牌投资",
+    specialty: language === 'zh' ? "房地产与品牌投资" : "Real Estate & Brand Investment",
     confidence: 93,
     recommendation: "BUY REAL ESTATE, GOLD",
     netWorth: "$2.6 Billion",
@@ -109,12 +109,121 @@ const aiAdvisors = [
     borderColor: "border-yellow-500/30",
     accentColor: "text-yellow-300",
     isSpecial: true,
-    investmentStyle: "品牌价值驱动",
+    investmentStyle: language === 'zh' ? "品牌价值驱动" : "Brand Value Driven",
     historicalReturn: "+156%",
-    famousQuote: "我们要让美国再次伟大，让投资再次伟大！",
-    mainAchievements: ["特朗普集团主席", "美国第45任总统", "房地产大亨", "品牌授权专家"],
-    currentHoldings: ["房地产", "特朗普NFT", "黄金", "Trump Media"],
-    tags: ["房地产", "品牌", "政治"]
+    famousQuote: language === 'zh' ? "我们要让美国再次伟大，让投资再次伟大！" : "We're going to make America great again, make investments great again!",
+    mainAchievements: language === 'zh' ? ["特朗普集团主席", "美国第45任总统", "房地产大亨", "品牌授权专家"] : ["Trump Organization Chairman", "45th US President", "Real Estate Mogul", "Brand Licensing Expert"],
+    currentHoldings: [language === 'zh' ? "房地产" : "Real Estate", language === 'zh' ? "特朗普NFT" : "Trump NFTs", language === 'zh' ? "黄金" : "Gold", "Trump Media"],
+    tags: language === 'zh' ? ["房地产", "品牌", "政治"] : ["Real Estate", "Branding", "Politics"]
+  }
+];
+  {
+    name: "Elon Musk",
+    specialty: t('advisors.elon.specialty') || "远见科技与市场颠覆",
+    confidence: 94,
+    recommendation: t('advisors.elon.recommendation') || "BUY DOGE, BTC",
+    netWorth: "$219.2 Billion",
+    avatar: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png",
+    backgroundColor: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
+    borderColor: "border-blue-500/30",
+    accentColor: "text-blue-300",
+    isSpecial: true,
+    investmentStyle: t('advisors.elon.investmentStyle') || "颠覆性创新",
+    historicalReturn: "+340%",
+    famousQuote: t('advisors.elon.quote') || "当其他人都谨慎时，要大胆；当其他人都大胆时，要谨慎。",
+    mainAchievements: t('advisors.elon.achievements') || ["SpaceX CEO", "Tesla创始人", "世界首富", "可重复火箭技术"],
+    currentHoldings: ["DOGE", "BTC", "TSLA"],
+    tags: t('advisors.elon.tags') || ["火星殖民", "电动汽车", "AI"]
+  },
+  {
+    name: "Warren Buffett",
+    specialty: t('advisors.warren.specialty') || "价值投资与长期财富建设",
+    confidence: 88,
+    recommendation: t('advisors.warren.recommendation') || "HOLD BTC, BUY ETH",
+    netWorth: "$118.3 Billion",
+    avatar: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png",
+    backgroundColor: "bg-gradient-to-br from-amber-900 via-yellow-900 to-orange-800",
+    borderColor: "border-amber-500/30",
+    accentColor: "text-amber-300",
+    isSpecial: true,
+    investmentStyle: t('advisors.warren.investmentStyle') || "价值投资",
+    historicalReturn: "+20.1%",
+    famousQuote: t('advisors.warren.quote') || "在别人贪婪时恐惧，在别人恐惧时贪婪。",
+    mainAchievements: t('advisors.warren.achievements') || ["伯克希尔CEO", "投资教父", "慈善家", "奥马哈先知"],
+    currentHoldings: ["BRK.A", "AAPL", "KO"],
+    tags: t('advisors.warren.tags') || ["价值投资", "长期持有", "基本面"]
+  },
+  {
+    name: "Bill Gates",
+    specialty: t('advisors.bill.specialty') || "科技创新与慈善投资",
+    confidence: 92,
+    recommendation: t('advisors.bill.recommendation') || "BUY ETH, HOLD MATIC",
+    netWorth: "$128.6 Billion",
+    avatar: "/lovable-uploads/a11e3b1a-1c1c-403b-910c-bd42820384c4.png",
+    backgroundColor: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-800",
+    borderColor: "border-emerald-500/30",
+    accentColor: "text-emerald-300",
+    isSpecial: true,
+    investmentStyle: t('advisors.bill.investmentStyle') || "科技创新",
+    historicalReturn: "+28.5%",
+    famousQuote: t('advisors.bill.quote') || "成功是一个糟糕的老师，它会让聪明人觉得自己不会失败。",
+    mainAchievements: t('advisors.bill.achievements') || ["微软创始人", "盖茨基金会", "慈善事业", "全球健康倡导者"],
+    currentHoldings: ["MSFT", "ETH", t('advisors.bill.cleanEnergy') || "清洁能源"],
+    tags: t('advisors.bill.tags') || ["慈善", "健康", "教育"]
+  },
+  {
+    name: "Vitalik Buterin",
+    specialty: t('advisors.vitalik.specialty') || "区块链与去中心化",
+    confidence: 96,
+    recommendation: t('advisors.vitalik.recommendation') || "BUY ETH, STAKE ETH",
+    netWorth: "$400 Million",
+    avatar: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png",
+    backgroundColor: "bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-800",
+    borderColor: "border-violet-500/30",
+    accentColor: "text-violet-300",
+    isSpecial: true,
+    investmentStyle: t('advisors.vitalik.investmentStyle') || "去中心化未来",
+    historicalReturn: "+1,200%",
+    famousQuote: t('advisors.vitalik.quote') || "区块链不仅仅是金融革命，更是去中心化协调的新范式。",
+    mainAchievements: t('advisors.vitalik.achievements') || ["以太坊联合创始人", "智能合约先驱", "区块链布道者", "加密朋克精神领袖"],
+    currentHoldings: ["ETH", t('advisors.vitalik.defiTokens') || "各类DeFi代币", t('advisors.vitalik.publicGoods') || "公共物品基金"],
+    tags: t('advisors.vitalik.tags') || ["智能合约", "DeFi", "Web3"]
+  },
+  {
+    name: "Justin Sun",
+    specialty: t('advisors.justin.specialty') || "TRON生态与营销",
+    confidence: 87,
+    recommendation: t('advisors.justin.recommendation') || "BUY TRX, USDD",
+    netWorth: "$1.1 Billion",
+    avatar: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png",
+    backgroundColor: "bg-gradient-to-br from-rose-900 via-pink-900 to-red-800",
+    borderColor: "border-rose-500/30",
+    accentColor: "text-rose-300",
+    isSpecial: true,
+    investmentStyle: t('advisors.justin.investmentStyle') || "营销驱动增长",
+    historicalReturn: "+890%",
+    famousQuote: t('advisors.justin.quote') || "在加密货币世界中，营销和技术同样重要。",
+    mainAchievements: t('advisors.justin.achievements') || ["TRON创始人", "火币全球顾问委员会", "天价NFT收藏家", "加密营销大师"],
+    currentHoldings: ["TRX", "USDD", "BTT", t('advisors.justin.nftCollection') || "NFT收藏"],
+    tags: t('advisors.justin.tags') || ["TRON", "营销", "DeFi"]
+  },
+  {
+    name: "Donald Trump",
+    specialty: t('advisors.trump.specialty') || "房地产与品牌投资",
+    confidence: 93,
+    recommendation: t('advisors.trump.recommendation') || "BUY REAL ESTATE, GOLD",
+    netWorth: "$2.6 Billion",
+    avatar: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png",
+    backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
+    borderColor: "border-yellow-500/30",
+    accentColor: "text-yellow-300",
+    isSpecial: true,
+    investmentStyle: t('advisors.trump.investmentStyle') || "品牌价值驱动",
+    historicalReturn: "+156%",
+    famousQuote: t('advisors.trump.quote') || "我们要让美国再次伟大，让投资再次伟大！",
+    mainAchievements: t('advisors.trump.achievements') || ["特朗普集团主席", "美国第45任总统", "房地产大亨", "品牌授权专家"],
+    currentHoldings: [t('advisors.trump.realEstate') || "房地产", t('advisors.trump.trumpNft') || "特朗普NFT", t('advisors.trump.gold') || "黄金", "Trump Media"],
+    tags: t('advisors.trump.tags') || ["房地产", "品牌", "政治"]
   }
 ];
 
@@ -125,7 +234,7 @@ interface AIAdvisorsGridProps {
 }
 
 export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationChange }: AIAdvisorsGridProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [activationStates, setActivationStates] = useState<Record<string, boolean>>({
     "Elon Musk": true,
@@ -136,6 +245,9 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
     "Donald Trump": true
   });
 
+  // Get localized advisor data
+  const aiAdvisors = getAiAdvisorsData(language);
+
   const handleActivationToggle = (name: string, isActive: boolean) => {
     const newStates = {
       ...activationStates,
@@ -145,8 +257,8 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
     onActivationChange?.(newStates);
     
     toast({
-      title: isActive ? "顾问已激活" : "顾问已停用",
-      description: `${name} ${isActive ? '现在已激活并将提供投资建议' : '已停用，不再提供投资建议'}`,
+      title: isActive ? (language === 'zh' ? "顾问已激活" : "Advisor Activated") : (language === 'zh' ? "顾问已停用" : "Advisor Deactivated"),
+      description: `${name} ${isActive ? (language === 'zh' ? '现在已激活并将提供投资建议' : 'is now activated and will provide investment advice') : (language === 'zh' ? '已停用，不再提供投资建议' : 'is deactivated and will no longer provide investment advice')}`,
       duration: 3000,
     });
   };
