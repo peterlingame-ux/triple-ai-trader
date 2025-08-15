@@ -15,7 +15,14 @@ const aiAdvisors = [
     backgroundColor: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
     borderColor: "border-blue-500/30",
     accentColor: "text-blue-300",
-    isSpecial: true
+    isSpecial: true,
+    investmentStyle: "颠覆性创新",
+    historicalReturn: "+340%",
+    riskLevel: "高",
+    famousQuote: "当其他人都谨慎时，要大胆；当其他人都大胆时，要谨慎。",
+    mainAchievements: ["SpaceX CEO", "Tesla创始人", "世界首富", "可重复火箭技术"],
+    currentHoldings: ["DOGE", "BTC", "TSLA"],
+    tags: ["火星殖民", "电动汽车", "AI"]
   },
   {
     name: "Warren Buffett",
@@ -27,7 +34,14 @@ const aiAdvisors = [
     backgroundColor: "bg-gradient-to-br from-amber-900 via-yellow-900 to-orange-800",
     borderColor: "border-amber-500/30",
     accentColor: "text-amber-300",
-    isSpecial: true
+    isSpecial: true,
+    investmentStyle: "价值投资",
+    historicalReturn: "+20.1%",
+    riskLevel: "低",
+    famousQuote: "在别人贪婪时恐惧，在别人恐惧时贪婪。",
+    mainAchievements: ["伯克希尔CEO", "投资教父", "慈善家", "奥马哈先知"],
+    currentHoldings: ["BRK.A", "AAPL", "KO"],
+    tags: ["价值投资", "长期持有", "基本面"]
   },
   {
     name: "Bill Gates",
@@ -39,23 +53,37 @@ const aiAdvisors = [
     backgroundColor: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-800",
     borderColor: "border-emerald-500/30",
     accentColor: "text-emerald-300",
-    isSpecial: true
+    isSpecial: true,
+    investmentStyle: "科技创新",
+    historicalReturn: "+28.5%",
+    riskLevel: "中",
+    famousQuote: "成功是一个糟糕的老师，它会让聪明人觉得自己不会失败。",
+    mainAchievements: ["微软创始人", "盖茨基金会", "慈善事业", "全球健康倡导者"],
+    currentHoldings: ["MSFT", "ETH", "清洁能源"],
+    tags: ["慈善", "健康", "教育"]
   },
   {
     name: "Jeff Bezos",
-    specialty: "ecommerce.innovation",
+    specialty: "电商与云计算",
     confidence: 89,
-    recommendation: "BUY AWS, AMZN",
+    recommendation: "BUY AWS, CLOUD",
     netWorth: "$177.5 Billion",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
     backgroundColor: "bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-800",
     borderColor: "border-purple-500/30",
     accentColor: "text-purple-300",
-    isSpecial: false
+    isSpecial: false,
+    investmentStyle: "长期增长",
+    historicalReturn: "+31.2%",
+    riskLevel: "中",
+    famousQuote: "你的品牌就是人们在你不在房间时对你的评价。",
+    mainAchievements: ["亚马逊创始人", "蓝色起源", "华盛顿邮报", "全球首富"],
+    currentHoldings: ["AMZN", "蓝色起源", "房地产"],
+    tags: ["电商", "太空", "媒体"]
   },
   {
     name: "Mark Cuban",
-    specialty: "sports.tech.investment",
+    specialty: "体育与科技投资",
     confidence: 85,
     recommendation: "BUY BTC, ETH",
     netWorth: "$5.4 Billion",
@@ -63,19 +91,33 @@ const aiAdvisors = [
     backgroundColor: "bg-gradient-to-br from-red-900 via-orange-900 to-yellow-800",
     borderColor: "border-red-500/30",
     accentColor: "text-red-300",
-    isSpecial: false
+    isSpecial: false,
+    investmentStyle: "高风险高回报",
+    historicalReturn: "+45.7%",
+    riskLevel: "高",
+    famousQuote: "汗水是成功的润滑剂。",
+    mainAchievements: ["达拉斯独行侠老板", "鲨鱼坦克投资人", "科技创业家", "媒体大亨"],
+    currentHoldings: ["BTC", "ETH", "NBA球队"],
+    tags: ["体育", "创业", "加密货币"]
   },
   {
     name: "Ray Dalio",
-    specialty: "hedge.fund.strategy",
+    specialty: "宏观对冲策略",
     confidence: 91,
-    recommendation: "DIVERSIFY, GOLD",
+    recommendation: "分散投资, 黄金",
     netWorth: "$19.1 Billion",
     avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=face",
     backgroundColor: "bg-gradient-to-br from-gray-900 via-slate-900 to-zinc-800",
     borderColor: "border-gray-500/30",
     accentColor: "text-gray-300",
-    isSpecial: false
+    isSpecial: false,
+    investmentStyle: "全天候策略",
+    historicalReturn: "+12.3%",
+    riskLevel: "低",
+    famousQuote: "拥有可信度的人应该坦诚地分享自己的想法。",
+    mainAchievements: ["桥水基金创始人", "原则作者", "宏观经济专家", "全球最大对冲基金"],
+    currentHoldings: ["黄金", "债券", "多元化"],
+    tags: ["宏观", "原则", "风险平价"]
   }
 ];
 
@@ -123,6 +165,13 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGri
             borderColor={advisor.borderColor}
             accentColor={advisor.accentColor}
             isSpecial={advisor.isSpecial}
+            investmentStyle={advisor.investmentStyle}
+            historicalReturn={advisor.historicalReturn}
+            riskLevel={advisor.riskLevel}
+            famousQuote={advisor.famousQuote}
+            mainAchievements={advisor.mainAchievements}
+            currentHoldings={advisor.currentHoldings}
+            tags={advisor.tags}
           />
         ))}
       </div>
