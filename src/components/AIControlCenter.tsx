@@ -13,6 +13,9 @@ import { SuperBrainDetection } from "./SuperBrainDetection";
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
 import warrenAvatar from "@/assets/warren-buffett-cartoon-avatar.png";
 import billAvatar from "@/assets/bill-gates-cartoon-avatar.png";
+import vitalikAvatar from "@/assets/vitalik-buterin-cartoon-avatar.png";
+import justinAvatar from "@/assets/justin-sun-cartoon-avatar.png";
+import trumpAvatar from "@/assets/donald-trump-cartoon-avatar.png";
 
 interface AIControlCenterProps {
   open: boolean;
@@ -27,7 +30,10 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
   const [aiConfigs, setAiConfigs] = useState({
     openai: { enabled: false, apiKey: "", model: "gpt-4o-mini" },
     claude: { enabled: false, apiKey: "", model: "claude-3-5-sonnet-20241022" },
-    grok: { enabled: false, apiKey: "", model: "grok-beta" }
+    grok: { enabled: false, apiKey: "", model: "grok-beta" },
+    vitalik: { enabled: false, apiKey: "", model: "gpt-5-2025-08-07" },
+    justin: { enabled: false, apiKey: "", model: "claude-sonnet-4-20250514" },
+    trump: { enabled: false, apiKey: "", model: "gpt-5-mini-2025-08-07" }
   });
 
   const cryptoOptions = [
@@ -118,7 +124,7 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
             <Monitor className="w-5 h-5 text-green-400" />
             <h3 className="text-lg font-semibold text-white">系统状态概览</h3>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={elonAvatar} alt="Elon Musk" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
               <div className="text-sm text-white font-medium">新闻分析引擎</div>
@@ -133,6 +139,21 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
               <img src={billAvatar} alt="Bill Gates" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
               <div className="text-sm text-white font-medium">大数据分析引擎</div>
               <div className="text-xs text-slate-400">Bill Gates</div>
+            </div>
+            <div className="text-center p-4 bg-slate-700/30 rounded-lg">
+              <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="text-sm text-white font-medium">区块链分析引擎</div>
+              <div className="text-xs text-slate-400">Vitalik Buterin</div>
+            </div>
+            <div className="text-center p-4 bg-slate-700/30 rounded-lg">
+              <img src={justinAvatar} alt="Justin Sun" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="text-sm text-white font-medium">DeFi分析引擎</div>
+              <div className="text-xs text-slate-400">Justin Sun</div>
+            </div>
+            <div className="text-center p-4 bg-slate-700/30 rounded-lg">
+              <img src={trumpAvatar} alt="Donald Trump" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="text-sm text-white font-medium">政策分析引擎</div>
+              <div className="text-xs text-slate-400">Donald Trump</div>
             </div>
           </div>
         </div>
@@ -339,6 +360,198 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
             </div>
           </div>
         </Card>
+
+        {/* Vitalik Buterin Configuration */}
+        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-10 h-10 rounded-full object-cover" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">Vitalik Buterin 分析配置</h3>
+                <Badge variant="outline" className="text-cyan-400 border-cyan-400/20 mt-1">区块链分析引擎</Badge>
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 mb-4">以太坊创始人的区块链技术深度分析和智能合约洞察</p>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={aiConfigs.vitalik.enabled}
+                  onChange={(e) => setAiConfigs(prev => ({
+                    ...prev,
+                    vitalik: { ...prev.vitalik, enabled: e.target.checked }
+                  }))}
+                  className="rounded"
+                />
+                <span className="text-sm text-slate-300">启用 Vitalik Buterin 分析引擎</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <Input
+                    placeholder="输入您的 API Key (基于 OpenAI)"
+                    type="password"
+                    value={aiConfigs.vitalik.apiKey}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      vitalik: { ...prev.vitalik, apiKey: e.target.value }
+                    }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <Select
+                    value={aiConfigs.vitalik.model}
+                    onValueChange={(value) => setAiConfigs(prev => ({
+                      ...prev,
+                      vitalik: { ...prev.vitalik, model: value }
+                    }))}
+                  >
+                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectItem value="gpt-5-2025-08-07">GPT-5</SelectItem>
+                      <SelectItem value="gpt-5-mini-2025-08-07">GPT-5 Mini</SelectItem>
+                      <SelectItem value="gpt-4.1-2025-04-14">GPT-4.1</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Justin Sun Configuration */}
+        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <img src={justinAvatar} alt="Justin Sun" className="w-10 h-10 rounded-full object-cover" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">Justin Sun 分析配置</h3>
+                <Badge variant="outline" className="text-orange-400 border-orange-400/20 mt-1">DeFi分析引擎</Badge>
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 mb-4">波场创始人的DeFi协议分析和去中心化金融趋势预测</p>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={aiConfigs.justin.enabled}
+                  onChange={(e) => setAiConfigs(prev => ({
+                    ...prev,
+                    justin: { ...prev.justin, enabled: e.target.checked }
+                  }))}
+                  className="rounded"
+                />
+                <span className="text-sm text-slate-300">启用 Justin Sun 分析引擎</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <Input
+                    placeholder="输入您的 API Key (基于 Claude)"
+                    type="password"
+                    value={aiConfigs.justin.apiKey}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      justin: { ...prev.justin, apiKey: e.target.value }
+                    }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <Select
+                    value={aiConfigs.justin.model}
+                    onValueChange={(value) => setAiConfigs(prev => ({
+                      ...prev,
+                      justin: { ...prev.justin, model: value }
+                    }))}
+                  >
+                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectItem value="claude-sonnet-4-20250514">Claude 4 Sonnet</SelectItem>
+                      <SelectItem value="claude-opus-4-20250514">Claude 4 Opus</SelectItem>
+                      <SelectItem value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Donald Trump Configuration */}
+        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <img src={trumpAvatar} alt="Donald Trump" className="w-10 h-10 rounded-full object-cover" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">Donald Trump 分析配置</h3>
+                <Badge variant="outline" className="text-red-400 border-red-400/20 mt-1">政策分析引擎</Badge>
+              </div>
+            </div>
+            <p className="text-sm text-slate-400 mb-4">政策导向分析和宏观经济对加密货币市场的影响评估</p>
+            
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={aiConfigs.trump.enabled}
+                  onChange={(e) => setAiConfigs(prev => ({
+                    ...prev,
+                    trump: { ...prev.trump, enabled: e.target.checked }
+                  }))}
+                  className="rounded"
+                />
+                <span className="text-sm text-slate-300">启用 Donald Trump 分析引擎</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <Input
+                    placeholder="输入您的 API Key (基于 OpenAI)"
+                    type="password"
+                    value={aiConfigs.trump.apiKey}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      trump: { ...prev.trump, apiKey: e.target.value }
+                    }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <Select
+                    value={aiConfigs.trump.model}
+                    onValueChange={(value) => setAiConfigs(prev => ({
+                      ...prev,
+                      trump: { ...prev.trump, model: value }
+                    }))}
+                  >
+                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectItem value="gpt-5-mini-2025-08-07">GPT-5 Mini</SelectItem>
+                      <SelectItem value="gpt-5-2025-08-07">GPT-5</SelectItem>
+                      <SelectItem value="gpt-4.1-mini-2025-04-14">GPT-4.1 Mini</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );
@@ -370,6 +583,21 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
                 <img src={billAvatar} alt="Bill Gates" className="w-4 h-4 rounded-full object-cover" />
                 <span className="text-slate-300">大数据分析引擎</span>
                 <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Bill Gates</Badge>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-4 h-4 rounded-full object-cover" />
+                <span className="text-slate-300">区块链分析引擎</span>
+                <Badge variant="outline" className="text-xs text-cyan-400 border-cyan-400/20">Vitalik Buterin</Badge>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <img src={justinAvatar} alt="Justin Sun" className="w-4 h-4 rounded-full object-cover" />
+                <span className="text-slate-300">DeFi分析引擎</span>
+                <Badge variant="outline" className="text-xs text-orange-400 border-orange-400/20">Justin Sun</Badge>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <img src={trumpAvatar} alt="Donald Trump" className="w-4 h-4 rounded-full object-cover" />
+                <span className="text-slate-300">政策分析引擎</span>
+                <Badge variant="outline" className="text-xs text-red-400 border-red-400/20">Donald Trump</Badge>
               </div>
             </div>
             
@@ -411,7 +639,7 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
             {/* Multi-AI Analysis Status */}
             <div className="mt-3 text-xs text-center">
               <span className="text-slate-500">
-                已启用 {Object.values(aiConfigs).filter(config => config.enabled).length}/3 个AI引擎
+                已启用 {Object.values(aiConfigs).filter(config => config.enabled).length}/6 个AI引擎
               </span>
             </div>
           </div>
