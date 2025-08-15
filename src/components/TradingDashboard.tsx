@@ -21,7 +21,6 @@ import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
-import { SupremeBrainCenter } from "./SupremeBrainCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
 
@@ -216,9 +215,6 @@ export const TradingDashboard = () => {
           open={showAIControlCenter} 
           onOpenChange={setShowAIControlCenter} 
         />
-
-        {/* Supreme Brain Center - 三合一智能分析系统 */}
-        <SupremeBrainCenter />
 
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
