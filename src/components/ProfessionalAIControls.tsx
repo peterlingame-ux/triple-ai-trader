@@ -5,10 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
+import { CryptoData, NewsArticle } from "@/types/api";
 
 interface ProfessionalAIControlsProps {
-  cryptoData?: any[];
-  newsData?: any[];
+  cryptoData?: CryptoData[];
+  newsData?: NewsArticle[];
   onOpenAIControlCenter?: () => void;
 }
 

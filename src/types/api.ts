@@ -53,10 +53,67 @@ export interface BinanceConfig {
 }
 
 export interface AIModelConfig {
-  provider: 'openai' | 'claude' | 'perplexity';
+  provider: 'openai' | 'claude' | 'perplexity' | 'grok' | 'vitalik' | 'justin' | 'trump';
   model: string;
   apiKey: string;
   enabled: boolean;
   temperature?: number;
   maxTokens?: number;
+}
+
+export interface OpportunityAlert {
+  id: string;
+  symbol: string;
+  type: 'price_chart' | 'technical_analysis' | 'news_sentiment' | 'blockchain' | 'defi' | 'policy';
+  confidence: number;
+  signal: 'buy' | 'sell' | 'hold';
+  price: number;
+  timestamp: Date;
+  analysis: {
+    priceAnalysis?: string;
+    technicalAnalysis?: string;
+    sentimentAnalysis?: string;
+    blockchainAnalysis?: string;
+    defiAnalysis?: string;
+    policyAnalysis?: string;
+  };
+  alerts: string[];
+}
+
+export interface TradingSignal {
+  id: string;
+  symbol: string;
+  type: 'buy' | 'sell';
+  price: number;
+  confidence: number;
+  timestamp: Date;
+  source: string;
+  reasoning: string;
+}
+
+export interface Position {
+  id: string;
+  symbol: string;
+  type: 'long' | 'short';
+  size: number;
+  entryPrice: number;
+  currentPrice: number;
+  pnl: number;
+  pnlPercent: number;
+  timestamp: Date;
+}
+
+export interface TradingStats {
+  totalPnL: number;
+  winRate: number;
+  totalTrades: number;
+  winningTrades: number;
+  losingTrades: number;
+  largestWin: number;
+  largestLoss: number;
+  avgWin: number;
+  avgLoss: number;
+  sharpeRatio: number;
+  maxDrawdown: number;
+  profitFactor: number;
 }

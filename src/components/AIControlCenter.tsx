@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
 import { SuperBrainDetection } from "./SuperBrainDetection";
+import { logger } from "@/utils/errorHandler";
 
 // Import avatars
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
@@ -101,13 +102,11 @@ export const AIControlCenter = ({ open, onOpenChange }: AIControlCenterProps) =>
   const handleMultiAIAnalysis = async () => {
     if (!analysisQuery.trim()) return;
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log("Starting multi-AI analysis with:", {
-        query: analysisQuery,
-        crypto: selectedCrypto,
-        aiConfigs: aiConfigs
-      });
-    }
+    logger.info("Starting multi-AI analysis", {
+      query: analysisQuery,
+      crypto: selectedCrypto,
+      aiConfigs: aiConfigs
+    }, 'AIControlCenter');
   };
 
   const AIConfigurationPanel = () => (

@@ -4,6 +4,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { Brain } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { CryptoData, NewsArticle } from "@/types/api";
 
 // AI advisors data
 const aiAdvisors = [
@@ -118,8 +119,8 @@ const aiAdvisors = [
 ];
 
 interface AIAdvisorsGridProps {
-  cryptoData?: any[];
-  newsData?: any[];
+  cryptoData?: CryptoData[];
+  newsData?: NewsArticle[];
 }
 
 export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGridProps) => {

@@ -5,23 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Zap, Brain, TrendingUp, TrendingDown, AlertTriangle, Play, Pause, Settings, CheckCircle, XCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-
-interface OpportunityAlert {
-  id: string;
-  symbol: string;
-  type: 'buy' | 'sell';
-  confidence: number;
-  price: number;
-  analysis: {
-    priceAnalysis: string;
-    technicalAnalysis: string;
-    newsAnalysis: string;
-  };
-  timestamp: Date;
-}
+import { CryptoData, OpportunityAlert } from "@/types/api";
 
 interface SuperBrainDetectionProps {
-  cryptoData?: any[];
+  cryptoData?: CryptoData[];
 }
 
 export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) => {
@@ -68,14 +55,16 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
       return {
         id: Date.now().toString(),
         symbol: randomSymbol,
-        type: Math.random() > 0.5 ? 'buy' : 'sell',
+        type: 'price_chart',
         confidence: Math.round(confidence),
+        signal: Math.random() > 0.5 ? 'buy' : 'sell',
         price: Math.random() * 50000 + 10000,
         analysis: {
           priceAnalysis: `基于GPT-4分析，${randomSymbol}价格图表显示强劲的${Math.random() > 0.5 ? '上升' : '下降'}趋势信号。`,
           technicalAnalysis: `Claude AI技术指标分析显示RSI、MACD等多个指标同时发出${Math.random() > 0.5 ? '买入' : '卖出'}信号。`,
-          newsAnalysis: `Perplexity实时新闻分析显示市场情绪${Math.random() > 0.5 ? '积极' : '消极'}，有利于当前交易决策。`
+          sentimentAnalysis: `Perplexity实时新闻分析显示市场情绪${Math.random() > 0.5 ? '积极' : '消极'}，有利于当前交易决策。`
         },
+        alerts: [],
         timestamp: new Date()
       };
     }
@@ -100,7 +89,7 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
           // 显示系统通知
           toast({
             title: `🧠 最强大脑检测到高胜率机会！`,
-            description: `${alert.symbol} ${alert.type === 'buy' ? '买入' : '卖出'}信号，胜率${alert.confidence}%`,
+            description: `${alert.symbol} ${alert.signal === 'buy' ? '买入' : '卖出'}信号，胜率${alert.confidence}%`,
             duration: 15000, // 15秒提醒
           });
         }
@@ -274,12 +263,12 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
                         <Badge 
                           variant="outline" 
                           className={`${
-                            alert.type === 'buy' 
+                            alert.signal === 'buy' 
                               ? 'text-green-400 border-green-400/20' 
                               : 'text-red-400 border-red-400/20'
                           }`}
                         >
-                          {alert.type === 'buy' ? (
+                          {alert.signal === 'buy' ? (
                             <>
                               <TrendingUp className="w-3 h-3 mr-1" />
                               买入信号
@@ -303,7 +292,7 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
                     <div className="text-sm text-slate-300 space-y-1">
                       <div><span className="text-blue-400">价格分析:</span> {alert.analysis.priceAnalysis}</div>
                       <div><span className="text-purple-400">技术分析:</span> {alert.analysis.technicalAnalysis}</div>
-                      <div><span className="text-green-400">新闻分析:</span> {alert.analysis.newsAnalysis}</div>
+                      <div><span className="text-green-400">新闻分析:</span> {alert.analysis.sentimentAnalysis}</div>
                     </div>
                   </div>
                 </Card>
@@ -332,12 +321,12 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
                 <Badge 
                   variant="outline" 
                   className={`text-lg px-4 py-2 ${
-                    currentAlert.type === 'buy' 
+                    currentAlert.signal === 'buy' 
                       ? 'text-green-400 border-green-400/20' 
                       : 'text-red-400 border-red-400/20'
                   }`}
                 >
-                  {currentAlert.type === 'buy' ? '买入信号' : '卖出信号'}
+                  {currentAlert.signal === 'buy' ? '买入信号' : '卖出信号'}
                 </Badge>
                 <div className="text-3xl font-bold text-yellow-400 mt-2">
                   胜率 {currentAlert.confidence}%
@@ -355,7 +344,7 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
                 </div>
                 <div className="p-3 bg-slate-700/50 rounded">
                   <div className="text-green-400 font-medium mb-1">新闻分析 (Perplexity)</div>
-                  <div className="text-slate-300">{currentAlert.analysis.newsAnalysis}</div>
+                  <div className="text-slate-300">{currentAlert.analysis.sentimentAnalysis}</div>
                 </div>
               </div>
               
@@ -375,7 +364,7 @@ export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) =>
                     });
                   }}
                   className={`flex-1 ${
-                    currentAlert.type === 'buy'
+                    currentAlert.signal === 'buy'
                       ? 'bg-green-500 hover:bg-green-600'
                       : 'bg-red-500 hover:bg-red-600'
                   }`}
