@@ -12,7 +12,7 @@ const aiAdvisors = [
     confidence: 94,
     recommendation: "BUY DOGE, BTC",
     netWorth: "$219.2 Billion",
-    avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=400&h=400&fit=crop&crop=face",
+    avatar: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png",
     backgroundColor: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
     borderColor: "border-blue-500/30",
     accentColor: "text-blue-300",
