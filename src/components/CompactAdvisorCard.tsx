@@ -46,10 +46,10 @@ export const CompactAdvisorCard = ({
     <Card className={`p-3 ${backgroundColor} ${borderColor} relative overflow-hidden hover:scale-105 transition-transform duration-200 group`}>
       {isSpecial && (
         <div className="absolute top-2 right-2 z-10">
-          <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/50 px-2 py-0.5 text-xs">
-            <Award className="w-2 h-2 mr-1" />
-            正在使用中
-          </Badge>
+          <button className="bg-gradient-to-r from-green-500/90 to-emerald-500/90 text-white border border-green-400/50 px-3 py-1 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm hover:from-green-400/90 hover:to-emerald-400/90 transition-all duration-200 flex items-center gap-1">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            激活中
+          </button>
         </div>
       )}
 
