@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, TrendingUp, Target, Quote, Star } from "lucide-react";
+import { DollarSign, TrendingUp, Target, Quote, Star, Power } from "lucide-react";
+import { useState } from "react";
 
 interface CompactAdvisorCardProps {
   name: string;
@@ -19,6 +20,7 @@ interface CompactAdvisorCardProps {
   mainAchievements: string[];
   currentHoldings: string[];
   tags: string[];
+  onActivationToggle?: (name: string, isActive: boolean) => void;
 }
 
 export const CompactAdvisorCard = ({ 
@@ -37,8 +39,16 @@ export const CompactAdvisorCard = ({
   famousQuote,
   mainAchievements,
   currentHoldings,
-  tags
+  tags,
+  onActivationToggle
 }: CompactAdvisorCardProps) => {
+  const [isActive, setIsActive] = useState(isSpecial || false);
+
+  const handleActivationToggle = () => {
+    const newActiveState = !isActive;
+    setIsActive(newActiveState);
+    onActivationToggle?.(name, newActiveState);
+  };
 
   return (
     <Card className={`relative overflow-hidden ${backgroundColor} border-0 shadow-2xl backdrop-blur-sm hover:shadow-3xl transition-all duration-500 group hover:-translate-y-2`}>
@@ -50,19 +60,33 @@ export const CompactAdvisorCard = ({
         <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:20px_20px]" />
       </div>
 
-      {/* Active Status Badge */}
-      {isSpecial && (
-        <div className="absolute top-3 right-3 z-20">
-          <div className="relative">
-            <button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm hover:from-emerald-400 hover:to-teal-400 transition-all duration-300 flex items-center gap-1.5 border border-white/20">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse shadow-sm"></div>
-              <span className="tracking-wide">激活中</span>
-            </button>
-            {/* Glow Effect */}
+      {/* Activation Toggle Button */}
+      <div className="absolute top-3 right-3 z-20">
+        <div className="relative">
+          <button 
+            onClick={handleActivationToggle}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm transition-all duration-300 flex items-center gap-1.5 border border-white/20 ${
+              isActive 
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400' 
+                : 'bg-gradient-to-r from-gray-600 to-gray-700 text-gray-300 hover:from-gray-500 hover:to-gray-600'
+            }`}
+          >
+            <div className={`w-2 h-2 rounded-full shadow-sm ${
+              isActive 
+                ? 'bg-white animate-pulse' 
+                : 'bg-gray-400'
+            }`}></div>
+            <Power className="w-3 h-3" />
+            <span className="tracking-wide">
+              {isActive ? '激活中' : '未激活'}
+            </span>
+          </button>
+          {/* Glow Effect - only when active */}
+          {isActive && (
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur-md opacity-50 -z-10" />
-          </div>
+          )}
         </div>
-      )}
+      </div>
 
       <div className="relative z-10 p-5">
         {/* Header Section */}

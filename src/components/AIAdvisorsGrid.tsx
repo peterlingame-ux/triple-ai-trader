@@ -1,8 +1,9 @@
 import { CompactAdvisorCard } from "./CompactAdvisorCard";
 import { ProfessionalAIControls } from "./ProfessionalAIControls";
 import { useLanguage } from "@/hooks/useLanguage";
-import trumpAvatar from "../assets/trump-avatar.jpg";
 import { Brain } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 // AI advisors data
 const aiAdvisors = [
@@ -123,6 +124,28 @@ interface AIAdvisorsGridProps {
 
 export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGridProps) => {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const [activationStates, setActivationStates] = useState<Record<string, boolean>>({
+    "Elon Musk": true,
+    "Warren Buffett": true,
+    "Bill Gates": true,
+    "Vitalik Buterin": true,
+    "Justin Sun": true,
+    "Donald Trump": true
+  });
+
+  const handleActivationToggle = (name: string, isActive: boolean) => {
+    setActivationStates(prev => ({
+      ...prev,
+      [name]: isActive
+    }));
+    
+    toast({
+      title: isActive ? "顾问已激活" : "顾问已停用",
+      description: `${name} ${isActive ? '现在已激活并将提供投资建议' : '已停用，不再提供投资建议'}`,
+      duration: 3000,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -159,13 +182,14 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [] }: AIAdvisorsGri
             backgroundColor={advisor.backgroundColor}
             borderColor={advisor.borderColor}
             accentColor={advisor.accentColor}
-            isSpecial={advisor.isSpecial}
+            isSpecial={activationStates[advisor.name]}
             investmentStyle={advisor.investmentStyle}
             historicalReturn={advisor.historicalReturn}
             famousQuote={advisor.famousQuote}
             mainAchievements={advisor.mainAchievements}
             currentHoldings={advisor.currentHoldings}
             tags={advisor.tags}
+            onActivationToggle={handleActivationToggle}
           />
         ))}
       </div>
