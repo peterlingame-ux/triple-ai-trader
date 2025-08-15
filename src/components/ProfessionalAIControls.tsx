@@ -27,7 +27,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
           className="mb-4"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          返回AI控制中心
+          返回{t('ai.control_center')}
         </Button>
         <AutoTrader />
       </div>
@@ -67,8 +67,8 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                 <Brain className="w-6 h-6 text-yellow-400" />
               </div>
               <div className="flex-1">
-                <h4 className="font-semibold text-foreground font-inter mb-1">AI控制中心</h4>
-                <p className="text-xs text-muted-foreground">配置您的AI分析接口，管理实时分析功能</p>
+                <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.control_center')}</h4>
+                <p className="text-xs text-muted-foreground">{t('ai.control_center.description')}</p>
               </div>
               <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                 <Brain className="w-4 h-4 text-yellow-400" />

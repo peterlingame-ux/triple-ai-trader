@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useLanguage } from '@/hooks/useLanguage';
 import { 
   TrendingUp, 
   BarChart3, 
@@ -21,6 +22,7 @@ import {
 } from 'lucide-react';
 
 export function AIConfigPanel() {
+  const { t } = useLanguage();
   const [selectedCrypto, setSelectedCrypto] = useState('BTC');
   const [activeAnalysis, setActiveAnalysis] = useState<string | null>(null);
 
@@ -88,11 +90,11 @@ export function AIConfigPanel() {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 via-slate-700 to-slate-600 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
                 Supreme Brain
               </h1>
-              <p className="text-lg text-muted-foreground">高级AI交易分析系统</p>
+              <p className="text-lg text-muted-foreground">{t('ai.control_center.advanced_system')}</p>
             </div>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            融合三重AI智能分析，为您提供最专业的加密货币投资决策支持
+            {t('ai.control_center.integrated_analysis')}
           </p>
         </div>
 
@@ -102,8 +104,8 @@ export function AIConfigPanel() {
             <div className="flex items-center gap-3">
               <Settings className="h-6 w-6 text-primary" />
               <div>
-                <CardTitle className="text-2xl">AI接口配置中心</CardTitle>
-                <p className="text-muted-foreground mt-1">配置您的AI分析接口，开启智能交易之旅</p>
+                <CardTitle className="text-2xl">{t('ai.control_center.title')}</CardTitle>
+                <p className="text-muted-foreground mt-1">{t('ai.control_center.description')}</p>
               </div>
             </div>
           </CardHeader>
@@ -112,7 +114,7 @@ export function AIConfigPanel() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                  <span className="font-semibold text-blue-700 dark:text-blue-400">新闻分析引擎</span>
+                  <span className="font-semibold text-blue-700 dark:text-blue-400">{t('ai.control_center.news_engine')}</span>
                 </div>
                 <SecureAPIConfig
                   title="OpenAI API"
@@ -125,7 +127,7 @@ export function AIConfigPanel() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  <span className="font-semibold text-green-700 dark:text-green-400">技术分析引擎</span>
+                  <span className="font-semibold text-green-700 dark:text-green-400">{t('ai.control_center.technical_engine')}</span>
                 </div>
                 <SecureAPIConfig
                   title="Claude API"
@@ -138,7 +140,7 @@ export function AIConfigPanel() {
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                  <span className="font-semibold text-purple-700 dark:text-purple-400">数据分析引擎</span>
+                  <span className="font-semibold text-purple-700 dark:text-purple-400">{t('ai.control_center.bigdata_engine')}</span>
                 </div>
                 <SecureAPIConfig
                   title="Perplexity API"
@@ -163,12 +165,12 @@ export function AIConfigPanel() {
                   <div className="flex items-center gap-3">
                     <TrendingUp className="h-6 w-6 text-primary" />
                     <div>
-                      <CardTitle>市场概览</CardTitle>
-                      <p className="text-sm text-muted-foreground">选择要分析的数字货币</p>
+                      <CardTitle>{t('ai.control_center.market_overview')}</CardTitle>
+                      <p className="text-sm text-muted-foreground">{t('ai.control_center.select_crypto')}</p>
                     </div>
                   </div>
                   <Badge variant="outline" className="px-4 py-2">
-                    实时数据
+                    {t('ai.control_center.realtime_data')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -211,8 +213,8 @@ export function AIConfigPanel() {
                   <div className="flex items-center gap-3">
                     <LineChart className="h-6 w-6 text-primary" />
                     <div>
-                      <CardTitle>{selectedCrypto} 实时图表</CardTitle>
-                      <p className="text-sm text-muted-foreground">专业K线图表与技术指标</p>
+                      <CardTitle>{selectedCrypto} {t('ai.control_center.realtime_chart')}</CardTitle>
+                      <p className="text-sm text-muted-foreground">{t('ai.control_center.professional_chart_desc')}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">

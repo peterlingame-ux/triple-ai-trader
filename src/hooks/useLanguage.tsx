@@ -896,6 +896,28 @@ const translations = {
     'labels.mainHoldings': '主要持仓',
     'labels.confidence': '信心度',
 
+    // AI control center additional translations
+    'ai.control_center.advanced_system': 'Advanced AI Trading Analysis System',
+    'ai.control_center.integrated_analysis': 'Integrating triple AI intelligent analysis to provide the most professional cryptocurrency investment decision support',
+    'ai.control_center.market_overview': 'Market Overview',
+    'ai.control_center.select_crypto': 'Select cryptocurrency to analyze',
+    'ai.control_center.realtime_data': 'Real-time Data',
+    'ai.control_center.realtime_chart': 'Real-time Chart',
+    'ai.control_center.professional_chart': 'Professional K-line Chart & Technical Indicators',
+    'ai.control_center.tradingview_chart': 'TradingView Professional Chart',
+    'ai.control_center.multi_timeframe': 'Supports multiple timeframes, technical indicators and drawing tools',
+    'ai.control_center.technical_overview': 'Technical Indicators Overview',
+    'ai.control_center.realtime_indicators': 'Real-time calculated key technical indicators',
+    'ai.control_center.quick_actions': 'Quick Actions',
+    'ai.control_center.market_scan': 'Market Scan',
+    'ai.control_center.risk_assessment': 'Risk Assessment',
+    'ai.control_center.export_report': 'Export Report',
+    'ai.control_center.core_features': 'Core Features',
+    'ai.control_center.ai_result_display': 'AI analysis results will be displayed here',
+    'ai.control_center.detailed_report': 'Including detailed analysis reports and recommendations',
+    'ai.control_center.analyzing': 'Analyzing...',
+    'ai.control_center.start_analysis': 'Start Analysis',
+
     // 缺失的常用翻译
     'button.collapse': '收起',
     'button.view_all': '查看全部',
