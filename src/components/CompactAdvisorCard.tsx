@@ -205,7 +205,7 @@ export const CompactAdvisorCard = ({
 
         {/* Investment Tags */}
         <div className="flex flex-wrap gap-1.5 mb-4">
-          {tags.slice(0, 3).map((tag, index) => (
+          {Array.isArray(tags) && tags.slice(0, 3).map((tag, index) => (
             <Badge 
               key={index} 
               variant="outline" 
@@ -247,7 +247,7 @@ export const CompactAdvisorCard = ({
             </span>
           </div>
           <div className="flex flex-wrap gap-1">
-            {currentHoldings.slice(0, 3).map((holding, index) => (
+            {Array.isArray(currentHoldings) && currentHoldings.slice(0, 3).map((holding, index) => (
               <Badge 
                 key={index} 
                 className={`text-xs px-2 py-0.5 border backdrop-blur-sm transition-all duration-200 ${
@@ -296,7 +296,7 @@ export const CompactAdvisorCard = ({
                   主要成就
                 </p>
                 <ul className="space-y-1">
-                  {mainAchievements.slice(0, 3).map((achievement, index) => (
+                  {Array.isArray(mainAchievements) && mainAchievements.slice(0, 3).map((achievement, index) => (
                     <li key={index} className="text-gray-300 text-xs flex items-start gap-1">
                       <span className="w-1 h-1 bg-emerald-400 rounded-full mt-1.5 flex-shrink-0" />
                       {achievement}

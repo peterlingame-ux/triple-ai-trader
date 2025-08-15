@@ -327,13 +327,6 @@ const translations = {
     'crypto.supplyRatio': 'Supply Ratio',
     
     // Crypto card translations
-    'crypto.volume24h': '24h Volume',
-    'crypto.marketCap': 'Market Cap',
-    'crypto.circulatingSupply': 'Circulating Supply',
-    'crypto.marketRank': 'Market Rank',
-    'crypto.marketDominance': 'Market Dominance',
-    'crypto.maxSupply': 'Max Supply',
-    'crypto.supplyRatio': 'Supply Ratio',
 
     // 3D Icon Showcase translations
     'showcase.title': 'Real 3D Static Icon Showcase',
