@@ -9,90 +9,15 @@ import { CryptoData, OpportunityAlert } from "@/types/api";
 
 interface SuperBrainDetectionProps {
   cryptoData?: CryptoData[];
-  activatedAdvisors?: string[];
 }
 
-export const SuperBrainDetection = ({ cryptoData, activatedAdvisors = [] }: SuperBrainDetectionProps) => {
+export const SuperBrainDetection = ({ cryptoData }: SuperBrainDetectionProps) => {
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [currentAlert, setCurrentAlert] = useState<OpportunityAlert | null>(null);
   const { toast } = useToast();
-  
-  // AI advisors data
-  const aiAdvisorsData = [
-    {
-      name: "Elon Musk",
-      specialty: "远见科技与市场颠覆",
-      avatar: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png",
-      backgroundColor: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
-      borderColor: "border-blue-500/30",
-      accentColor: "text-blue-300",
-      investmentStyle: "颠覆性创新",
-      historicalReturn: "+340%",
-      netWorth: "$219.2 Billion"
-    },
-    {
-      name: "Warren Buffett",
-      specialty: "价值投资与长期财富建设",
-      avatar: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png",
-      backgroundColor: "bg-gradient-to-br from-amber-900 via-yellow-900 to-orange-800",
-      borderColor: "border-amber-500/30",
-      accentColor: "text-amber-300",
-      investmentStyle: "价值投资",
-      historicalReturn: "+20.1%",
-      netWorth: "$118.3 Billion"
-    },
-    {
-      name: "Bill Gates",
-      specialty: "科技创新与慈善投资",
-      avatar: "/lovable-uploads/a11e3b1a-1c1c-403b-910c-bd42820384c4.png",
-      backgroundColor: "bg-gradient-to-br from-emerald-900 via-teal-900 to-cyan-800",
-      borderColor: "border-emerald-500/30",
-      accentColor: "text-emerald-300",
-      investmentStyle: "科技创新",
-      historicalReturn: "+28.5%",
-      netWorth: "$128.6 Billion"
-    },
-    {
-      name: "Vitalik Buterin",
-      specialty: "区块链与去中心化",
-      avatar: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png",
-      backgroundColor: "bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-800",
-      borderColor: "border-violet-500/30",
-      accentColor: "text-violet-300",
-      investmentStyle: "去中心化未来",
-      historicalReturn: "+1,200%",
-      netWorth: "$400 Million"
-    },
-    {
-      name: "Justin Sun",
-      specialty: "TRON生态与营销",
-      avatar: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png",
-      backgroundColor: "bg-gradient-to-br from-rose-900 via-pink-900 to-red-800",
-      borderColor: "border-rose-500/30",
-      accentColor: "text-rose-300",
-      investmentStyle: "营销驱动增长",
-      historicalReturn: "+890%",
-      netWorth: "$1.1 Billion"
-    },
-    {
-      name: "Donald Trump",
-      specialty: "房地产与品牌投资",
-      avatar: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png",
-      backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
-      borderColor: "border-yellow-500/30",
-      accentColor: "text-yellow-300",
-      investmentStyle: "品牌价值驱动",
-      historicalReturn: "+156%",
-      netWorth: "$2.6 Billion"
-    }
-  ];
-
-  const getActivatedAdvisorCards = () => {
-    return aiAdvisorsData.filter(advisor => activatedAdvisors.includes(advisor.name));
-  };
 
   // Mock API call - 预留接口
   const performSuperBrainAnalysis = async () => {
@@ -203,151 +128,16 @@ export const SuperBrainDetection = ({ cryptoData, activatedAdvisors = [] }: Supe
   return (
     <div className="space-y-6">
       {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
-            <Brain className="w-10 h-10" />
-            SUPREME BRAIN
-          </h1>
-          <p className="text-slate-400 max-w-2xl mx-auto">
-            六个顶级AI模型协同分析，只在胜率达到90%以上时提醒您最佳交易时机
-          </p>
+      <div className="text-center mb-8">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <Brain className="w-8 h-8 text-yellow-400" />
+          <h2 className="text-3xl font-bold text-white">最强大脑自动检测</h2>
+          <Zap className="w-8 h-8 text-yellow-400" />
         </div>
-
-        {/* All Advisors Display */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-6">
-            <Brain className="w-5 h-5 text-blue-400" />
-            <h2 className="text-xl font-semibold text-white">AI顾问状态</h2>
-            <Badge variant="outline" className="text-green-400 border-green-400/20">
-              {activatedAdvisors.length}/6 位激活中
-            </Badge>
-          </div>
-          
-          {/* All Advisors Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-            {aiAdvisorsData.map((advisor, index) => {
-              const isActivated = activatedAdvisors.includes(advisor.name);
-              return (
-                <Card 
-                  key={index} 
-                  className={`${
-                    isActivated 
-                      ? `${advisor.backgroundColor} ${advisor.borderColor}` 
-                      : 'bg-gray-800/50 border-gray-600/30'
-                  } border relative overflow-hidden transition-all duration-300 ${
-                    isActivated ? 'opacity-100' : 'opacity-60 grayscale'
-                  }`}
-                >
-                  {/* Activation Status Badge */}
-                  <div className="absolute top-3 right-3 z-10">
-                    <Badge className={`px-2 py-1 text-xs ${
-                      isActivated 
-                        ? 'bg-green-500/20 text-green-300 border-green-500/50' 
-                        : 'bg-gray-500/20 text-gray-400 border-gray-500/50'
-                    }`}>
-                      {isActivated ? (
-                        <>
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          激活中
-                        </>
-                      ) : (
-                        <>
-                          <XCircle className="w-3 h-3 mr-1" />
-                          未激活
-                        </>
-                      )}
-                    </Badge>
-                  </div>
-
-                  <div className="p-4">
-                    {/* Avatar */}
-                    <div className={`w-16 h-16 rounded-full overflow-hidden border-2 ${
-                      isActivated ? 'border-white/20' : 'border-gray-500/20'
-                    } mx-auto mb-3`}>
-                      <img 
-                        src={advisor.avatar} 
-                        alt={advisor.name}
-                        className={`w-full h-full object-cover transition-all duration-300 ${
-                          isActivated ? '' : 'grayscale'
-                        }`}
-                      />
-                    </div>
-
-                    {/* Name and Specialty */}
-                    <div className="text-center mb-3">
-                      <h3 className={`font-bold text-sm mb-1 ${
-                        isActivated ? 'text-white' : 'text-gray-400'
-                      }`}>
-                        {advisor.name}
-                      </h3>
-                      <p className={`text-xs ${
-                        isActivated ? advisor.accentColor : 'text-gray-500'
-                      }`}>
-                        {advisor.specialty}
-                      </p>
-                    </div>
-
-                    {/* Investment Info */}
-                    <div className="space-y-2 text-xs">
-                      <div className="flex justify-between items-center">
-                        <span className={isActivated ? 'text-slate-400' : 'text-gray-500'}>
-                          投资风格
-                        </span>
-                        <span className={isActivated ? 'text-white' : 'text-gray-400'}>
-                          {advisor.investmentStyle}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className={isActivated ? 'text-slate-400' : 'text-gray-500'}>
-                          历史回报
-                        </span>
-                        <span className={`font-medium ${
-                          isActivated 
-                            ? advisor.historicalReturn.includes('+') 
-                              ? 'text-green-400' 
-                              : 'text-red-400'
-                            : 'text-gray-400'
-                        }`}>
-                          {advisor.historicalReturn}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Net Worth */}
-                    <div className={`mt-3 p-2 rounded border ${
-                      isActivated 
-                        ? 'bg-white/5 border-white/10' 
-                        : 'bg-gray-700/30 border-gray-600/20'
-                    }`}>
-                      <div className="text-center">
-                        <div className={`text-xs ${
-                          isActivated ? 'text-slate-400' : 'text-gray-500'
-                        }`}>
-                          个人净资产
-                        </div>
-                        <div className={`text-sm font-bold ${
-                          isActivated ? advisor.accentColor : 'text-gray-400'
-                        }`}>
-                          {advisor.netWorth}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Inactive Overlay */}
-                    {!isActivated && (
-                      <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center">
-                        <div className="text-center">
-                          <XCircle className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-400 text-xs font-medium">未激活</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+        <p className="text-slate-400 max-w-2xl mx-auto">
+          六个顶级AI模型协同分析，只在胜率达到90%以上时提醒您最佳交易时机
+        </p>
+      </div>
 
       {/* Control Panel */}
       <Card className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 border-slate-600 backdrop-blur-sm">

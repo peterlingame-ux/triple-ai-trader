@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WalletConnector } from "./WalletConnector";
+
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
 // import { AIOpportunityAlert } from "./AIOpportunityAlert"; // Temporarily disabled
 import { UserProfile } from "./UserProfile";
+
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
@@ -19,31 +21,14 @@ import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
-import { CryptoData, NewsArticle } from "@/types/api";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
 
 
-interface TradingDashboardProps {
-  cryptoData: CryptoData[];
-  newsData: NewsArticle[];
-  onOpenAIControlCenter: () => void;
-  activationStates?: Record<string, boolean>;
-  onActivationChange?: (states: Record<string, boolean>) => void;
-}
-
-export const TradingDashboard = ({ 
-  cryptoData, 
-  newsData, 
-  onOpenAIControlCenter,
-  activationStates = {},
-  onActivationChange
-}: TradingDashboardProps) => {
+export const TradingDashboard = () => {
   const { t } = useLanguage();
-  const { cryptoData: hookCryptoData, newsData: hookNewsData, loading, error, refreshData } = useCryptoData();
-  // Use provided props or fallback to hook data
-  const finalCryptoData = cryptoData.length > 0 ? cryptoData : hookCryptoData;
-  const finalNewsData = newsData.length > 0 ? newsData : hookNewsData;
+  const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
+  const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
@@ -60,12 +45,10 @@ export const TradingDashboard = ({
     };
   }, []);
   
-  const { getPortfolioData, isWalletConnected } = useWalletData();
-  
   // Memoize filtered crypto data for performance
   const filteredCryptoData = useMemo(() => 
-    filterCryptoData(finalCryptoData, searchQuery), 
-    [finalCryptoData, searchQuery]
+    filterCryptoData(cryptoData, searchQuery), 
+    [cryptoData, searchQuery]
   );
 
   // Get portfolio data from either wallet or auto-trader
@@ -187,7 +170,7 @@ export const TradingDashboard = ({
               onSearch={handleSearch}
               onClearSearch={handleClearSearch}
               searchQuery={searchQuery}
-              totalCryptos={finalCryptoData.length}
+              totalCryptos={cryptoData.length}
               filteredCount={filteredCryptoData.length}
             />
           </div>
@@ -235,12 +218,7 @@ export const TradingDashboard = ({
 
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
-        <AIAdvisorsGrid 
-          cryptoData={finalCryptoData} 
-          newsData={finalNewsData}
-          activationStates={activationStates}
-          onActivationChange={onActivationChange}
-        />
+          <AIAdvisorsGrid cryptoData={cryptoData} newsData={newsData} />
         </div>
 
         {/* Upcoming Advisors Section */}
