@@ -103,7 +103,7 @@ const aiAdvisors = [
     confidence: 93,
     recommendation: "BUY REAL ESTATE, GOLD",
     netWorth: "$2.6 Billion",
-    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiByeD0iMTAwIiBmaWxsPSIjMzc0MTUxIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iODAiIGZpbGw9IiM2Mzc0OEQiLz4KPHN2ZyB4PSI3NSIgeT0iNjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI4MCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjRkZGRkZGIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyUzYuNDggMjIgMTIgMjJTMjIgMTcuNTIgMjIgMTJTMTcuNTIgMiAxMiAyWk0xMy4xOSAxNS4zMkgxMC44MlYxM0gxMy4xOVYxNS4zMlpNMTMuNjggMTEuMjlIMTAuMzJWOC43MUgxMy42OFYxMS4yOVoiLz4KPC9zdmc+Cjwvc3ZnPg==",
+    avatar: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png",
     backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
     borderColor: "border-yellow-500/30",
     accentColor: "text-yellow-300",
