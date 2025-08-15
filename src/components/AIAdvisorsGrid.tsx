@@ -66,7 +66,7 @@ const aiAdvisors = [
     confidence: 96,
     recommendation: "BUY ETH, STAKE ETH",
     netWorth: "$400 Million",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=face",
+    avatar: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png",
     backgroundColor: "bg-gradient-to-br from-violet-900 via-purple-900 to-indigo-800",
     borderColor: "border-violet-500/30",
     accentColor: "text-violet-300",
