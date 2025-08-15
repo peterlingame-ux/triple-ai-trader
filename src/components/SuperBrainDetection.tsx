@@ -213,74 +213,141 @@ export const SuperBrainDetection = ({ cryptoData, activatedAdvisors = [] }: Supe
           </p>
         </div>
 
-        {/* Activated Advisors Display */}
-        {activatedAdvisors.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-6">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <h2 className="text-xl font-semibold text-white">已激活的AI顾问</h2>
-              <Badge variant="outline" className="text-green-400 border-green-400/20">
-                {activatedAdvisors.length} 位激活中
-              </Badge>
-            </div>
-            
-            {/* Activated Advisors Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-              {getActivatedAdvisorCards().map((advisor, index) => (
-                <Card key={index} className={`${advisor.backgroundColor} ${advisor.borderColor} border relative overflow-hidden`}>
+        {/* All Advisors Display */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-6">
+            <Brain className="w-5 h-5 text-blue-400" />
+            <h2 className="text-xl font-semibold text-white">AI顾问状态</h2>
+            <Badge variant="outline" className="text-green-400 border-green-400/20">
+              {activatedAdvisors.length}/6 位激活中
+            </Badge>
+          </div>
+          
+          {/* All Advisors Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            {aiAdvisorsData.map((advisor, index) => {
+              const isActivated = activatedAdvisors.includes(advisor.name);
+              return (
+                <Card 
+                  key={index} 
+                  className={`${
+                    isActivated 
+                      ? `${advisor.backgroundColor} ${advisor.borderColor}` 
+                      : 'bg-gray-800/50 border-gray-600/30'
+                  } border relative overflow-hidden transition-all duration-300 ${
+                    isActivated ? 'opacity-100' : 'opacity-60 grayscale'
+                  }`}
+                >
                   {/* Activation Status Badge */}
                   <div className="absolute top-3 right-3 z-10">
-                    <Badge className="bg-green-500/20 text-green-300 border-green-500/50 px-2 py-1 text-xs">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      激活中
+                    <Badge className={`px-2 py-1 text-xs ${
+                      isActivated 
+                        ? 'bg-green-500/20 text-green-300 border-green-500/50' 
+                        : 'bg-gray-500/20 text-gray-400 border-gray-500/50'
+                    }`}>
+                      {isActivated ? (
+                        <>
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          激活中
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-3 h-3 mr-1" />
+                          未激活
+                        </>
+                      )}
                     </Badge>
                   </div>
 
                   <div className="p-4">
                     {/* Avatar */}
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 mx-auto mb-3">
+                    <div className={`w-16 h-16 rounded-full overflow-hidden border-2 ${
+                      isActivated ? 'border-white/20' : 'border-gray-500/20'
+                    } mx-auto mb-3`}>
                       <img 
                         src={advisor.avatar} 
                         alt={advisor.name}
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full object-cover transition-all duration-300 ${
+                          isActivated ? '' : 'grayscale'
+                        }`}
                       />
                     </div>
 
                     {/* Name and Specialty */}
                     <div className="text-center mb-3">
-                      <h3 className="text-white font-bold text-sm mb-1">{advisor.name}</h3>
-                      <p className={`text-xs ${advisor.accentColor}`}>{advisor.specialty}</p>
+                      <h3 className={`font-bold text-sm mb-1 ${
+                        isActivated ? 'text-white' : 'text-gray-400'
+                      }`}>
+                        {advisor.name}
+                      </h3>
+                      <p className={`text-xs ${
+                        isActivated ? advisor.accentColor : 'text-gray-500'
+                      }`}>
+                        {advisor.specialty}
+                      </p>
                     </div>
 
                     {/* Investment Info */}
                     <div className="space-y-2 text-xs">
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400">投资风格</span>
-                        <span className="text-white">{advisor.investmentStyle}</span>
+                        <span className={isActivated ? 'text-slate-400' : 'text-gray-500'}>
+                          投资风格
+                        </span>
+                        <span className={isActivated ? 'text-white' : 'text-gray-400'}>
+                          {advisor.investmentStyle}
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400">历史回报</span>
-                        <span className={`font-medium ${advisor.historicalReturn.includes('+') ? 'text-green-400' : 'text-red-400'}`}>
+                        <span className={isActivated ? 'text-slate-400' : 'text-gray-500'}>
+                          历史回报
+                        </span>
+                        <span className={`font-medium ${
+                          isActivated 
+                            ? advisor.historicalReturn.includes('+') 
+                              ? 'text-green-400' 
+                              : 'text-red-400'
+                            : 'text-gray-400'
+                        }`}>
                           {advisor.historicalReturn}
                         </span>
                       </div>
                     </div>
 
                     {/* Net Worth */}
-                    <div className="mt-3 p-2 bg-white/5 rounded border border-white/10">
+                    <div className={`mt-3 p-2 rounded border ${
+                      isActivated 
+                        ? 'bg-white/5 border-white/10' 
+                        : 'bg-gray-700/30 border-gray-600/20'
+                    }`}>
                       <div className="text-center">
-                        <div className="text-xs text-slate-400">个人净资产</div>
-                        <div className={`text-sm font-bold ${advisor.accentColor}`}>
+                        <div className={`text-xs ${
+                          isActivated ? 'text-slate-400' : 'text-gray-500'
+                        }`}>
+                          个人净资产
+                        </div>
+                        <div className={`text-sm font-bold ${
+                          isActivated ? advisor.accentColor : 'text-gray-400'
+                        }`}>
                           {advisor.netWorth}
                         </div>
                       </div>
                     </div>
+
+                    {/* Inactive Overlay */}
+                    {!isActivated && (
+                      <div className="absolute inset-0 bg-gray-900/30 flex items-center justify-center">
+                        <div className="text-center">
+                          <XCircle className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                          <p className="text-gray-400 text-xs font-medium">未激活</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </Card>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        )}
+        </div>
 
       {/* Control Panel */}
       <Card className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 border-slate-600 backdrop-blur-sm">
