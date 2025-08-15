@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
 import { SuperBrainDetection } from "./SuperBrainDetection";
 import { logger } from "@/utils/errorHandler";
+import { useLanguage } from "@/hooks/useLanguage";
 
 // Import avatars
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
@@ -25,6 +26,7 @@ interface AIControlCenterProps {
 }
 
 export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AIControlCenterProps) => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
@@ -113,8 +115,8 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
   const AIConfigurationPanel = () => (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">AI控制中心</h2>
-        <p className="text-slate-400">配置您的AI分析接口，开启智能交易之旅</p>
+        <h2 className="text-3xl font-bold text-white mb-2">{t('ai.control_center.title')}</h2>
+        <p className="text-slate-400">{t('ai.control_center.description')}</p>
       </div>
 
       {/* System Status Overview */}
@@ -122,37 +124,37 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
         <div className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <Monitor className="w-5 h-5 text-green-400" />
-            <h3 className="text-lg font-semibold text-white">系统状态概览</h3>
+            <h3 className="text-lg font-semibold text-white">{t('ai.control_center.system_status')}</h3>
           </div>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={elonAvatar} alt="Elon Musk" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">新闻分析引擎</div>
+              <div className="text-sm text-white font-medium">{t('ai.control_center.news_engine')}</div>
               <div className="text-xs text-slate-400">Elon Musk</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={warrenAvatar} alt="Warren Buffett" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">技术分析引擎</div>
+              <div className="text-sm text-white font-medium">{t('ai.control_center.technical_engine')}</div>
               <div className="text-xs text-slate-400">Warren Buffett</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={billAvatar} alt="Bill Gates" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">大数据分析引擎</div>
+              <div className="text-sm text-white font-medium">{t('ai.control_center.bigdata_engine')}</div>
               <div className="text-xs text-slate-400">Bill Gates</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">区块链分析引擎</div>
+              <div className="text-sm text-white font-medium">{t('ai.control_center.blockchain_engine')}</div>
               <div className="text-xs text-slate-400">Vitalik Buterin</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={justinAvatar} alt="Justin Sun" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">DeFi分析引擎</div>
+              <div className="text-sm text-white font-medium">{t('ai.control_center.defi_engine')}</div>
               <div className="text-xs text-slate-400">Justin Sun</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
               <img src={trumpAvatar} alt="Donald Trump" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">政策分析引擎</div>
+              <div className="text-sm text-white font-medium">{t('ai.control_center.policy_engine')}</div>
               <div className="text-xs text-slate-400">Donald Trump</div>
             </div>
           </div>
@@ -167,11 +169,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="flex items-center gap-3 mb-4">
               <img src={elonAvatar} alt="Elon Musk" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Elon Musk 分析配置</h3>
-                <Badge variant="outline" className="text-blue-400 border-blue-400/20 mt-1">新闻分析引擎</Badge>
+                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.elon_config')}</h3>
+                <Badge variant="outline" className="text-blue-400 border-blue-400/20 mt-1">{t('ai.control_center.news_engine')}</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">马斯克风格的创新思维分析和市场情绪评估</p>
+            <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.elon_desc')}</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -184,14 +186,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Elon Musk 分析引擎</span>
+                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Elon Musk {t('ai.control_center.news_engine')}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
-                    placeholder="输入您的 API Key (基于 OpenAI)"
+                    placeholder={`${t('ai.control_center.enter_api_key')} (${t('ai.control_center.news_engine')})`}
                     type="password"
                     value={aiConfigs.openai.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -202,7 +204,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
                   <Select
                     value={aiConfigs.openai.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
@@ -223,7 +225,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
               </div>
               
               <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
-                ⚠️ 请先登录以配置API密钥。登录后，您可以安全地存储和管理您的API密钥。
+                ⚠️ {t('ai.control_center.login_required')}
               </div>
             </div>
           </div>
@@ -235,11 +237,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="flex items-center gap-3 mb-4">
               <img src={warrenAvatar} alt="Warren Buffett" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Warren Buffett 分析配置</h3>
-                <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">技术分析引擎</Badge>
+                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.warren_config')}</h3>
+                <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{t('ai.control_center.technical_engine')}</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">价值投资大师的深度技术指标分析和长期投资判断</p>
+            <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.warren_desc')}</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -252,14 +254,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Warren Buffett 分析引擎</span>
+                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Warren Buffett {t('ai.control_center.technical_engine')}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
-                    placeholder="输入您的 API Key (基于 Claude)"
+                    placeholder={`${t('ai.control_center.enter_api_key')} (Claude)`}
                     type="password"
                     value={aiConfigs.claude.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -270,7 +272,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
                   <Select
                     value={aiConfigs.claude.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
@@ -291,7 +293,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
               </div>
               
               <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
-                🔒 登录后，您的API密钥将被加密并安全存储在Supabase中，它们远不会存储在您的浏览器中或以明文传输。
+                🔒 {t('ai.control_center.security_notice')}
               </div>
             </div>
           </div>
@@ -303,11 +305,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="flex items-center gap-3 mb-4">
               <img src={billAvatar} alt="Bill Gates" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Bill Gates 分析配置</h3>
-                <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">大数据分析引擎</Badge>
+                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.bill_config')}</h3>
+                <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">{t('ai.control_center.bigdata_engine')}</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">科技巨头的数据驱动分析和全球市场洞察</p>
+            <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.bill_desc')}</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -320,14 +322,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Bill Gates 分析引擎</span>
+                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Bill Gates {t('ai.control_center.bigdata_engine')}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
-                    placeholder="输入您的 API Key (基于 Grok)"
+                    placeholder={`${t('ai.control_center.enter_api_key')} (Grok)`}
                     type="password"
                     value={aiConfigs.grok.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -338,7 +340,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
                   <Select
                     value={aiConfigs.grok.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
@@ -367,11 +369,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="flex items-center gap-3 mb-4">
               <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Vitalik Buterin 分析配置</h3>
-                <Badge variant="outline" className="text-cyan-400 border-cyan-400/20 mt-1">区块链分析引擎</Badge>
+                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.vitalik_config')}</h3>
+                <Badge variant="outline" className="text-cyan-400 border-cyan-400/20 mt-1">{t('ai.control_center.blockchain_engine')}</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">以太坊创始人的区块链技术深度分析和智能合约洞察</p>
+            <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.vitalik_desc')}</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -384,14 +386,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Vitalik Buterin 分析引擎</span>
+                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Vitalik Buterin {t('ai.control_center.blockchain_engine')}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
-                    placeholder="输入您的 API Key (基于 OpenAI)"
+                    placeholder={`${t('ai.control_center.enter_api_key')} (OpenAI)`}
                     type="password"
                     value={aiConfigs.vitalik.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -402,7 +404,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
                   <Select
                     value={aiConfigs.vitalik.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
@@ -431,11 +433,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="flex items-center gap-3 mb-4">
               <img src={justinAvatar} alt="Justin Sun" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Justin Sun 分析配置</h3>
-                <Badge variant="outline" className="text-orange-400 border-orange-400/20 mt-1">DeFi分析引擎</Badge>
+                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.justin_config')}</h3>
+                <Badge variant="outline" className="text-orange-400 border-orange-400/20 mt-1">{t('ai.control_center.defi_engine')}</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">波场创始人的DeFi协议分析和去中心化金融趋势预测</p>
+            <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.justin_desc')}</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -448,14 +450,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Justin Sun 分析引擎</span>
+                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Justin Sun {t('ai.control_center.defi_engine')}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
-                    placeholder="输入您的 API Key (基于 Claude)"
+                    placeholder={`${t('ai.control_center.enter_api_key')} (Claude)`}
                     type="password"
                     value={aiConfigs.justin.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -466,7 +468,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
                   <Select
                     value={aiConfigs.justin.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
@@ -495,11 +497,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             <div className="flex items-center gap-3 mb-4">
               <img src={trumpAvatar} alt="Donald Trump" className="w-10 h-10 rounded-full object-cover" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Donald Trump 分析配置</h3>
-                <Badge variant="outline" className="text-red-400 border-red-400/20 mt-1">政策分析引擎</Badge>
+                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.trump_config')}</h3>
+                <Badge variant="outline" className="text-red-400 border-red-400/20 mt-1">{t('ai.control_center.policy_engine')}</Badge>
               </div>
             </div>
-            <p className="text-sm text-slate-400 mb-4">政策导向分析和宏观经济对加密货币市场的影响评估</p>
+            <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.trump_desc')}</p>
             
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -512,14 +514,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   }))}
                   className="rounded"
                 />
-                <span className="text-sm text-slate-300">启用 Donald Trump 分析引擎</span>
+                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Donald Trump {t('ai.control_center.policy_engine')}</span>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">API Key</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
-                    placeholder="输入您的 API Key (基于 OpenAI)"
+                    placeholder={`${t('ai.control_center.enter_api_key')} (OpenAI)`}
                     type="password"
                     value={aiConfigs.trump.apiKey}
                     onChange={(e) => setAiConfigs(prev => ({
@@ -530,7 +532,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型选择</label>
+                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
                   <Select
                     value={aiConfigs.trump.model}
                     onValueChange={(value) => setAiConfigs(prev => ({
@@ -564,50 +566,50 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
           <div className="p-6 h-full flex flex-col">
             <div className="flex items-center gap-2 mb-4">
               <Brain className="w-5 h-5 text-yellow-400" />
-              <h3 className="text-lg font-semibold text-white">AI分析聊天</h3>
+              <h3 className="text-lg font-semibold text-white">{t('ai.control_center.ai_analysis_chat')}</h3>
             </div>
             
             {/* AI Status Indicators */}
             <div className="space-y-2 mb-4">
               <div className="flex items-center gap-2 text-xs">
                 <img src={elonAvatar} alt="Elon Musk" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">新闻分析引擎</span>
+                <span className="text-slate-300">{t('ai.control_center.news_engine')}</span>
                 <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/20">Elon Musk</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <img src={warrenAvatar} alt="Warren Buffett" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">技术分析引擎</span>
+                <span className="text-slate-300">{t('ai.control_center.technical_engine')}</span>
                 <Badge variant="outline" className="text-xs text-purple-400 border-purple-400/20">Warren Buffett</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <img src={billAvatar} alt="Bill Gates" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">大数据分析引擎</span>
+                <span className="text-slate-300">{t('ai.control_center.bigdata_engine')}</span>
                 <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Bill Gates</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">区块链分析引擎</span>
+                <span className="text-slate-300">{t('ai.control_center.blockchain_engine')}</span>
                 <Badge variant="outline" className="text-xs text-cyan-400 border-cyan-400/20">Vitalik Buterin</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <img src={justinAvatar} alt="Justin Sun" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">DeFi分析引擎</span>
+                <span className="text-slate-300">{t('ai.control_center.defi_engine')}</span>
                 <Badge variant="outline" className="text-xs text-orange-400 border-orange-400/20">Justin Sun</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <img src={trumpAvatar} alt="Donald Trump" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">政策分析引擎</span>
+                <span className="text-slate-300">{t('ai.control_center.policy_engine')}</span>
                 <Badge variant="outline" className="text-xs text-red-400 border-red-400/20">Donald Trump</Badge>
               </div>
             </div>
             
             <div className="flex-1 space-y-4 mb-4">
               <div className="text-slate-300 text-sm">
-                针对选定的加密货币进行实时市场数据分析
+                {t('ai.control_center.analysis_desc')}
               </div>
               
               <div className="space-y-2">
-                <div className="text-yellow-400 text-sm font-medium mb-2">试试问:</div>
+                <div className="text-yellow-400 text-sm font-medium mb-2">{t('ai.control_center.try_asking')}</div>
                 {sampleQuestions.map((question, index) => (
                   <div 
                     key={index}
@@ -622,7 +624,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
 
             <div className="flex gap-2">
               <Input
-                placeholder="询问技术分析..."
+                placeholder={t('ai.control_center.ask_technical')}
                 value={analysisQuery}
                 onChange={(e) => setAnalysisQuery(e.target.value)}
                 className="bg-slate-700/50 border-slate-600 text-white placeholder-slate-400"
@@ -639,7 +641,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             {/* Multi-AI Analysis Status */}
             <div className="mt-3 text-xs text-center">
               <span className="text-slate-500">
-                已启用 {Object.values(aiConfigs).filter(config => config.enabled).length}/6 个AI引擎
+                {t('activation.activated')} {Object.values(aiConfigs).filter(config => config.enabled).length}/6 {t('ai.control_center.engines_enabled')}
               </span>
             </div>
           </div>
@@ -877,10 +879,10 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                 <Cpu className="w-6 h-6 text-black" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white font-orbitron">
-                  AI 控制中心
-                </h1>
-                <p className="text-sm text-slate-300">高级AI交易分析系统 - 统一管理平台</p>
+            <h1 className="text-2xl font-bold text-white font-orbitron">
+              {t('ai.control_center.title')}
+            </h1>
+            <p className="text-sm text-slate-300">{t('ai.control_center.description')}</p>
               </div>
             </div>
             <Button 
@@ -893,7 +895,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
             </Button>
           </DialogTitle>
           <DialogDescription className="text-slate-400 text-sm mt-2">
-            配置您的AI分析接口，管理实时分析功能，开启智能交易之旅
+            {t('ai.control_center.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -905,21 +907,21 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
               >
                 <Settings className="w-4 h-4 mr-2" />
-                AI 配置管理
+                {t('ai.control_center.title')}
               </TabsTrigger>
               <TabsTrigger 
                 value="analysis" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
               >
                 <Activity className="w-4 h-4 mr-2" />
-                实时分析
+                {t('ai.control_center.realtime_analysis')}
               </TabsTrigger>
               <TabsTrigger 
                 value="superbrain" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
               >
                 <Brain className="w-4 h-4 mr-2" />
-                最强大脑检测
+                {t('ai.control_center.supreme_brain_detection')}
               </TabsTrigger>
             </TabsList>
 
