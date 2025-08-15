@@ -231,6 +231,33 @@ const translations = {
     'ai.control_center.realtime_data': 'Real-time Data',
     'ai.control_center.realtime_chart': 'Real-time Chart',
     'ai.control_center.professional_chart_desc': 'Professional K-line Chart & Technical Indicators',
+    'ai.control_center.supreme_brain_detection': 'Supreme Brain Detection',
+    'ai.control_center.ai_analysis_chat': 'AI Analysis Chat', 
+    'ai.control_center.engines_enabled': 'AI engines enabled',
+
+    // Binance API configuration translations
+    'binance.api_config': 'Binance API Configuration',
+    'binance.config_description': 'Configure your Binance API for real-time trading data',
+    'binance.login_required': 'Login Required',
+    'binance.login_first': 'Please login first to configure your API keys',
+    'binance.api_secure_storage': 'Your API keys are securely encrypted and stored',
+
+    // Upcoming advisors translations
+    'advisors.trump.name': 'Donald Trump',
+    'advisors.trump.expertise': 'Business Empire Strategy',
+    'advisors.trump.status': '🔧 In Development',
+    'upcoming.specialty': 'Business Empire Strategist',
+    'upcoming.key.achievements': 'Key Achievements',
+    'upcoming.philosophy': 'Investment Philosophy',
+    'upcoming.core.skills': 'Core Skills',
+    'upcoming.experience': '50+ Years Business Experience',
+
+    // Authentication translations
+    'auth.login': 'Login',
+    'auth.register': 'Register', 
+    'auth.login_register': 'Login / Register',
+    'auth.logout': 'Logout',
+    'auth.loading': 'Loading...',
 
     // AI opportunity detection translations - Enhanced
       'ai.brain_detection': 'Supreme Brain AI Detection',
@@ -581,6 +608,13 @@ const translations = {
      'portfolio.currently_trading': '正在交易',
      
      'ai.communicate': '开始沟通',
+     
+     // 认证翻译
+     'auth.login': '登录',
+     'auth.register': '注册', 
+     'auth.login_register': '登录 / 注册',
+     'auth.logout': '退出登录',
+     'auth.loading': '加载中...',
     'wallet.connect': '连接钱包',
     'wallet.real': '真实钱包',
     'wallet.virtual': 'AI虚拟投资组合',
@@ -2847,11 +2881,6 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const t = (key: string, params?: Record<string, string>): string => {
     let translation = translations[language]?.[key] || key;
-    
-    // Debug: Log missing translations
-    if (translation === key && !translations[language]?.[key]) {
-      console.log(`Missing translation for key: "${key}" in language: "${language}"`);
-    }
     
     // Handle parameter substitution
     if (params) {

@@ -3,16 +3,18 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">加载中...</p>
+          <p className="text-muted-foreground">{t('auth.loading')}</p>
         </div>
       </div>
     );
@@ -34,14 +36,14 @@ const Index = () => {
                 </div>
                 <Button variant="outline" size="sm" onClick={signOut}>
                   <LogOut className="h-4 w-4 mr-2" />
-                  退出登录
+                  {t('auth.logout')}
                 </Button>
               </>
             ) : (
               <Link to="/auth">
                 <Button variant="default" size="sm">
                   <LogIn className="h-4 w-4 mr-2" />
-                  登录 / 注册
+                  {t('auth.login_register')}
                 </Button>
               </Link>
             )}
