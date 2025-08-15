@@ -16,7 +16,6 @@ interface CompactAdvisorCardProps {
   accentColor: string;
   investmentStyle: string;
   historicalReturn: string;
-  riskLevel: string;
   famousQuote: string;
   mainAchievements: string[];
   currentHoldings: string[];
@@ -36,7 +35,6 @@ export const CompactAdvisorCard = ({
   accentColor,
   investmentStyle,
   historicalReturn,
-  riskLevel,
   famousQuote,
   mainAchievements,
   currentHoldings,
@@ -58,15 +56,15 @@ export const CompactAdvisorCard = ({
       <div className="relative z-10">
         {/* Avatar and Name */}
         <div className="flex flex-col items-center mb-3">
-          <div className={`w-14 h-14 rounded-full overflow-hidden border-2 ${borderColor.replace('border-', 'border-').replace('/30', '/50')} shadow-lg mb-2`}>
+          <div className={`w-20 h-20 rounded-full overflow-hidden border-2 ${borderColor.replace('border-', 'border-').replace('/30', '/50')} shadow-lg mb-2`}>
             <img 
               src={avatar} 
               alt={name}
               className="w-full h-full object-cover"
             />
           </div>
-          <h3 className="text-white font-bold text-xs text-center">{name}</h3>
-          <p className={`${accentColor} text-xs text-center mb-1`}>{t(specialty)}</p>
+          <h3 className="text-white font-bold text-sm text-center">{name}</h3>
+          <p className={`${accentColor} text-xs text-center mb-1`}>{specialty}</p>
         </div>
 
         {/* Investment Style & Performance */}
@@ -80,12 +78,6 @@ export const CompactAdvisorCard = ({
             <span className="text-green-400 font-medium flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               {historicalReturn}
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-300">风险:</span>
-            <span className={`font-medium ${riskLevel === '低' ? 'text-green-400' : riskLevel === '中' ? 'text-yellow-400' : 'text-red-400'}`}>
-              {riskLevel}
             </span>
           </div>
         </div>
