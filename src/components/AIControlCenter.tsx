@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
   const [analysisQuery, setAnalysisQuery] = useState("");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiConfigs, setAiConfigs] = useState({
     openai: { enabled: false, apiKey: "", model: "gpt-4o-mini" },
     claude: { enabled: false, apiKey: "", model: "claude-3-5-sonnet-20241022" },
@@ -102,15 +103,28 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
     `${currentLanguage === 'zh' ? '当前市场情绪对' : 'How does current market sentiment affect '}${selectedCrypto}${currentLanguage === 'zh' ? '有什么影响?' : '?'}`
   ];
 
-  const handleMultiAIAnalysis = async () => {
-    if (!analysisQuery.trim()) return;
+  const handleMultiAIAnalysis = useCallback(async () => {
+    if (!analysisQuery.trim() || isAnalyzing) return;
     
-    logger.info("Starting multi-AI analysis", {
-      query: analysisQuery,
-      crypto: selectedCrypto,
-      aiConfigs: aiConfigs
-    }, 'AIControlCenter');
-  };
+    setIsAnalyzing(true);
+    try {
+      logger.info("Starting multi-AI analysis", {
+        query: analysisQuery,
+        crypto: selectedCrypto,
+        enabledConfigs: Object.entries(aiConfigs)
+          .filter(([_, config]) => config.enabled)
+          .map(([name, _]) => name)
+      }, 'AIControlCenter');
+      
+      // Add actual analysis logic here
+      // For now, just simulate delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      logger.error("Multi-AI analysis failed", { error }, 'AIControlCenter');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [analysisQuery, selectedCrypto, aiConfigs, isAnalyzing]);
 
   const AIConfigurationPanel = () => (
     <div className="space-y-6">

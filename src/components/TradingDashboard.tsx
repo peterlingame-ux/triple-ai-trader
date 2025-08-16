@@ -34,17 +34,19 @@ export const TradingDashboard = () => {
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
   const [advisorStates, setAdvisorStates] = useState<Record<string, boolean>>({});
 
-  // Listen for AI Control Center open events
+  // Listen for AI Control Center open events - 优化事件监听
   useEffect(() => {
     const handleOpenAIControlCenter = () => {
-      setShowAIControlCenter(true);
+      if (!showAIControlCenter) { // 避免重复打开
+        setShowAIControlCenter(true);
+      }
     };
 
     window.addEventListener('openAIControlCenter', handleOpenAIControlCenter);
     return () => {
       window.removeEventListener('openAIControlCenter', handleOpenAIControlCenter);
     };
-  }, []);
+  }, [showAIControlCenter]);
   
   // Memoize filtered crypto data for performance
   const filteredCryptoData = useMemo(() => 

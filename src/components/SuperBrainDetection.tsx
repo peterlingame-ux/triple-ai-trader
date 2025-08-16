@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Brain, TrendingUp, TrendingDown, AlertTriangle, Play, Pause, Settings, CheckCircle, XCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoData, OpportunityAlert } from "@/types/api";
@@ -115,26 +115,30 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     return null;
   };
 
-  // 自动检测循环
+  // 自动检测循环 - 优化性能
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
     if (isMonitoring) {
       interval = setInterval(async () => {
         setLastCheckTime(new Date());
-        const alert = await performSuperBrainAnalysis();
-        
-        if (alert) {
-          setAlerts(prev => [alert, ...prev.slice(0, 9)]); // 保持最多10条记录
-          setCurrentAlert(alert);
-          setShowAlert(true);
+        try {
+          const alert = await performSuperBrainAnalysis();
           
-          // Display system notification
-          toast({
-            title: t('ai.high_probability_opportunity'),
-            description: `${alert.symbol} ${alert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}，${t('ai.win_rate')}${alert.confidence}%`,
-            duration: 15000, // 15 second reminder
-          });
+          if (alert) {
+            setAlerts(prev => [alert, ...prev.slice(0, 9)]); // 保持最多10条记录
+            setCurrentAlert(alert);
+            setShowAlert(true);
+            
+            // Display system notification
+            toast({
+              title: t('ai.high_probability_opportunity'),
+              description: `${alert.symbol} ${alert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}，${t('ai.win_rate')}${alert.confidence}%`,
+              duration: 15000, // 15 second reminder
+            });
+          }
+        } catch (error) {
+          console.error('Detection analysis error:', error);
         }
       }, 30000); // 每30秒检测一次
     }
@@ -142,7 +146,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isMonitoring, toast]);
+  }, [isMonitoring, toast, t]);
 
   const toggleMonitoring = () => {
     setIsMonitoring(!isMonitoring);
@@ -363,6 +367,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               <Brain className="w-6 h-6" />
               {t('ai.high_probability_opportunity')}
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              {t('ai.high_probability_opportunity')}
+            </DialogDescription>
           </DialogHeader>
           
           {currentAlert && (
