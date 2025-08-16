@@ -1,0 +1,108 @@
+/* Mobile desktop-like experience styles */
+
+/* Custom scrollbar for better desktop-like feel on mobile */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Enhanced mobile typography for desktop-like density */
+@media (max-width: 768px) {
+  .mobile-dense-text {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  .mobile-compact-grid {
+    gap: 8px;
+  }
+  
+  /* Better touch targets for mobile */
+  button, .clickable {
+    min-height: 32px;
+    min-width: 32px;
+  }
+  
+  /* Optimize card spacing for density */
+  .crypto-card-mobile {
+    padding: 8px;
+    margin: 4px;
+  }
+  
+  /* Improved readability on small screens */
+  .mobile-text-optimize {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Desktop viewport simulation on mobile */
+.desktop-mode-mobile {
+  zoom: 0.75;
+  transform-origin: top left;
+}
+
+/* Performance optimizations for mobile */
+.mobile-optimized {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Better hover states for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:scale-105:hover {
+    transform: scale(1.02);
+  }
+  
+  .hover\:shadow-lg:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Prevent zoom on input focus for mobile */
+input, select, textarea {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* Better grid responsiveness */
+.responsive-crypto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .responsive-crypto-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-crypto-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+}

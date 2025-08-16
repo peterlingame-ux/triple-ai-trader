@@ -61,7 +61,7 @@ export const ProfessionalCryptoGrid = memo<ProfessionalCryptoGridProps>(({
   return (
     <div className="relative">
       <div 
-        className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-3 transition-all duration-300 ${
+        className={`grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3 transition-all duration-300 ${
           isAnimating ? 'opacity-70 scale-[0.98]' : 'opacity-100 scale-100'
         }`}
       >
