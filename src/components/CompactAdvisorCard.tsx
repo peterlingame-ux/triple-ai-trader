@@ -293,7 +293,7 @@ export const CompactAdvisorCard = ({
               <div>
                 <p className="text-white font-semibold text-xs mb-2 flex items-center gap-1">
                   <Star className="w-3 h-3" />
-                  主要成就
+                  {t('advisor.mainAchievements')}
                 </p>
                 <ul className="space-y-1">
                   {Array.isArray(mainAchievements) && mainAchievements.slice(0, 3).map((achievement, index) => (
@@ -306,7 +306,7 @@ export const CompactAdvisorCard = ({
               </div>
               
               <div>
-                <p className="text-white font-semibold text-xs mb-2">投资理念</p>
+                <p className="text-white font-semibold text-xs mb-2">{t('advisor.investmentPhilosophy')}</p>
                 <div className="bg-white/10 rounded p-2 border-l-2 border-emerald-400">
                   <p className="text-gray-200 text-xs italic leading-relaxed">"{famousQuote}"</p>
                 </div>

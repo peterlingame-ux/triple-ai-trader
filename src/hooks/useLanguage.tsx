@@ -471,6 +471,7 @@ const translations = {
     // AI advisor detailed information translations
     'advisor.netWorth': 'Personal Net Worth',
     'advisor.representativeWorks': 'Representative Works',
+    'advisor.mainAchievements': 'Main Achievements',
     'advisor.investmentExpertise': 'Investment Expertise',
     'advisor.investmentPhilosophy': 'Investment Philosophy',
     'advisor.currentAnalysis': 'Current Market Analysis',

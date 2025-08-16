@@ -95,7 +95,7 @@ export const BillProfile = ({ name, specialty, confidence, recommendation, reaso
         <div className="mb-6">
           <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
             <Award className="w-4 h-4" />
-            {t('advisor.representativeWorks')}
+            {t('advisor.mainAchievements')}
           </h3>
           <div className="grid grid-cols-2 gap-3">
             {achievements.map((achievement, index) => (
