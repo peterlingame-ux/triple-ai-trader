@@ -258,6 +258,20 @@ const translations = {
     'auth.login_register': 'Login / Register',
     'auth.logout': 'Logout',
     'auth.loading': 'Loading...',
+    'auth.back': 'Back',
+    'auth.login_description': 'Login to access your secure trading dashboard',
+    'auth.sign_in': 'Sign In',
+    'auth.sign_up': 'Sign Up',
+    'auth.email': 'Email',
+    'auth.email_placeholder': 'Enter your email',
+    'auth.password': 'Password',
+    'auth.password_placeholder': 'Enter your password',
+    'auth.create_password_placeholder': 'Create password',
+    'auth.registration_error': 'Registration Error',
+    'auth.check_email': 'Check your email',
+    'auth.confirmation_sent': 'We sent you a confirmation link to complete registration.',
+    'auth.login_error': 'Login Error',
+    'auth.security_notice': 'Your API keys and trading data are encrypted and securely protected',
     
     // Supreme Brain Detection translations  
     'ai.supreme_brain_detection': 'Supreme Brain Auto Detection',
@@ -694,12 +708,26 @@ const translations = {
      
      'ai.communicate': '开始沟通',
      
-     // 认证翻译
-     'auth.login': '登录',
-     'auth.register': '注册', 
-     'auth.login_register': '登录 / 注册',
-     'auth.logout': '退出登录',
-     'auth.loading': '加载中...',
+      // 认证翻译
+      'auth.login': '登录',
+      'auth.register': '注册', 
+      'auth.login_register': '登录 / 注册',
+      'auth.logout': '退出登录',
+      'auth.loading': '加载中...',
+      'auth.back': '返回',
+      'auth.login_description': '登录以访问您的安全交易仪表板',
+      'auth.sign_in': '登录',
+      'auth.sign_up': '注册',
+      'auth.email': '邮箱',
+      'auth.email_placeholder': '输入您的邮箱',
+      'auth.password': '密码',
+      'auth.password_placeholder': '输入您的密码',
+      'auth.create_password_placeholder': '创建密码',
+      'auth.registration_error': '注册错误',
+      'auth.check_email': '查看您的邮箱',
+      'auth.confirmation_sent': '我们已向您发送确认链接以完成注册。',
+      'auth.login_error': '登录错误',
+      'auth.security_notice': '您的API密钥和交易数据已加密并安全保护',
      
      // 最强大脑检测翻译
      'ai.supreme_brain_detection': '最强大脑自动检测',

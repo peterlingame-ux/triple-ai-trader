@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ export default function Auth() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -56,14 +58,14 @@ export default function Auth() {
     if (error) {
       setError(error.message);
       toast({
-        title: "Registration Error",
+        title: t('auth.registration_error'),
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Check your email",
-        description: "We sent you a confirmation link to complete registration.",
+        title: t('auth.check_email'),
+        description: t('auth.confirmation_sent'),
       });
     }
     setLoading(false);
@@ -82,7 +84,7 @@ export default function Auth() {
     if (error) {
       setError(error.message);
       toast({
-        title: "Login Error",
+        title: t('auth.login_error'),
         description: error.message,
         variant: "destructive"
       });
@@ -101,41 +103,41 @@ export default function Auth() {
             onClick={() => navigate('/')}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            返回
+            {t('auth.back')}
           </Button>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            加密货币交易平台
+            {t('app.title')}
           </CardTitle>
           <CardDescription>
-            登录以访问您的安全交易仪表板
+            {t('auth.login_description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">登录</TabsTrigger>
-              <TabsTrigger value="signup">注册</TabsTrigger>
+              <TabsTrigger value="signin">{t('auth.sign_in')}</TabsTrigger>
+              <TabsTrigger value="signup">{t('auth.sign_up')}</TabsTrigger>
             </TabsList>
             
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email">邮箱</Label>
+                  <Label htmlFor="signin-email">{t('auth.email')}</Label>
                   <Input
                     id="signin-email"
                     type="email"
-                    placeholder="输入您的邮箱"
+                    placeholder={t('auth.email_placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signin-password">密码</Label>
+                  <Label htmlFor="signin-password">{t('auth.password')}</Label>
                   <Input
                     id="signin-password"
                     type="password"
-                    placeholder="输入您的密码"
+                    placeholder={t('auth.password_placeholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -143,7 +145,7 @@ export default function Auth() {
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  登录
+                  {t('auth.sign_in')}
                 </Button>
               </form>
             </TabsContent>
@@ -151,22 +153,22 @@ export default function Auth() {
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">邮箱</Label>
+                  <Label htmlFor="signup-email">{t('auth.email')}</Label>
                   <Input
                     id="signup-email"
                     type="email"
-                    placeholder="输入您的邮箱"
+                    placeholder={t('auth.email_placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-password">密码</Label>
+                  <Label htmlFor="signup-password">{t('auth.password')}</Label>
                   <Input
                     id="signup-password"
                     type="password"
-                    placeholder="创建密码"
+                    placeholder={t('auth.create_password_placeholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -175,7 +177,7 @@ export default function Auth() {
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  注册
+                  {t('auth.sign_up')}
                 </Button>
               </form>
             </TabsContent>
@@ -189,7 +191,7 @@ export default function Auth() {
 
           <div className="mt-6 p-4 bg-secondary/50 rounded-lg">
             <p className="text-sm text-muted-foreground text-center">
-              🔒 您的API密钥和交易数据已加密并安全保护
+              🔒 {t('auth.security_notice')}
             </p>
           </div>
         </CardContent>
