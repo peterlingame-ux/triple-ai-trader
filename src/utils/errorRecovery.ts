@@ -229,8 +229,13 @@ export const errorRecoverySystem = {
       event.preventDefault(); // Prevent default browser error handling
     });
     
-    // Handle uncaught errors
+    // Handle uncaught errors with ResizeObserver filtering
     window.addEventListener('error', (event) => {
+      // Filter out ResizeObserver errors to prevent spam
+      if (event.message.includes('ResizeObserver loop completed')) {
+        return; // Silently ignore these errors
+      }
+      
       logger.error('Uncaught error', { 
         message: event.message,
         filename: event.filename,
