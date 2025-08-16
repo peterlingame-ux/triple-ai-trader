@@ -277,7 +277,70 @@ const baseTranslations = {
   'crypto.marketRank': 'Market Rank',
   'crypto.marketDominance': 'Market Dominance',
   'crypto.maxSupply': 'Max Supply',
-  'crypto.supplyRatio': 'Supply Ratio'
+  'crypto.supplyRatio': 'Supply Ratio',
+
+  // Advisors main
+  'advisors.more_models': 'More Models',
+  'advisors.not_alone': 'You Are Not Alone',
+  'advisors.coming_soon': 'Coming Soon',
+  'advisors.coming_soon_status': 'Coming Soon',
+  
+  // Individual advisor names and details
+  'advisors.trump.name': 'Donald Trump',
+  'advisors.trump.status': 'Available',
+  'advisors.quantitative.name': 'Quantitative Master',
+  'advisors.quantitative.specialty': 'Quantitative Analysis & Algorithmic Trading',
+  'advisors.quantitative.expertise': 'Quant Analysis',
+  'advisors.crypto.name': 'Crypto Specialist',
+  'advisors.crypto.specialty': 'Cryptocurrency Market Analysis',
+  'advisors.crypto.expertise': 'Crypto Trading',
+  'advisors.macro.name': 'Macro Economist',
+  'advisors.macro.specialty': 'Macroeconomic Analysis & Global Markets',
+  'advisors.macro.expertise': 'Macro Strategy',
+  
+  // Upcoming advisors details
+  'upcoming.description.trump': 'Real estate mogul and business leader with decades of investment experience',
+  'upcoming.description.quant': 'Advanced quantitative analysis using mathematical models and algorithms',
+  'upcoming.description.crypto': 'Specialized in cryptocurrency market dynamics and blockchain technology',
+  'upcoming.description.macro': 'Expert in global economic trends and macroeconomic policy analysis',
+  
+  'upcoming.title.trump': 'Business Mogul & Investment Strategist',
+  'upcoming.title.quant': 'Quantitative Analysis Expert',
+  'upcoming.title.crypto': 'Cryptocurrency Market Specialist',
+  'upcoming.title.macro': 'Global Macro Economist',
+  
+  'upcoming.achievements.trump.1': 'Trump Organization Chairman',
+  'upcoming.achievements.trump.2': '45th President of the United States',
+  'upcoming.achievements.trump.3': 'Real Estate Development Empire',
+  'upcoming.achievements.trump.4': 'Brand Licensing & Media Success',
+  'upcoming.achievements.tbd': 'To Be Announced',
+  
+  'upcoming.specialty.trump': 'Real Estate Investment, Brand Building, and Strategic Asset Management',
+  'upcoming.specialty.quant': 'Mathematical Models, Statistical Analysis, and Algorithmic Trading Systems',
+  'upcoming.specialty.crypto': 'Blockchain Technology, DeFi Protocols, and Cryptocurrency Market Analysis',
+  'upcoming.specialty.macro': 'Global Economic Policy, Interest Rate Analysis, and Currency Markets',
+  
+  'upcoming.experience.trump': '40+ Years in Business',
+  'upcoming.experience.quant': 'Advanced Analytics',
+  'upcoming.experience.crypto': 'Blockchain Innovation',
+  'upcoming.experience.macro': 'Global Economics',
+  
+  'upcoming.philosophy.trump': 'Make deals that create lasting value and build strong brands',
+  'upcoming.philosophy.quant': 'Data-driven decisions eliminate emotion from trading',
+  'upcoming.philosophy.crypto': 'Decentralization is the future of finance',
+  'upcoming.philosophy.macro': 'Global economic cycles drive all market movements',
+  
+  'upcoming.skills.trump.1': 'Real Estate',
+  'upcoming.skills.trump.2': 'Branding',
+  'upcoming.skills.trump.3': 'Negotiation',
+  'upcoming.skills.trump.4': 'Media Strategy',
+  
+  'upcoming.key.achievements': 'Key Achievements',
+  'upcoming.specialty': 'Specialty',
+  'upcoming.philosophy': 'Investment Philosophy',
+  'upcoming.core.skills': 'Core Skills',
+  'upcoming.experience': 'Experience',
+  'upcoming.elite.assembling': 'Elite Assembling'
 };
 
 const translations = {
@@ -322,6 +385,24 @@ const translations = {
     'ai.clear_history': '清除历史',
     'ai.detection_history': '检测历史',
     'ai.records': '条记录',
+    'ai.no_records_monitoring': '监控进行中，等待高概率机会...',
+    'ai.no_records_start': '暂无检测记录，请开始监控',
+    'ai.last_check': '最后检查',
+    'ai.monitoring_started': '最强大脑检测已启动',
+    'ai.monitoring_started_desc': '系统将每30秒自动分析市场机会',
+    'ai.monitoring_paused': '最强大脑检测已暂停',
+    'ai.monitoring_paused_desc': '已停止自动分析',
+    'ai.all_alerts_cleared': '所有提醒已清除',
+    'ai.history_cleared': '历史提醒记录已清除',
+    'ai.high_probability_opportunity': '最强大脑检测到高概率机会！',
+    'ai.buy_signal': '买入信号',
+    'ai.sell_signal': '卖出信号',
+    'ai.win_rate': '胜率',
+    'ai.price_analysis': '价格分析',
+    'ai.technical_indicators': '技术指标',
+    'ai.news_analysis': '新闻分析',
+    'ai.got_it': '知道了',
+    'ai.trade_now': '立即交易',
     'ai.kline_chart': 'K线图表与技术指标',
     'ai.professional_kline': '专业K线图表',
     'ai.realtime_data': '实时价格数据 + 技术指标叠加',
@@ -343,6 +424,24 @@ const translations = {
     'wallet.real': '真实钱包',
     'wallet.virtual': 'AI虚拟投资组合',
     'wallet.ai_virtual_badge': 'AI虚拟',
+    'wallet.connect_wallet': '连接钱包',
+    'wallet.multiple_options': '多种选择',
+    'wallet.connected': '已连接',
+    'wallet.address_short': '钱包地址',
+    'wallet.connect_title': '连接钱包',
+    'wallet.select_description': '选择最安全可靠的钱包开始交易和管理您的投资组合',
+    'wallet.address': '钱包地址：',
+    'wallet.network': '网络：',
+    'wallet.view_explorer': '在区块浏览器中查看',
+    'wallet.disconnect': '断开连接',
+    'wallet.connection_success': '钱包已连接',
+    'wallet.connection_success_desc': '成功连接到 {wallet}',
+    'wallet.connection_failed': '连接失败',
+    'wallet.connection_failed_desc': '连接钱包失败，请重试。',
+    'wallet.disconnected': '钱包已断开',
+    'wallet.disconnected_desc': '您的钱包已断开连接。',
+    'wallet.address_copied': '地址已复制',
+    'wallet.address_copied_desc': '钱包地址已复制到剪贴板。',
     'trading.spot': '现货交易',
     'trading.futures': '期货交易',
     'trading.options': '期权交易',
@@ -350,6 +449,7 @@ const translations = {
     'trading.type': '交易类型',
     'trading.leverage': '杠杆',
     'button.refresh': '刷新数据',
+    'button.show_top': '显示前6名',
     'button.all_categories': '所有类别',
     'button.collapse': '收起',
     'button.view_all': '查看全部',
@@ -360,6 +460,7 @@ const translations = {
     'search.currencies': '种加密货币',
     'search.filter': '搜索',
     'search.not_found': '未找到匹配的加密货币',
+    'search.try_other': '',
     'search.suggestion': '请尝试使用其他关键词搜索，如Bitcoin、BTC',
     'language.switch': '语言切换',
     'profile.personal': '个人资料',
@@ -448,7 +549,70 @@ const translations = {
     'crypto.marketRank': '市场排名',
     'crypto.marketDominance': '市场主导地位',
     'crypto.maxSupply': '最大供应量',
-    'crypto.supplyRatio': '供应比率'
+    'crypto.supplyRatio': '供应比率',
+
+    // Advisors main
+    'advisors.more_models': '更多模型',
+    'advisors.not_alone': '您并不孤单',
+    'advisors.coming_soon': '即将推出',
+    'advisors.coming_soon_status': '即将推出',
+    
+    // Individual advisor names and details
+    'advisors.trump.name': '唐纳德·特朗普',
+    'advisors.trump.status': '可用',
+    'advisors.quantitative.name': '量化大师',
+    'advisors.quantitative.specialty': '量化分析与算法交易',
+    'advisors.quantitative.expertise': '量化分析',
+    'advisors.crypto.name': '加密货币专家',
+    'advisors.crypto.specialty': '加密货币市场分析',
+    'advisors.crypto.expertise': '加密交易',
+    'advisors.macro.name': '宏观经济学家',
+    'advisors.macro.specialty': '宏观经济分析与全球市场',
+    'advisors.macro.expertise': '宏观策略',
+    
+    // Upcoming advisors details
+    'upcoming.description.trump': '房地产大亨和商界领袖，拥有数十年投资经验',
+    'upcoming.description.quant': '使用数学模型和算法进行高级量化分析',
+    'upcoming.description.crypto': '专门研究加密货币市场动态和区块链技术',
+    'upcoming.description.macro': '全球经济趋势和宏观经济政策分析专家',
+    
+    'upcoming.title.trump': '商业大亨与投资策略师',
+    'upcoming.title.quant': '量化分析专家',
+    'upcoming.title.crypto': '加密货币市场专家',
+    'upcoming.title.macro': '全球宏观经济学家',
+    
+    'upcoming.achievements.trump.1': '特朗普集团主席',
+    'upcoming.achievements.trump.2': '美国第45任总统',
+    'upcoming.achievements.trump.3': '房地产开发帝国',
+    'upcoming.achievements.trump.4': '品牌授权与媒体成功',
+    'upcoming.achievements.tbd': '待公布',
+    
+    'upcoming.specialty.trump': '房地产投资、品牌建设和战略资产管理',
+    'upcoming.specialty.quant': '数学模型、统计分析和算法交易系统',
+    'upcoming.specialty.crypto': '区块链技术、DeFi协议和加密货币市场分析',
+    'upcoming.specialty.macro': '全球经济政策、利率分析和货币市场',
+    
+    'upcoming.experience.trump': '40+年商业经验',
+    'upcoming.experience.quant': '高级分析',
+    'upcoming.experience.crypto': '区块链创新',
+    'upcoming.experience.macro': '全球经济学',
+    
+    'upcoming.philosophy.trump': '进行能创造持久价值并建立强势品牌的交易',
+    'upcoming.philosophy.quant': '数据驱动的决策消除交易中的情绪因素',
+    'upcoming.philosophy.crypto': '去中心化是金融的未来',
+    'upcoming.philosophy.macro': '全球经济周期驱动所有市场走势',
+    
+    'upcoming.skills.trump.1': '房地产',
+    'upcoming.skills.trump.2': '品牌建设',
+    'upcoming.skills.trump.3': '谈判',
+    'upcoming.skills.trump.4': '媒体策略',
+    
+    'upcoming.key.achievements': '主要成就',
+    'upcoming.specialty': '专业领域',
+    'upcoming.philosophy': '投资理念',
+    'upcoming.core.skills': '核心技能',
+    'upcoming.experience': '经验',
+    'upcoming.elite.assembling': '精英组装中'
   },
   
   ja: {
@@ -479,7 +643,26 @@ const translations = {
     'advisors.bill.specialty': 'テクノロジー革新＆慈善投資',
     'advisors.vitalik.specialty': 'ブロックチェーン＆分散化',
     'advisors.justin.specialty': 'TRONエコシステム＆マーケティング',
-    'advisors.trump.specialty': '不動産＆ブランド投資'
+    'advisors.trump.specialty': '不動産＆ブランド投資',
+    
+    // Missing keys for Japanese
+    'advisors.more_models': 'より多くのモデル',
+    'advisors.not_alone': 'あなたは一人ではありません',
+    'advisors.coming_soon': '近日公開',
+    'advisors.coming_soon_status': '近日公開',
+    'advisors.trump.name': 'ドナルド・トランプ',
+    'advisors.trump.status': '利用可能',
+    'advisors.quantitative.name': 'クオンツマスター',
+    'advisors.quantitative.specialty': 'クオンツ分析とアルゴリズム取引',
+    'advisors.quantitative.expertise': 'クオンツ分析',
+     'advisors.crypto.name': '暗号通貨専門家',
+    'advisors.crypto.specialty': '暗号通貨市場分析',
+    'advisors.crypto.expertise': '暗号取引',
+    'advisors.macro.name': 'マクロ経済学者',
+    'advisors.macro.specialty': 'マクロ経済分析とグローバル市場',
+    'advisors.macro.expertise': 'マクロ戦略',
+    'upcoming.description.trump': '数十年の投資経験を持つ不動産王と経営者',
+    'upcoming.elite.assembling': 'エリート集結中'
   },
   
   ko: {
@@ -510,7 +693,26 @@ const translations = {
     'advisors.bill.specialty': '기술 혁신 & 자선 투자',
     'advisors.vitalik.specialty': '블록체인 & 탈중앙화',
     'advisors.justin.specialty': 'TRON 생태계 & 마케팅',
-    'advisors.trump.specialty': '부동산 & 브랜드 투자'
+    'advisors.trump.specialty': '부동산 & 브랜드 투자',
+    
+    // Missing keys for Korean
+    'advisors.more_models': '더 많은 모델',
+    'advisors.not_alone': '당신은 혼자가 아닙니다',
+    'advisors.coming_soon': '곧 출시',
+    'advisors.coming_soon_status': '곧 출시',
+    'advisors.trump.name': '도널드 트럼프',
+    'advisors.trump.status': '사용 가능',
+    'advisors.quantitative.name': '퀀트 마스터',
+    'advisors.quantitative.specialty': '정량 분석 및 알고리즘 거래',
+    'advisors.quantitative.expertise': '퀀트 분석',
+    'advisors.crypto.name': '암호화폐 전문가',
+    'advisors.crypto.specialty': '암호화폐 시장 분석',
+    'advisors.crypto.expertise': '암호화폐 거래',
+    'advisors.macro.name': '거시경제학자',
+    'advisors.macro.specialty': '거시경제 분석 및 글로벌 시장',
+    'advisors.macro.expertise': '거시 전략',
+    'upcoming.description.trump': '수십 년의 투자 경험을 가진 부동산 거물과 비즈니스 리더',
+    'upcoming.elite.assembling': '엘리트 조립 중'
   },
   
   es: {
