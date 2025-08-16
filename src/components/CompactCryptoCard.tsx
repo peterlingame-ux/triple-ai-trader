@@ -29,43 +29,43 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   const isPositive = change >= 0;
   
   return (
-    <Card className="p-2 md:p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
+    <Card className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
       {/* Header - 3D Icon, Symbol & Price */}
-      <div className="flex items-center justify-between mb-1 md:mb-2">
-        <div className="flex items-center gap-1 md:gap-2">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
           <div className="flex-shrink-0">
-            <CryptoIcon symbol={symbol} size={24} />
+            <CryptoIcon symbol={symbol} size={32} />
           </div>
           <div>
-            <h3 className="text-foreground font-semibold text-xs md:text-sm font-mono tracking-wider">{symbol}</h3>
-            <p className="text-muted-foreground text-[8px] md:text-[10px] font-medium truncate max-w-[40px] md:max-w-none">{name}</p>
+            <h3 className="text-foreground font-semibold text-sm font-mono tracking-wider">{symbol}</h3>
+            <p className="text-muted-foreground text-[10px] font-medium truncate">{name}</p>
           </div>
         </div>
         
         {/* Price */}
         <div className="text-right">
-          <p className="text-foreground font-bold text-xs md:text-sm font-mono">
+          <p className="text-foreground font-bold text-sm font-mono">
             ${formatPrice(price)}
           </p>
-          <div className={`flex items-center gap-1 text-[10px] md:text-xs font-medium ${
+          <div className={`flex items-center gap-1 text-xs font-medium ${
             isPositive ? 'text-success' : 'text-destructive'
           }`}>
-            {isPositive ? <TrendingUp className="w-2 h-2 md:w-3 md:h-3" /> : <TrendingDown className="w-2 h-2 md:w-3 md:h-3" />}
+            {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
             {isPositive ? '+' : ''}{changePercent.toFixed(1)}%
           </div>
         </div>
       </div>
       
       {/* Change Amount */}
-      <div className="mb-1 md:mb-2">
-        <p className={`text-[10px] md:text-xs font-mono ${isPositive ? 'text-success' : 'text-destructive'}`}>
+      <div className="mb-2">
+        <p className={`text-xs font-mono ${isPositive ? 'text-success' : 'text-destructive'}`}>
           {isPositive ? '+' : ''}${Math.abs(change).toFixed(2)}
         </p>
       </div>
       
       {/* Compact Market Data */}
-      <div className="pt-1 md:pt-2 border-t border-border/30">
-        <div className="flex justify-between items-center text-[8px] md:text-[10px]">
+      <div className="pt-2 border-t border-border/30">
+        <div className="flex justify-between items-center text-[10px]">
           <div className="text-center">
             <p className="text-muted-foreground mb-1">{t('crypto.vol')}</p>
             <p className="text-foreground font-mono font-medium">
