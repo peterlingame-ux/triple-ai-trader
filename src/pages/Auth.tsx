@@ -143,9 +143,17 @@ export default function Auth() {
                     required
                   />
                 </div>
-                <Button type="submit" variant="signin" className="w-full h-12 text-base font-semibold" disabled={loading}>
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {t('auth.sign_in')}
+                <Button 
+                  type="submit" 
+                  variant="signin" 
+                  className="w-full h-12 text-base font-semibold relative overflow-hidden group" 
+                  disabled={loading}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/80 opacity-100 group-hover:opacity-90 transition-opacity duration-300"></div>
+                  <div className="relative z-10 flex items-center justify-center">
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t('auth.sign_in')}
+                  </div>
                 </Button>
               </form>
             </TabsContent>
@@ -175,9 +183,17 @@ export default function Auth() {
                     minLength={6}
                   />
                 </div>
-                <Button type="submit" variant="signup" className="w-full h-12 text-base font-semibold" disabled={loading}>
-                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {t('auth.sign_up')}
+                <Button 
+                  type="submit" 
+                  variant="signup" 
+                  className="w-full h-12 text-base font-semibold relative overflow-hidden group" 
+                  disabled={loading}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent via-accent/90 to-accent/80 opacity-100 group-hover:opacity-90 transition-opacity duration-300"></div>
+                  <div className="relative z-10 flex items-center justify-center">
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t('auth.sign_up')}
+                  </div>
                 </Button>
               </form>
             </TabsContent>
