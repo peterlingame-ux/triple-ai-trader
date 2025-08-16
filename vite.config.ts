@@ -19,38 +19,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  build: {
-    // Optimize build output
-    target: 'esnext',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: mode === 'production',
-        drop_debugger: mode === 'production',
-      },
-    },
-    rollupOptions: {
-      output: {
-        // Manual chunk splitting for better caching
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-tabs'],
-          crypto: ['ethers', 'lightweight-charts'],
-          utils: ['clsx', 'tailwind-merge', 'date-fns'],
-        },
-      },
-    },
-    // Increase chunk size warning limit
-    chunkSizeWarningLimit: 1000,
-  },
-  optimizeDeps: {
-    // Pre-bundle frequently used dependencies
-    include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      'lucide-react',
-      '@tanstack/react-query',
-    ],
-  },
 }));

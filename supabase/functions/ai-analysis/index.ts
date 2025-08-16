@@ -2,10 +2,10 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { corsHeaders } from '../_shared/cors.ts'
 
 interface AIAnalysisRequest {
-  type: 'price_chart' | 'technical_analysis' | 'news_sentiment' | 'market_trend' | 'multi_source' | 'portfolio_risk';
+  type: 'price_chart' | 'technical_analysis' | 'news_sentiment';
   data: any;
   config: {
-    provider: 'openai' | 'claude' | 'perplexity' | 'grok' | 'fusion' | 'risk_assessment';
+    provider: 'openai' | 'claude' | 'perplexity';
     model: string;
     apiKey: string;
     temperature?: number;
@@ -33,15 +33,6 @@ serve(async (req) => {
         break;
       case 'news_sentiment':
         analysisResult = await analyzeNewsSentiment(data, config);
-        break;
-      case 'market_trend':
-        analysisResult = await analyzeMarketTrend(data, config);
-        break;
-      case 'multi_source':
-        analysisResult = await analyzeMultiSource(data, config);
-        break;
-      case 'portfolio_risk':
-        analysisResult = await analyzePortfolioRisk(data, config);
         break;
       default:
         throw new Error('Invalid analysis type');
@@ -152,103 +143,15 @@ ${newsTexts}
   return await callAIAPI(prompt, config);
 }
 
-async function analyzeMarketTrend(data: any, config: any): Promise<string> {
-  const prompt = `作为加密货币市场趋势分析专家，分析以下市场数据并预测趋势：
-
-交易对: ${data.symbol}
-市场数据:
-- 当前价格: $${data.marketData.price}
-- 24小时成交量: ${data.marketData.volume24h}
-- 市值: $${data.marketData.marketCap}
-- 市场占有率: ${data.marketData.dominance}%
-- RSI: ${data.marketData.rsi}
-- MA20: $${data.marketData.ma20}
-- MA50: $${data.marketData.ma50}
-
-请分析：
-1. 短期趋势方向（1-7天）
-2. 中期趋势预测（1-4周）
-3. 关键转折点位置
-4. 趋势强度评估
-5. 具体操作建议（明确的BUY/SELL/HOLD）
-6. 趋势分析信心度（70-95%）
-
-回答必须包含明确的信心度，如"85%信心度看涨趋势"。`;
-
-  return await callAIAPI(prompt, config);
-}
-
-async function analyzeMultiSource(data: any, config: any): Promise<string> {
-  const prompt = `作为多源数据融合分析专家，综合分析以下三个维度的数据：
-
-价格数据分析结果:
-${JSON.stringify(data.price, null, 2)}
-
-技术分析结果:
-${JSON.stringify(data.technical, null, 2)}
-
-新闻情感结果:
-${JSON.stringify(data.news, null, 2)}
-
-请进行融合分析：
-1. 三个维度的一致性评估
-2. 数据冲突点识别和解释
-3. 综合信号强度计算
-4. 最终交易建议（明确的BUY/SELL/HOLD）
-5. 融合分析信心度（75-95%）
-6. 建议的仓位大小
-
-回答必须包含明确的信心度，如"90%信心度综合分析建议买入"。`;
-
-  return await callAIAPI(prompt, config);
-}
-
-async function analyzePortfolioRisk(data: any, config: any): Promise<string> {
-  const prompt = `作为投资组合风险管理专家，分析以下投资情况：
-
-交易对: ${data.symbol}
-当前余额: $${data.balance}
-已开仓位数量: ${data.positions.length}
-已开仓位详情:
-${data.positions.map(pos => `- ${pos.symbol}: ${pos.type} $${pos.size} (PnL: ${pos.pnlPercent}%)`).join('\n')}
-
-请进行风险评估：
-1. 单笔交易风险评估
-2. 投资组合集中度风险
-3. 最大回撤预估
-4. 建议的风险控制措施
-5. 仓位调整建议
-6. 风险评估信心度（80-95%）
-
-回答必须包含明确的信心度，如"88%信心度评估为中等风险"。`;
-
-  return await callAIAPI(prompt, config);
-}
-
 async function callAIAPI(prompt: string, config: any): Promise<string> {
   try {
-    // 优先使用Supabase Secrets中的API密钥
-    const openaiKey = Deno.env.get('OPENAI_API_KEY');
-    const claudeKey = Deno.env.get('CLAUDE_API_KEY');
-    const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
-    const grokKey = Deno.env.get('GROK_API_KEY');
-
-    // 根据provider选择对应的API密钥和调用方法
     switch (config.provider) {
       case 'openai':
-        return await callOpenAI(prompt, { ...config, apiKey: openaiKey || config.apiKey });
+        return await callOpenAI(prompt, config);
       case 'claude':
-        return await callClaude(prompt, { ...config, apiKey: claudeKey || config.apiKey });
+        return await callClaude(prompt, config);
       case 'perplexity':
-        return await callPerplexity(prompt, { ...config, apiKey: perplexityKey || config.apiKey });
-      case 'grok':
-        return await callGrok(prompt, { ...config, apiKey: grokKey || config.apiKey });
-      case 'fusion':
-        // 使用OpenAI作为融合分析的后端
-        return await callOpenAI(prompt, { ...config, apiKey: openaiKey || config.apiKey, model: 'gpt-4.1-2025-04-14' });
-      case 'risk_assessment':
-        // 使用Claude作为风险评估的后端  
-        return await callClaude(prompt, { ...config, apiKey: claudeKey || config.apiKey, model: 'claude-sonnet-4-20250514' });
+        return await callPerplexity(prompt, config);
       default:
         throw new Error('Unsupported AI provider');
     }
@@ -256,7 +159,7 @@ async function callAIAPI(prompt: string, config: any): Promise<string> {
     console.error('AI API call failed:', error);
     // Return fallback analysis with random confidence
     const confidence = Math.floor(Math.random() * 26) + 70; // 70-95%
-    return `基于${config.provider}分析，当前显示${confidence}%信心度的交易信号。建议根据风险承受能力进行操作。由于API调用失败，这是基于历史模式的分析结果。`;
+    return `基于技术分析，当前市场显示${confidence}%信心度的交易信号。建议根据风险承受能力进行操作。由于API调用失败，这是基于历史模式的分析结果。`;
   }
 }
 
@@ -348,38 +251,6 @@ async function callPerplexity(prompt: string, config: any): Promise<string> {
   const data = await response.json();
   if (data.error) {
     throw new Error(`Perplexity API Error: ${data.error.message}`);
-  }
-  
-  return data.choices[0]?.message?.content || 'API返回空响应';
-}
-
-async function callGrok(prompt: string, config: any): Promise<string> {
-  const response = await fetch('https://api.x.ai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${config.apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: config.model || 'grok-2-beta',
-      messages: [
-        {
-          role: 'system',
-          content: '你是专业的加密货币分析师。请基于最新市场信息进行分析。'
-        },
-        {
-          role: 'user',
-          content: prompt
-        }
-      ],
-      temperature: config.temperature || 0.1,
-      max_tokens: config.maxTokens || 800
-    }),
-  });
-
-  const data = await response.json();
-  if (data.error) {
-    throw new Error(`Grok API Error: ${data.error.message}`);
   }
   
   return data.choices[0]?.message?.content || 'API返回空响应';
