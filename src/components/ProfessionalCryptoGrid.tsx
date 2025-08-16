@@ -1,5 +1,6 @@
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useCallback } from "react";
 import { CompactCryptoCard } from "./CompactCryptoCard";
+import { useOptimizedCryptoRender } from "@/hooks/useOptimizedPerformance";
 
 interface CryptoData {
   symbol: string;
@@ -25,6 +26,13 @@ export const ProfessionalCryptoGrid = memo<ProfessionalCryptoGridProps>(({
 }) => {
   const [displayData, setDisplayData] = useState<CryptoData[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { shouldRender } = useOptimizedCryptoRender(cryptoData, showAll ? cryptoData.length : maxVisible);
+
+  const updateDisplayData = useCallback((newData: CryptoData[]) => {
+    if (shouldRender) {
+      setDisplayData(newData);
+    }
+  }, [shouldRender]);
 
   useEffect(() => {
     if (showAll !== undefined) {
@@ -33,22 +41,22 @@ export const ProfessionalCryptoGrid = memo<ProfessionalCryptoGridProps>(({
       // 添加短暂延迟来实现平滑过渡
       const timer = setTimeout(() => {
         const newData = showAll ? cryptoData : cryptoData.slice(0, maxVisible);
-        setDisplayData(newData);
+        updateDisplayData(newData);
         setIsAnimating(false);
       }, 150);
 
       return () => clearTimeout(timer);
     }
-  }, [cryptoData, showAll, maxVisible]);
+  }, [cryptoData, showAll, maxVisible, updateDisplayData]);
 
   // 初始化数据
   useEffect(() => {
     if (!showAll && cryptoData.length > 0) {
-      setDisplayData(cryptoData.slice(0, maxVisible));
+      updateDisplayData(cryptoData.slice(0, maxVisible));
     } else if (showAll) {
-      setDisplayData(cryptoData);
+      updateDisplayData(cryptoData);
     }
-  }, [cryptoData, showAll, maxVisible]);
+  }, [cryptoData, showAll, maxVisible, updateDisplayData]);
 
   return (
     <div className="relative">

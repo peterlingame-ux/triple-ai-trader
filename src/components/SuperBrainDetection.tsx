@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -115,38 +115,47 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     return null;
   };
 
-  // 自动检测循环 - 优化性能
+  // 自动检测循环 - 优化性能，使用useCallback减少不必要的重新创建
+  const performAnalysis = useCallback(async () => {
+    setLastCheckTime(new Date());
+    try {
+      const alert = await performSuperBrainAnalysis();
+      
+      if (alert) {
+        setAlerts(prev => {
+          const newAlerts = [alert, ...prev.slice(0, 9)]; // 保持最多10条记录
+          return newAlerts;
+        });
+        setCurrentAlert(alert);
+        setShowAlert(true);
+        
+        // Display system notification
+        toast({
+          title: t('ai.high_probability_opportunity'),
+          description: `${alert.symbol} ${alert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}，${t('ai.win_rate')}${alert.confidence}%`,
+          duration: 15000, // 15 second reminder
+        });
+      }
+    } catch (error) {
+      console.error('Detection analysis error:', error);
+    }
+  }, [toast, t]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
     if (isMonitoring) {
-      interval = setInterval(async () => {
-        setLastCheckTime(new Date());
-        try {
-          const alert = await performSuperBrainAnalysis();
-          
-          if (alert) {
-            setAlerts(prev => [alert, ...prev.slice(0, 9)]); // 保持最多10条记录
-            setCurrentAlert(alert);
-            setShowAlert(true);
-            
-            // Display system notification
-            toast({
-              title: t('ai.high_probability_opportunity'),
-              description: `${alert.symbol} ${alert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}，${t('ai.win_rate')}${alert.confidence}%`,
-              duration: 15000, // 15 second reminder
-            });
-          }
-        } catch (error) {
-          console.error('Detection analysis error:', error);
-        }
-      }, 30000); // 每30秒检测一次
+      // 立即执行一次
+      performAnalysis();
+      
+      // 增加检测间隔到60秒以减少性能消耗
+      interval = setInterval(performAnalysis, 60000);
     }
     
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isMonitoring, toast, t]);
+  }, [isMonitoring, performAnalysis]);
 
   const toggleMonitoring = () => {
     setIsMonitoring(!isMonitoring);

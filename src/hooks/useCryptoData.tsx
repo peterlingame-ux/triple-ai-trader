@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -164,8 +164,11 @@ const CRYPTO_NAMES = {
 };
 
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
+  // Memoize symbols to prevent unnecessary re-renders
+  const memoizedSymbols = useMemo(() => symbols, [symbols.join(',')]);
+  
   // Initialize with mock data immediately to avoid blank page
-  const generateMockData = (symbols: string[]): CryptoData[] => {
+  const generateMockData = useCallback((symbols: string[]): CryptoData[] => {
     return symbols.map((symbol, index) => {
       // 为不同加密货币设置合理的基础价格
       const basePrices: Record<string, number> = {
@@ -219,9 +222,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         resistance: Math.round(high24h * 1.02 * 100000) / 100000
       };
     });
-  };
+  }, []);
 
-  const [cryptoData, setCryptoData] = useState<CryptoData[]>(() => generateMockData(symbols));
+  const [cryptoData, setCryptoData] = useState<CryptoData[]>(() => generateMockData(memoizedSymbols));
   const [newsData, setNewsData] = useState<NewsArticle[]>([]);
   const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
@@ -310,7 +313,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     setNewsData(generateMockNews());
   }, [language]);
   
-  const fetchCryptoData = async () => {
+  const fetchCryptoData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -336,7 +339,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       }
       
       // 直接使用模拟数据，不尝试调用可能失败的API端点
-      const mockData = generateMockData(symbols);
+      const mockData = generateMockData(memoizedSymbols);
       setCryptoData(mockData);
       
       toast({
@@ -346,13 +349,13 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       
     } catch (err) {
       console.error('数据获取错误:', err);
-      const fallbackData = generateMockData(symbols);
+      const fallbackData = generateMockData(memoizedSymbols);
       setCryptoData(fallbackData);
       setError('网络错误，使用模拟数据');
     } finally {
       setLoading(false);
     }
-  };
+  }, [memoizedSymbols, generateMockData, toast]);
 
   // 获取币安API配置
   const getBinanceConfig = () => {
@@ -375,10 +378,10 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     }
   };
 
-  const fetchNewsData = async () => {
+  const fetchNewsData = useCallback(async () => {
     // 直接使用模拟数据，避免API调用失败
     setNewsData(generateMockNews());
-  };
+  }, [language]);
 
   useEffect(() => {
     fetchCryptoData();
@@ -398,16 +401,16 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       clearInterval(interval);
       clearInterval(newsInterval);
     };
-  }, [symbols.join(',')]);
+  }, [fetchCryptoData, fetchNewsData]);
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     fetchCryptoData();
     fetchNewsData();
     toast({
       title: "数据已刷新",
       description: "最新加密货币市场数据已加载",
     });
-  };
+  }, [fetchCryptoData, fetchNewsData, toast]);
 
   return {
     cryptoData,

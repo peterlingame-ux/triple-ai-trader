@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ import { AIControlCenter } from "./AIControlCenter";
 // Removed duplicate mock data - using centralized data from useCryptoData hook
 
 
-export const TradingDashboard = () => {
+export const TradingDashboard = memo(() => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
@@ -35,18 +35,18 @@ export const TradingDashboard = () => {
   const [advisorStates, setAdvisorStates] = useState<Record<string, boolean>>({});
 
   // Listen for AI Control Center open events - 优化事件监听
-  useEffect(() => {
-    const handleOpenAIControlCenter = () => {
-      if (!showAIControlCenter) { // 避免重复打开
-        setShowAIControlCenter(true);
-      }
-    };
+  const handleOpenAIControlCenter = useCallback(() => {
+    if (!showAIControlCenter) { // 避免重复打开
+      setShowAIControlCenter(true);
+    }
+  }, [showAIControlCenter]);
 
+  useEffect(() => {
     window.addEventListener('openAIControlCenter', handleOpenAIControlCenter);
     return () => {
       window.removeEventListener('openAIControlCenter', handleOpenAIControlCenter);
     };
-  }, [showAIControlCenter]);
+  }, [handleOpenAIControlCenter]);
   
   // Memoize filtered crypto data for performance
   const filteredCryptoData = useMemo(() => 
@@ -235,4 +235,6 @@ export const TradingDashboard = () => {
       </div>
     </div>
   );
-};
+});
+
+TradingDashboard.displayName = "TradingDashboard";
