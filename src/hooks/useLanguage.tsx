@@ -842,6 +842,11 @@ const translations = {
     'upcoming.achievements.trump.3': '《交易的艺术》作者',
     'upcoming.achievements.trump.4': '《学徒》电视节目制作人',
     'upcoming.achievements.tbd': '待揭晓',
+    'upcoming.specialty': '商业战略师',
+    'upcoming.key_achievements': '主要成就',
+    'upcoming.philosophy': '投资理念',
+    'upcoming.core_skills': '核心技能',
+    'upcoming.experience': '50+年商业经验',
     'upcoming.specialty.trump': '房地产投资，品牌建设，谈判艺术',
     'upcoming.specialty.quant': '算法交易，数据分析',
     'upcoming.specialty.crypto': 'DeFi，NFT，区块链投资',
@@ -970,6 +975,7 @@ const translations = {
     'autotrader.system_analyzing': '系统正在智能分析市场机会',
     'autotrader.ai_standby': 'AI系统待命中...',
     'autotrader.start_to_view': '启动自动交易以查看实时动态',
+    'autotrader.live_activity': '实时活动',
     
     // AI顾问翻译
     'advisors.elon.specialty': '远见科技与市场颠覆',
