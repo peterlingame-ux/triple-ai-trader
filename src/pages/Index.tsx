@@ -1,17 +1,29 @@
+import React, { useEffect } from "react";
 import { TradingDashboard } from "@/components/TradingDashboard";
+import { OptimizedTradingDashboard } from "@/components/OptimizedTradingDashboard";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import { performanceMonitor } from "@/utils/performanceMonitor";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
 
+  // Monitor page load performance
+  useEffect(() => {
+    performanceMonitor.start('page-load');
+    return () => {
+      performanceMonitor.end('page-load');
+      performanceMonitor.logSummary();
+    };
+  }, []);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">{t('auth.loading')}</p>
@@ -50,7 +62,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-      <TradingDashboard />
+      <OptimizedTradingDashboard />
     </div>
   );
 };

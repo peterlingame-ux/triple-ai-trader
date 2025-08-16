@@ -141,4 +141,46 @@
     backface-visibility: hidden;
     perspective: 1000px;
   }
+
+  /* Optimized loading states */
+  .loading-skeleton {
+    @apply animate-pulse bg-muted/50 rounded;
+  }
+
+  /* Smooth scroll optimizations */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Image optimization */
+  .optimized-image {
+    @apply object-cover transition-opacity duration-300;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  /* Focus ring optimization */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Grid auto-fit optimization */
+  .auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  /* Flex utilities for better performance */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  /* Text optimization */
+  .text-optimize {
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
