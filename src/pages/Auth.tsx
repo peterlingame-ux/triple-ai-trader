@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -146,14 +146,11 @@ export default function Auth() {
                 <Button 
                   type="submit" 
                   variant="signin" 
-                  className="w-full h-12 text-base font-semibold relative overflow-hidden group" 
+                  className="w-full h-12 text-base font-semibold" 
                   disabled={loading}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/80 opacity-100 group-hover:opacity-90 transition-opacity duration-300"></div>
-                  <div className="relative z-10 flex items-center justify-center">
-                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {t('auth.sign_in')}
-                  </div>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {t('auth.sign_in')}
                 </Button>
               </form>
             </TabsContent>
@@ -186,14 +183,11 @@ export default function Auth() {
                 <Button 
                   type="submit" 
                   variant="signup" 
-                  className="w-full h-12 text-base font-semibold relative overflow-hidden group" 
+                  className="w-full h-12 text-base font-semibold" 
                   disabled={loading}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-accent via-accent/90 to-accent/80 opacity-100 group-hover:opacity-90 transition-opacity duration-300"></div>
-                  <div className="relative z-10 flex items-center justify-center">
-                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {t('auth.sign_up')}
-                  </div>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {t('auth.sign_up')}
                 </Button>
               </form>
             </TabsContent>
