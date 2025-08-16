@@ -143,7 +143,7 @@ export default function Auth() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" variant="signin" className="w-full h-12 text-base font-semibold" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {t('auth.sign_in')}
                 </Button>
@@ -175,7 +175,7 @@ export default function Auth() {
                     minLength={6}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" variant="signup" className="w-full h-12 text-base font-semibold" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {t('auth.sign_up')}
                 </Button>
