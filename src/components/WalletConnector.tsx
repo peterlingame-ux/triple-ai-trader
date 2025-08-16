@@ -32,7 +32,7 @@ const walletOptions: WalletOption[] = [
     category: 'browser',
     securityLevel: 'high',
     platforms: ['Chrome', 'Firefox', 'Brave', 'Edge', 'iOS', 'Android'],
-    features: ['DApp集成', 'NFT支持', '多链支持', '硬件钱包支持'],
+    features: ['wallet.feature.dapp_integration', 'wallet.feature.nft_support', 'wallet.feature.multi_chain', 'wallet.feature.hardware_support'],
     marketShare: 35,
     isRecommended: true,
     isInstalled: typeof window !== 'undefined' && !!window.ethereum
@@ -45,7 +45,7 @@ const walletOptions: WalletOption[] = [
     category: 'browser',
     securityLevel: 'very-high',
     platforms: ['Chrome', 'Safari', 'iOS', 'Android'],
-    features: ['DApp浏览器', 'NFT画廊', '多链支持', '云备份'],
+    features: ['wallet.feature.dapp_browser', 'wallet.feature.nft_gallery', 'wallet.feature.multi_chain', 'wallet.feature.cloud_backup'],
     marketShare: 15,
     isRecommended: true
   },
@@ -56,8 +56,8 @@ const walletOptions: WalletOption[] = [
     icon: '🔗',
     category: 'browser',
     securityLevel: 'high',
-    platforms: ['通用', '所有设备'],
-    features: ['跨平台', '300+钱包支持', '二维码连接', '多链支持'],
+    platforms: ['wallet.platform.universal', 'wallet.platform.all_devices'],
+    features: ['wallet.feature.cross_platform', 'wallet.feature.300_wallets', 'wallet.feature.qr_connect', 'wallet.feature.multi_chain'],
     marketShare: 20
   },
   {
@@ -68,7 +68,7 @@ const walletOptions: WalletOption[] = [
     category: 'mobile',
     securityLevel: 'high',
     platforms: ['iOS', 'Android', 'Chrome'],
-    features: ['70+区块链', 'NFT支持', 'DApp浏览器', '质押功能'],
+    features: ['wallet.feature.70_blockchains', 'wallet.feature.nft_support', 'wallet.feature.dapp_browser', 'wallet.feature.staking'],
     marketShare: 12
   },
   {
@@ -79,7 +79,7 @@ const walletOptions: WalletOption[] = [
     category: 'browser',
     securityLevel: 'high',
     platforms: ['Chrome', 'Firefox', 'Brave', 'iOS', 'Android'],
-    features: ['Solana原生', 'NFT支持', 'DeFi集成', '多链支持'],
+    features: ['wallet.feature.solana_native', 'wallet.feature.nft_support', 'wallet.feature.defi_integration', 'wallet.feature.multi_chain'],
     marketShare: 8
   },
   {
@@ -90,7 +90,7 @@ const walletOptions: WalletOption[] = [
     category: 'mobile',
     securityLevel: 'high',
     platforms: ['iOS', 'Android', 'Chrome', 'Desktop'],
-    features: ['100+公链', 'DApp商店', 'NFT市场', '去中心化交易'],
+    features: ['wallet.feature.100_chains', 'wallet.feature.dapp_store', 'wallet.feature.nft_market', 'wallet.feature.dex_trading'],
     marketShare: 9,
     isRecommended: true
   },
@@ -103,8 +103,8 @@ const walletOptions: WalletOption[] = [
     icon: '🔐',
     category: 'hardware',
     securityLevel: 'extreme',
-    platforms: ['Nano S Plus', 'Nano X', '桌面端', '移动端'],
-    features: ['冷存储', '5500+币种', '蓝牙连接', '安全芯片'],
+    platforms: ['Nano S Plus', 'Nano X', 'wallet.platform.desktop', 'wallet.platform.mobile'],
+    features: ['wallet.feature.cold_storage', 'wallet.feature.5500_coins', 'wallet.feature.bluetooth', 'wallet.feature.secure_chip'],
     marketShare: 25,
     isRecommended: true
   },
@@ -115,8 +115,8 @@ const walletOptions: WalletOption[] = [
     icon: '⚡',
     category: 'hardware',
     securityLevel: 'extreme',
-    platforms: ['Model T', 'Model One', '桌面端', '网页端'],
-    features: ['开源代码', 'PIN保护', '1600+币种', '密码短语支持'],
+    platforms: ['Model T', 'Model One', 'wallet.platform.desktop', 'wallet.platform.web'],
+    features: ['wallet.feature.open_source', 'wallet.feature.pin_protection', 'wallet.feature.1600_coins', 'wallet.feature.passphrase'],
     marketShare: 15
   },
 
@@ -129,7 +129,7 @@ const walletOptions: WalletOption[] = [
     category: 'mobile',
     securityLevel: 'high',
     platforms: ['Windows', 'Mac', 'Linux', 'iOS', 'Android'],
-    features: ['260+资产', '内置交易', '投资组合跟踪', '硬件支持'],
+    features: ['wallet.feature.260_assets', 'wallet.feature.built_in_exchange', 'wallet.feature.portfolio_tracking', 'wallet.feature.hardware_support'],
     marketShare: 6
   },
   {
@@ -140,7 +140,7 @@ const walletOptions: WalletOption[] = [
     category: 'mobile',
     securityLevel: 'high',
     platforms: ['Windows', 'Mac', 'Linux', 'iOS', 'Android'],
-    features: ['500+资产', '原子交换', '质押功能', '购买加密货币'],
+    features: ['wallet.feature.500_assets', 'wallet.feature.atomic_swaps', 'wallet.feature.staking', 'wallet.feature.buy_crypto'],
     marketShare: 4
   },
 
@@ -152,8 +152,8 @@ const walletOptions: WalletOption[] = [
     icon: '🏛️',
     category: 'institutional',
     securityLevel: 'extreme',
-    platforms: ['网页端', '移动端', '桌面端'],
-    features: ['多重签名', '团队管理', '高级安全', 'DeFi集成'],
+    platforms: ['wallet.platform.web', 'wallet.platform.mobile', 'wallet.platform.desktop'],
+    features: ['wallet.feature.multi_sig', 'wallet.feature.team_management', 'wallet.feature.advanced_security', 'wallet.feature.defi_integration'],
     marketShare: 3
   },
   {
@@ -164,7 +164,7 @@ const walletOptions: WalletOption[] = [
     category: 'mobile',
     securityLevel: 'very-high',
     platforms: ['iOS', 'Android'],
-    features: ['社交恢复', '免Gas交易', 'DeFi原生', '二层网络'],
+    features: ['wallet.feature.social_recovery', 'wallet.feature.gasless_tx', 'wallet.feature.defi_native', 'wallet.feature.layer2'],
     marketShare: 2
   },
 
@@ -177,7 +177,7 @@ const walletOptions: WalletOption[] = [
     category: 'mobile',
     securityLevel: 'high',
     platforms: ['iOS', 'Android', 'Chrome'],
-    features: ['交易所集成', '理财产品', '多链支持', '法币入金'],
+    features: ['wallet.feature.exchange_integration', 'wallet.feature.yield_products', 'wallet.feature.multi_chain', 'wallet.feature.fiat_onramp'],
     marketShare: 7
   },
   {
@@ -188,7 +188,7 @@ const walletOptions: WalletOption[] = [
     category: 'browser',
     securityLevel: 'high',
     platforms: ['Chrome', 'Firefox', 'iOS', 'Android'],
-    features: ['多链支持', 'NFT市场', 'DeFi协议', '交易所集成'],
+    features: ['wallet.feature.multi_chain', 'wallet.feature.nft_market', 'wallet.feature.defi_protocols', 'wallet.feature.exchange_integration'],
     marketShare: 5
   }
 ];
@@ -516,12 +516,12 @@ export const WalletConnector = () => {
                     {/* Features */}
                     <div>
                       <p className="text-slate-400 text-xs mb-1">{t('wallet.key_features')}</p>
-                      <div className="flex flex-wrap gap-1">
-                        {wallet.features.slice(0, 2).map((feature) => (
-                          <Badge key={feature} className="bg-blue-500/20 text-blue-400 text-xs">
-                            {feature}
-                          </Badge>
-                        ))}
+                       <div className="flex flex-wrap gap-1">
+                         {wallet.features.slice(0, 2).map((feature) => (
+                           <Badge key={feature} className="bg-blue-500/20 text-blue-400 text-xs">
+                             {t(feature)}
+                           </Badge>
+                         ))}
                         {wallet.features.length > 2 && (
                           <Badge className="bg-slate-600/20 text-slate-400 text-xs">
                             {t('wallet.more_features').replace('{count}', String(wallet.features.length - 2))}

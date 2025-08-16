@@ -243,12 +243,12 @@ export const UserProfile = () => {
                 {isUploading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mr-2" />
-                    处理中...
+                    {t('profile.processing')}
                   </>
                 ) : (
                   <>
                     <Upload className="w-4 h-4 mr-2" />
-                    上传头像
+                    {t('profile.upload_avatar')}
                   </>
                 )}
               </Button>
@@ -262,7 +262,7 @@ export const UserProfile = () => {
                   className="rounded"
                 />
                 <Label htmlFor="removeBackground" className="text-muted-foreground cursor-pointer">
-                  自动移除背景
+                  {t('profile.remove_background')}
                 </Label>
               </div>
             </div>
@@ -271,13 +271,13 @@ export const UserProfile = () => {
           {/* Name Section */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-sm font-medium">
-              姓名
+              {t('profile.name_label')}
             </Label>
             <Input
               id="name"
               value={tempName}
               onChange={(e) => setTempName(e.target.value)}
-              placeholder="输入您的姓名"
+              placeholder={t('profile.name_placeholder')}
               className="bg-slate-700 border-slate-600 text-foreground"
             />
           </div>
@@ -289,14 +289,14 @@ export const UserProfile = () => {
               onClick={cancelEdit}
               className="flex-1"
             >
-              取消
+              {t('profile.cancel')}
             </Button>
             <Button
               onClick={saveProfile}
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
               disabled={!tempName.trim()}
             >
-              保存
+              {t('profile.save')}
             </Button>
           </div>
         </div>
