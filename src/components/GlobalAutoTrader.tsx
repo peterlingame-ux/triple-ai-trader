@@ -17,6 +17,13 @@ interface TradingAlert {
   reasoning: string;
   timestamp: Date;
   profit?: number;
+  leverage?: number;
+  contractType?: 'spot' | 'futures' | 'margin';
+  direction?: 'long' | 'short';
+  hasAddedPosition?: boolean;
+  duration?: number; // in minutes
+  startDate?: Date;
+  endDate?: Date;
 }
 
 export const GlobalAutoTrader = () => {
@@ -60,6 +67,10 @@ export const GlobalAutoTrader = () => {
   }, [isAutoTradingEnabled]);
 
   const executeAutoTrade = (signalData: any) => {
+    const startDate = new Date();
+    const duration = Math.floor(Math.random() * 1440) + 60; // 1-24小时随机持续时间
+    const endDate = new Date(startDate.getTime() + duration * 60000);
+    
     const tradeAlert: TradingAlert = {
       symbol: signalData.symbol,
       signal: signalData.action || signalData.signal,
@@ -70,7 +81,14 @@ export const GlobalAutoTrader = () => {
       position: signalData.position || '轻仓',
       reasoning: signalData.reasoning || signalData.analysis?.priceAnalysis || 'AI综合分析',
       timestamp: new Date(),
-      profit: Math.random() > 0.12 ? parseFloat((Math.random() * 500 + 100).toFixed(2)) : -parseFloat((Math.random() * 100 + 20).toFixed(2))
+      profit: Math.random() > 0.12 ? parseFloat((Math.random() * 500 + 100).toFixed(2)) : -parseFloat((Math.random() * 100 + 20).toFixed(2)),
+      leverage: Math.floor(Math.random() * 20) + 1, // 1-20倍杠杆
+      contractType: Math.random() > 0.5 ? 'futures' : 'spot',
+      direction: signalData.signal === 'buy' ? 'long' : 'short',
+      hasAddedPosition: Math.random() > 0.7, // 30%概率有补仓
+      duration: duration,
+      startDate: startDate,
+      endDate: endDate
     };
 
     // 模拟自动执行交易
@@ -193,19 +211,60 @@ export const GlobalAutoTrader = () => {
 
             {/* 交易详情 */}
             <div className="space-y-3">
+              {/* 基础交易信息 */}
               <div className="p-3 bg-slate-800/60 rounded-lg border border-green-400/20">
+                <h4 className="text-sm font-semibold text-white mb-2">交易信息</h4>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="text-slate-300">
-                    入场: <span className="text-green-400 font-mono">${currentAlert.entry.toLocaleString()}</span>
+                    货币种类: <span className="text-yellow-400 font-semibold">{currentAlert.symbol}</span>
                   </div>
                   <div className="text-slate-300">
-                    止损: <span className="text-red-400 font-mono">${currentAlert.stopLoss.toLocaleString()}</span>
+                    交易方向: <span className={`font-semibold ${currentAlert.direction === 'long' ? 'text-green-400' : 'text-red-400'}`}>
+                      {currentAlert.direction === 'long' ? '做多 (Long)' : '做空 (Short)'}
+                    </span>
                   </div>
                   <div className="text-slate-300">
-                    止盈: <span className="text-green-400 font-mono">${currentAlert.takeProfit.toLocaleString()}</span>
+                    合约类型: <span className="text-blue-400">{currentAlert.contractType === 'spot' ? '现货' : '期货合约'}</span>
                   </div>
                   <div className="text-slate-300">
-                    仓位: <span className="text-yellow-400">{currentAlert.position}</span>
+                    杠杆倍数: <span className="text-orange-400 font-bold">{currentAlert.leverage}x</span>
+                  </div>
+                  <div className="text-slate-300">
+                    入场价格: <span className="text-green-400 font-mono">${currentAlert.entry.toLocaleString()}</span>
+                  </div>
+                  <div className="text-slate-300">
+                    止盈价格: <span className="text-green-400 font-mono">${currentAlert.takeProfit.toLocaleString()}</span>
+                  </div>
+                  <div className="text-slate-300">
+                    止损价格: <span className="text-red-400 font-mono">${currentAlert.stopLoss.toLocaleString()}</span>
+                  </div>
+                  <div className="text-slate-300">
+                    仓位大小: <span className="text-yellow-400">{currentAlert.position}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 交易执行信息 */}
+              <div className="p-3 bg-slate-800/60 rounded-lg border border-blue-400/20">
+                <h4 className="text-sm font-semibold text-white mb-2">执行详情</h4>
+                <div className="grid grid-cols-1 gap-2 text-sm">
+                  <div className="text-slate-300">
+                    开始时间: <span className="text-cyan-400 font-mono">{currentAlert.startDate?.toLocaleString()}</span>
+                  </div>
+                  <div className="text-slate-300">
+                    结束时间: <span className="text-cyan-400 font-mono">{currentAlert.endDate?.toLocaleString()}</span>
+                  </div>
+                  <div className="text-slate-300">
+                    持续时长: <span className="text-purple-400">
+                      {currentAlert.duration && currentAlert.duration >= 60 ? 
+                        `${Math.floor(currentAlert.duration / 60)}小时${currentAlert.duration % 60}分钟` : 
+                        `${currentAlert.duration}分钟`}
+                    </span>
+                  </div>
+                  <div className="text-slate-300">
+                    补仓情况: <span className={`${currentAlert.hasAddedPosition ? 'text-yellow-400' : 'text-gray-400'}`}>
+                      {currentAlert.hasAddedPosition ? '已补仓' : '未补仓'}
+                    </span>
                   </div>
                 </div>
               </div>
