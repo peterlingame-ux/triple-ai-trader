@@ -1,4 +1,5 @@
 import { CompactAdvisorCard } from "./CompactAdvisorCard";
+import { TradingExchangePanel } from "./TradingExchangePanel";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Brain } from "lucide-react";
 import { useState } from "react";
@@ -155,6 +156,17 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
 
   return (
     <div className="space-y-6">
+      {/* Trading Exchange Panel */}
+      <TradingExchangePanel 
+        cryptoData={cryptoData} 
+        newsData={newsData}
+        onOpenAIControlCenter={() => {
+          // This will be handled by the parent TradingDashboard component
+          const event = new CustomEvent('openAIControlCenter');
+          window.dispatchEvent(event);
+        }}
+      />
+
       {/* Section Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
