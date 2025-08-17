@@ -511,7 +511,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
 
       {/* 专业交易弹窗 - 简洁清晰 */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
-        <DialogContent className="max-w-md bg-slate-900 border-slate-700 text-slate-100">
+        <DialogContent className="max-w-sm w-[90vw] max-h-[85vh] overflow-y-auto bg-slate-900 border-slate-700 text-slate-100">
           <DialogHeader className="pb-4 border-b border-slate-700">
             <DialogTitle className="text-lg font-semibold text-slate-100 flex items-center gap-2">
               <Zap className="w-5 h-5 text-blue-400" />
