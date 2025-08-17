@@ -1,5 +1,5 @@
 import { CompactAdvisorCard } from "./CompactAdvisorCard";
-import { ProfessionalAIControls } from "./ProfessionalAIControls";
+import { TradingExchangePanel } from "./TradingExchangePanel";
 import { useLanguage } from "@/hooks/useLanguage";
 import { Brain } from "lucide-react";
 import { useState } from "react";
@@ -156,8 +156,8 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
 
   return (
     <div className="space-y-6">
-      {/* Professional AI Controls */}
-      <ProfessionalAIControls 
+      {/* Trading Exchange Panel */}
+      <TradingExchangePanel 
         cryptoData={cryptoData} 
         newsData={newsData}
         onOpenAIControlCenter={() => {
