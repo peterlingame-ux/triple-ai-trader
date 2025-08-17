@@ -1,5 +1,6 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
 import { GlobalAutoTrader } from "@/components/GlobalAutoTrader";
+import { IntelligentPositionManager } from "@/components/IntelligentPositionManager";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
@@ -53,6 +54,9 @@ const Index = () => {
         </div>
       </header>
       <TradingDashboard />
+      <div className="container mx-auto px-4 py-8">
+        <IntelligentPositionManager />
+      </div>
       <GlobalAutoTrader />
     </div>
   );

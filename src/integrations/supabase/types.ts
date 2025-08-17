@@ -14,6 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
+      positions: {
+        Row: {
+          ai_reasoning: string | null
+          closed_at: string | null
+          confidence: number
+          created_at: string | null
+          current_price: number
+          entry_price: number
+          id: string
+          leverage: number | null
+          opened_at: string | null
+          pnl: number | null
+          pnl_percent: number | null
+          position_size: number
+          status: string
+          stop_loss: number | null
+          strategy: string | null
+          symbol: string
+          take_profit: number | null
+          trading_type: string | null
+          type: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          closed_at?: string | null
+          confidence: number
+          created_at?: string | null
+          current_price: number
+          entry_price: number
+          id?: string
+          leverage?: number | null
+          opened_at?: string | null
+          pnl?: number | null
+          pnl_percent?: number | null
+          position_size: number
+          status?: string
+          stop_loss?: number | null
+          strategy?: string | null
+          symbol: string
+          take_profit?: number | null
+          trading_type?: string | null
+          type: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          ai_reasoning?: string | null
+          closed_at?: string | null
+          confidence?: number
+          created_at?: string | null
+          current_price?: number
+          entry_price?: number
+          id?: string
+          leverage?: number | null
+          opened_at?: string | null
+          pnl?: number | null
+          pnl_percent?: number | null
+          position_size?: number
+          status?: string
+          stop_loss?: number | null
+          strategy?: string | null
+          symbol?: string
+          take_profit?: number | null
+          trading_type?: string | null
+          type?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
