@@ -328,7 +328,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
 
       {/* Alert Dialog */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
-        <DialogContent className="max-w-2xl bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-lg bg-slate-900 border-slate-700">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-white">
               <Brain className="w-6 h-6 text-yellow-400" />
