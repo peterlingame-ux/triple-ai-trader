@@ -18,10 +18,27 @@ interface ProfessionalAIControlsProps {
 export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenAIControlCenter, isSuperBrainMonitoring = false }: ProfessionalAIControlsProps) => {
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [isMonitoring, setIsMonitoring] = useState(false);
-  const [isAutoTraderActive, setIsAutoTraderActive] = useState(false);
+  
+  // 从localStorage读取初始状态
+  const [isMonitoring, setIsMonitoring] = useState(() => {
+    const saved = localStorage.getItem('superBrainMonitoring');
+    return saved ? JSON.parse(saved) : false;
+  });
+  
+  const [isAutoTraderActive, setIsAutoTraderActive] = useState(() => {
+    const saved = localStorage.getItem('autoTraderConfig');
+    if (saved) {
+      try {
+        const config = JSON.parse(saved);
+        return config.enabled || false;
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
 
-  // 监听最强大脑监控状态变化
+  // 监听状态变化
   React.useEffect(() => {
     const handleMonitoringChange = (event: CustomEvent) => {
       setIsMonitoring(event.detail.isMonitoring);
@@ -38,6 +55,23 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
       window.removeEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
       window.removeEventListener('autoTraderStatusChanged', handleAutoTraderChange as EventListener);
     };
+  }, []);
+
+  // 初始化时发送状态事件，确保其他组件同步
+  React.useEffect(() => {
+    if (isMonitoring) {
+      const event = new CustomEvent('superBrainMonitoringChanged', {
+        detail: { isMonitoring: true }
+      });
+      window.dispatchEvent(event);
+    }
+    
+    if (isAutoTraderActive) {
+      const event = new CustomEvent('autoTraderStatusChanged', {
+        detail: { isActive: true }
+      });
+      window.dispatchEvent(event);
+    }
   }, []);
 
   // 如果有活跃的区域，显示对应的组件

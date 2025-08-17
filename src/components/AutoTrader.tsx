@@ -146,24 +146,56 @@ export const AutoTrader = () => {
   } = useAIAnalysis();
   
   const [isOpen, setIsOpen] = useState(false);
-  const [config, setConfig] = useState<AutoTraderConfig>({
-    enabled: false,
-    strategy: 'conservative',
-    tradingType: 'spot',
-    conservativeMinConfidence: 90,
-    aggressiveMinConfidence: 70,
-    maxPositions: 5,
-    riskPerTrade: 2,
-    virtualBalance: 100000,
-    allowedSymbols: ['BTC', 'ETH', 'SOL'],
-    stopLossPercent: 5,
-    takeProfitPercent: 10,
-    trailingStop: true,
-    maxDailyLoss: 1000,
-    autoReinvest: true,
-    leverage: 1,
-    maxLeverage: 100,
-    marginRatio: 0.1
+  
+  // 从localStorage读取初始配置，包括enabled状态
+  const [config, setConfig] = useState<AutoTraderConfig>(() => {
+    const saved = localStorage.getItem('autoTraderConfig');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return {
+          enabled: false,
+          strategy: 'conservative',
+          tradingType: 'spot',
+          conservativeMinConfidence: 90,
+          aggressiveMinConfidence: 70,
+          maxPositions: 5,
+          riskPerTrade: 2,
+          virtualBalance: 100000,
+          allowedSymbols: ['BTC', 'ETH', 'SOL'],
+          stopLossPercent: 5,
+          takeProfitPercent: 10,
+          trailingStop: true,
+          maxDailyLoss: 1000,
+          autoReinvest: true,
+          leverage: 1,
+          maxLeverage: 100,
+          marginRatio: 0.1,
+          ...parsed // 覆盖默认值
+        };
+      } catch (error) {
+        console.error('Failed to parse saved AutoTrader config:', error);
+      }
+    }
+    return {
+      enabled: false,
+      strategy: 'conservative',
+      tradingType: 'spot',
+      conservativeMinConfidence: 90,
+      aggressiveMinConfidence: 70,
+      maxPositions: 5,
+      riskPerTrade: 2,
+      virtualBalance: 100000,
+      allowedSymbols: ['BTC', 'ETH', 'SOL'],
+      stopLossPercent: 5,
+      takeProfitPercent: 10,
+      trailingStop: true,
+      maxDailyLoss: 1000,
+      autoReinvest: true,
+      leverage: 1,
+      maxLeverage: 100,
+      marginRatio: 0.1
+    };
   });
 
   const [signals, setSignals] = useState<TradingSignal[]>([]);
@@ -632,7 +664,11 @@ export const AutoTrader = () => {
 
   const toggleAutoTrader = () => {
     const newEnabled = !config.enabled;
-    setConfig(prev => ({ ...prev, enabled: newEnabled }));
+    const newConfig = { ...config, enabled: newEnabled };
+    setConfig(newConfig);
+    
+    // 保存配置到localStorage
+    localStorage.setItem('autoTraderConfig', JSON.stringify(newConfig));
     
     // 发送AI自动赚钱状态变化事件
     const statusChangeEvent = new CustomEvent('autoTraderStatusChanged', {

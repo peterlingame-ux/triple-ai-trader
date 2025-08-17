@@ -54,7 +54,11 @@ interface SuperBrainDetectionProps {
 }
 
 export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBrainDetectionProps) => {
-  const [isMonitoring, setIsMonitoring] = useState(false);
+  // 从localStorage读取初始状态
+  const [isMonitoring, setIsMonitoring] = useState(() => {
+    const saved = localStorage.getItem('superBrainMonitoring');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -164,15 +168,19 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   }, [isMonitoring, performAnalysis]);
 
   const toggleMonitoring = () => {
-    setIsMonitoring(!isMonitoring);
+    const newStatus = !isMonitoring;
+    setIsMonitoring(newStatus);
+    
+    // 保存状态到localStorage
+    localStorage.setItem('superBrainMonitoring', JSON.stringify(newStatus));
     
     // 发送监控状态变化事件
     const statusChangeEvent = new CustomEvent('superBrainMonitoringChanged', {
-      detail: { isMonitoring: !isMonitoring }
+      detail: { isMonitoring: newStatus }
     });
     window.dispatchEvent(statusChangeEvent);
     
-    if (!isMonitoring) {
+    if (newStatus) {
       setLastCheckTime(new Date());
       toast({
         title: t('ai.monitoring_started'),
