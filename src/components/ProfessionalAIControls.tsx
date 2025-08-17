@@ -3,12 +3,14 @@ import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon, BarChart3 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon, BarChart3, Calendar, TrendingUp } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
 import { CryptoData, NewsArticle } from "@/types/api";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { useWalletData } from "@/hooks/useWalletData";
+import { useTimeBasedStats } from "@/hooks/useTimeBasedStats";
 
 interface ProfessionalAIControlsProps {
   cryptoData?: CryptoData[];
@@ -20,6 +22,7 @@ interface ProfessionalAIControlsProps {
 export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenAIControlCenter, isSuperBrainMonitoring = false }: ProfessionalAIControlsProps) => {
   const { t } = useLanguage();
   const { getPortfolioData } = useWalletData();
+  const { stats, timeRanges, selectedTimeRange, setSelectedTimeRange, isLoading } = useTimeBasedStats();
   const [activeSection, setActiveSection] = useState<string | null>(null);
   
   // Get portfolio data for the cards
@@ -224,31 +227,84 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
             </div>
           </div>
 
-          {/* 底部统计面板 */}
-          <div className="grid grid-cols-3 gap-8 pt-6 border-t border-slate-700/50">
+          {/* 时间选择器 */}
+          <div className="flex items-center justify-between pt-6 border-t border-slate-700/50">
+            <div className="flex items-center gap-3">
+              <Calendar className="w-5 h-5 text-slate-400" />
+              <span className="text-sm text-slate-400">数据统计时间段:</span>
+            </div>
+            <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+              <SelectTrigger className="w-32 bg-slate-800/50 border-slate-600 text-slate-300">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-600">
+                {timeRanges.map((range) => (
+                  <SelectItem key={range.value} value={range.value} className="text-slate-300 focus:bg-slate-700">
+                    {range.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 实时数据统计面板 */}
+          <div className="grid grid-cols-3 gap-8 pt-6">
             <div className="text-center space-y-3">
-              <div className="text-3xl font-bold text-emerald-400 font-mono">94.2%</div>
+              <div className="text-3xl font-bold text-emerald-400 font-mono">
+                {isLoading ? '--' : `${stats.aiAccuracy.toFixed(1)}%`}
+              </div>
               <div className="text-sm text-emerald-300/80 font-medium">AI精准度</div>
               <div className="w-full bg-slate-700/50 rounded-full h-2">
-                <div className="bg-gradient-to-r from-emerald-400 to-emerald-300 h-2 rounded-full transition-all duration-700" style={{width: '94.2%'}}></div>
+                <div 
+                  className="bg-gradient-to-r from-emerald-400 to-emerald-300 h-2 rounded-full transition-all duration-700" 
+                  style={{width: `${Math.min(stats.aiAccuracy, 100)}%`}}
+                ></div>
+              </div>
+              <div className="text-xs text-slate-400">
+                {stats.winningTrades}/{stats.totalTrades} 盈利交易
               </div>
             </div>
             <div className="text-center space-y-3">
-              <div className="text-3xl font-bold text-blue-400 font-mono">47</div>
+              <div className="text-3xl font-bold text-blue-400 font-mono">
+                {isLoading ? '--' : stats.activeSignals}
+              </div>
               <div className="text-sm text-blue-300/80 font-medium">活跃信号</div>
               <div className="flex justify-center gap-1">
                 <div className="w-2 h-2 rounded-full bg-blue-400 animate-ping"></div>
                 <div className="w-2 h-2 rounded-full bg-blue-400/60 animate-pulse" style={{animationDelay: '0.5s'}}></div>
                 <div className="w-2 h-2 rounded-full bg-blue-400/30 animate-pulse" style={{animationDelay: '1s'}}></div>
               </div>
-            </div>
-            <div className="text-center space-y-3">
-              <div className="text-3xl font-bold text-purple-400 font-mono">+12.4%</div>
-              <div className="text-sm text-purple-300/80 font-medium">月收益率</div>
-              <div className="w-full bg-slate-700/50 rounded-full h-2">
-                <div className="bg-gradient-to-r from-purple-400 to-pink-400 h-2 rounded-full transition-all duration-700" style={{width: '62%'}}></div>
+              <div className="text-xs text-slate-400">
+                当前持仓数量
               </div>
             </div>
+            <div className="text-center space-y-3">
+              <div className={`text-3xl font-bold font-mono ${stats.monthlyReturn >= 0 ? 'text-purple-400' : 'text-red-400'}`}>
+                {isLoading ? '--' : `${stats.monthlyReturn >= 0 ? '+' : ''}${stats.monthlyReturn.toFixed(1)}%`}
+              </div>
+              <div className="text-sm text-purple-300/80 font-medium">期间收益率</div>
+              <div className="w-full bg-slate-700/50 rounded-full h-2">
+                <div 
+                  className={`h-2 rounded-full transition-all duration-700 ${
+                    stats.monthlyReturn >= 0 
+                      ? 'bg-gradient-to-r from-purple-400 to-pink-400' 
+                      : 'bg-gradient-to-r from-red-400 to-red-300'
+                  }`}
+                  style={{width: `${Math.min(Math.abs(stats.monthlyReturn) * 2, 100)}%`}}
+                ></div>
+              </div>
+              <div className="text-xs text-slate-400">
+                {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toFixed(2)} 总盈亏
+              </div>
+            </div>
+          </div>
+
+          {/* 时间范围显示 */}
+          <div className="flex items-center justify-center gap-2 pt-4 text-xs text-slate-500">
+            <TrendingUp className="w-3 h-3" />
+            <span>
+              数据统计时间: {stats.startDate.toLocaleDateString('zh-CN')} - {stats.endDate.toLocaleDateString('zh-CN')}
+            </span>
           </div>
         </div>
       </Card>
