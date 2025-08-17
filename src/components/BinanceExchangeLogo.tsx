@@ -1,4 +1,5 @@
 import React from 'react';
+import binanceRealLogo from '@/assets/binance-real-logo.png';
 
 interface BinanceExchangeLogoProps {
   className?: string;
@@ -15,7 +16,7 @@ export const BinanceExchangeLogo: React.FC<BinanceExchangeLogoProps> = ({
     <div className={`relative ${className}`}>
       {/* Main Binance Logo */}
       <img
-        src="/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png"
+        src={binanceRealLogo}
         alt="Binance Exchange"
         width={size}
         height={size}
