@@ -268,8 +268,8 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         });
         window.dispatchEvent(globalEvent);
         
-        // 触发AI自动交易事件 - 发送给GlobalAutoTrader
-        const autoTradeEvent = new CustomEvent('superBrainTradingSignal', {
+        // 触发AI自动交易事件 - 发送给AutoTrader
+        const autoTradeEvent = new CustomEvent('superBrainSignal', {
           detail: {
             symbol: alert.symbol,
             action: alert.signal,
@@ -287,6 +287,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           }
         });
         window.dispatchEvent(autoTradeEvent);
+        
+        console.log('📡 最强大脑信号已发送给AI自动交易:', {
+          symbol: alert.symbol,
+          action: alert.signal,
+          confidence: alert.confidence,
+          entry: alert.tradingDetails?.entry || alert.price
+        });
         
                         // Display system notification
                         toast({
