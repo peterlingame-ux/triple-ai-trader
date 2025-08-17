@@ -218,7 +218,10 @@ export const AutoTrader = () => {
   useEffect(() => {
     // 处理最强大脑信号
     const handleSuperBrainSignal = (event: CustomEvent) => {
-      if (!isEnabled) return;
+      if (!isEnabled) {
+        console.log('AI自动交易未启动，忽略信号:', event.detail);
+        return;
+      }
       
       const signal = event.detail as SuperBrainSignal;
       const strategy = strategies.find(s => s.type === selectedStrategy);
@@ -268,12 +271,60 @@ export const AutoTrader = () => {
       executeAutomaticTrade(signal);
     };
 
+    // 处理来自后端edge function的实时信号
+    const handleRealTimeSignal = async () => {
+      if (!isEnabled || !isAuthenticated) return;
+      
+      try {
+        // 调用实时分析API获取最新信号
+        const { data, error } = await supabase.functions.invoke('super-brain-analysis', {
+          body: {
+            symbols: ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL'],
+            analysisTypes: ['price', 'technical', 'news', 'sentiment', 'volume', 'macro']
+          }
+        });
+
+        if (data && !error) {
+          console.log('收到实时信号:', data);
+          
+          // 将后端信号转换为前端格式
+          const signal: SuperBrainSignal = {
+            symbol: data.symbol,
+            action: data.action,
+            confidence: data.confidence,
+            entry: data.entry,
+            stopLoss: data.stopLoss,
+            takeProfit: data.takeProfit,
+            reasoning: data.reasoning,
+            timestamp: new Date()
+          };
+          
+          // 触发信号处理
+          handleSuperBrainSignal({ detail: signal } as CustomEvent);
+        }
+      } catch (error) {
+        console.error('获取实时信号失败:', error);
+      }
+    };
+
     window.addEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
+    
+    // 定期检查实时信号（仅当AI自动交易和最强大脑都启动时）
+    let realTimeInterval: NodeJS.Timeout;
+    if (isAuthenticated && isEnabled && isSuperBrainActive) {
+      // 每30秒检查一次实时信号
+      realTimeInterval = setInterval(handleRealTimeSignal, 30000);
+      // 立即执行一次
+      handleRealTimeSignal();
+    }
     
     return () => {
       window.removeEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
+      if (realTimeInterval) {
+        clearInterval(realTimeInterval);
+      }
     };
-  }, [isEnabled, selectedStrategy, positions]);
+  }, [isEnabled, selectedStrategy, positions, isAuthenticated, isSuperBrainActive, supabase, toast]);
 
   // 执行自动交易
   const executeAutomaticTrade = useCallback(async (signal: SuperBrainSignal) => {
