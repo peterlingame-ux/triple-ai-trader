@@ -109,15 +109,6 @@ export const TradingHistoryPanel = ({ onBack, dateRange }: TradingHistoryPanelPr
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onBack}
-              className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700"
-            >
-              <ChevronLeft className="w-4 h-4 mr-1" />
-              返回
-            </Button>
             <div>
               <h3 className="text-lg font-semibold text-white">交易记录</h3>
               <p className="text-xs text-slate-400">历史交易详细记录</p>
