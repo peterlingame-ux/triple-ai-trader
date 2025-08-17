@@ -505,156 +505,270 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         </div>
       </Card>
 
-      {/* Alert Dialog */}
+      {/* Alert Dialog - 重新设计的专业版弹窗 */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
-        <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
+        <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-400/30 text-white max-w-lg shadow-2xl shadow-yellow-400/20 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-yellow-400">
-              <Brain className="w-6 h-6" />
-              {t('ai.high_probability_opportunity')}
+            <DialogTitle className="flex items-center justify-center gap-3 text-xl font-bold">
+              <div className="flex items-center gap-2">
+                <Brain className="w-6 h-6 text-yellow-400 animate-pulse" />
+                <span className="bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent">
+                  最强大脑检测到高胜率机会！
+                </span>
+              </div>
             </DialogTitle>
             <DialogDescription className="sr-only">
-              {t('ai.high_probability_opportunity')}
+              AI检测到高胜率交易机会
             </DialogDescription>
           </DialogHeader>
           
           {currentAlert && (
-            <div className="space-y-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-white mb-2">
-                  {currentAlert.symbol}
-                </div>
-                <Badge 
-                  variant="outline" 
-                  className={`text-lg px-4 py-2 ${
-                    currentAlert.signal === 'buy' 
-                      ? 'text-green-400 border-green-400/20' 
-                      : 'text-red-400 border-red-400/20'
-                  }`}
-                >
-                  {currentAlert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}
-                </Badge>
-                <div className="text-3xl font-bold text-yellow-400 mt-2">
-                  {t('ai.win_rate')} {currentAlert.confidence}%
-                </div>
-              </div>
-              
-              <div className="space-y-3 text-sm">
-                <div className="p-3 bg-slate-700/50 rounded">
-                  <div className="text-blue-400 font-medium mb-1">📊 价格分析 (6AI综合)</div>
-                  <div className="text-slate-300">{currentAlert.analysis.priceAnalysis}</div>
-                </div>
-                <div className="p-3 bg-slate-700/50 rounded">
-                  <div className="text-purple-400 font-medium mb-1">🎯 技术指标 (多维度)</div>
-                  <div className="text-slate-300">{currentAlert.analysis.technicalAnalysis}</div>
-                </div>
-                <div className="p-3 bg-slate-700/50 rounded">
-                  <div className="text-green-400 font-medium mb-1">🧠 综合结论 (AI大脑)</div>
-                  <div className="text-slate-300">{currentAlert.analysis.sentimentAnalysis}</div>
+            <div className="space-y-6 p-2">
+              {/* 核心信息区域 */}
+              <div className="text-center bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded-xl p-6 border border-yellow-400/20">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-yellow-400/20 to-amber-400/20 rounded-full border-2 border-yellow-400/40 mb-4">
+                  <span className="text-2xl font-bold text-yellow-400">{currentAlert.symbol}</span>
                 </div>
                 
-                {/* 交易详情 */}
-                {currentAlert.tradingDetails && (
-                  <div className="p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20 space-y-4">
-                    <div className="text-yellow-400 font-medium mb-3">📋 具体交易建议</div>
-                    
-                    {/* 基础交易信息 */}
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">入场价格:</span>
+                <div className="mb-4">
+                  <Badge 
+                    variant="outline" 
+                    className={`text-lg px-6 py-2 font-bold border-2 ${
+                      currentAlert.signal === 'buy' 
+                        ? 'text-green-400 border-green-400/40 bg-green-400/10' 
+                        : 'text-red-400 border-red-400/40 bg-red-400/10'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {currentAlert.signal === 'buy' ? (
+                        <>
+                          <TrendingUp className="w-4 h-4" />
+                          <span>买入信号</span>
+                        </>
+                      ) : (
+                        <>
+                          <TrendingDown className="w-4 h-4" />
+                          <span>卖出信号</span>
+                        </>
+                      )}
+                    </div>
+                  </Badge>
+                </div>
+                
+                <div className="text-4xl font-black text-yellow-400 mb-2 animate-pulse">
+                  胜率 {currentAlert.confidence}%
+                </div>
+                <div className="text-sm text-slate-400">
+                  AI综合分析置信度
+                </div>
+              </div>
+
+              {/* 分析结果展示 */}
+              <div className="space-y-4">
+                {/* 价格分析 */}
+                <div className="bg-slate-800/60 rounded-lg p-4 border border-blue-400/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 bg-blue-400/20 rounded flex items-center justify-center">
+                      <span className="text-blue-400 text-sm font-bold">📊</span>
+                    </div>
+                    <h4 className="text-blue-400 font-semibold">价格分析 (6AI综合)</h4>
+                  </div>
+                  <div className="bg-slate-700/30 rounded p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="w-4 h-4 text-yellow-400" />
+                      <span className="text-yellow-400 font-medium">
+                        {currentAlert.symbol}: {currentAlert.signal === 'buy' ? '建议买多' : '建议卖空'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 技术指标 */}
+                <div className="bg-slate-800/60 rounded-lg p-4 border border-purple-400/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 bg-purple-400/20 rounded flex items-center justify-center">
+                      <span className="text-purple-400 text-sm font-bold">🎯</span>
+                    </div>
+                    <h4 className="text-purple-400 font-semibold">技术指标 (多维度)</h4>
+                  </div>
+                  {currentAlert.tradingDetails && (
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-300">入场:</span>
                         <span className="text-green-400 font-mono">${currentAlert.tradingDetails.entry.toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">止损价格:</span>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-300">止损:</span>
                         <span className="text-red-400 font-mono">${currentAlert.tradingDetails.stopLoss.toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">第一止盈:</span>
-                        <span className="text-green-400 font-mono">${currentAlert.tradingDetails.firstTakeProfit?.toLocaleString() || '--'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-400">第二止盈:</span>
-                        <span className="text-green-400 font-mono">${currentAlert.tradingDetails.secondTakeProfit?.toLocaleString() || '--'}</span>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-300">止盈:</span>
+                        <span className="text-green-400 font-mono">${currentAlert.tradingDetails.takeProfit.toLocaleString()}</span>
                       </div>
                     </div>
+                  )}
+                </div>
 
-                    {/* 仓位管理信息 */}
-                    <div className="border-t border-yellow-500/20 pt-3">
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">建议仓位:</span>
-                          <span className="text-yellow-400 font-medium">{currentAlert.tradingDetails.positionRatio || 10}%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">安全系数:</span>
-                          <div className="flex items-center gap-1">
-                            <span className="text-white font-mono">{currentAlert.tradingDetails.safetyFactor || 5}/10</span>
-                            <div className="flex">
-                              {[...Array(10)].map((_, i) => (
-                                <div 
-                                  key={i} 
-                                  className={`w-1 h-2 ${i < (currentAlert.tradingDetails?.safetyFactor || 5) ? 'bg-green-400' : 'bg-slate-600'} mr-0.5`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">必须止损:</span>
-                          <div className="flex items-center gap-1">
-                            {currentAlert.tradingDetails.stopLossRequired ? (
-                              <>
-                                <AlertTriangle className="w-3 h-3 text-red-400" />
-                                <span className="text-red-400 text-xs font-medium">是</span>
-                              </>
-                            ) : (
-                              <span className="text-green-400 text-xs font-medium">否</span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">风险等级:</span>
-                          <Badge 
-                            variant="outline" 
-                            className={`text-xs ${
-                              currentAlert.tradingDetails.riskLevel === 'low' ? 'text-green-400 border-green-400' :
-                              currentAlert.tradingDetails.riskLevel === 'medium' ? 'text-yellow-400 border-yellow-400' :
-                              'text-red-400 border-red-400'
-                            }`}
-                          >
-                            {currentAlert.tradingDetails.riskLevel === 'low' ? '低风险' : 
-                             currentAlert.tradingDetails.riskLevel === 'medium' ? '中风险' : '高风险'}
-                          </Badge>
-                        </div>
+                {/* 综合结论 */}
+                <div className="bg-slate-800/60 rounded-lg p-4 border border-green-400/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 bg-green-400/20 rounded flex items-center justify-center">
+                      <span className="text-green-400 text-sm font-bold">🧠</span>
+                    </div>
+                    <h4 className="text-green-400 font-semibold">综合结论 (AI大脑)</h4>
+                  </div>
+                  <div className="bg-slate-700/30 rounded p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-4 h-4 bg-gradient-to-r from-green-400 to-blue-400 rounded-full"></div>
+                      <span className="text-white font-medium">
+                        仓位: {currentAlert.tradingDetails?.position || '轻仓'} | 胜率: {currentAlert.confidence}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 具体交易建议 */}
+              {currentAlert.tradingDetails && (
+                <div className="bg-gradient-to-br from-amber-900/20 to-yellow-900/20 rounded-xl p-5 border-2 border-amber-400/30">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-6 h-6 bg-amber-400/20 rounded flex items-center justify-center">
+                      <span className="text-amber-400 text-sm font-bold">📋</span>
+                    </div>
+                    <h4 className="text-amber-400 font-bold text-lg">具体交易建议</h4>
+                  </div>
+
+                  {/* 价格区间 */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="bg-slate-800/40 rounded-lg p-3">
+                      <div className="text-slate-400 text-xs mb-1">入场价格:</div>
+                      <div className="text-green-400 font-mono text-lg font-bold">
+                        ${currentAlert.tradingDetails.entry.toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="bg-slate-800/40 rounded-lg p-3">
+                      <div className="text-slate-400 text-xs mb-1">止损价格:</div>
+                      <div className="text-red-400 font-mono text-lg font-bold">
+                        ${currentAlert.tradingDetails.stopLoss.toLocaleString()}
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
+
+                  {/* 止盈设置 */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="bg-slate-800/40 rounded-lg p-3">
+                      <div className="text-slate-400 text-xs mb-1">第一止盈:</div>
+                      <div className="text-green-400 font-mono text-base font-bold">
+                        ${currentAlert.tradingDetails.firstTakeProfit?.toLocaleString() || '--'}
+                      </div>
+                    </div>
+                    <div className="bg-slate-800/40 rounded-lg p-3">
+                      <div className="text-slate-400 text-xs mb-1">第二止盈:</div>
+                      <div className="text-green-400 font-mono text-base font-bold">
+                        ${currentAlert.tradingDetails.secondTakeProfit?.toLocaleString() || '--'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 风控参数 */}
+                  <div className="space-y-3 bg-slate-800/20 rounded-lg p-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">建议仓位:</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 font-bold text-lg">
+                          {currentAlert.tradingDetails.positionRatio || 10}%
+                        </span>
+                        <Badge variant="outline" className="text-xs text-yellow-400 border-yellow-400/40">
+                          总仓位
+                        </Badge>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">安全系数:</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white font-mono font-bold">
+                          {currentAlert.tradingDetails.safetyFactor || 5}/10
+                        </span>
+                        <div className="flex gap-0.5">
+                          {[...Array(10)].map((_, i) => (
+                            <div 
+                              key={i} 
+                              className={`w-2 h-3 rounded-sm ${
+                                i < (currentAlert.tradingDetails?.safetyFactor || 5) 
+                                  ? 'bg-green-400' 
+                                  : 'bg-slate-600'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">必须止损:</span>
+                      <div className="flex items-center gap-1">
+                        {currentAlert.tradingDetails.stopLossRequired ? (
+                          <>
+                            <AlertTriangle className="w-4 h-4 text-red-400" />
+                            <span className="text-red-400 font-semibold">是</span>
+                          </>
+                        ) : (
+                          <span className="text-green-400 font-semibold">否</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">风险等级:</span>
+                      <Badge 
+                        variant="outline" 
+                        className={`font-bold ${
+                          currentAlert.tradingDetails.riskLevel === 'low' 
+                            ? 'text-green-400 border-green-400 bg-green-400/10' :
+                          currentAlert.tradingDetails.riskLevel === 'medium' 
+                            ? 'text-yellow-400 border-yellow-400 bg-yellow-400/10' :
+                            'text-red-400 border-red-400 bg-red-400/10'
+                        }`}
+                      >
+                        {currentAlert.tradingDetails.riskLevel === 'low' ? '低风险' : 
+                         currentAlert.tradingDetails.riskLevel === 'medium' ? '中风险' : '高风险'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              )}
               
-              <div className="flex gap-3">
+              {/* 操作按钮 */}
+              <div className="flex gap-3 pt-4">
                 <Button 
                   onClick={() => setShowAlert(false)}
-                  className="flex-1 bg-slate-600 hover:bg-slate-500"
+                  variant="outline"
+                  className="flex-1 bg-slate-700/50 hover:bg-slate-600/50 border-slate-500 text-slate-300"
                 >
-                  {t('ai.got_it')}
+                  知道了
                 </Button>
                 <Button 
                   onClick={() => {
                     setShowAlert(false);
                     toast({
-                      title: t('ai.api_interface_reserved'),
-                      description: t('ai.configure_trading_api'),
+                      title: "交易接口预留",
+                      description: "请配置交易API以启用自动交易",
                     });
                   }}
-                  className={`flex-1 ${
+                  className={`flex-1 font-bold ${
                     currentAlert.signal === 'buy'
-                      ? 'bg-green-500 hover:bg-green-600'
-                      : 'bg-red-500 hover:bg-red-600'
-                  }`}
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+                      : 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700'
+                  } text-white border-0`}
                 >
-                  {t('ai.trade_now')}
+                  立即交易
                 </Button>
+              </div>
+
+              {/* 免责声明 */}
+              <div className="text-center text-xs text-slate-500 border-t border-slate-700 pt-3">
+                ⚠️ 投资有风险，交易需谨慎。AI分析仅供参考，不构成投资建议。
               </div>
             </div>
           )}
