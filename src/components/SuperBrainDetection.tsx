@@ -377,28 +377,71 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               </div>
               
               {currentAlert.tradingDetails && (
-                <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-4">
-                  <h4 className="font-medium text-white mb-3">交易参数</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <div className="text-slate-400">入场价格</div>
-                      <div className="text-white font-medium">${currentAlert.tradingDetails.entry.toLocaleString()}</div>
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-6 space-y-6">
+                  <h4 className="font-medium text-white text-lg mb-4">交易参数</h4>
+                  
+                  {/* Entry Price Range */}
+                  <div className="bg-slate-900/50 rounded-lg p-4">
+                    <h5 className="text-white font-medium mb-3">入场价格区间</h5>
+                    <div className="text-2xl font-bold text-white mb-2">
+                      ${currentAlert.tradingDetails.entry.toLocaleString()}
                     </div>
-                    <div>
-                      <div className="text-slate-400">止损价格</div>
-                      <div className="text-red-400 font-medium">${currentAlert.tradingDetails.stopLoss.toLocaleString()}</div>
+                    <div className="text-sm text-slate-400">
+                      建议区间: ${(currentAlert.tradingDetails.entry * 0.998).toLocaleString()} - ${(currentAlert.tradingDetails.entry * 1.002).toLocaleString()}
                     </div>
-                    <div>
-                      <div className="text-slate-400">止盈价格</div>
-                      <div className="text-green-400 font-medium">${currentAlert.tradingDetails.takeProfit.toLocaleString()}</div>
+                  </div>
+
+                  {/* Position & Win Rate */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">建议仓位</h5>
+                      <div className="text-xl font-bold text-blue-400">
+                        {currentAlert.confidence >= 95 ? '25%' :
+                         currentAlert.confidence >= 90 ? '20%' :
+                         currentAlert.confidence >= 85 ? '15%' : '8%'}
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        {currentAlert.tradingDetails.position}
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-slate-400">建议仓位</div>
-                      <div className="text-blue-400 font-medium">{currentAlert.tradingDetails.position}</div>
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">AI分析胜率</h5>
+                      <div className="text-xl font-bold text-yellow-400">
+                        {currentAlert.confidence}%
+                      </div>
+                      <div className="text-xs text-slate-500">
+                        综合6大模型分析
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-slate-400">风险等级</div>
-                      <div className={`font-medium ${
+                  </div>
+
+                  {/* Technical Parameters */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">入场价格</h5>
+                      <div className="text-lg font-bold text-white">
+                        ${currentAlert.tradingDetails.entry.toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">止损价格</h5>
+                      <div className="text-lg font-bold text-red-400">
+                        ${currentAlert.tradingDetails.stopLoss.toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">止盈价格</h5>
+                      <div className="text-lg font-bold text-green-400">
+                        ${currentAlert.tradingDetails.takeProfit.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Additional Parameters */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">风险等级</h5>
+                      <div className={`text-lg font-bold ${
                         currentAlert.tradingDetails.riskLevel === 'low' ? 'text-green-400' :
                         currentAlert.tradingDetails.riskLevel === 'medium' ? 'text-yellow-400' : 'text-red-400'
                       }`}>
@@ -406,11 +449,33 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                          currentAlert.tradingDetails.riskLevel === 'medium' ? '中风险' : '高风险'}
                       </div>
                     </div>
-                    <div>
-                      <div className="text-slate-400">杠杆倍数</div>
-                      <div className="text-purple-400 font-medium">{currentAlert.tradingDetails.leverage}</div>
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">杠杆倍数</h5>
+                      <div className="text-lg font-bold text-purple-400">
+                        {currentAlert.tradingDetails.leverage}
+                      </div>
+                    </div>
+                    <div className="bg-slate-900/50 rounded-lg p-4">
+                      <h5 className="text-slate-400 text-sm mb-2">加仓机会</h5>
+                      <div className="text-lg font-bold text-blue-400">
+                        {currentAlert.confidence >= 90 ? '有' : '无'}
+                      </div>
+                      {currentAlert.confidence >= 90 && (
+                        <div className="text-xs text-slate-500">
+                          -{((currentAlert.tradingDetails.entry * 0.985).toLocaleString())}
+                        </div>
+                      )}
                     </div>
                   </div>
+
+                  {/* Risk Warning */}
+                  {currentAlert.confidence < 90 && (
+                    <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-3">
+                      <div className="text-red-400 text-sm font-medium">
+                        ⚠️ 风险提醒: 必须设置止损，安全系数 {(100 - currentAlert.confidence)}%
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
