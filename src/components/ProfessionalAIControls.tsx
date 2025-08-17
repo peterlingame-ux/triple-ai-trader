@@ -167,36 +167,6 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
             </div>
           </div>
 
-          {/* AI控制中心标题和状态 */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-blue-500/30">
-                <Brain className="w-6 h-6 text-blue-400" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-foreground font-orbitron">AI控制中心</h3>
-                <p className="text-sm text-muted-foreground">专业分析交易工具</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 px-3 py-1">
-                实时市场数据
-              </Badge>
-              {isMonitoring && (
-                <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 animate-pulse px-3 py-1">
-                  <Shield className="w-3 h-3 mr-1" />
-                  {t('ai.supreme_brain_active')}
-                </Badge>
-              )}
-              {isAutoTraderActive && (
-                <Badge variant="outline" className="bg-purple-500/10 text-purple-400 border-purple-500/30 animate-pulse px-3 py-1">
-                  <BotIcon className="w-3 h-3 mr-1" />
-                  {t('ai.auto_trader_active')}
-                </Badge>
-              )}
-            </div>
-          </div>
-
           {/* 控制面板按钮 */}
           <div className="bg-gradient-to-r from-slate-800/40 via-slate-700/30 to-slate-800/40 border border-slate-600/30 rounded-2xl p-6 mb-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
