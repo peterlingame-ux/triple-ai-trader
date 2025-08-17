@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Bot, 
   TrendingUp, 
   TrendingDown, 
   DollarSign, 
   Zap, 
-  Target, 
   Shield, 
   Activity,
   BarChart3,
@@ -24,265 +23,192 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Percent,
+  Brain,
+  Target,
+  Wallet,
   ArrowUp,
   ArrowDown,
-  Brain,
-  Timer,
-  Award,
-  TrendingDownIcon,
-  TrendingUpIcon,
   CircleDollarSign,
-  Sparkles
+  Sparkles,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  PieChart
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useAIAnalysis } from "@/hooks/useAIAnalysis";
-import { useCryptoData } from "@/hooks/useCryptoData";
-import { useLanguage } from "@/hooks/useLanguage";
-import { useWalletData } from "@/hooks/useWalletData";
+import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
-type TradingStrategy = 'conservative' | 'aggressive';
-type TradingType = 'spot' | 'futures';
+interface VirtualAccount {
+  balance: number;
+  totalPnL: number;
+  dailyPnL: number;
+  winRate: number;
+  totalTrades: number;
+  activePositions: number;
+}
 
-interface TradingSignal {
-  id: string;
-  symbol: string;
-  type: 'long' | 'short';
-  tradingType: TradingType;
-  confidence: number;
-  entry: number;
-  stopLoss: number;
-  takeProfit: number;
-  reasoning: string;
-  timestamp: Date;
-  status: 'pending' | 'executed' | 'closed';
-  strategy: TradingStrategy;
-  leverage?: number;
-  aiAnalysis: {
-    technicalScore: number;
-    fundamentalScore: number;
-    marketSentiment: 'bullish' | 'bearish' | 'neutral';
-    riskLevel: 'low' | 'medium' | 'high';
-  };
+interface TradingStrategy {
+  type: 'conservative' | 'aggressive';
+  name: string;
+  description: string;
+  minConfidence: number;
+  icon: React.ReactNode;
+  color: string;
 }
 
 interface Position {
   id: string;
   symbol: string;
   type: 'long' | 'short';
-  tradingType: TradingType;
-  entry: number;
-  size: number;
+  entryPrice: number;
   currentPrice: number;
+  size: number;
   pnl: number;
   pnlPercent: number;
+  confidence: number;
+  strategy: 'conservative' | 'aggressive';
   openTime: Date;
-  status: 'open' | 'closed';
-  strategy: TradingStrategy;
   stopLoss: number;
   takeProfit: number;
-  highestProfit: number;
-  maxDrawdown: number;
-  leverage?: number;
-  margin?: number; // For leveraged trades
-  liquidationPrice?: number; // For futures
 }
 
-interface AutoTraderConfig {
-  enabled: boolean;
-  strategy: TradingStrategy;
-  tradingType: TradingType;
-  conservativeMinConfidence: number;
-  aggressiveMinConfidence: number;
-  maxPositions: number;
-  riskPerTrade: number;
-  virtualBalance: number;
-  allowedSymbols: string[];
-  stopLossPercent: number;
-  takeProfitPercent: number;
-  trailingStop: boolean;
-  maxDailyLoss: number;
-  autoReinvest: boolean;
-  // Trading type specific configs
-  leverage: number;
-  maxLeverage: number;
-  marginRatio: number; // For futures
-}
-
-interface TradingStats {
-  totalPnL: number;
-  winRate: number;
-  totalTrades: number;
-  conservativeStats: {
-    trades: number;
-    winRate: number;
-    avgProfit: number;
-  };
-  aggressiveStats: {
-    trades: number;
-    winRate: number;
-    avgProfit: number;
-  };
-  dailyPnL: number;
-  monthlyPnL: number;
-  // Trading type specific stats
-  spotStats: { trades: number; winRate: number; avgProfit: number; };
-  futuresStats: { trades: number; winRate: number; avgProfit: number; totalMargin: number; };
-  leverageUsed: number;
-  maxDrawdown: number;
-  sharpeRatio: number;
+interface SuperBrainSignal {
+  symbol: string;
+  action: 'buy' | 'sell';
+  confidence: number;
+  entry: number;
+  stopLoss: number;
+  takeProfit: number;
+  reasoning: string;
+  timestamp: Date;
 }
 
 export const AutoTrader = () => {
   const { toast } = useToast();
-  const { cryptoData, newsData } = useCryptoData();
-  const { t } = useLanguage();
-  const { updateAutoTraderData } = useWalletData();
-  const {
-    analyzePriceChart,
-    analyzeTechnicalIndicators,
-    analyzeNewsSentiment,
-    loading: aiLoading
-  } = useAIAnalysis();
   
-  const [isOpen, setIsOpen] = useState(false);
-  
-  // 从localStorage读取初始配置，包括enabled状态
-  const [config, setConfig] = useState<AutoTraderConfig>(() => {
-    const saved = localStorage.getItem('autoTraderConfig');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return {
-          enabled: false,
-          strategy: 'conservative',
-          tradingType: 'spot',
-          conservativeMinConfidence: 90,
-          aggressiveMinConfidence: 70,
-          maxPositions: 5,
-          riskPerTrade: 2,
-          virtualBalance: 100000,
-          allowedSymbols: ['BTC', 'ETH', 'SOL'],
-          stopLossPercent: 5,
-          takeProfitPercent: 10,
-          trailingStop: true,
-          maxDailyLoss: 1000,
-          autoReinvest: true,
-          leverage: 1,
-          maxLeverage: 100,
-          marginRatio: 0.1,
-          ...parsed // 覆盖默认值
-        };
-      } catch (error) {
-        console.error('Failed to parse saved AutoTrader config:', error);
-      }
-    }
-    return {
-      enabled: false,
-      strategy: 'conservative',
-      tradingType: 'spot',
-      conservativeMinConfidence: 90,
-      aggressiveMinConfidence: 70,
-      maxPositions: 5,
-      riskPerTrade: 2,
-      virtualBalance: 100000,
-      allowedSymbols: ['BTC', 'ETH', 'SOL'],
-      stopLossPercent: 5,
-      takeProfitPercent: 10,
-      trailingStop: true,
-      maxDailyLoss: 1000,
-      autoReinvest: true,
-      leverage: 1,
-      maxLeverage: 100,
-      marginRatio: 0.1
+  // 检查最强大脑监测状态
+  const [isSuperBrainActive, setIsSuperBrainActive] = useState(() => {
+    const saved = localStorage.getItem('superBrainMonitoring');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // 虚拟账户
+  const [virtualAccount, setVirtualAccount] = useState<VirtualAccount>(() => {
+    const saved = localStorage.getItem('virtualAccount');
+    return saved ? JSON.parse(saved) : {
+      balance: 100000,
+      totalPnL: 0,
+      dailyPnL: 0,
+      winRate: 0,
+      totalTrades: 0,
+      activePositions: 0
     };
   });
 
-  const [signals, setSignals] = useState<TradingSignal[]>([]);
-  const [positions, setPositions] = useState<Position[]>([]);
-  const [stats, setStats] = useState<TradingStats>({
-    totalPnL: 0,
-    winRate: 87.5,
-    totalTrades: 48,
-    conservativeStats: { trades: 32, winRate: 93.8, avgProfit: 156.5 },
-    aggressiveStats: { trades: 16, winRate: 75.0, avgProfit: 89.2 },
-    dailyPnL: 1247.89,
-    monthlyPnL: 15847.32,
-    spotStats: { trades: 18, winRate: 89.0, avgProfit: 120.5 },
-    futuresStats: { trades: 24, winRate: 83.3, avgProfit: 185.2, totalMargin: 8500 },
-    leverageUsed: 3.2,
-    maxDrawdown: -2.8,
-    sharpeRatio: 2.15
+  // AI自动交易配置
+  const [isEnabled, setIsEnabled] = useState(() => {
+    const saved = localStorage.getItem('autoTraderEnabled');
+    return saved ? JSON.parse(saved) : false;
   });
 
-  const [tradingActivity, setTradingActivity] = useState<string[]>([]);
-  const [aiAnalysisResults, setAiAnalysisResults] = useState<{[symbol: string]: any}>({});
+  const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>('conservative');
+  const [maxPositions, setMaxPositions] = useState(5);
+  const [riskPerTrade, setRiskPerTrade] = useState(2); // 每笔交易风险百分比
+  
+  // 持仓管理
+  const [positions, setPositions] = useState<Position[]>([]);
+  const [tradingHistory, setTradingHistory] = useState<string[]>([]);
+  const [pendingSignals, setPendingSignals] = useState<SuperBrainSignal[]>([]);
 
-  // Sync initial data with WalletProvider
+  // 交易策略配置
+  const strategies: TradingStrategy[] = [
+    {
+      type: 'conservative',
+      name: '稳健型',
+      description: '胜率大于90%才进行交易，追求稳定收益',
+      minConfidence: 90,
+      icon: <Shield className="w-5 h-5" />,
+      color: 'text-blue-400'
+    },
+    {
+      type: 'aggressive',
+      name: '激进型', 
+      description: '胜率达到70%就进行交易，追求更多机会',
+      minConfidence: 70,
+      icon: <Zap className="w-5 h-5" />,
+      color: 'text-orange-400'
+    }
+  ];
+
+  // 监听最强大脑状态变化
   useEffect(() => {
-    updateAutoTraderData({
-      virtualBalance: config.virtualBalance,
-      totalPnL: stats.totalPnL,
-      dailyPnL: stats.dailyPnL,
-      activeTrades: positions.filter(p => p.status === 'open').length,
-      winRate: stats.winRate,
-      monthlyPnL: stats.monthlyPnL
-    });
-  }, [stats, positions, config.virtualBalance]);
+    const handleMonitoringChange = (event: CustomEvent) => {
+      setIsSuperBrainActive(event.detail.isMonitoring);
+      if (!event.detail.isMonitoring && isEnabled) {
+        setIsEnabled(false);
+        localStorage.setItem('autoTraderEnabled', JSON.stringify(false));
+        toast({
+          title: "AI自动交易已停止",
+          description: "最强大脑监测已关闭，AI自动交易同步停止",
+        });
+      }
+    };
+
+    window.addEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
+    };
+  }, [isEnabled]);
 
   // 监听最强大脑交易信号
   useEffect(() => {
-    const handleSuperBrainSignal = async (event: CustomEvent) => {
-      // 只有当AI自动交易开启时才响应
-      if (!config.enabled) {
-        console.log('AutoTrader disabled, ignoring SuperBrain signal');
-        return;
-      }
+    const handleSuperBrainSignal = (event: CustomEvent) => {
+      if (!isEnabled) return;
 
       const signalData = event.detail;
-      console.log('AutoTrader received SuperBrain signal:', signalData);
+      const signal: SuperBrainSignal = {
+        symbol: signalData.symbol,
+        action: signalData.action, // 修正：使用action而不是signal
+        confidence: signalData.confidence,
+        entry: signalData.entry || signalData.price,
+        stopLoss: signalData.stopLoss || 0,
+        takeProfit: signalData.takeProfit || 0,
+        reasoning: signalData.reasoning || signalData.analysis?.sentimentAnalysis || '',
+        timestamp: new Date()
+      };
 
-      // 检查信号强度是否符合配置要求
-      const minConfidence = config.strategy === 'conservative' 
-        ? config.conservativeMinConfidence 
-        : config.aggressiveMinConfidence;
-
-      if (signalData.confidence < minConfidence) {
-        console.log(`Signal confidence ${signalData.confidence}% below threshold ${minConfidence}%`);
-        setTradingActivity(prev => [
-          `⚠️ 信号强度${signalData.confidence}%低于设定阈值${minConfidence}%，忽略交易`,
+      // 检查策略要求
+      const strategy = strategies.find(s => s.type === selectedStrategy);
+      if (!strategy || signal.confidence < strategy.minConfidence) {
+        setTradingHistory(prev => [
+          `⚠️ ${signal.symbol} 信号胜率${signal.confidence}%低于${strategy?.name}策略要求${strategy?.minConfidence}%，忽略`,
           ...prev.slice(0, 19)
         ]);
         return;
       }
 
-      // 检查是否已有该币种的持仓
-      const existingPosition = positions.find(p => 
-        p.symbol === signalData.symbol && p.status === 'open'
-      );
-
-      if (existingPosition) {
-        console.log(`Already have open position for ${signalData.symbol}`);
-        setTradingActivity(prev => [
-          `💰 ${signalData.symbol}已有持仓，跳过本次信号`,
+      // 检查持仓限制
+      if (positions.length >= maxPositions) {
+        setTradingHistory(prev => [
+          `⚠️ ${signal.symbol} 已达最大持仓数${maxPositions}，跳过交易`,
           ...prev.slice(0, 19)
         ]);
         return;
       }
 
-      // 检查最大持仓数限制
-      const openPositions = positions.filter(p => p.status === 'open').length;
-      if (openPositions >= config.maxPositions) {
-        console.log(`Max positions reached: ${openPositions}/${config.maxPositions}`);
-        setTradingActivity(prev => [
-          `⚠️ 已达最大持仓数${config.maxPositions}，无法开新仓`,
+      // 检查是否已有该币种持仓
+      if (positions.some(p => p.symbol === signal.symbol)) {
+        setTradingHistory(prev => [
+          `💰 ${signal.symbol} 已有持仓，跳过重复交易`,
           ...prev.slice(0, 19)
         ]);
         return;
       }
 
       // 执行自动交易
-      await executeAutoTrade(signalData);
+      executeAutomaticTrade(signal);
     };
 
     window.addEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
@@ -290,1238 +216,546 @@ export const AutoTrader = () => {
     return () => {
       window.removeEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
     };
-  }, [config, positions]);
+  }, [isEnabled, selectedStrategy, maxPositions, positions]);
 
-  // Real-time sync of active trades count
-  useEffect(() => {
-    const activeTradesCount = positions.filter(p => p.status === 'open').length;
-    updateAutoTraderData({
-      activeTrades: activeTradesCount
-    });
-  }, [positions]);
-
-  // Sync virtual balance changes
-  useEffect(() => {
-    updateAutoTraderData({
-      virtualBalance: config.virtualBalance
-    });
-  }, [config.virtualBalance]);
-
-  // Enhanced AI signal generation using real AI API analysis
-  useEffect(() => {
-    if (!config.enabled) return;
-
-    const generateAISignal = async () => {
-      try {
-        // 选择要分析的加密货币
-        const availableCryptos = cryptoData.length > 0 ? cryptoData : config.allowedSymbols.map(symbol => ({
-          symbol,
-          price: Math.random() * 50000 + 20000,
-          high24h: Math.random() * 52000 + 21000,
-          low24h: Math.random() * 48000 + 19000,
-          volume24h: Math.random() * 1e9,
-          change24h: (Math.random() - 0.5) * 1000,
-          rsi: Math.random() * 100,
-          ma20: Math.random() * 50000 + 20000,
-          ma50: Math.random() * 50000 + 20000,
-          support: Math.random() * 48000 + 19000,
-          resistance: Math.random() * 52000 + 21000,
-          marketCap: Math.random() * 1e12,
-          dominance: Math.random() * 10
-        }));
-
-        const crypto = availableCryptos[Math.floor(Math.random() * Math.min(availableCryptos.length, config.allowedSymbols.length))];
-        const symbol = crypto.symbol;
-
-        // 1. 进行价格图表分析
-        const priceAnalysisData = {
-          symbol: symbol,
-          timeframe: '1H',
-          priceData: {
-            current: crypto.price,
-            high24h: crypto.high24h,
-            low24h: crypto.low24h,
-            volume24h: crypto.volume24h,
-            change24h: crypto.change24h
-          },
-          technicalData: {
-            rsi: crypto.rsi,
-            ma20: crypto.ma20,
-            ma50: crypto.ma50,
-            support: crypto.support,
-            resistance: crypto.resistance
-          }
-        };
-
-        // 2. 进行技术分析
-        const technicalAnalysisData = {
-          symbol: symbol,
-          indicators: {
-            rsi: crypto.rsi,
-            macd: ((crypto.price - crypto.ma20) / crypto.ma20 * 100),
-            kdj: (crypto.rsi * 0.8),
-            bollinger: {
-              upper: crypto.price * 1.02,
-              middle: crypto.ma20,
-              lower: crypto.price * 0.98
-            },
-            movingAverages: {
-              ma5: crypto.price * 0.995,
-              ma10: crypto.price * 0.992,
-              ma20: crypto.ma20,
-              ma50: crypto.ma50,
-              ma200: crypto.ma50 * 0.92
-            },
-            supportResistance: {
-              support1: crypto.support,
-              support2: crypto.support * 0.95,
-              resistance1: crypto.resistance,
-              resistance2: crypto.resistance * 1.05
-            }
-          },
-          marketData: {
-            price: crypto.price,
-            volume: crypto.volume24h,
-            marketCap: crypto.marketCap,
-            dominance: crypto.dominance
-          }
-        };
-
-        // 3. 进行新闻情感分析
-        const newsAnalysisData = {
-          news: newsData.slice(0, 5).map(news => ({
-            title: news.title,
-            description: news.description || '',
-            source: typeof news.source === 'string' ? news.source : news.source.name,
-            publishedAt: news.publishedAt || ''
-          })),
-          symbol: symbol,
-          timeframe: '1H'
-        };
-
-        // 并行调用三个AI分析
-        const [priceAnalysis, technicalAnalysis, sentimentAnalysis] = await Promise.all([
-          analyzePriceChart(priceAnalysisData).catch(() => "价格分析暂时不可用"),
-          analyzeTechnicalIndicators(technicalAnalysisData).catch(() => "技术分析暂时不可用"),
-          analyzeNewsSentiment(newsAnalysisData).catch(() => "情感分析暂时不可用")
-        ]);
-
-        // 保存AI分析结果
-        setAiAnalysisResults(prev => ({
-          ...prev,
-          [symbol]: {
-            priceAnalysis,
-            technicalAnalysis,
-            sentimentAnalysis,
-            timestamp: new Date()
-          }
-        }));
-
-        // 基于AI分析结果计算信号强度
-        const aiConfidence = calculateAIConfidence(priceAnalysis, technicalAnalysis, sentimentAnalysis);
-        const tradingDirection = determineTradingDirection(priceAnalysis, technicalAnalysis, sentimentAnalysis);
-        
-        const minConfidence = config.strategy === 'conservative' 
-          ? config.conservativeMinConfidence 
-          : config.aggressiveMinConfidence;
-
-        if (aiConfidence >= minConfidence && positions.length < config.maxPositions) {
-          const leverage = config.tradingType === 'spot' ? 1 : config.leverage;
-          
-          let signal: TradingSignal = {
-            id: Date.now().toString(),
-            symbol,
-            type: tradingDirection,
-            tradingType: config.tradingType,
-            confidence: aiConfidence,
-            entry: crypto.price,
-            stopLoss: tradingDirection === 'long' 
-              ? crypto.price * (1 - config.stopLossPercent / 100) 
-              : crypto.price * (1 + config.stopLossPercent / 100),
-            takeProfit: tradingDirection === 'long' 
-              ? crypto.price * (1 + config.takeProfitPercent / 100) 
-              : crypto.price * (1 - config.takeProfitPercent / 100),
-            reasoning: `AI多模型分析: ${priceAnalysis.substring(0, 100)}...`,
-            timestamp: new Date(),
-            status: 'pending',
-            strategy: config.strategy,
-            leverage: leverage,
-            aiAnalysis: {
-              technicalScore: extractScore(technicalAnalysis),
-              fundamentalScore: extractScore(priceAnalysis),
-              marketSentiment: extractSentiment(sentimentAnalysis),
-              riskLevel: config.strategy === 'conservative' ? 'low' : 'medium'
-            }
-          };
-
-          // Add futures-specific fields
-          if (config.tradingType === 'futures') {
-            signal.leverage = leverage;
-          }
-
-          setSignals(prev => [signal, ...prev.slice(0, 9)]);
-          
-          // Add to activity log
-          const tradingTypeText = config.tradingType === 'spot' ? '现货' : '合约';
-          setTradingActivity(prev => [
-            `🤖 AI多模型分析发现${config.strategy === 'conservative' ? '稳健' : '激进'}${tradingTypeText}交易机会: ${symbol} ${tradingDirection === 'long' ? '买入' : '卖空'} ${leverage > 1 ? `${leverage}x杠杆` : ''} (置信度: ${aiConfidence}%)`,
-            ...prev.slice(0, 19)
-          ]);
-          
-          // Auto execute with delay
-          setTimeout(() => executeSignal(signal), 3000);
-        }
-
-      } catch (error) {
-        console.error('AI信号生成错误:', error);
-        setTradingActivity(prev => [
-          `⚠️ AI分析暂时不可用，使用备用策略`,
-          ...prev.slice(0, 19)
-        ]);
-      }
-    };
-
-    const interval = setInterval(generateAISignal, Math.random() * 15000 + 10000); // 10-25秒间隔
-    return () => clearInterval(interval);
-  }, [config.enabled, config.strategy, config.conservativeMinConfidence, config.aggressiveMinConfidence, config.maxPositions, positions.length, cryptoData, newsData, analyzePriceChart, analyzeTechnicalIndicators, analyzeNewsSentiment]);
-
-  // AI分析结果处理函数
-  const calculateAIConfidence = (priceAnalysis: string, technicalAnalysis: string, sentimentAnalysis: string): number => {
-    let confidence = 50; // 基础置信度
-    
-    // 分析价格分析结果
-    if (priceAnalysis.includes('强烈') || priceAnalysis.includes('明确') || priceAnalysis.includes('突破')) {
-      confidence += 15;
-    } else if (priceAnalysis.includes('谨慎') || priceAnalysis.includes('风险')) {
-      confidence -= 10;
-    }
-    
-    // 分析技术指标结果
-    if (technicalAnalysis.includes('买入') || technicalAnalysis.includes('看涨') || technicalAnalysis.includes('bullish')) {
-      confidence += 20;
-    } else if (technicalAnalysis.includes('卖出') || technicalAnalysis.includes('看跌') || technicalAnalysis.includes('bearish')) {
-      confidence += 20; // 无论看涨看跌，明确方向都增加置信度
-    }
-    
-    // 分析情感结果
-    if (sentimentAnalysis.includes('积极') || sentimentAnalysis.includes('乐观') || sentimentAnalysis.includes('看涨')) {
-      confidence += 10;
-    } else if (sentimentAnalysis.includes('消极') || sentimentAnalysis.includes('悲观') || sentimentAnalysis.includes('看跌')) {
-      confidence += 10;
-    }
-    
-    return Math.min(Math.max(confidence, 30), 95); // 限制在30-95%之间
-  };
-
-  const determineTradingDirection = (priceAnalysis: string, technicalAnalysis: string, sentimentAnalysis: string): 'long' | 'short' => {
-    let longScore = 0;
-    let shortScore = 0;
-    
-    // 分析文本中的方向指示
-    const bullishKeywords = ['买入', '看涨', 'bullish', '上涨', '突破', '支撑'];
-    const bearishKeywords = ['卖出', '看跌', 'bearish', '下跌', '阻力', '突破阻力'];
-    
-    const allAnalysis = [priceAnalysis, technicalAnalysis, sentimentAnalysis].join(' ');
-    
-    bullishKeywords.forEach(keyword => {
-      if (allAnalysis.includes(keyword)) longScore++;
-    });
-    
-    bearishKeywords.forEach(keyword => {
-      if (allAnalysis.includes(keyword)) shortScore++;
-    });
-    
-    return longScore >= shortScore ? 'long' : 'short';
-  };
-
-  const extractScore = (analysis: string): number => {
-    // 从分析文本中提取数值评分
-    const scoreMatch = analysis.match(/(\d+)分|(\d+)%|(\d+)\.(\d+)/);
-    if (scoreMatch) {
-      return parseInt(scoreMatch[1] || scoreMatch[2] || scoreMatch[3]) || Math.floor(Math.random() * 30) + 70;
-    }
-    return Math.floor(Math.random() * 30) + 70; // 70-100的随机分数
-  };
-
-  const extractSentiment = (analysis: string): 'bullish' | 'bearish' | 'neutral' => {
-    if (analysis.includes('看涨') || analysis.includes('积极') || analysis.includes('乐观')) {
-      return 'bullish';
-    } else if (analysis.includes('看跌') || analysis.includes('消极') || analysis.includes('悲观')) {
-      return 'bearish';
-    }
-    return 'neutral';
-  };
-
-  const generateAIReasoning = (symbol: string, type: string, confidence: number, strategy: TradingStrategy, tradingType: TradingType): string => {
-    const baseReasons = [
-      `${symbol}突破关键阻力位，成交量放大确认`,
-      `多重技术指标共振，${type === 'long' ? '看涨' : '看跌'}信号强烈`,
-      `市场情绪转换，资金流向显示明显${type === 'long' ? '买入' : '卖出'}压力`,
-      `AI深度学习模型识别出类似历史模式`,
-      `基本面分析与技术面完美结合的交易机会`
-    ];
-    
-    const tradingTypeReasons = {
-      spot: '现货市场流动性充足，适合稳健布局',
-      futures: '期货合约价差机会明显，杠杆优势突出'
-    };
-    
-    const strategyNote = strategy === 'conservative' 
-      ? '稳健策略：风险控制优先，追求稳定收益'
-      : '激进策略：追求高收益，承担相应风险';
-    
-    return `${baseReasons[Math.floor(Math.random() * baseReasons.length)]}。${tradingTypeReasons[tradingType]}。${strategyNote}`;
-  };
-
-  const executeSignal = (signal: TradingSignal) => {
-    let positionSize = (config.virtualBalance * config.riskPerTrade) / 100;
-    
-    // Apply leverage for futures
-    if (signal.tradingType === 'futures' && signal.leverage) {
-      positionSize *= signal.leverage;
-    }
-    
-    // Calculate margin for leveraged positions
-    const margin = signal.tradingType === 'futures' ? positionSize / (signal.leverage || 1) : positionSize;
-    
-    // Calculate liquidation price for futures
-    let liquidationPrice;
-    if (signal.tradingType === 'futures' && signal.leverage) {
-      const marginRatio = 1 / signal.leverage * 0.8; // 80% of full margin
-      liquidationPrice = signal.type === 'long' 
-        ? signal.entry * (1 - marginRatio)
-        : signal.entry * (1 + marginRatio);
-    }
+  // 执行自动交易
+  const executeAutomaticTrade = useCallback(async (signal: SuperBrainSignal) => {
+    const tradeSize = (virtualAccount.balance * riskPerTrade) / 100;
+    const positionSize = tradeSize / signal.entry;
     
     const newPosition: Position = {
-      id: signal.id,
+      id: Date.now().toString(),
       symbol: signal.symbol,
-      type: signal.type,
-      tradingType: signal.tradingType,
-      entry: signal.entry,
-      size: positionSize,
+      type: signal.action === 'buy' ? 'long' : 'short',
+      entryPrice: signal.entry,
       currentPrice: signal.entry,
+      size: positionSize,
       pnl: 0,
       pnlPercent: 0,
-      openTime: signal.timestamp,
-      status: 'open',
-      strategy: signal.strategy,
+      confidence: signal.confidence,
+      strategy: selectedStrategy,
+      openTime: new Date(),
       stopLoss: signal.stopLoss,
-      takeProfit: signal.takeProfit,
-      highestProfit: 0,
-      maxDrawdown: 0,
-      leverage: signal.leverage,
-      margin: margin,
-      liquidationPrice: liquidationPrice
+      takeProfit: signal.takeProfit
     };
 
+    // 更新持仓
     setPositions(prev => [...prev, newPosition]);
-    setSignals(prev => 
-      prev.map(s => s.id === signal.id ? { ...s, status: 'executed' } : s)
-    );
+    
+    // 更新虚拟账户
+    setVirtualAccount(prev => ({
+      ...prev,
+      balance: prev.balance - tradeSize,
+      totalTrades: prev.totalTrades + 1,
+      activePositions: prev.activePositions + 1
+    }));
 
-    // Add to activity log
-    const tradingTypeText = signal.tradingType === 'spot' ? '现货' : '合约';
-    const leverageText = signal.leverage && signal.leverage > 1 ? ` ${signal.leverage}x杠杆` : '';
-    setTradingActivity(prev => [
-      `✅ ${tradingTypeText}交易执行: ${signal.symbol} ${signal.type === 'long' ? '买入' : '卖空'} $${signal.entry.toLocaleString()}${leverageText} (${signal.strategy === 'conservative' ? '稳健' : '激进'}策略)`,
+    // 添加交易历史
+    const strategyName = strategies.find(s => s.type === selectedStrategy)?.name;
+    setTradingHistory(prev => [
+      `🚀 ${strategyName} ${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} $${signal.entry.toFixed(2)} 胜率${signal.confidence}%`,
       ...prev.slice(0, 19)
     ]);
 
-    // Immediately sync active trades count with WalletProvider
-    setTimeout(() => {
-      updateAutoTraderData({
-        activeTrades: positions.length + 1 // +1 because this position is being added
+    // 保存到数据库
+    try {
+      await supabase.from('positions').insert({
+        symbol: newPosition.symbol,
+        type: newPosition.type,
+        entry_price: newPosition.entryPrice,
+        current_price: newPosition.currentPrice,
+        position_size: newPosition.size,
+        stop_loss: newPosition.stopLoss,
+        take_profit: newPosition.takeProfit,
+        confidence: newPosition.confidence,
+        strategy: newPosition.strategy,
+        status: 'open'
       });
-    }, 100);
+    } catch (error) {
+      console.error('Failed to save position to database:', error);
+    }
 
     toast({
-      title: "AI自动交易执行",
-      description: `${signal.symbol} ${tradingTypeText} ${signal.type === 'long' ? '买入' : '卖空'} 订单已执行${leverageText}`,
+      title: "自动交易执行成功",
+      description: `${strategyName}策略 ${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} ${positionSize.toFixed(4)}`,
+    });
+  }, [virtualAccount.balance, riskPerTrade, selectedStrategy]);
+
+  // 启动/停止AI自动交易
+  const toggleAutoTrader = () => {
+    if (!isSuperBrainActive) {
+      toast({
+        title: "无法启动AI自动交易",
+        description: "请先开启最强大脑自动检测功能",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const newState = !isEnabled;
+    setIsEnabled(newState);
+    localStorage.setItem('autoTraderEnabled', JSON.stringify(newState));
+    
+    // 发送状态变化事件
+    window.dispatchEvent(new CustomEvent('autoTraderStatusChanged', {
+      detail: { isActive: newState }
+    }));
+
+    toast({
+      title: newState ? "AI自动交易已启动" : "AI自动交易已停止",
+      description: newState 
+        ? `${strategies.find(s => s.type === selectedStrategy)?.name}策略已激活，等待交易信号...`
+        : "自动交易功能已关闭",
+    });
+
+    if (newState) {
+      setTradingHistory(prev => [
+        `🤖 AI自动交易启动 - ${strategies.find(s => s.type === selectedStrategy)?.name}策略`,
+        ...prev.slice(0, 19)
+      ]);
+    }
+  };
+
+  // 设置虚拟账户余额
+  const updateVirtualBalance = (newBalance: number) => {
+    const updatedAccount = { ...virtualAccount, balance: newBalance };
+    setVirtualAccount(updatedAccount);
+    localStorage.setItem('virtualAccount', JSON.stringify(updatedAccount));
+  };
+
+  // 平仓操作
+  const closePosition = (position: Position) => {
+    const pnl = position.type === 'long' 
+      ? (position.currentPrice - position.entryPrice) * position.size
+      : (position.entryPrice - position.currentPrice) * position.size;
+    
+    // 更新虚拟账户
+    setVirtualAccount(prev => ({
+      ...prev,
+      balance: prev.balance + (position.entryPrice * position.size) + pnl,
+      totalPnL: prev.totalPnL + pnl,
+      dailyPnL: prev.dailyPnL + pnl,
+      activePositions: prev.activePositions - 1,
+      winRate: prev.totalTrades > 0 ? ((prev.totalTrades * prev.winRate / 100 + (pnl > 0 ? 1 : 0)) / prev.totalTrades * 100) : (pnl > 0 ? 100 : 0)
+    }));
+
+    // 移除持仓
+    setPositions(prev => prev.filter(p => p.id !== position.id));
+
+    setTradingHistory(prev => [
+      `${pnl > 0 ? '✅' : '❌'} ${position.symbol} 平仓 ${pnl > 0 ? '+' : ''}$${pnl.toFixed(2)}`,
+      ...prev.slice(0, 19)
+    ]);
+
+    toast({
+      title: pnl > 0 ? "盈利平仓" : "止损平仓",
+      description: `${position.symbol} ${pnl > 0 ? '+' : ''}$${pnl.toFixed(2)}`,
     });
   };
 
-  // Enhanced price simulation with auto stop-loss and take-profit
+  // 定期更新持仓价格（模拟）
   useEffect(() => {
-    const updatePrices = () => {
+    if (positions.length === 0) return;
+
+    const interval = setInterval(() => {
       setPositions(prev => prev.map(position => {
-        if (position.status === 'closed') return position;
-
-        const volatility = position.strategy === 'aggressive' ? 0.025 : 0.015;
-        const priceChange = (Math.random() - 0.5) * volatility;
+        const priceChange = (Math.random() - 0.5) * 0.02; // ±1%随机变化
         const newPrice = position.currentPrice * (1 + priceChange);
-        
-        let pnl = 0;
-        if (position.type === 'long') {
-          pnl = (newPrice - position.entry) * (position.size / position.entry);
-        } else {
-          pnl = (position.entry - newPrice) * (position.size / position.entry);
-        }
-        
-        const pnlPercent = (pnl / position.size) * 100;
-        const highestProfit = Math.max(position.highestProfit, pnl);
-        const maxDrawdown = Math.min(position.maxDrawdown, pnl);
-
-        // Auto stop-loss and take-profit
-        const shouldStopLoss = (position.type === 'long' && newPrice <= position.stopLoss) ||
-                              (position.type === 'short' && newPrice >= position.stopLoss);
-        
-        const shouldTakeProfit = (position.type === 'long' && newPrice >= position.takeProfit) ||
-                                (position.type === 'short' && newPrice <= position.takeProfit);
-
-        if (shouldStopLoss || shouldTakeProfit) {
-          const reason = shouldStopLoss ? '止损' : '止盈';
-          setTradingActivity(prev => [
-            `${shouldStopLoss ? '🛑' : '🎯'} 自动${reason}: ${position.symbol} ${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)} (${pnlPercent.toFixed(2)}%)`,
-            ...prev.slice(0, 19)
-          ]);
-          
-          // Update stats and sync with WalletProvider
-          setStats(prevStats => {
-            const newStats = {
-              ...prevStats,
-              totalPnL: prevStats.totalPnL + pnl,
-              totalTrades: prevStats.totalTrades + 1,
-              dailyPnL: prevStats.dailyPnL + pnl
-            };
-            
-            // Sync with WalletProvider
-            updateAutoTraderData({
-              virtualBalance: config.virtualBalance,
-              totalPnL: newStats.totalPnL,
-              dailyPnL: newStats.dailyPnL,
-              activeTrades: positions.filter(p => p.status === 'open').length,
-              winRate: newStats.winRate,
-              monthlyPnL: newStats.monthlyPnL
-            });
-            
-            return newStats;
-          });
-
-          return {
-            ...position,
-            currentPrice: newPrice,
-            pnl,
-            pnlPercent,
-            status: 'closed' as const,
-            highestProfit,
-            maxDrawdown
-          };
-        }
+        const pnl = position.type === 'long' 
+          ? (newPrice - position.entryPrice) * position.size
+          : (position.entryPrice - newPrice) * position.size;
+        const pnlPercent = (pnl / (position.entryPrice * position.size)) * 100;
 
         return {
           ...position,
           currentPrice: newPrice,
-          pnl,
-          pnlPercent,
-          highestProfit,
-          maxDrawdown
+          pnl: pnl,
+          pnlPercent: pnlPercent
         };
       }));
-    };
+    }, 5000); // 每5秒更新一次
 
-    const interval = setInterval(updatePrices, 1500);
     return () => clearInterval(interval);
-  }, []);
-
-  const toggleAutoTrader = () => {
-    const newEnabled = !config.enabled;
-    const newConfig = { ...config, enabled: newEnabled };
-    setConfig(newConfig);
-    
-    // 保存配置到localStorage
-    localStorage.setItem('autoTraderConfig', JSON.stringify(newConfig));
-    
-    // 发送AI自动赚钱状态变化事件
-    const statusChangeEvent = new CustomEvent('autoTraderStatusChanged', {
-      detail: { isActive: newEnabled }
-    });
-    window.dispatchEvent(statusChangeEvent);
-    
-    const message = config.enabled ? t('autotrader.stopped') : `${t('autotrader.started')} (${config.strategy === 'conservative' ? t('autotrader.conservative_strategy') : t('autotrader.aggressive_strategy')})`;
-    
-    setTradingActivity(prev => [
-      `⚡ ${message}`,
-      ...prev.slice(0, 19)
-    ]);
-    
-    toast({
-      title: message,
-      description: config.enabled ? t('autotrader.system_paused') : t('autotrader.system_analyzing'),
-    });
-  };
-
-  // 执行自动交易的核心函数
-  const executeAutoTrade = async (signalData: any) => {
-    try {
-      const { symbol, signal, confidence, price, tradingDetails } = signalData;
-      
-      // 计算交易金额（基于风险百分比）
-      const riskAmount = (config.virtualBalance * config.riskPerTrade) / 100;
-      const entryPrice = tradingDetails?.entry || price;
-      const stopLoss = tradingDetails?.stopLoss || (entryPrice * (signal === 'buy' ? 0.95 : 1.05));
-      const takeProfit = tradingDetails?.takeProfit || (entryPrice * (signal === 'buy' ? 1.1 : 0.9));
-      
-      // 根据止损距离计算仓位大小
-      const stopDistance = Math.abs(entryPrice - stopLoss) / entryPrice;
-      const maxPositionSize = riskAmount / stopDistance;
-      const positionSize = Math.min(maxPositionSize, config.virtualBalance * 0.1); // 最大10%仓位
-      
-      // 创建新的交易信号
-      const newSignal: TradingSignal = {
-        id: `signal_${Date.now()}`,
-        symbol,
-        type: signal === 'buy' ? 'long' : 'short',
-        tradingType: config.tradingType,
-        confidence,
-        entry: entryPrice,
-        stopLoss,
-        takeProfit,
-        reasoning: `🧠 最强大脑AI分析：${tradingDetails?.reasoning || '综合6种AI模型分析结果'}`,
-        timestamp: new Date(),
-        status: 'executed',
-        strategy: config.strategy,
-        leverage: config.tradingType === 'futures' ? config.leverage : undefined,
-        aiAnalysis: {
-          technicalScore: confidence,
-          fundamentalScore: confidence,
-          marketSentiment: signal === 'buy' ? 'bullish' : 'bearish',
-          riskLevel: confidence > 85 ? 'low' : confidence > 70 ? 'medium' : 'high'
-        }
-      };
-
-      // 创建新的持仓
-      const newPosition: Position = {
-        id: `pos_${Date.now()}`,
-        symbol,
-        type: signal === 'buy' ? 'long' : 'short',
-        tradingType: config.tradingType,
-        entry: entryPrice,
-        size: positionSize,
-        currentPrice: entryPrice,
-        pnl: 0,
-        pnlPercent: 0,
-        openTime: new Date(),
-        status: 'open',
-        strategy: config.strategy,
-        stopLoss,
-        takeProfit,
-        highestProfit: 0,
-        maxDrawdown: 0,
-        leverage: config.tradingType === 'futures' ? config.leverage : undefined,
-        margin: config.tradingType === 'futures' ? positionSize / config.leverage : undefined,
-        liquidationPrice: config.tradingType === 'futures' 
-          ? (signal === 'buy' ? entryPrice * 0.8 : entryPrice * 1.2) 
-          : undefined
-      };
-
-      // 更新状态
-      setSignals(prev => [newSignal, ...prev.slice(0, 19)]);
-      setPositions(prev => [newPosition, ...prev]);
-      
-      // 更新虚拟余额
-      setConfig(prev => ({
-        ...prev,
-        virtualBalance: prev.virtualBalance - positionSize
-      }));
-
-      // 记录交易活动
-      const actionText = signal === 'buy' ? '买入' : '卖出';
-      setTradingActivity(prev => [
-        `🚀 基于最强大脑分析自动${actionText} ${symbol}`,
-        `💰 入场价格: $${entryPrice.toFixed(2)} | 仓位: ${(positionSize/1000).toFixed(1)}K`,
-        `🎯 止损: $${stopLoss.toFixed(2)} | 止盈: $${takeProfit.toFixed(2)}`,
-        `🧠 AI胜率: ${confidence}% | 策略: ${config.strategy}`,
-        ...prev.slice(0, 16)
-      ]);
-
-      // 显示成功通知
-      toast({
-        title: `🚀 AI自动交易执行成功`,
-        description: `基于最强大脑分析，自动${actionText} ${symbol}，胜率 ${confidence}%`,
-        duration: 8000,
-      });
-
-      console.log('Auto trade executed successfully:', newPosition);
-
-    } catch (error) {
-      console.error('Auto trade execution failed:', error);
-      
-      setTradingActivity(prev => [
-        `❌ 自动交易执行失败: ${error.message}`,
-        ...prev.slice(0, 19)
-      ]);
-
-      toast({
-        title: '自动交易失败',
-        description: '执行交易时发生错误，请检查配置',
-        duration: 5000,
-      });
-    }
-  };
-
-  const closePosition = (positionId: string) => {
-    const position = positions.find(p => p.id === positionId);
-    if (!position) return;
-
-    setPositions(prev => 
-      prev.map(p => p.id === positionId ? { ...p, status: 'closed' } : p)
-    );
-    
-    setTradingActivity(prev => [
-      `📤 手动平仓: ${position.symbol} ${position.pnl >= 0 ? '+' : ''}$${position.pnl.toFixed(2)}`,
-      ...prev.slice(0, 19)
-    ]);
-    
-    setStats(prevStats => {
-      const newStats = {
-        ...prevStats,
-        totalPnL: prevStats.totalPnL + position.pnl,
-        totalTrades: prevStats.totalTrades + 1
-      };
-      
-      // Sync with WalletProvider
-      updateAutoTraderData({
-        virtualBalance: config.virtualBalance,
-        totalPnL: newStats.totalPnL,
-        dailyPnL: newStats.dailyPnL,
-        activeTrades: positions.filter(p => p.status === 'open').length - 1, // -1 because this position will be closed
-        winRate: newStats.winRate,
-        monthlyPnL: newStats.monthlyPnL
-      });
-      
-      return newStats;
-    });
-  };
-
-  const resetVirtualAccount = () => {
-    const newConfig = { ...config, virtualBalance: 100000 };
-    setConfig(newConfig);
-    setPositions([]);
-    setSignals([]);
-    const resetStats = {
-      totalPnL: 0,
-      winRate: 87.5,
-      totalTrades: 48,
-      conservativeStats: { trades: 32, winRate: 93.8, avgProfit: 156.5 },
-      aggressiveStats: { trades: 16, winRate: 75.0, avgProfit: 89.2 },
-      dailyPnL: 0,
-      monthlyPnL: 0,
-      spotStats: { trades: 18, winRate: 89.0, avgProfit: 120.5 },
-      futuresStats: { trades: 24, winRate: 83.3, avgProfit: 185.2, totalMargin: 8500 },
-      leverageUsed: 3.2,
-      maxDrawdown: -2.8,
-      sharpeRatio: 2.15
-    };
-    setStats(resetStats);
-    setTradingActivity(['🔄 虚拟账户已重置']);
-    
-    // Sync with WalletProvider
-    updateAutoTraderData({
-      virtualBalance: 100000,
-      totalPnL: 0,
-      dailyPnL: 0,
-      activeTrades: 0,
-      winRate: 87.5,
-      monthlyPnL: 0
-    });
-    
-    toast({
-      title: "虚拟账户已重置",
-      description: "所有交易记录和余额已重置到初始状态",
-    });
-  };
-
-  const getStrategyConfig = () => {
-    return config.strategy === 'conservative' 
-      ? { minConfidence: config.conservativeMinConfidence, color: 'green', name: t('trading.conservative_strategy') }
-      : { minConfidence: config.aggressiveMinConfidence, color: 'orange', name: t('trading.aggressive_strategy') };
-  };
-
-  const strategyConfig = getStrategyConfig();
+  }, [positions.length]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-orbitron tracking-wide px-6 py-2 relative">
-          <Bot className="w-4 h-4 mr-2" />
-          {t('autotrader.button')}
-          {config.enabled && (
-            <div className="absolute -top-1 -right-1">
-              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            </div>
-          )}
-          {Object.keys(aiAnalysisResults).length > 0 && (
-            <Badge variant="outline" className="ml-2 bg-accent/20 text-accent border-accent/50">
-              <Brain className="w-3 h-3 mr-1" />
-              {t('autotrader.ai_analysis_active')}
-            </Badge>
-          )}
-        </Button>
-      </DialogTrigger>
-      
-      <DialogContent className="sm:max-w-7xl max-h-[95vh] bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 border-emerald-700/50 overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-white flex items-center gap-3 font-orbitron text-xl">
-            <Bot className="w-6 h-6 text-emerald-400" />
-            {t('autotrader.title')}
-            <div className="flex items-center gap-2 ml-auto">
-              {aiLoading.priceChart && (
-                <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/50">
-                  <Activity className="w-3 h-3 mr-1 animate-spin" />
-                  价格分析
-                </Badge>
-              )}
-              {aiLoading.technicalAnalysis && (
-                <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
-                  <Activity className="w-3 h-3 mr-1 animate-spin" />
-                  技术分析
-                </Badge>
-              )}
-              {aiLoading.newsSentiment && (
-                <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/50">
-                  <Activity className="w-3 h-3 mr-1 animate-spin" />
-                  情感分析
-                </Badge>
-              )}
-              <Badge variant="outline" className={`${config.enabled ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-red-500/20 text-red-400 border-red-500/50'}`}>
-                <div className={`w-2 h-2 rounded-full mr-2 ${config.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`}></div>
-                {config.enabled ? '运行中 (接收最强大脑信号)' : '已停止'}
-              </Badge>
-            </div>
-          </DialogTitle>
-        </DialogHeader>
-        
-        <div className="flex-1 flex gap-4 min-h-0">
-          {/* Left Panel - Enhanced Controls & Analytics */}
-          <div className="w-1/3 space-y-4">
-            {/* Strategy Selection & Main Controls */}
-            <Card className="p-4 bg-gradient-to-br from-slate-800/80 to-slate-700/50 border-slate-600">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-white font-semibold flex items-center gap-2">
-                  <Target className="w-4 h-4" />
-                  {t('autotrader.strategy_control')}
-                </h3>
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={config.enabled}
-                    onCheckedChange={toggleAutoTrader}
-                    className="data-[state=checked]:bg-green-600"
-                  />
-                  {config.enabled ? (
-                    <Play className="w-4 h-4 text-green-400" />
-                  ) : (
-                    <Pause className="w-4 h-4 text-red-400" />
-                  )}
-                </div>
+    <div className="space-y-6">
+      {/* 头部控制面板 */}
+      <Card className="bg-gradient-to-r from-emerald-900/40 to-emerald-800/40 border-emerald-600/30">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <Bot className="w-6 h-6 text-emerald-400" />
               </div>
-              
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium text-white">🧠 最强大脑联动</h4>
-                      <Badge variant="outline" className={config.enabled ? "bg-blue-500/20 text-blue-400 border-blue-500/50" : "bg-gray-500/20 text-gray-400"}>
-                        {config.enabled ? "已启用" : "未启用"}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-slate-400 mb-3">
-                      当最强大脑检测到高胜率交易机会时，AI自动赚钱将根据信号自动执行交易
-                    </p>
-                    {config.enabled && (
-                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                        <div className="text-xs text-blue-300 space-y-1">
-                          <div>• 监听最强大脑交易信号</div>
-                          <div>• 根据策略自动过滤信号强度</div>
-                          <div>• 自动执行符合条件的交易</div>
-                          <div>• 严格遵守仓位和风险管理</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white">AI自动赚钱</h2>
+                <p className="text-emerald-300/70">智能自动交易系统</p>
+              </div>
+            </div>
 
-                  <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-slate-300 text-sm mb-2 block">{t('trading.strategy')}</label>
-                    <Select value={config.strategy} onValueChange={(value: TradingStrategy) => setConfig(prev => ({ ...prev, strategy: value }))}>
-                      <SelectTrigger className="bg-slate-700 border-slate-600">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="conservative">
-                          <div className="flex items-center gap-2">
-                            <Shield className="w-4 h-4 text-green-400" />
-                            {t('trading.conservative_strategy')} (≥90%{t('ai.win_rate')})
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="aggressive">
-                          <div className="flex items-center gap-2">
-                            <Zap className="w-4 h-4 text-orange-400" />
-                            {t('trading.aggressive_strategy')} (≥70%{t('ai.win_rate')})
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-slate-300 text-sm mb-2 block">{t('trading.type')}</label>
-                    <Select value={config.tradingType} onValueChange={(value: TradingType) => setConfig(prev => ({ ...prev, tradingType: value }))}>
-                      <SelectTrigger className="bg-slate-700 border-slate-600">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="spot">
-                          <div className="flex items-center gap-2">
-                            <CircleDollarSign className="w-4 h-4 text-blue-400" />
-                            {t('trading.spot')}
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="futures">
-                          <div className="flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-purple-400" />
-                            {t('trading.futures')}
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                {config.tradingType !== 'spot' && (
-                  <div>
-                    <label className="text-slate-300 text-sm mb-2 block">{t('trading.leverage')}: {config.leverage}x</label>
-                    <Slider
-                      value={[config.leverage]}
-                      onValueChange={(value) => setConfig(prev => ({ ...prev, leverage: value[0] }))}
-                      max={config.tradingType === 'futures' ? 100 : 50}
-                      min={1}
-                      step={1}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-slate-400 mt-1">
-                      <span>1x</span>
-                      <span>{config.tradingType === 'futures' ? '100x' : '50x'}</span>
-                    </div>
-                  </div>
+            <div className="flex items-center gap-4">
+              {/* 最强大脑状态指示 */}
+              <div className="flex items-center gap-2">
+                <Brain className={`w-4 h-4 ${isSuperBrainActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                <span className={`text-sm ${isSuperBrainActive ? 'text-emerald-400' : 'text-slate-400'}`}>
+                  最强大脑: {isSuperBrainActive ? '已激活' : '未激活'}
+                </span>
+              </div>
+
+              {/* 启动/停止按钮 */}
+              <Button
+                onClick={toggleAutoTrader}
+                disabled={!isSuperBrainActive}
+                className={`px-6 py-2 ${
+                  isEnabled 
+                    ? 'bg-red-500 hover:bg-red-600 text-white' 
+                    : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {isEnabled ? (
+                  <>
+                    <Pause className="w-4 h-4 mr-2" />
+                    停止自动交易
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4 mr-2" />
+                    启动自动交易
+                  </>
                 )}
-                
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">{t('trading.strategy_short')}</p>
-                    <p className={`font-semibold ${config.strategy === 'conservative' ? 'text-green-400' : 'text-orange-400'}`}>
-                      {strategyConfig.name}
-                    </p>
-                  </div>
-                  <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">{t('trading.type')}</p>
-                    <p className="text-white font-mono">
-                      {config.tradingType === 'spot' ? t('trading.spot_short') : t('trading.futures_short')}
-                    </p>
-                  </div>
-                  <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">{t('trading.leverage')}</p>
-                    <p className="text-white font-mono">{config.leverage}x</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Enhanced Virtual Account with Profit Visualization */}
-            <Card className="p-4 bg-gradient-to-br from-blue-900/30 to-purple-900/30 border-blue-500/30">
-              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-                <CircleDollarSign className="w-4 h-4 text-blue-400" />
-                {t('autotrader.virtual_account')}
-              </h3>
-              
-              <div className="space-y-3">
-                <div className="text-center p-3 bg-slate-800/50 rounded-lg">
-                  <p className="text-slate-400 text-sm">{t('autotrader.total_assets')}</p>
-                  <p className="text-2xl font-bold text-white font-mono">
-                    ${(config.virtualBalance + stats.totalPnL).toLocaleString()}
-                  </p>
-                  <p className={`text-sm font-mono ${stats.totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toLocaleString()} 
-                    ({((stats.totalPnL / config.virtualBalance) * 100).toFixed(2)}%)
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="text-center p-2 bg-green-500/10 rounded border border-green-500/20">
-                    <p className="text-green-400">{t('autotrader.daily_pnl')}</p>
-                    <p className="text-white font-mono">+${stats.dailyPnL.toLocaleString()}</p>
-                  </div>
-                  <div className="text-center p-2 bg-blue-500/10 rounded border border-blue-500/20">
-                    <p className="text-blue-400">{t('autotrader.monthly_pnl')}</p>
-                    <p className="text-white font-mono">+${stats.monthlyPnL.toLocaleString()}</p>
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">{t('autotrader.win_rate')}</p>
-                    <p className="text-white font-mono">{stats.winRate.toFixed(1)}%</p>
-                  </div>
-                  <div className="text-center p-2 bg-slate-700/50 rounded">
-                    <p className="text-slate-400">{t('autotrader.total_trades')}</p>
-                    <p className="text-white font-mono">{stats.totalTrades}</p>
-                  </div>
-                </div>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={resetVirtualAccount}
-                  className="w-full"
-                >
-                  {t('autotrader.reset_account')}
-                </Button>
-              </div>
-            </Card>
-
-            {/* Strategy Performance Comparison */}
-            <Card className="p-4 bg-slate-800/50 border-slate-700">
-              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-                <Award className="w-4 h-4 text-yellow-400" />
-                {t('autotrader.strategy_performance')}
-              </h3>
-              
-              <div className="space-y-3">
-                <div className="p-3 bg-green-500/10 rounded border border-green-500/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-green-400 font-medium">{t('trading.conservative_strategy')}</span>
-                    <Badge className="bg-green-500/20 text-green-400">93.8%{t('ai.win_rate')}</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                       <p className="text-slate-400">{t('trading.trades_count')}</p>
-                      <p className="text-white">{stats.conservativeStats.trades}</p>
-                    </div>
-                    <div>
-                       <p className="text-slate-400">{t('trading.avg_profit')}</p>
-                      <p className="text-green-400">+${stats.conservativeStats.avgProfit}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-3 bg-orange-500/10 rounded border border-orange-500/20">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-orange-400 font-medium">{t('trading.aggressive_strategy')}</span>
-                    <Badge className="bg-orange-500/20 text-orange-400">75.0%{t('ai.win_rate')}</Badge>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <p className="text-slate-400">{t('trading.trades_count')}</p>
-                      <p className="text-white">{stats.aggressiveStats.trades}</p>
-                    </div>
-                    <div>
-                      <p className="text-slate-400">{t('trading.avg_profit')}</p>
-                      <p className="text-orange-400">+${stats.aggressiveStats.avgProfit}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* Advanced Settings */}
-            <Card className="p-4 bg-slate-800/50 border-slate-700">
-              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                {t('trading.advanced_settings')}
-              </h3>
-              
-              <div className="space-y-3">
-                <div>
-                  <label className="text-slate-400 text-sm">{t('trading.risk_per_trade')} ({config.riskPerTrade}%)</label>
-                  <Slider
-                    value={[config.riskPerTrade]}
-                    onValueChange={(value) => setConfig(prev => ({ ...prev, riskPerTrade: value[0] }))}
-                    max={10}
-                    min={1}
-                    step={0.5}
-                    className="w-full mt-1"
-                  />
-                </div>
-                
-                <div>
-                  <label className="text-slate-400 text-sm">{t('trading.stop_loss_ratio')} ({config.stopLossPercent}%)</label>
-                  <Slider
-                    value={[config.stopLossPercent]}
-                    onValueChange={(value) => setConfig(prev => ({ ...prev, stopLossPercent: value[0] }))}
-                    max={15}
-                    min={2}
-                    step={1}
-                    className="w-full mt-1"
-                  />
-                </div>
-                
-                <div>
-                  <label className="text-slate-400 text-sm">{t('trading.take_profit_ratio')} ({config.takeProfitPercent}%)</label>
-                  <Slider
-                    value={[config.takeProfitPercent]}
-                    onValueChange={(value) => setConfig(prev => ({ ...prev, takeProfitPercent: value[0] }))}
-                    max={30}
-                    min={5}
-                    step={1}
-                    className="w-full mt-1"
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">{t('trading.trailing_stop')}</span>
-                  <Switch
-                    checked={config.trailingStop}
-                    onCheckedChange={(checked) => setConfig(prev => ({ ...prev, trailingStop: checked }))}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">{t('trading.auto_reinvest')}</span>
-                  <Switch
-                    checked={config.autoReinvest}
-                    onCheckedChange={(checked) => setConfig(prev => ({ ...prev, autoReinvest: checked }))}
-                  />
-                </div>
-              </div>
-            </Card>
+              </Button>
+            </div>
           </div>
 
-          {/* Right Panel - Enhanced Real-time Activity */}
-          <div className="flex-1 space-y-4">
-            <Tabs defaultValue="activity" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-slate-800">
-                <TabsTrigger value="activity">{t('autotrader.realtime_activity')}</TabsTrigger>
-                <TabsTrigger value="signals">{t('autotrader.ai_signals')}</TabsTrigger>
-                <TabsTrigger value="positions">{t('autotrader.position_management')}</TabsTrigger>
-                <TabsTrigger value="analytics">{t('autotrader.data_analysis')}</TabsTrigger>
-              </TabsList>
-              
-              {/* Real-time Trading Activity */}
-              <TabsContent value="activity" className="space-y-3 mt-4">
-                <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
-                  <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-blue-400" />
-                    {t('autotrader.live_activity')}
-                    <Badge className="bg-blue-500/20 text-blue-400 text-xs animate-pulse">LIVE</Badge>
-                  </h4>
-                  
-                  <div className="max-h-80 overflow-y-auto space-y-2">
-                    {tradingActivity.length === 0 ? (
-                      <div className="text-center text-slate-400 py-8">
-                        <Bot className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                        <p>{t('autotrader.ai_standby')}</p>
-                        <p className="text-sm">{t('autotrader.start_to_view')}</p>
+          {/* 状态提示 */}
+          {!isSuperBrainActive && (
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-amber-400" />
+                <span className="text-amber-300">
+                  请先开启"最强大脑自动检测"功能，AI自动交易依赖于大脑检测的交易信号
+                </span>
+              </div>
+            </div>
+          )}
+
+          {isEnabled && (
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-emerald-400" />
+                <span className="text-emerald-300">
+                  AI自动交易已激活，正在使用{strategies.find(s => s.type === selectedStrategy)?.name}策略等待交易信号
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* 左侧：虚拟账户 & 策略配置 */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* 虚拟账户 */}
+          <Card className="bg-slate-900/95 border-slate-700/50">
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Wallet className="w-5 h-5 text-blue-400" />
+                <h3 className="text-lg font-semibold text-white">虚拟账户</h3>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-slate-300 text-sm">账户余额 (USDT)</Label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Input
+                      type="number"
+                      value={virtualAccount.balance}
+                      onChange={(e) => updateVirtualBalance(Number(e.target.value))}
+                      className="bg-slate-800 border-slate-600 text-white"
+                      min="1000"
+                      max="10000000"
+                      step="1000"
+                    />
+                    <Button
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => updateVirtualBalance(100000)}
+                      className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                    >
+                      重置
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-800/60 rounded-lg p-3">
+                    <div className="text-xs text-slate-400 mb-1">总盈亏</div>
+                    <div className={`text-lg font-mono font-bold ${
+                      virtualAccount.totalPnL >= 0 ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      {virtualAccount.totalPnL >= 0 ? '+' : ''}${virtualAccount.totalPnL.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="bg-slate-800/60 rounded-lg p-3">
+                    <div className="text-xs text-slate-400 mb-1">今日盈亏</div>
+                    <div className={`text-lg font-mono font-bold ${
+                      virtualAccount.dailyPnL >= 0 ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      {virtualAccount.dailyPnL >= 0 ? '+' : ''}${virtualAccount.dailyPnL.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="text-center">
+                    <div className="text-sm font-mono font-bold text-blue-400">
+                      {virtualAccount.winRate.toFixed(1)}%
+                    </div>
+                    <div className="text-xs text-slate-400">胜率</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-mono font-bold text-purple-400">
+                      {virtualAccount.totalTrades}
+                    </div>
+                    <div className="text-xs text-slate-400">总交易</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-mono font-bold text-orange-400">
+                      {virtualAccount.activePositions}
+                    </div>
+                    <div className="text-xs text-slate-400">持仓数</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* 交易策略配置 */}
+          <Card className="bg-slate-900/95 border-slate-700/50">
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Target className="w-5 h-5 text-orange-400" />
+                <h3 className="text-lg font-semibold text-white">交易策略</h3>
+              </div>
+
+              <div className="space-y-4">
+                {strategies.map((strategy) => (
+                  <div
+                    key={strategy.type}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                      selectedStrategy === strategy.type
+                        ? 'border-emerald-500/50 bg-emerald-500/10'
+                        : 'border-slate-600 bg-slate-800/40 hover:border-slate-500'
+                    }`}
+                    onClick={() => setSelectedStrategy(strategy.type)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`${strategy.color}`}>
+                        {strategy.icon}
                       </div>
-                    ) : (
-                      tradingActivity.map((activity, index) => (
-                        <div key={index} className="p-2 bg-slate-700/30 rounded text-sm text-slate-200 border-l-2 border-blue-500/30">
-                          <span className="text-slate-400 text-xs">{new Date().toLocaleTimeString()}</span>
-                          <p className="mt-1">{activity}</p>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-medium">{strategy.name}</span>
+                          <Badge variant="outline" className="text-xs">
+                            ≥{strategy.minConfidence}%
+                          </Badge>
                         </div>
-                      ))
-                    )}
-                  </div>
-                </Card>
-              </TabsContent>
-              
-              {/* Enhanced AI Signals */}
-              <TabsContent value="signals" className="space-y-3 mt-4">
-                <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
-                  <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-purple-400" />
-                    {t('ai.signal_analysis')}
-                  </h4>
-                  
-                  <div className="max-h-80 overflow-y-auto space-y-3">
-                    {signals.length === 0 ? (
-                      <div className="text-center text-slate-400 py-8">
-                        <Brain className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                        <p>{t('ai.analyzing_market')}</p>
+                        <div className="text-xs text-slate-400 mt-1">
+                          {strategy.description}
+                        </div>
                       </div>
-                    ) : (
-                      signals.map((signal) => (
-                        <Card key={signal.id} className="p-3 bg-gradient-to-r from-slate-700/50 to-slate-600/30 border-slate-600">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <Badge className={signal.type === 'long' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
-                                {signal.type === 'long' ? <ArrowUp className="w-3 h-3 mr-1" /> : <ArrowDown className="w-3 h-3 mr-1" />}
-                                {signal.symbol}
-                              </Badge>
-                              <Badge className={`${signal.strategy === 'conservative' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'}`}>
-                                {signal.strategy === 'conservative' ? '稳健' : '激进'}
-                              </Badge>
-                              <Badge className="bg-purple-500/20 text-purple-400">
-                                <Brain className="w-3 h-3 mr-1" />
-                                {signal.confidence}%
-                              </Badge>
-                            </div>
-                            {signal.status === 'executed' && <CheckCircle className="w-4 h-4 text-green-400" />}
-                          </div>
-                          
-                          {/* AI Analysis Details */}
-                          <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
-                            <div className="p-2 bg-slate-800/50 rounded">
-                              <p className="text-slate-400">技术面评分</p>
-                              <p className="text-white">{signal.aiAnalysis.technicalScore}/100</p>
-                            </div>
-                            <div className="p-2 bg-slate-800/50 rounded">
-                              <p className="text-slate-400">基本面评分</p>
-                              <p className="text-white">{signal.aiAnalysis.fundamentalScore}/100</p>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-2 text-xs mb-2">
-                            <div>
-                              <span className="text-slate-400">入场:</span>
-                              <p className="text-white font-mono">${signal.entry.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">止损:</span>
-                              <p className="text-red-400 font-mono">${signal.stopLoss.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">止盈:</span>
-                              <p className="text-green-400 font-mono">${signal.takeProfit.toLocaleString()}</p>
-                            </div>
-                          </div>
-                          
-                          <p className="text-slate-300 text-xs bg-slate-800/30 p-2 rounded">{signal.reasoning}</p>
-                        </Card>
-                      ))
-                    )}
+                      {selectedStrategy === strategy.type && (
+                        <CheckCircle className="w-5 h-5 text-emerald-400" />
+                      )}
+                    </div>
                   </div>
-                </Card>
-              </TabsContent>
-              
-              {/* Enhanced Positions */}
-              <TabsContent value="positions" className="space-y-3 mt-4">
-                <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
-                  <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
-                    <BarChart3 className="w-4 h-4 text-green-400" />
-                    {t('ai.position_management')} ({positions.filter(p => p.status === 'open').length})
-                  </h4>
-                  
-                  <div className="max-h-80 overflow-y-auto space-y-3">
-                    {positions.filter(p => p.status === 'open').length === 0 ? (
-                      <div className="text-center text-slate-400 py-8">
-                        <DollarSign className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                        <p>{t('trading.no_positions')}</p>
-                        <p className="text-sm">{t('trading.auto_discover')}</p>
+                ))}
+
+                <div className="pt-4 border-t border-slate-700">
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-slate-300 text-sm">最大持仓数</Label>
+                      <Input
+                        type="number"
+                        value={maxPositions}
+                        onChange={(e) => setMaxPositions(Number(e.target.value))}
+                        className="bg-slate-800 border-slate-600 text-white mt-1"
+                        min="1"
+                        max="10"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-slate-300 text-sm">单笔风险 (%)</Label>
+                      <Input
+                        type="number"
+                        value={riskPerTrade}
+                        onChange={(e) => setRiskPerTrade(Number(e.target.value))}
+                        className="bg-slate-800 border-slate-600 text-white mt-1"
+                        min="0.5"
+                        max="10"
+                        step="0.5"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* 实时交易历史 */}
+          <Card className="bg-slate-900/95 border-slate-700/50">
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Activity className="w-5 h-5 text-green-400" />
+                <h3 className="text-lg font-semibold text-white">交易动态</h3>
+              </div>
+
+              <ScrollArea className="h-60">
+                <div className="space-y-2">
+                  {tradingHistory.length === 0 ? (
+                    <div className="text-center text-slate-400 py-8">
+                      <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">等待交易信号...</p>
+                    </div>
+                  ) : (
+                    tradingHistory.map((activity, index) => (
+                      <div key={index} className="text-xs text-slate-300 p-2 bg-slate-800/40 rounded">
+                        {activity}
                       </div>
-                    ) : (
-                      positions.filter(p => p.status === 'open').map((position) => (
-                        <Card key={position.id} className="p-3 bg-gradient-to-r from-slate-700/50 to-slate-600/30 border-slate-600">
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <Badge className={position.type === 'long' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
-                                {position.type === 'long' ? <TrendingUpIcon className="w-3 h-3 mr-1" /> : <TrendingDownIcon className="w-3 h-3 mr-1" />}
-                                {position.symbol}
-                              </Badge>
-                              <Badge className={`${position.strategy === 'conservative' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'}`}>
-                                {position.strategy === 'conservative' ? '稳健' : '激进'}
-                              </Badge>
-                              <Badge className={position.pnl >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
-                                {position.pnl >= 0 ? '+' : ''}{position.pnlPercent.toFixed(2)}%
-                              </Badge>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </Card>
+        </div>
+
+        {/* 右侧：持仓管理 */}
+        <div className="lg:col-span-2">
+          <Card className="bg-slate-900/95 border-slate-700/50">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <PieChart className="w-5 h-5 text-yellow-400" />
+                  <h3 className="text-lg font-semibold text-white">持仓管理</h3>
+                </div>
+                <Badge variant="outline" className="text-slate-300">
+                  {positions.length}/{maxPositions} 持仓
+                </Badge>
+              </div>
+
+              <ScrollArea className="h-96">
+                {positions.length === 0 ? (
+                  <div className="text-center text-slate-400 py-16">
+                    <CircleDollarSign className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">暂无持仓</p>
+                    <p className="text-sm">AI自动交易激活后将自动建仓</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {positions.map((position) => (
+                      <div
+                        key={position.id}
+                        className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4 hover:bg-slate-800/80 transition-colors"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="text-lg font-bold text-white">
+                              {position.symbol}
+                            </div>
+                            <Badge 
+                              variant="outline" 
+                              className={cn(
+                                "text-xs",
+                                position.type === 'long' 
+                                  ? "bg-green-500/10 text-green-400 border-green-500/30" 
+                                  : "bg-red-500/10 text-red-400 border-red-500/30"
+                              )}
+                            >
+                              {position.type === 'long' ? '做多' : '做空'}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
+                              {position.confidence}%
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {strategies.find(s => s.type === position.strategy)?.name}
+                            </Badge>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <div className={`text-lg font-mono font-bold ${
+                              position.pnl >= 0 ? 'text-green-400' : 'text-red-400'
+                            }`}>
+                              {position.pnl >= 0 ? '+' : ''}${position.pnl.toFixed(2)}
                             </div>
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => closePosition(position.id)}
-                              className="text-xs"
+                              onClick={() => closePosition(position)}
+                              className="border-slate-600 text-slate-300 hover:bg-slate-700"
                             >
-                              手动平仓
+                              平仓
                             </Button>
                           </div>
-                          
-                          <div className="grid grid-cols-4 gap-2 text-xs mb-2">
-                            <div>
-                              <span className="text-slate-400">入场价:</span>
-                              <p className="text-white font-mono">${position.entry.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">当前价:</span>
-                              <p className="text-white font-mono">${position.currentPrice.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">止损价:</span>
-                              <p className="text-red-400 font-mono">${position.stopLoss.toLocaleString()}</p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">止盈价:</span>
-                              <p className="text-green-400 font-mono">${position.takeProfit.toLocaleString()}</p>
+                        </div>
+
+                        <div className="grid grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="text-slate-400">开仓价:</span>
+                            <div className="text-white font-mono">
+                              ${position.entryPrice.toFixed(4)}
                             </div>
                           </div>
-                          
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div>
-                              <span className="text-slate-400">当前盈亏:</span>
-                              <p className={`font-mono ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                {position.pnl >= 0 ? '+' : ''}${position.pnl.toFixed(2)}
-                              </p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">最高盈利:</span>
-                              <p className="text-green-400 font-mono">+${position.highestProfit.toFixed(2)}</p>
-                            </div>
-                            <div>
-                              <span className="text-slate-400">最大回撤:</span>
-                              <p className="text-red-400 font-mono">${position.maxDrawdown.toFixed(2)}</p>
+                          <div>
+                            <span className="text-slate-400">当前价:</span>
+                            <div className="text-white font-mono">
+                              ${position.currentPrice.toFixed(4)}
                             </div>
                           </div>
-                          
-                          {/* Auto Trading Indicators */}
-                          <div className="mt-2 flex items-center gap-2 text-xs">
-                            <Badge className="bg-blue-500/20 text-blue-400">
-                              <Timer className="w-3 h-3 mr-1" />
-                              自动止损
-                            </Badge>
-                            <Badge className="bg-purple-500/20 text-purple-400">
-                              <Target className="w-3 h-3 mr-1" />
-                              自动止盈
-                            </Badge>
-                            {config.trailingStop && (
-                              <Badge className="bg-yellow-500/20 text-yellow-400">
-                                {t('trading.trailing_stop')}
-                              </Badge>
-                            )}
+                          <div>
+                            <span className="text-slate-400">仓位:</span>
+                            <div className="text-white font-mono">
+                              {position.size.toFixed(6)}
+                            </div>
                           </div>
-                        </Card>
-                      ))
-                    )}
+                          <div>
+                            <span className="text-slate-400">盈亏比:</span>
+                            <div className={`font-mono ${
+                              position.pnlPercent >= 0 ? 'text-green-400' : 'text-red-400'
+                            }`}>
+                              {position.pnlPercent >= 0 ? '+' : ''}{position.pnlPercent.toFixed(2)}%
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 text-sm mt-3 pt-3 border-t border-slate-700/50">
+                          <div>
+                            <span className="text-slate-400">止损:</span>
+                            <span className="text-red-400 font-mono ml-2">
+                              ${position.stopLoss.toFixed(4)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">止盈:</span>
+                            <span className="text-green-400 font-mono ml-2">
+                              ${position.takeProfit.toFixed(4)}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="text-xs text-slate-400 mt-2">
+                          开仓时间: {position.openTime.toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </Card>
-              </TabsContent>
-              
-              {/* Analytics Dashboard */}
-              <TabsContent value="analytics" className="space-y-3 mt-4">
-                <Card className="bg-slate-800/50 rounded-lg p-4 border-slate-700">
-                  <h4 className="text-white font-semibold mb-3">{t('ai.trading_report')}</h4>
-                  <div className="text-center text-slate-400 py-8">
-                    <BarChart3 className="w-12 h-12 mx-auto mb-3 text-slate-500" />
-                    <p>{t('ai.detailed_data')}</p>
-                    <p className="text-sm">{t('ai.includes_analysis')}</p>
-                  </div>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </div>
-        
-        {/* Enhanced Warning Notice */}
-        <div className="mt-4 p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-lg">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5" />
-            <div className="text-sm">
-              <p className="text-amber-400 font-medium">虚拟交易系统 - 全自动盈利引擎</p>
-              <p className="text-amber-200/80 text-xs mt-1">
-                • 本系统使用虚拟资金进行策略测试 • AI自动分析、入场、止损、止盈，用户无需任何操作 • 
-                稳健策略追求稳定收益(≥90%胜率)，激进策略追求高收益(≥70%胜率) • 
-                实盘交易存在风险，请谨慎操作 • AI信号仅供参考，不构成投资建议
-              </p>
+                )}
+              </ScrollArea>
             </div>
-          </div>
+          </Card>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
