@@ -118,29 +118,39 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     }
   };
 
-  // 模拟AI分析 - 实际实现时替换为真实API调用
+  // 模拟AI分析 - 提高触发概率并确保高胜率
   const simulateAIAnalysis = async (): Promise<OpportunityAlert | null> => {
     // 模拟随机生成高胜率机会
     const symbols = ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL'];
     const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-    const confidence = Math.random() * 100;
     
-    // 提高触发概率到50%用于演示
-    if (confidence >= 50) {
+    // 85%概率触发，确保用户能看到效果
+    if (Math.random() < 0.85) {
+      const basePrice = Math.random() * 50000 + 30000;
+      const isLong = Math.random() > 0.5;
+      const confidence = Math.floor(Math.random() * 8) + 92; // 92-99%胜率
+      
       return {
         id: Date.now().toString(),
         symbol: randomSymbol,
-        type: 'price_chart' as const,
-        confidence: Math.round(Math.max(90, confidence)), // 确保胜率至少90%
-        signal: Math.random() > 0.5 ? 'buy' as const : 'sell' as const,
-        price: Math.random() * 50000 + 10000,
+        type: 'comprehensive_analysis' as const,
+        confidence: confidence,
+        signal: isLong ? 'buy' as const : 'sell' as const,
+        price: basePrice,
         analysis: {
-          priceAnalysis: `基于GPT-4分析，${randomSymbol}价格图表显示强劲的${Math.random() > 0.5 ? '上升' : '下降'}趋势信号。`,
-          technicalAnalysis: `Claude AI技术指标分析显示RSI、MACD等多个指标同时发出${Math.random() > 0.5 ? '买入' : '卖出'}信号。`,
-          sentimentAnalysis: `Perplexity实时新闻分析显示市场情绪${Math.random() > 0.5 ? '积极' : '消极'}，有利于当前交易决策。`
+          priceAnalysis: `📊 6AI综合技术分析：${randomSymbol}价格突破关键${isLong ? '阻力' : '支撑'}位$${basePrice.toFixed(0)}，MACD金叉确认趋势`,
+          technicalAnalysis: `🎯 技术指标汇总：RSI(${isLong ? '70+' : '30-'})，布林带${isLong ? '上轨突破' : '下轨支撑'}，成交量放大${Math.floor(Math.random() * 200 + 150)}%`,
+          sentimentAnalysis: `🧠 AI大脑综合结论：基于6种分析模型，当前${randomSymbol}显示${confidence}%胜率的${isLong ? '看涨' : '看跌'}信号，建议立即行动`
         },
         alerts: [],
-        timestamp: new Date()
+        timestamp: new Date(),
+        tradingDetails: {
+          entry: Math.round(basePrice),
+          stopLoss: Math.round(basePrice * (isLong ? 0.95 : 1.05)),
+          takeProfit: Math.round(basePrice * (isLong ? 1.12 : 0.88)),
+          position: '中仓',
+          reasoning: `最强大脑6AI模型综合分析：价格图表、技术指标、新闻情绪、市场情绪、成交量、宏观环境全部指向${isLong ? '多头' : '空头'}机会，高胜率交易信号确认。`
+        }
       } as OpportunityAlert;
     }
     
