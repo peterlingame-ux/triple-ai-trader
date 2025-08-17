@@ -1,6 +1,7 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
 import { GlobalAutoTrader } from "@/components/GlobalAutoTrader";
 import { IntelligentPositionManager } from "@/components/IntelligentPositionManager";
+import { AIFeatureStatus } from "@/components/AIFeatureStatus";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
@@ -55,7 +56,14 @@ const Index = () => {
       </header>
       <TradingDashboard />
       <div className="container mx-auto px-4 py-8">
-        <IntelligentPositionManager />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <IntelligentPositionManager />
+          </div>
+          <div className="lg:col-span-1">
+            <AIFeatureStatus />
+          </div>
+        </div>
       </div>
       <GlobalAutoTrader />
     </div>
