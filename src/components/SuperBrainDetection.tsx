@@ -209,6 +209,8 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
 
   // 自动检测循环 - 优化性能，使用useCallback减少不必要的重新创建
   const performAnalysis = useCallback(async () => {
+    if (!isMonitoring) return; // 添加检查防止在未监控状态下执行
+    
     setLastCheckTime(new Date());
     try {
       const alert = await performSuperBrainAnalysis();
@@ -257,7 +259,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     } catch (error) {
       console.error('Detection analysis error:', error);
     }
-  }, [toast, t]);
+  }, [isMonitoring, toast, t]); // 移除performSuperBrainAnalysis依赖
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
