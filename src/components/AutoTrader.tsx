@@ -32,6 +32,7 @@ import { TradingStatistics } from "./TradingStatistics";
 import { SuperBrainSignal } from "@/types/trading";
 import { TRADING_STRATEGIES, TRADING_CONFIG } from "@/constants/trading";
 import { formatTradingHistory, validateSignal } from "@/utils/tradingHelpers";
+import { signalBridge } from "@/utils/signalBridge";
 
 export const AutoTrader = () => {
   const { toast } = useToast();
@@ -180,25 +181,14 @@ export const AutoTrader = () => {
     }
   }, [positions, executeTradeWithSignal]);
 
-  // 在组件加载时暴露处理函数并检查待处理信号
+  // 注册信号处理器到桥接器
   useEffect(() => {
-    // 暴露处理函数给全局
-    (window as any).autoTraderHandleSignal = handleSignal;
-    
-    // 检查是否有待处理的信号
-    const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
-    if (pendingSignals.length > 0) {
-      console.log('发现待处理信号:', pendingSignals.length);
-      pendingSignals.forEach((signal: SuperBrainSignal) => {
-        console.log('处理待处理信号:', signal);
-        handleSignal(signal);
-      });
-      // 清空已处理的信号
-      localStorage.removeItem('pendingAutoTraderSignals');
-    }
+    console.log('🔌 AutoTrader 注册信号处理器');
+    signalBridge.registerHandler(handleSignal);
     
     return () => {
-      delete (window as any).autoTraderHandleSignal;
+      console.log('🔌 AutoTrader 移除信号处理器');
+      signalBridge.unregisterHandler(handleSignal);
     };
   }, [handleSignal]);
 

@@ -15,6 +15,7 @@ import { useSignalProcessor } from "@/hooks/useSignalProcessor";
 import { TradingAlert } from "@/types/trading";
 import { AI_ADVISORS, TRADING_CONFIG } from "@/constants/trading";
 import { generateMockAnalysis } from "@/utils/tradingHelpers";
+import { signalBridge } from "@/utils/signalBridge";
 
 interface SuperBrainDetectionProps {
   cryptoData?: CryptoData[];
@@ -68,21 +69,10 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           detail: alert
         }));
         
-        // 发送信号给AutoTrader
+        // 发送信号给AutoTrader - 使用信号桥接器
         const signal = convertToSignal(alert);
-        
-        // 直接调用AutoTrader的处理函数，不依赖事件
-        const autoTraderHandleSignal = (window as any).autoTraderHandleSignal;
-        if (autoTraderHandleSignal) {
-          console.log('直接调用AutoTrader处理函数');
-          autoTraderHandleSignal(signal);
-        } else {
-          // 备用：存储信号供AutoTrader读取
-          const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
-          pendingSignals.push(signal);
-          localStorage.setItem('pendingAutoTraderSignals', JSON.stringify(pendingSignals));
-          console.log('信号已存储，等待AutoTrader处理');
-        }
+        console.log('🚀 通过信号桥接器发送信号:', signal);
+        signalBridge.sendSignal(signal);
         
         dispatchSignal(signal);
         
