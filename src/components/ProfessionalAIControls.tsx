@@ -100,15 +100,6 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
   // 默认显示控制面板
   return (
     <div className="space-y-6">
-      {/* Portfolio Overview Section */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <BarChart3 className="w-5 h-5 text-foreground" />
-          <h2 className="text-xl font-bold text-foreground font-orbitron">{t('portfolio.overview')}</h2>
-        </div>
-        <OptimizedPortfolioCards portfolioData={portfolioData} />
-      </div>
-
       <Card className="bg-gradient-to-r from-slate-900/95 via-blue-950/90 to-slate-900/95 border-border/50 backdrop-blur-xl">
         <div className="p-6">
         {/* Header Section */}
@@ -125,7 +116,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">
               <Activity className="w-3 h-3 mr-1" />
-              {t('status.live')}
+              实时市场数据
             </Badge>
             {isMonitoring && (
               <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 animate-pulse">
@@ -142,8 +133,17 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
           </div>
         </div>
 
+        {/* Portfolio Overview Section - Moved here */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 className="w-5 h-5 text-foreground" />
+            <h2 className="text-lg font-semibold text-foreground font-orbitron">{t('portfolio.overview')}</h2>
+          </div>
+          <OptimizedPortfolioCards portfolioData={portfolioData} />
+        </div>
+
         {/* Control Buttons - Side by Side Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {/* AI Control Center Panel */}
           <Card 
             className="p-6 bg-gradient-to-br from-yellow-500/10 via-orange-500/10 to-yellow-500/5 border-yellow-500/20 hover:border-yellow-400/40 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/10 group"
@@ -155,7 +155,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
               </div>
               <div className="flex-1">
                 <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.control_center')}</h4>
-                <p className="text-xs text-muted-foreground">{t('ai.control_center.description')}</p>
+                <p className="text-xs text-muted-foreground">配置和管理您的AI交易助手</p>
               </div>
               <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                 <Brain className="w-4 h-4 text-yellow-400" />
@@ -174,7 +174,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
               </div>
               <div className="flex-1">
                 <h4 className="font-semibold text-foreground font-inter mb-1">{t('ai.auto_trading')}</h4>
-                <p className="text-xs text-muted-foreground">{t('ai.auto_trading_desc')}</p>
+                <p className="text-xs text-muted-foreground">智能自动交易系统</p>
               </div>
               <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
                 <Zap className="w-4 h-4 text-green-400" />
@@ -184,18 +184,18 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-border/50">
+        <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border/50">
           <div className="text-center">
             <div className="text-lg font-bold text-green-400">94.2%</div>
-            <div className="text-xs text-muted-foreground">{t('stats.ai_accuracy')}</div>
+            <div className="text-xs text-muted-foreground">AI精准度</div>
           </div>
           <div className="text-center">
             <div className="text-lg font-bold text-blue-400">47</div>
-            <div className="text-xs text-muted-foreground">{t('stats.active_signals')}</div>
+            <div className="text-xs text-muted-foreground">活跃信号</div>
           </div>
           <div className="text-center">
             <div className="text-lg font-bold text-purple-400">+12.4%</div>
-            <div className="text-xs text-muted-foreground">{t('stats.monthly_return')}</div>
+            <div className="text-xs text-muted-foreground">月收益率</div>
           </div>
         </div>
       </div>
