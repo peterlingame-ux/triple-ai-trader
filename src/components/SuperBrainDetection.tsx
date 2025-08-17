@@ -251,12 +251,12 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         });
         window.dispatchEvent(autoTradeEvent);
         
-        // Display system notification
-        toast({
-          title: t('ai.high_probability_opportunity'),
-          description: `${alert.symbol} ${alert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}，${t('ai.win_rate')}${alert.confidence}%`,
-          duration: 15000, // 15 second reminder
-        });
+                        // Display system notification
+                        toast({
+                          title: '发现高胜率机会',
+                          description: `${alert.symbol} ${alert.signal === 'buy' ? '买入信号' : '卖出信号'}，胜率${alert.confidence}%`,
+                          duration: 15000, // 15 second reminder
+                        });
       }
     } catch (error) {
       console.error('Detection analysis error:', error);
@@ -295,13 +295,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     if (newStatus) {
       setLastCheckTime(new Date());
       toast({
-        title: t('ai.monitoring_started'),
-        description: t('ai.monitoring_started_desc'),
+        title: '监控已启动',
+        description: 'AI 6大脑模型正在分析市场机会...',
       });
     } else {
       toast({
-        title: t('ai.monitoring_paused'),
-        description: t('ai.monitoring_paused_desc'),
+        title: '监控已暂停',
+        description: 'AI 监控功能已暂停',
       });
     }
   };
@@ -309,8 +309,8 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   const clearAllAlerts = () => {
     setAlerts([]);
     toast({
-      title: t('ai.all_alerts_cleared'),
-      description: t('ai.history_cleared'),
+      title: '已清空历史记录',
+      description: '所有交易信号历史已清除',
     });
   };
 
@@ -320,11 +320,11 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Brain className="w-8 h-8 text-yellow-400" />
-          <h2 className="text-3xl font-bold text-white">{t('ai.supreme_brain_detection')}</h2>
+          <h2 className="text-3xl font-bold text-white">最强大脑AI监测</h2>
           <Zap className="w-8 h-8 text-yellow-400" />
         </div>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          {t('ai.six_models_analysis')}
+          6大AI模型同步分析，实时捕捉高胜率交易机会
         </p>
       </div>
 
@@ -344,12 +344,12 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                 {isMonitoring ? (
                   <>
                     <Pause className="w-4 h-4 mr-2" />
-                    {t('ai.pause_monitoring')}
+                    暂停监控
                   </>
                 ) : (
                   <>
                     <Play className="w-4 h-4 mr-2" />
-                    {t('ai.start_monitoring')}
+                    开始监控
                   </>
                 )}
               </Button>
@@ -357,7 +357,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               <div className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded-full ${isMonitoring ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`}></div>
                 <span className="text-sm text-slate-300">
-                  {isMonitoring ? t('ai.monitoring') : t('ai.paused')}
+                  {isMonitoring ? '监控中' : '已暂停'}
                 </span>
               </div>
             </div>
@@ -365,7 +365,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
             <div className="flex items-center gap-4">
               {lastCheckTime && (
                 <div className="text-sm text-slate-400">
-                  {t('ai.last_check')}: {lastCheckTime.toLocaleTimeString()}
+                  最后检查: {lastCheckTime.toLocaleTimeString()}
                 </div>
               )}
               <Button
@@ -374,7 +374,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                 onClick={clearAllAlerts}
                 className="border-slate-600 text-slate-300 hover:bg-slate-700"
               >
-                {t('ai.clear_history')}
+                清空历史
               </Button>
             </div>
           </div>
@@ -422,7 +422,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       ? advisor.accentColor + ' border-current/20' 
                       : 'text-gray-500 border-gray-500/20'
                   }`}>
-                    {isActive ? t('activation.activated') : t('activation.deactivated')}
+                    {isActive ? '已激活' : '未激活'}
                   </Badge>
                 </div>
               );
