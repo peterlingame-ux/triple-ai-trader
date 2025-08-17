@@ -18,7 +18,6 @@ import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
-import { ProfessionalPositionManager } from "./ProfessionalPositionManager";
 // Portfolio cards moved to AI Control Center
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
@@ -137,9 +136,6 @@ export const TradingDashboard = memo(() => {
 
         {/* 币安API配置 */}
         <BinanceAPIConfig />
-
-        {/* Professional Position Manager */}
-        <ProfessionalPositionManager />
 
         {/* Crypto Cards Grid */}
         <div>
