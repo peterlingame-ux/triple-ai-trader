@@ -122,21 +122,28 @@ export function BinanceAPIConfig() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-               {/* Binance Logo - 完全无边框 */}
-               <div className="relative transition-all duration-500">
-                 <BinanceExchangeLogo 
-                   size={48} 
-                   showGlow={connectionStatus === 'success'} 
-                   className="flex-shrink-0"
-                 />
-                 {connectionStatus === 'success' && (
-                   <>
-                     {/* 极简发光效果 */}
-                     <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/6 to-amber-500/6 blur-sm rounded-xl -z-10" />
-                     <div className="absolute -inset-2 bg-gradient-to-r from-yellow-500/3 to-amber-500/3 blur-md rounded-xl -z-20" />
-                   </>
-                 )}
-               </div>
+              {/* Binance Logo with Professional Styling */}
+              <div className={`
+                relative p-3 rounded-xl border transition-all duration-500
+                ${connectionStatus === 'success' 
+                  ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border-yellow-500/40 shadow-lg shadow-yellow-500/30' 
+                  : 'bg-gradient-to-br from-slate-700/30 to-slate-600/30 border-slate-600/50'
+                }
+              `}>
+                <BinanceExchangeLogo 
+                  size={48} 
+                  showGlow={connectionStatus === 'success'} 
+                  className="flex-shrink-0"
+                />
+                {connectionStatus === 'success' && (
+                  <>
+                    {/* Glow rings for success state */}
+                    <div className="absolute inset-0 rounded-xl bg-yellow-400/10 animate-pulse" />
+                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 blur-sm -z-10" />
+                    <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-yellow-500/10 to-amber-500/10 blur-md -z-20" />
+                  </>
+                )}
+              </div>
               
               {/* Content */}
               <div className="space-y-2">
@@ -212,7 +219,13 @@ export function BinanceAPIConfig() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="relative transition-all duration-500">
+              <div className={`
+                relative p-3 rounded-xl border transition-all duration-500
+                ${connectionStatus === 'success' 
+                  ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border-yellow-500/40' 
+                  : 'bg-gradient-to-br from-slate-700/30 to-slate-600/30 border-slate-600/50'
+                }
+              `}>
                 <BinanceExchangeLogo 
                   size={48} 
                   showGlow={connectionStatus === 'success'} 
@@ -220,8 +233,8 @@ export function BinanceAPIConfig() {
                 />
                 {connectionStatus === 'success' && (
                   <>
-                    <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500/6 to-amber-500/6 blur-sm rounded-xl -z-10" />
-                    <div className="absolute -inset-2 bg-gradient-to-r from-yellow-500/3 to-amber-500/3 blur-md rounded-xl -z-20" />
+                    <div className="absolute inset-0 rounded-xl bg-yellow-400/10 animate-pulse" />
+                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 blur-sm -z-10" />
                   </>
                 )}
               </div>
