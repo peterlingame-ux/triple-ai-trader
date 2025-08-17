@@ -134,6 +134,7 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
         <Card className="bg-slate-900/95 border-slate-700/50">
           <div className="p-4">
             <div className="flex items-center gap-2 mb-2">
+              <Wallet className="w-5 h-5 text-purple-400" />
               <h3 className="text-sm font-medium text-slate-300">AI虚拟投资组合</h3>
               <Badge className="text-xs bg-purple-600">1</Badge>
             </div>
