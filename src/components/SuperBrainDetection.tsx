@@ -10,6 +10,7 @@ import { CryptoData, OpportunityAlert } from "@/types/api";
 import { supabase } from "@/integrations/supabase/client";
 import { CryptoStaticIcon } from "./Static3DIconShowcase";
 import { CRYPTO_NAMES } from "@/constants/crypto";
+import { ProfessionalDetectionHistory } from "./ProfessionalDetectionHistory";
 
 // AI advisors data
 const aiAdvisors = [
@@ -62,6 +63,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     const saved = localStorage.getItem('superBrainMonitoring');
     return saved ? JSON.parse(saved) : false;
   });
+  const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [currentAlert, setCurrentAlert] = useState<OpportunityAlert | null>(null);
@@ -214,8 +216,38 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       const alert = await performSuperBrainAnalysis();
       
       if (alert) {
+        setAlerts(prev => {
+          const newAlerts = [alert, ...prev.slice(0, 9)]; // 保持最多10条记录
+          return newAlerts;
+        });
         setCurrentAlert(alert);
         setShowAlert(true);
+        
+        // 触发全局弹窗事件
+        const globalEvent = new CustomEvent('superBrainOpportunity', {
+          detail: alert
+        });
+        window.dispatchEvent(globalEvent);
+        
+        // 触发AI自动交易事件 - 发送给GlobalAutoTrader
+        const autoTradeEvent = new CustomEvent('superBrainTradingSignal', {
+          detail: {
+            symbol: alert.symbol,
+            action: alert.signal,
+            signal: alert.signal,
+            confidence: alert.confidence,
+            entry: alert.tradingDetails?.entry || alert.price,
+            stopLoss: alert.tradingDetails?.stopLoss,
+            takeProfit: alert.tradingDetails?.takeProfit,
+            position: alert.tradingDetails?.position,
+            reasoning: alert.tradingDetails?.reasoning || alert.analysis?.priceAnalysis,
+            price: alert.price,
+            tradingDetails: alert.tradingDetails,
+            analysis: alert.analysis,
+            timestamp: alert.timestamp
+          }
+        });
+        window.dispatchEvent(autoTradeEvent);
         
         // Display system notification
         toast({
@@ -227,7 +259,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     } catch (error) {
       console.error('Detection analysis error:', error);
     }
-  }, [isMonitoring, toast, t]);
+  }, [isMonitoring, toast, t]); // 移除performSuperBrainAnalysis依赖
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -270,6 +302,14 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         description: t('ai.monitoring_paused_desc'),
       });
     }
+  };
+
+  const clearAllAlerts = () => {
+    setAlerts([]);
+    toast({
+      title: t('ai.all_alerts_cleared'),
+      description: t('ai.history_cleared'),
+    });
   };
 
   return (
@@ -326,6 +366,14 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                   {t('ai.last_check')}: {lastCheckTime.toLocaleTimeString()}
                 </div>
               )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearAllAlerts}
+                className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              >
+                {t('ai.clear_history')}
+              </Button>
             </div>
           </div>
 
@@ -380,6 +428,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           </div>
         </div>
       </Card>
+
+      {/* Professional Detection History */}
+      <ProfessionalDetectionHistory 
+        alerts={alerts}
+        isMonitoring={isMonitoring}
+        onClearHistory={clearAllAlerts}
+      />
 
       {/* 专业交易弹窗 - 简洁清晰 */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
