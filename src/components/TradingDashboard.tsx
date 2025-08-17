@@ -67,198 +67,107 @@ export const TradingDashboard = memo(() => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      <div className="max-w-7xl mx-auto space-y-4">
-        {/* Compact Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-white font-orbitron tracking-wide">Meta BrainX</h1>
-            <p className="text-sm text-slate-400">{t('app.subtitle')}</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30 px-3 py-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-              {t('status.live')}
-            </Badge>
-            <UserProfile />
-            <WalletConnector />
-            <LanguageSwitcher />
-          </div>
+    <div className="min-h-screen relative p-3 sm:p-6 bg-gradient-to-br from-slate-800 via-blue-900 to-slate-900 overflow-hidden">
+      {/* Simplified background elements for better mobile performance */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 sm:opacity-30">
+        <div className="absolute top-6 sm:top-10 left-6 sm:left-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-sm sm:text-lg font-bold">₿</span>
         </div>
-
-        {/* Portfolio Overview Cards - Compact Design */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          {/* AI虚拟投资组合 */}
-          <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <BarChart3 className="w-4 h-4 text-purple-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-purple-300">AI虚拟投资组合</p>
-                  <p className="text-xs text-purple-400">总价值</p>
-                </div>
-              </div>
-              <Badge variant="secondary" className="text-xs bg-purple-500/20 text-purple-300">1</Badge>
-            </div>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-white">${totalValue.toLocaleString()}</p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span className="text-xs text-purple-300">模拟交易</span>
-              </div>
-            </div>
-          </Card>
-
-          {/* 日盈亏 */}
-          <Card className="bg-gradient-to-br from-emerald-500/10 to-green-600/5 border-emerald-500/20 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-emerald-500/20 rounded-lg">
-                  <Brain className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-emerald-300">日盈亏</p>
-                  <p className="text-xs text-emerald-400">盈亏金额</p>
-                </div>
-              </div>
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-emerald-400">+${Math.abs(dailyChange).toLocaleString()}</p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                <span className="text-xs text-emerald-300">+{((Math.abs(dailyChange) / totalValue) * 100).toFixed(2)}%</span>
-              </div>
-            </div>
-          </Card>
-
-          {/* 活跃交易 */}
-          <Card className="bg-gradient-to-br from-amber-500/10 to-yellow-600/5 border-amber-500/20 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-amber-500/20 rounded-lg">
-                  <RefreshCw className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-amber-300">活跃交易</p>
-                  <p className="text-xs text-amber-400">当前持仓</p>
-                </div>
-              </div>
-              <Badge variant="secondary" className="text-xs bg-amber-500/20 text-amber-300">P</Badge>
-            </div>
-            <div className="space-y-1">
-              <p className="text-2xl font-bold text-white">{activeTrades}</p>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
-                <span className="text-xs text-amber-300">正在交易</span>
-              </div>
-            </div>
-          </Card>
+        <div className="absolute top-20 sm:top-32 right-12 sm:right-20 w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-accent/15 flex items-center justify-center">
+          <span className="text-accent text-xs sm:text-sm font-bold">Ξ</span>
         </div>
-
-        {/* AI Control Center Section - More Compact */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-          {/* AI控制中心 */}
-          <Card className="bg-gradient-to-br from-amber-500/10 to-yellow-600/5 border-amber-500/20 p-6 cursor-pointer hover:border-amber-500/40 transition-all duration-300" 
-                onClick={() => setShowAIControlCenter(true)}>
-            <div className="flex items-center justify-between mb-4">
+        <div className="absolute bottom-1/3 right-6 sm:right-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-accent/20 flex items-center justify-center">
+          <span className="text-accent text-base sm:text-lg font-bold">$</span>
+        </div>
+      </div>
+      
+      {/* Main content with backdrop blur */}
+      <div className="relative z-10 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-8">
+        {/* Professional Header Design - Mobile Optimized */}
+        <div className="relative">
+          {/* Background with enhanced glassmorphism */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl"></div>
+          
+          {/* Content */}
+          <div className="relative px-4 sm:px-10 py-4 sm:py-8">
+            <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+              {/* Left Section - Brand */}
+              <div className="flex items-center gap-4 sm:gap-8">
+                <div className="space-y-1 sm:space-y-2">
+                  <h1 className="text-3xl sm:text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
+                    Meta BrainX
+                  </h1>
+                  <p className="text-sm sm:text-lg text-slate-300 font-inter font-medium tracking-wide">
+                    {t('app.subtitle')}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Center Section - Status Indicator - Mobile: Full Width */}
+              <div className="flex items-center justify-center sm:justify-start gap-4">
+                <div className="relative">
+                  <Badge variant="outline" className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full mr-2 sm:mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <Brain className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                    {t('status.live')}
+                  </Badge>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </div>
+              
+              {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-amber-500/20 rounded-xl">
-                  <Brain className="w-6 h-6 text-amber-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white">AI控制中心</h3>
-                  <p className="text-sm text-amber-300">配置和管理您的AI交易助手</p>
-                </div>
-              </div>
-              <div className="p-2 bg-amber-500/20 rounded-lg">
-                <Brain className="w-5 h-5 text-amber-400" />
+                <UserProfile />
+                <WalletConnector />
+                <LanguageSwitcher />
               </div>
             </div>
-          </Card>
-
-          {/* AI自动赚钱 */}
-          <Card className="bg-gradient-to-br from-emerald-500/10 to-green-600/5 border-emerald-500/20 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                  <RefreshCw className="w-6 h-6 text-emerald-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-white">AI自动赚钱</h3>
-                  <p className="text-sm text-emerald-300">智能自动交易系统</p>
-                </div>
-              </div>
-              <div className="p-2 bg-emerald-500/20 rounded-lg">
-                <RefreshCw className="w-5 h-5 text-emerald-400" />
-              </div>
-            </div>
-          </Card>
+          </div>
+          
+          {/* Subtle bottom accent */}
+          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-sm"></div>
         </div>
 
-        {/* Performance Metrics - Compact Bottom Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-400 mb-2">94.2%</div>
-            <div className="text-sm text-slate-400 mb-2">AI精准度</div>
-            <div className="w-full bg-slate-700 rounded-full h-2">
-              <div className="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full" style={{width: '94.2%'}}></div>
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-blue-400 mb-2">47</div>
-            <div className="text-sm text-slate-400 mb-2">活跃信号</div>
-            <div className="flex justify-center">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <div className="w-2 h-2 bg-blue-400/60 rounded-full"></div>
-                <div className="w-2 h-2 bg-blue-400/30 rounded-full"></div>
-              </div>
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-purple-400 mb-2">+12.4%</div>
-            <div className="text-sm text-slate-400 mb-2">月收益率</div>
-            <div className="w-full bg-slate-700 rounded-full h-2">
-              <div className="bg-gradient-to-r from-purple-400 to-pink-500 h-2 rounded-full" style={{width: '62%'}}></div>
-            </div>
-          </div>
-        </div>
+        {/* AI Opportunity Alert - Temporarily disabled due to API issues */}
+        {/* <AIOpportunityAlert /> */}
 
-        {/* 币安API配置 - More Compact */}
+        {/* Portfolio Overview moved to AI Control Center */}
+
+        {/* 币安API配置 */}
         <BinanceAPIConfig />
 
-        {/* Crypto Market Section - Simplified */}
-        <Card className="bg-slate-900/50 border-slate-700/50 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <BarChart3 className="w-5 h-5" />
+        {/* Crypto Cards Grid */}
+        <div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
               {t('market.overview')}
-              {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
+              {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
             </h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
               <Button 
                 variant="outline" 
                 onClick={refreshData}
                 size="sm"
-                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30"
+                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30 text-xs sm:text-sm whitespace-nowrap"
               >
-                <RefreshCw className="w-4 h-4 mr-1" />
+                <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                 {t('button.refresh')}
               </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setShowAllCrypto(!showAllCrypto)}
-                className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border-blue-600/30"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
               >
                 {showAllCrypto ? t('button.collapse') : t('button.all_categories')}
+                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
               </Button>
             </div>
           </div>
           
-          <div className="mb-4">
+          {/* Search Component - Mobile Optimized */}
+          <div className="mb-4 sm:mb-6">
             <CryptoSearch
               onSearch={handleSearch}
               onClearSearch={handleClearSearch}
@@ -268,36 +177,40 @@ export const TradingDashboard = memo(() => {
             />
           </div>
           
-          <ProfessionalCryptoGrid 
-            cryptoData={filteredCryptoData} 
-            showAll={showAllCrypto}
-            maxVisible={6}
-          />
+                  <ProfessionalCryptoGrid 
+                    cryptoData={filteredCryptoData} 
+                    showAll={showAllCrypto}
+                    maxVisible={6}
+                  />
+                  
+                  {/* 货币计数和折叠状态显示 */}
+                  <div className="flex items-center justify-between mt-4 px-2">
+                    <div className="text-sm text-muted-foreground">
+                      {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
+                    </div>
+                    {filteredCryptoData.length > 6 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowAllCrypto(!showAllCrypto)}
+                        className="text-primary hover:text-primary/80 text-xs sm:text-sm"
+                      >
+                        {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
+                      </Button>
+                    )}
+                  </div>
           
-          <div className="flex items-center justify-between mt-4">
-            <div className="text-sm text-muted-foreground">
-              {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
-            </div>
-            {filteredCryptoData.length > 6 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowAllCrypto(!showAllCrypto)}
-                className="text-primary hover:text-primary/80"
-              >
-                {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
-              </Button>
-            )}
-          </div>
-
           {filteredCryptoData.length === 0 && searchQuery && (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">
+            <div className="text-center py-8 sm:py-12">
+              <p className="text-muted-foreground text-base sm:text-lg">
                 {t('search.not_found')} "{searchQuery}" {t('search.try_other')}
+              </p>
+              <p className="text-muted-foreground/70 text-sm mt-2">
+                {t('search.suggestion')}
               </p>
             </div>
           )}
-        </Card>
+        </div>
 
         {/* AI Control Center Modal */}
         <AIControlCenter 
@@ -318,6 +231,7 @@ export const TradingDashboard = memo(() => {
 
         {/* Upcoming Advisors Section */}
         <UpcomingAdvisors />
+      </div>
       </div>
     </div>
   );
