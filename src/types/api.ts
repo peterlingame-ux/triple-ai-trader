@@ -90,6 +90,8 @@ export interface OpportunityAlert {
     stopLossRequired?: boolean;   // 是否建议必须止损
     safetyFactor?: number;        // 安全系数(1-10)
     riskLevel?: 'low' | 'medium' | 'high'; // 风险等级
+    leverage?: string;            // 建议杠杆倍数
+    liquidationSafety?: number;   // 爆仓安全系数
   };
 }
 

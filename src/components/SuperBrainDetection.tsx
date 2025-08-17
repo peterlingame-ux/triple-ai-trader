@@ -547,10 +547,41 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               {/* 交易信息 */}
               {currentAlert.tradingDetails && (
                 <div className="space-y-3">
+                  {/* 交易类型和方向 */}
                   <div className="flex justify-between items-center py-2 border-b border-slate-800">
-                    <span className="text-sm text-slate-400">入场价格</span>
+                    <span className="text-sm text-slate-400">本次交易类型</span>
+                    <span className="text-sm font-medium text-slate-100">永续合约</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">交易方向</span>
+                    <span className={`text-sm font-medium ${
+                      currentAlert.signal === 'buy' ? 'text-emerald-400' : 'text-red-400'
+                    }`}>
+                      {currentAlert.signal === 'buy' ? '做多' : '做空'}
+                    </span>
+                  </div>
+
+                  {/* 杠杆和仓位 */}
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">建议杠杆倍数</span>
+                    <span className="text-sm font-medium text-blue-400">
+                      {currentAlert.tradingDetails.leverage || '10x'}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">建议仓位比例</span>
+                    <span className="text-sm font-medium text-blue-400">
+                      {currentAlert.tradingDetails.positionRatio || 10}% 总仓位
+                    </span>
+                  </div>
+
+                  {/* 价格信息 */}
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">入场价格建议区间</span>
                     <span className="text-sm font-medium text-slate-100">
-                      ${currentAlert.tradingDetails.entry?.toLocaleString()}
+                      ${(currentAlert.tradingDetails.entry * 0.998).toFixed(0)} - ${(currentAlert.tradingDetails.entry * 1.002).toFixed(0)}
                     </span>
                   </div>
                   
@@ -561,17 +592,57 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                     </span>
                   </div>
                   
+                  {/* 止盈点 */}
                   <div className="flex justify-between items-center py-2 border-b border-slate-800">
-                    <span className="text-sm text-slate-400">止盈价位</span>
+                    <span className="text-sm text-slate-400">第一止盈点</span>
                     <span className="text-sm font-medium text-emerald-400">
-                      ${currentAlert.tradingDetails.takeProfit?.toLocaleString()}
+                      ${currentAlert.tradingDetails.firstTakeProfit?.toLocaleString() || currentAlert.tradingDetails.takeProfit?.toLocaleString()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">第二止盈点</span>
+                    <span className="text-sm font-medium text-emerald-400">
+                      ${currentAlert.tradingDetails.secondTakeProfit?.toLocaleString() || (currentAlert.tradingDetails.takeProfit * 1.05).toFixed(0)}
+                    </span>
+                  </div>
+
+                  {/* 风险控制 */}
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">交易胜率分析</span>
+                    <span className="text-sm font-medium text-emerald-400">
+                      {currentAlert.confidence}%
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">止损点可否等待</span>
+                    <span className={`text-sm font-medium ${
+                      currentAlert.tradingDetails.stopLossRequired ? 'text-red-400' : 'text-yellow-400'
+                    }`}>
+                      {currentAlert.tradingDetails.stopLossRequired ? '不可等待' : '可适当等待'}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">是否必须止损</span>
+                    <span className={`text-sm font-medium ${
+                      currentAlert.tradingDetails.stopLossRequired ? 'text-red-400' : 'text-emerald-400'
+                    }`}>
+                      {currentAlert.tradingDetails.stopLossRequired ? '必须严格止损' : '可灵活处理'}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center py-2">
-                    <span className="text-sm text-slate-400">建议仓位</span>
-                    <span className="text-sm font-medium text-blue-400">
-                      {currentAlert.tradingDetails.position}
+                    <span className="text-sm text-slate-400">安全系数等级</span>
+                    <span className={`text-sm font-medium ${
+                      (currentAlert.tradingDetails.safetyFactor || 5) >= 8 ? 'text-emerald-400' : 
+                      (currentAlert.tradingDetails.safetyFactor || 5) >= 6 ? 'text-yellow-400' : 'text-red-400'
+                    }`}>
+                      {currentAlert.tradingDetails.safetyFactor || 5}/10 {
+                        (currentAlert.tradingDetails.safetyFactor || 5) >= 8 ? '(高安全)' : 
+                        (currentAlert.tradingDetails.safetyFactor || 5) >= 6 ? '(中等安全)' : '(注意风险)'
+                      }
                     </span>
                   </div>
                 </div>
