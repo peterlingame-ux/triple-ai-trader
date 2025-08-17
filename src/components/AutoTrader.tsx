@@ -307,7 +307,7 @@ export const AutoTrader = () => {
       }
     };
 
-    window.addEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
+    window.addEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
     
     // 定期检查实时信号（仅当AI自动交易和最强大脑都启动时）
     let realTimeInterval: NodeJS.Timeout;
@@ -319,7 +319,7 @@ export const AutoTrader = () => {
     }
     
     return () => {
-      window.removeEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
+      window.removeEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
       if (realTimeInterval) {
         clearInterval(realTimeInterval);
       }
