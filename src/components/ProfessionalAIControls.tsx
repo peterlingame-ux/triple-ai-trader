@@ -115,8 +115,8 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                   <BarChart3 className="w-5 h-5 text-purple-400" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-purple-300">AI虚拟投资组合</h3>
-                  <p className="text-xs text-muted-foreground">总价值</p>
+                  <h3 className="text-sm font-medium text-purple-300">{t('portfolio.ai_virtual')}</h3>
+                  <p className="text-xs text-muted-foreground">{t('portfolio.total_value')}</p>
                 </div>
                 <Badge variant="outline" className="ml-auto bg-purple-500/10 text-purple-400 border-purple-500/30 text-xs">
                   1
@@ -141,7 +141,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                   <Activity className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-emerald-300">日盈亏</h3>
+                  <h3 className="text-sm font-medium text-emerald-300">{t('portfolio.daily_pnl')}</h3>
                   <p className="text-xs text-muted-foreground">盈亏金额</p>
                 </div>
                 <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse ml-auto"></div>
@@ -167,8 +167,8 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                   <Zap className="w-5 h-5 text-amber-400" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-amber-300">活跃交易</h3>
-                  <p className="text-xs text-muted-foreground">当前持仓</p>
+                  <h3 className="text-sm font-medium text-amber-300">{t('portfolio.active_trades')}</h3>
+                  <p className="text-xs text-muted-foreground">{t('portfolio.current_holdings')}</p>
                 </div>
                 <Badge variant="outline" className="ml-auto bg-amber-500/10 text-amber-400 border-amber-500/30 text-xs">
                   P
@@ -231,7 +231,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
           <div className="flex items-center justify-between pt-6 border-t border-slate-700/50">
             <div className="flex items-center gap-3">
               <Calendar className="w-5 h-5 text-slate-400" />
-              <span className="text-sm text-slate-400">数据统计时间段:</span>
+              <span className="text-sm text-slate-400">{t('stats.data_period')}</span>
             </div>
             <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
               <SelectTrigger className="w-32 bg-slate-800/50 border-slate-600 text-slate-300">
@@ -253,7 +253,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
               <div className="text-3xl font-bold text-emerald-400 font-mono">
                 {isLoading ? '--' : `${stats.aiAccuracy.toFixed(1)}%`}
               </div>
-              <div className="text-sm text-emerald-300/80 font-medium">AI精准度</div>
+              <div className="text-sm text-emerald-300/80 font-medium">{t('stats.ai_accuracy')}</div>
               <div className="w-full bg-slate-700/50 rounded-full h-2">
                 <div 
                   className="bg-gradient-to-r from-emerald-400 to-emerald-300 h-2 rounded-full transition-all duration-700" 
@@ -261,7 +261,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                 ></div>
               </div>
               <div className="text-xs text-slate-400">
-                {stats.winningTrades}/{stats.totalTrades} 盈利交易
+                {stats.winningTrades}/{stats.totalTrades} {t('stats.profitable_trades')}
               </div>
             </div>
             <div className="text-center space-y-3">
@@ -275,14 +275,14 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                 <div className="w-2 h-2 rounded-full bg-blue-400/30 animate-pulse" style={{animationDelay: '1s'}}></div>
               </div>
               <div className="text-xs text-slate-400">
-                当前持仓数量
+                {t('stats.current_position_qty')}
               </div>
             </div>
             <div className="text-center space-y-3">
               <div className={`text-3xl font-bold font-mono ${stats.monthlyReturn >= 0 ? 'text-purple-400' : 'text-red-400'}`}>
                 {isLoading ? '--' : `${stats.monthlyReturn >= 0 ? '+' : ''}${stats.monthlyReturn.toFixed(1)}%`}
               </div>
-              <div className="text-sm text-purple-300/80 font-medium">期间收益率</div>
+              <div className="text-sm text-purple-300/80 font-medium">{t('stats.period_return')}</div>
               <div className="w-full bg-slate-700/50 rounded-full h-2">
                 <div 
                   className={`h-2 rounded-full transition-all duration-700 ${
@@ -294,7 +294,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                 ></div>
               </div>
               <div className="text-xs text-slate-400">
-                {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toFixed(2)} 总盈亏
+                {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toFixed(2)} {t('stats.total_pnl')}
               </div>
             </div>
           </div>

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { format, subDays, subMonths } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Position {
   id: string;
@@ -53,6 +54,7 @@ interface TradingStatisticsProps {
 }
 
 export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, isEnabled }: TradingStatisticsProps) => {
+  const { t } = useLanguage();
   console.log('=== TradingStatistics 组件渲染 ===');
   console.log('TradingStatistics - 接收到的 virtualAccount prop:', virtualAccount);
   
@@ -134,13 +136,13 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
         <Card className="bg-slate-900/95 border-slate-700/50">
           <div className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-sm font-medium text-slate-300">AI虚拟投资组合</h3>
+              <h3 className="text-sm font-medium text-slate-300">{t('portfolio.ai_virtual')}</h3>
             </div>
             <div className="text-2xl font-bold text-white mb-1">
               ${stats.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
             <div className="text-xs text-slate-400">
-              总价值 {stats.currentPositionsPnL !== 0 && (
+              {t('portfolio.total_value')} {stats.currentPositionsPnL !== 0 && (
                 <span className={`ml-1 ${stats.currentPositionsPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                   ({stats.currentPositionsPnL >= 0 ? '+' : ''}${stats.currentPositionsPnL.toFixed(2)} 持仓浮盈)
                 </span>
@@ -152,7 +154,7 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
         <Card className="bg-slate-900/95 border-slate-700/50">
           <div className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-sm font-medium text-slate-300">日盈亏</h3>
+              <h3 className="text-sm font-medium text-slate-300">{t('portfolio.daily_pnl')}</h3>
             </div>
             <div className={`text-2xl font-bold mb-1 ${virtualAccount.dailyPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
               {virtualAccount.dailyPnL >= 0 ? '+' : ''}${virtualAccount.dailyPnL.toFixed(2)}
@@ -166,12 +168,12 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
         <Card className="bg-slate-900/95 border-slate-700/50">
           <div className="p-4">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-sm font-medium text-slate-300">活跃交易</h3>
+              <h3 className="text-sm font-medium text-slate-300">{t('portfolio.active_trades')}</h3>
             </div>
             <div className="text-2xl font-bold text-white mb-1">
               {virtualAccount.activePositions}
             </div>
-            <div className="text-xs text-slate-400">当前持仓</div>
+            <div className="text-xs text-slate-400">{t('portfolio.current_holdings')}</div>
           </div>
         </Card>
       </div>

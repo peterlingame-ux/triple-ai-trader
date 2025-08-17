@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface CustomDateRangePickerProps {
   dateRange: DateRange | undefined;
@@ -16,6 +17,7 @@ interface CustomDateRangePickerProps {
 
 export const CustomDateRangePicker = ({ dateRange, onDateRangeChange, className }: CustomDateRangePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   const presetRanges = [
     {
@@ -115,7 +117,7 @@ export const CustomDateRangePicker = ({ dateRange, onDateRangeChange, className 
     <div className={cn("flex items-center gap-2", className)}>
       <div className="flex items-center gap-2 text-sm text-slate-300">
         <CalendarLucide className="w-4 h-4" />
-        <span>数据统计时间段:</span>
+        <span>{t('stats.data_period')}</span>
       </div>
       
       <Select value={getCurrentPreset()} onValueChange={handlePresetSelect}>

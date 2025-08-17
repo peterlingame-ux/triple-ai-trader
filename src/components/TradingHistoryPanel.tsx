@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { PositionDetailsCard } from "./PositionDetailsCard";
 import { Position as TradingPosition } from "@/types/trading";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Position {
   id: string;
@@ -50,6 +51,7 @@ interface TradingHistoryPanelProps {
 }
 
 export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => {
+  const { t } = useLanguage();
   const [positions, setPositions] = useState<Position[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed'>('all');
@@ -160,7 +162,7 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div>
-              <h3 className="text-lg font-semibold text-white">交易记录</h3>
+              <h3 className="text-lg font-semibold text-white">{t('trading.records')}</h3>
               <p className="text-xs text-slate-400">历史交易详细记录</p>
             </div>
           </div>
@@ -209,13 +211,13 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
             </div>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-            <div className="text-xs text-slate-400 mb-1">盈利交易</div>
+            <div className="text-xs text-slate-400 mb-1">{t('stats.profitable_trades')}</div>
             <div className="text-lg font-mono font-bold text-blue-400">
               {stats.winTrades}
             </div>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3">
-            <div className="text-xs text-slate-400 mb-1">总盈亏</div>
+            <div className="text-xs text-slate-400 mb-1">{t('stats.total_pnl')}</div>
             <div className={`text-lg font-mono font-bold ${getPnLColor(stats.totalPnL)}`}>
               {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toFixed(2)}
             </div>

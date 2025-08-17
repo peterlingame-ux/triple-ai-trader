@@ -137,7 +137,7 @@ export const TradingExchangePanel = ({
             {/* Portfolio Summary */}
             <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase tracking-wide">AI虚拟投资组合</span>
+                <span className="text-xs text-slate-400 uppercase tracking-wide">{t('portfolio.ai_virtual')}</span>
                 <Badge variant="outline" className="text-xs bg-violet-500/10 text-violet-400 border-violet-500/30 px-2 py-0.5">
                   1
                 </Badge>
@@ -145,13 +145,13 @@ export const TradingExchangePanel = ({
               <div className="text-lg font-mono font-bold text-white">
                 ${portfolioData.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </div>
-              <div className="text-xs text-slate-500 mt-1">总价值</div>
+              <div className="text-xs text-slate-500 mt-1">{t('portfolio.total_value')}</div>
             </div>
 
             {/* P&L */}
             <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase tracking-wide">日盈亏</span>
+                <span className="text-xs text-slate-400 uppercase tracking-wide">{t('portfolio.daily_pnl')}</span>
                 <div className={`w-2 h-2 rounded-full ${portfolioData.dailyChange >= 0 ? 'bg-green-400' : 'bg-red-400'}`}></div>
               </div>
               <div className={`text-lg font-mono font-bold ${portfolioData.dailyChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -165,7 +165,7 @@ export const TradingExchangePanel = ({
             {/* Active Positions */}
             <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-slate-400 uppercase tracking-wide">活跃交易</span>
+                <span className="text-xs text-slate-400 uppercase tracking-wide">{t('portfolio.active_trades')}</span>
                 <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/30 px-2 py-0.5">
                   P
                 </Badge>
@@ -173,7 +173,7 @@ export const TradingExchangePanel = ({
               <div className="text-lg font-mono font-bold text-white">
                 {portfolioData.activeTrades}
               </div>
-              <div className="text-xs text-slate-500 mt-1">当前持仓</div>
+              <div className="text-xs text-slate-500 mt-1">{t('portfolio.current_holdings')}</div>
             </div>
           </div>
 
@@ -224,7 +224,7 @@ export const TradingExchangePanel = ({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-slate-400" />
-                <span className="text-xs text-slate-400 uppercase tracking-wide">数据统计时间段:</span>
+                <span className="text-xs text-slate-400 uppercase tracking-wide">{t('stats.data_period')}</span>
               </div>
               
               <div className="flex items-center gap-2">
@@ -313,7 +313,7 @@ export const TradingExchangePanel = ({
                   className="h-7 bg-slate-700/50 border-slate-600 text-slate-300 text-xs hover:bg-slate-600/50"
                 >
                   <History className="w-3 h-3 mr-1" />
-                  交易记录
+                  {t('trading.records')}
                 </Button>
               </div>
             </div>
@@ -324,7 +324,7 @@ export const TradingExchangePanel = ({
                 <div className="text-2xl font-mono font-bold text-green-400 mb-1">
                   {isLoading ? '--.--%' : `${stats.aiAccuracy.toFixed(1)}%`}
                 </div>
-                <div className="text-xs text-slate-400 uppercase tracking-wide mb-2">AI精准度</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wide mb-2">{t('stats.ai_accuracy')}</div>
                 <div className="w-full bg-slate-700/50 rounded-sm h-1 mb-2">
                   <div 
                     className="bg-green-400 h-1 rounded-sm transition-all duration-500" 
@@ -332,7 +332,7 @@ export const TradingExchangePanel = ({
                   ></div>
                 </div>
                 <div className="text-xs text-slate-500 font-mono">
-                  {stats.winningTrades}/{stats.totalTrades} 盈利交易
+                  {stats.winningTrades}/{stats.totalTrades} {t('stats.profitable_trades')}
                 </div>
               </div>
 
@@ -347,7 +347,7 @@ export const TradingExchangePanel = ({
                   <div className="w-1 h-1 rounded-full bg-blue-400/30 animate-pulse" style={{animationDelay: '0.4s'}}></div>
                 </div>
                 <div className="text-xs text-slate-500 font-mono">
-                  当前持仓数量
+                  {t('stats.current_position_qty')}
                 </div>
               </div>
 
@@ -355,7 +355,7 @@ export const TradingExchangePanel = ({
                 <div className={`text-2xl font-mono font-bold mb-1 ${stats.monthlyReturn >= 0 ? 'text-purple-400' : 'text-red-400'}`}>
                   {isLoading ? '--.--%' : `${stats.monthlyReturn >= 0 ? '+' : ''}${stats.monthlyReturn.toFixed(1)}%`}
                 </div>
-                <div className="text-xs text-slate-400 uppercase tracking-wide mb-2">期间收益率</div>
+                <div className="text-xs text-slate-400 uppercase tracking-wide mb-2">{t('stats.period_return')}</div>
                 <div className="w-full bg-slate-700/50 rounded-sm h-1 mb-2">
                   <div 
                     className={`h-1 rounded-sm transition-all duration-500 ${
@@ -365,7 +365,7 @@ export const TradingExchangePanel = ({
                   ></div>
                 </div>
                 <div className="text-xs text-slate-500 font-mono">
-                  {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toFixed(2)} 总盈亏
+                  {stats.totalPnL >= 0 ? '+' : ''}${stats.totalPnL.toFixed(2)} {t('stats.total_pnl')}
                 </div>
               </div>
             </div>

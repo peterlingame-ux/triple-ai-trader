@@ -25,6 +25,7 @@ import {
   Zap
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/useLanguage";
 import { useUserSettings } from "@/hooks/useUserSettings";
 import { useVirtualAccount } from "@/hooks/useVirtualAccount";
 import { useSignalProcessor } from "@/hooks/useSignalProcessor";
@@ -35,6 +36,7 @@ import { formatTradingHistory, validateSignal } from "@/utils/tradingHelpers";
 
 export const AutoTrader = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const { settings, isAuthenticated, updateSettings, startBackgroundMonitoring } = useUserSettings();
   const { virtualAccount, positions, updateBalance, executeTrade } = useVirtualAccount();
   const { callSuperBrainAPI, convertToSignal } = useSignalProcessor();
@@ -534,7 +536,7 @@ export const AutoTrader = () => {
                         <div className={`text-2xl font-bold ${virtualAccount.totalPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                           {virtualAccount.totalPnL >= 0 ? '+' : ''}${virtualAccount.totalPnL.toFixed(2)}
                         </div>
-                        <div className="text-sm text-slate-400">总盈亏</div>
+                        <div className="text-sm text-slate-400">{t('stats.total_pnl')}</div>
                       </div>
                       <div>
                         <div className="text-2xl font-bold text-blue-400">
@@ -555,7 +557,7 @@ export const AutoTrader = () => {
                   <div className="bg-slate-700/50 rounded-lg p-6">
                     <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                       <Target className="w-5 h-5 text-yellow-400" />
-                      当前持仓 ({positions.length})
+                      {t('portfolio.current_holdings')} ({positions.length})
                     </h3>
                     {positions.length > 0 ? (
                       <div className="space-y-3 max-h-40 overflow-y-auto">
@@ -728,7 +730,7 @@ export const AutoTrader = () => {
                   <div className="text-center text-slate-400 py-12">
                     <Bot className="w-16 h-16 mx-auto mb-4 opacity-50" />
                     <p>暂无交易历史</p>
-                    <p className="text-sm">启动AI自动交易后，交易记录将在这里显示</p>
+                    <p className="text-sm">启动AI自动交易后，{t('trading.records')}将在这里显示</p>
                   </div>
                 )}
               </ScrollArea>
