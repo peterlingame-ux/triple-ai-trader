@@ -18,8 +18,10 @@ import {
   Activity
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Position {
+  id: string;
   symbol: string;
   side: 'LONG' | 'SHORT';
   size: number;
@@ -31,6 +33,8 @@ interface Position {
   marginRatio: number;
   liquidationPrice: number;
   leverage: number;
+  confidence: number;
+  openTime: Date;
 }
 
 interface TradingConfig {
@@ -44,13 +48,29 @@ interface TradingConfig {
   enableShortPositions: boolean;
 }
 
+interface VirtualAccount {
+  balance: number;
+  totalPnL: number;
+  dailyPnL: number;
+  winRate: number;
+  totalTrades: number;
+  activePositions: number;
+}
+
 export const AutoTradingSystem = () => {
   const { toast } = useToast();
   const [isRunning, setIsRunning] = useState(false);
   const [positions, setPositions] = useState<Position[]>([]);
-  const [totalBalance, setTotalBalance] = useState(100000);
-  const [totalPnL, setTotalPnL] = useState(0);
+  const [virtualAccount, setVirtualAccount] = useState<VirtualAccount>({
+    balance: 100000,
+    totalPnL: 0,
+    dailyPnL: 0,
+    winRate: 0,
+    totalTrades: 0,
+    activePositions: 0
+  });
   const [aiAnalysisCount, setAiAnalysisCount] = useState(0);
+  const [tradingHistory, setTradingHistory] = useState<string[]>([]);
   
   const [config, setConfig] = useState<TradingConfig>({
     initialCapital: 100000,
@@ -63,81 +83,145 @@ export const AutoTradingSystem = () => {
     enableShortPositions: true
   });
 
-  // 模拟持仓数据
-  const mockPositions: Position[] = [
-    {
-      symbol: "ETHUSDT",
-      side: "LONG",
-      size: 23,
-      entryPrice: 4675.36,
-      markPrice: 4550.44,
-      unrealizedPnl: -2873.16,
-      unrealizedPnlPercent: -53.43,
-      margin: 5233,
-      marginRatio: 1432.6,
-      liquidationPrice: 6516.89,
-      leverage: 20
-    },
-    {
-      symbol: "BTCUSDT", 
-      side: "SHORT",
-      size: 0.5,
-      entryPrice: 98500,
-      markPrice: 97200,
-      unrealizedPnl: 650,
-      unrealizedPnlPercent: 1.32,
-      margin: 2450,
-      marginRatio: 98.5,
-      liquidationPrice: 105000,
-      leverage: 20
-    }
-  ];
-
   useEffect(() => {
     if (isRunning) {
-      setPositions(mockPositions);
+      // 重置账户到初始状态
+      setVirtualAccount(prev => ({
+        ...prev,
+        balance: config.initialCapital,
+        totalPnL: 0,
+        dailyPnL: 0,
+        activePositions: 0
+      }));
+      
       // 启动AI分析定时器
       const interval = setInterval(() => {
         performAIAnalysis();
       }, 30000); // 每30秒分析一次
 
+      // 立即执行一次分析
+      performAIAnalysis();
+
       return () => clearInterval(interval);
     } else {
+      // 清空持仓
       setPositions([]);
+      setVirtualAccount(prev => ({ ...prev, activePositions: 0 }));
     }
-  }, [isRunning]);
+  }, [isRunning, config.initialCapital]);
 
   const performAIAnalysis = async () => {
     try {
       console.log('执行AI市场分析...');
       setAiAnalysisCount(prev => prev + 1);
       
-      // 这里调用超级大脑分析
-      const response = await fetch('/api/super-brain-analysis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          symbols: ['BTCUSDT', 'ETHUSDT', 'ADAUSDT'],
+      // 调用超级大脑分析
+      const { data, error } = await supabase.functions.invoke('super-brain-analysis', {
+        body: {
+          symbols: ['BTC', 'ETH', 'ADA', 'SOL', 'DOT', 'MATIC'],
           analysisType: 'full_market_scan',
           confidenceThreshold: config.aiConfidenceThreshold
-        })
+        }
       });
 
-      if (response.ok) {
-        const analysis = await response.json();
-        console.log('AI分析结果:', analysis);
+      if (error) {
+        console.error('AI分析API错误:', error);
+        toast({
+          title: "AI分析失败",
+          description: `错误: ${error.message}`,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (data && data.success) {
+        console.log('AI分析成功:', data);
         
         // 基于AI分析结果执行交易
-        executeTradesBasedOnAI(analysis);
+        await executeTradesBasedOnAI(data);
+
+        toast({
+          title: "AI分析完成",
+          description: `发现 ${data.trading_signals?.length || 0} 个高置信度交易信号`,
+        });
       }
     } catch (error) {
       console.error('AI分析失败:', error);
+      toast({
+        title: "AI分析错误",
+        description: "网络连接或系统错误",
+        variant: "destructive"
+      });
     }
   };
 
-  const executeTradesBasedOnAI = (analysis: any) => {
-    // 基于AI分析结果执行自动交易逻辑
-    console.log('基于AI分析执行交易决策');
+  const executeTradesBasedOnAI = async (analysisData: any) => {
+    if (!analysisData.trading_signals || analysisData.trading_signals.length === 0) {
+      console.log('没有高置信度交易信号');
+      return;
+    }
+
+    console.log('开始执行AI交易信号:', analysisData.trading_signals);
+
+    for (const signal of analysisData.trading_signals) {
+      // 检查是否超过最大持仓数
+      if (positions.length >= config.maxPositions) {
+        console.log('已达最大持仓数，跳过交易');
+        break;
+      }
+
+      // 检查交易方向是否启用
+      const isLong = signal.signal === 'BUY';
+      if ((isLong && !config.enableLongPositions) || (!isLong && !config.enableShortPositions)) {
+        console.log(`${signal.signal}方向未启用，跳过 ${signal.symbol}`);
+        continue;
+      }
+
+      // 计算持仓大小
+      const riskAmount = virtualAccount.balance * (config.riskPerTrade / 100);
+      const leverage = 20; // 固定20倍杠杆
+      const positionSize = riskAmount * leverage / signal.entry_price;
+
+      // 创建新持仓
+      const newPosition: Position = {
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+        symbol: signal.symbol,
+        side: isLong ? 'LONG' : 'SHORT',
+        size: positionSize,
+        entryPrice: signal.entry_price,
+        markPrice: signal.entry_price,
+        unrealizedPnl: 0,
+        unrealizedPnlPercent: 0,
+        margin: riskAmount,
+        marginRatio: 0,
+        liquidationPrice: isLong ? signal.entry_price * 0.8 : signal.entry_price * 1.2,
+        leverage: leverage,
+        confidence: signal.confidence,
+        openTime: new Date()
+      };
+
+      // 添加持仓
+      setPositions(prev => [...prev, newPosition]);
+
+      // 更新虚拟账户
+      setVirtualAccount(prev => ({
+        ...prev,
+        balance: prev.balance - riskAmount, // 减去保证金
+        totalTrades: prev.totalTrades + 1,
+        activePositions: prev.activePositions + 1
+      }));
+
+      // 添加交易历史
+      const historyEntry = `${new Date().toLocaleTimeString()} - AI自动执行${signal.signal} ${signal.symbol} @ $${signal.entry_price.toFixed(2)} (置信度: ${signal.confidence}%) ✅`;
+      setTradingHistory(prev => [historyEntry, ...prev.slice(0, 49)]); // 保留最近50条
+
+      console.log(`创建持仓: ${signal.symbol} ${signal.signal} @ ${signal.entry_price}`);
+
+      toast({
+        title: `AI自动开仓`,
+        description: `${signal.symbol} ${isLong ? '做多' : '做空'} @ $${signal.entry_price.toFixed(2)}`,
+      });
+    }
   };
 
   const toggleTrading = () => {
@@ -151,6 +235,37 @@ export const AutoTradingSystem = () => {
   const calculateTotalPnL = () => {
     return positions.reduce((total, pos) => total + pos.unrealizedPnl, 0);
   };
+
+  // 模拟价格波动更新持仓盈亏
+  useEffect(() => {
+    if (positions.length === 0) return;
+
+    const interval = setInterval(() => {
+      setPositions(prev => prev.map(pos => {
+        // 模拟价格变动 (-0.5% 到 +0.5%)
+        const priceChange = (Math.random() - 0.5) * 0.01;
+        const newMarkPrice = pos.markPrice * (1 + priceChange);
+        
+        // 计算盈亏
+        const priceDiff = newMarkPrice - pos.entryPrice;
+        const unrealizedPnl = pos.side === 'LONG' 
+          ? priceDiff * pos.size
+          : -priceDiff * pos.size;
+        
+        const unrealizedPnlPercent = (unrealizedPnl / pos.margin) * 100;
+
+        return {
+          ...pos,
+          markPrice: newMarkPrice,
+          unrealizedPnl,
+          unrealizedPnlPercent,
+          marginRatio: Math.abs(unrealizedPnlPercent) > 80 ? 150 : Math.abs(unrealizedPnlPercent) * 2
+        };
+      }));
+    }, 5000); // 每5秒更新一次价格
+
+    return () => clearInterval(interval);
+  }, [positions.length]);
 
   return (
     <div className="space-y-6">
@@ -274,7 +389,7 @@ export const AutoTradingSystem = () => {
               <h3 className="text-sm font-medium text-slate-300">账户余额</h3>
             </div>
             <div className="text-2xl font-bold text-white">
-              ${totalBalance.toLocaleString()}
+              ${virtualAccount.balance.toLocaleString()}
             </div>
             <div className="text-xs text-slate-400">USDT</div>
           </div>
@@ -290,7 +405,7 @@ export const AutoTradingSystem = () => {
               {calculateTotalPnL() >= 0 ? '+' : ''}${calculateTotalPnL().toFixed(2)}
             </div>
             <div className={`text-xs ${calculateTotalPnL() >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {((calculateTotalPnL() / totalBalance) * 100).toFixed(2)}%
+              {((calculateTotalPnL() / virtualAccount.balance) * 100).toFixed(2)}%
             </div>
           </div>
         </Card>
@@ -336,13 +451,16 @@ export const AutoTradingSystem = () => {
             </h3>
             
             <div className="space-y-4">
-              {positions.map((position, index) => (
-                <div key={index} className="bg-slate-800/50 rounded-lg p-4">
+              {positions.map((position) => (
+                <div key={position.id} className="bg-slate-800/50 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <h4 className="text-lg font-bold text-white">{position.symbol}</h4>
                       <Badge className={`${position.side === 'LONG' ? 'bg-green-600' : 'bg-red-600'}`}>
                         {position.leverage}x {position.side === 'LONG' ? '多' : '空'}
+                      </Badge>
+                      <Badge className="bg-purple-600 text-xs">
+                        AI {position.confidence}%
                       </Badge>
                     </div>
                     
@@ -359,7 +477,7 @@ export const AutoTradingSystem = () => {
                     <div>
                       <div className="text-xs text-slate-400 mb-1">收益额 (USDT)</div>
                       <div className={`text-lg font-bold ${position.unrealizedPnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        {position.unrealizedPnl >= 0 ? '+' : ''}{position.unrealizedPnl.toFixed(2)}
+                        {position.unrealizedPnl >= 0 ? '+' : ''}${position.unrealizedPnl.toFixed(2)}
                       </div>
                     </div>
                     
@@ -372,7 +490,7 @@ export const AutoTradingSystem = () => {
                     
                     <div>
                       <div className="text-xs text-slate-400 mb-1">持仓量 ({position.symbol.replace('USDT', '')})</div>
-                      <div className="text-lg font-bold text-white">{position.size}</div>
+                      <div className="text-lg font-bold text-white">{position.size.toFixed(4)}</div>
                     </div>
                     
                     <div>
@@ -382,12 +500,12 @@ export const AutoTradingSystem = () => {
                     
                     <div>
                       <div className="text-xs text-slate-400 mb-1">开仓均价</div>
-                      <div className="text-lg font-bold text-white">{position.entryPrice.toFixed(2)}</div>
+                      <div className="text-lg font-bold text-white">${position.entryPrice.toFixed(2)}</div>
                     </div>
                     
                     <div>
                       <div className="text-xs text-slate-400 mb-1">标记价格</div>
-                      <div className="text-lg font-bold text-white">{position.markPrice.toFixed(2)}</div>
+                      <div className="text-lg font-bold text-white">${position.markPrice.toFixed(2)}</div>
                     </div>
                   </div>
 
@@ -403,7 +521,7 @@ export const AutoTradingSystem = () => {
                       <div className="text-xs text-slate-400 mb-1">预估强平价</div>
                       <div className="text-sm font-medium text-red-400 flex items-center gap-1">
                         <AlertTriangle className="w-3 h-3" />
-                        {position.liquidationPrice.toFixed(2)}
+                        ${position.liquidationPrice.toFixed(2)}
                       </div>
                     </div>
                     
@@ -432,6 +550,25 @@ export const AutoTradingSystem = () => {
             <p className="text-sm text-slate-500">
               超级大脑正在分析市场数据，寻找最佳交易机会...
             </p>
+          </div>
+        </Card>
+      )}
+
+      {/* 交易历史 */}
+      {tradingHistory.length > 0 && (
+        <Card className="bg-slate-900/95 border-slate-700/50">
+          <div className="p-6">
+            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-green-400" />
+              交易历史
+            </h3>
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {tradingHistory.map((entry, index) => (
+                <div key={index} className="text-sm text-slate-300 bg-slate-800/30 p-2 rounded">
+                  {entry}
+                </div>
+              ))}
+            </div>
           </div>
         </Card>
       )}
