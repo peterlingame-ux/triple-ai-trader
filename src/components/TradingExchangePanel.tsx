@@ -8,10 +8,11 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   ArrowUp, ArrowDown, Activity, Power, PowerOff, 
-  Calendar, BarChart3, Settings, Zap, Brain, CalendarDays
+  Calendar, BarChart3, Settings, Zap, Brain, CalendarDays, History
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
+import { TradingHistoryPanel } from "./TradingHistoryPanel";
 import { CryptoData, NewsArticle } from "@/types/api";
 import { useWalletData } from "@/hooks/useWalletData";
 import { useTimeBasedStats } from "@/hooks/useTimeBasedStats";
@@ -111,6 +112,16 @@ export const TradingExchangePanel = ({
         </Button>
         <AutoTrader />
       </div>
+    );
+  }
+
+  // Show Trading History Panel if selected
+  if (activeSection === 'history') {
+    return (
+      <TradingHistoryPanel 
+        onBack={() => setActiveSection(null)}
+        dateRange={customDateRange}
+      />
     );
   }
 
@@ -294,6 +305,17 @@ export const TradingExchangePanel = ({
                     />
                   </PopoverContent>
                 </Popover>
+
+                {/* Trading History Button */}
+                <Button
+                  onClick={() => setActiveSection('history')}
+                  variant="outline"
+                  size="sm"
+                  className="h-7 bg-slate-700/50 border-slate-600 text-slate-300 text-xs hover:bg-slate-600/50"
+                >
+                  <History className="w-3 h-3 mr-1" />
+                  交易记录
+                </Button>
               </div>
             </div>
 
