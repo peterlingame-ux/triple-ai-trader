@@ -53,24 +53,42 @@ interface TradingStatisticsProps {
 }
 
 export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, isEnabled }: TradingStatisticsProps) => {
+  console.log('=== TradingStatistics 组件渲染 ===');
+  console.log('TradingStatistics - 接收到的 virtualAccount prop:', virtualAccount);
+  
   const [timeRange, setTimeRange] = useState("1month");
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // 计算统计数据
+  // 监听props变化
+  useEffect(() => {
+    console.log('TradingStatistics - props更新，virtualAccount.balance:', virtualAccount.balance);
+  }, [virtualAccount.balance]);
+
+  // 计算统计数据 - 每次组件渲染时都会调用
   const calculateStats = () => {
-    // 调试日志
+    // 详细调试日志
+    console.log('=== TradingStatistics calculateStats 开始 ===');
+    console.log('TradingStatistics - props.virtualAccount:', virtualAccount);
     console.log('TradingStatistics - virtualAccount.balance:', virtualAccount.balance);
+    console.log('TradingStatistics - positions:', positions);
     
     // AI虚拟投资组合价值 = 账户余额 + 当前持仓的浮动盈亏
-    const currentPositionsPnL = positions.reduce((sum, pos) => sum + pos.pnl, 0);
-    const totalValue = virtualAccount.balance + currentPositionsPnL;
+    const currentPositionsPnL = positions.reduce((sum, pos) => {
+      console.log('Position PnL:', pos.symbol, pos.pnl);
+      return sum + pos.pnl;
+    }, 0);
     
-    // 直接使用传入的账户余额
-    const baseBalance = virtualAccount.balance;
+    console.log('TradingStatistics - currentPositionsPnL:', currentPositionsPnL);
+    
+    // 直接使用传入的账户余额作为总价值
+    const totalValue = virtualAccount.balance;
+    console.log('TradingStatistics - calculated totalValue:', totalValue);
+    
+    // 计算收益率
     const totalReturn = virtualAccount.totalPnL !== 0 ? 
-      (virtualAccount.totalPnL / baseBalance) * 100 : 0;
+      (virtualAccount.totalPnL / virtualAccount.balance) * 100 : 0;
     
     // 计算盈利交易数
     const profitableTrades = tradingHistory.filter(h => h.includes('✅')).length;
@@ -81,8 +99,8 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
       ? positions.reduce((sum, pos) => sum + pos.confidence, 0) / positions.length 
       : 0;
 
-    return {
-      totalValue: virtualAccount.balance, // 直接使用传入的账户余额
+    const result = {
+      totalValue: virtualAccount.balance, // 直接使用账户余额
       totalReturn,
       profitableTrades,
       totalExecutedTrades,
@@ -90,6 +108,11 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
       activeSignals: positions.length,
       currentPositionsPnL
     };
+    
+    console.log('TradingStatistics - calculateStats 结果:', result);
+    console.log('=== TradingStatistics calculateStats 结束 ===');
+    
+    return result;
   };
 
   const stats = calculateStats();

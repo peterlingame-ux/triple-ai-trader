@@ -140,8 +140,9 @@ export const AutoTrader = () => {
     }
   ];
 
-  // 监听设置变化，同步状态
+  // 监听设置变化，同步状态 - 修复循环依赖问题
   useEffect(() => {
+    console.log('AutoTrader - settings useEffect 触发');
     console.log('AutoTrader - settings changed:', settings);
     console.log('AutoTrader - settings.virtual_balance:', settings.virtual_balance);
     
@@ -153,8 +154,10 @@ export const AutoTrader = () => {
     setMaxPositions(settings.max_positions || 5);
     setRiskPerTrade(settings.risk_per_trade || 2);
     
-    // 确保虚拟账户余额与设置同步
-    if (settings.virtual_balance !== undefined) {
+    // 只有当设置中的余额与当前虚拟账户余额不同时才更新
+    if (settings.virtual_balance !== undefined && settings.virtual_balance !== virtualAccount.balance) {
+      console.log('AutoTrader - 检测到余额变化，从', virtualAccount.balance, '到', settings.virtual_balance);
+      
       const newVirtualAccount = {
         balance: settings.virtual_balance,
         totalPnL: virtualAccount.totalPnL,
@@ -163,11 +166,12 @@ export const AutoTrader = () => {
         totalTrades: virtualAccount.totalTrades,
         activePositions: virtualAccount.activePositions
       };
-      console.log('AutoTrader - updating virtualAccount to:', newVirtualAccount);
+      
+      console.log('AutoTrader - 更新 virtualAccount 为:', newVirtualAccount);
       setVirtualAccount(newVirtualAccount);
       setTempBalance(settings.virtual_balance.toString());
     }
-  }, [settings]);
+  }, [settings.virtual_balance, settings.super_brain_monitoring, settings.auto_trading_enabled, settings.trading_strategy, settings.max_positions, settings.risk_per_trade]); // 只依赖具体的设置字段
 
   // 确认策略更改
   const confirmStrategyChange = async () => {
@@ -415,19 +419,27 @@ export const AutoTrader = () => {
     }
   };
 
-  // 设置虚拟账户余额
+  // 设置虚拟账户余额 - 简化状态管理
   const updateVirtualBalance = async (newBalance: number) => {
-    const updatedAccount = { ...virtualAccount, balance: newBalance };
-    setVirtualAccount(updatedAccount);
-    setTempBalance(newBalance.toString());
+    console.log('updateVirtualBalance called with:', newBalance);
+    console.log('updateVirtualBalance - current virtualAccount.balance:', virtualAccount.balance);
     
-    // 更新数据库设置
-    await updateSettings({ virtual_balance: newBalance });
+    // 不直接更新virtualAccount状态，只更新设置，让useEffect处理状态更新
+    console.log('updateVirtualBalance - calling updateSettings with virtual_balance:', newBalance);
+    const success = await updateSettings({ virtual_balance: newBalance });
+    console.log('updateVirtualBalance - updateSettings result:', success);
+    
+    if (success) {
+      // 立即更新tempBalance显示
+      setTempBalance(newBalance.toString());
+    }
   };
 
   // 确认更新余额
   const confirmBalanceUpdate = () => {
     const newBalance = Number(tempBalance);
+    console.log('confirmBalanceUpdate - tempBalance:', tempBalance, 'newBalance:', newBalance);
+    
     if (isNaN(newBalance) || newBalance < 1000) {
       toast({
         title: "❌ 余额设置失败",
@@ -438,6 +450,7 @@ export const AutoTrader = () => {
       return;
     }
     
+    console.log('confirmBalanceUpdate - calling updateVirtualBalance with:', newBalance);
     updateVirtualBalance(newBalance);
     toast({
       title: "✅ 余额更新成功",

@@ -141,12 +141,18 @@ export const useUserSettings = () => {
 
   // 更新设置
   const updateSettings = async (updates: Partial<UserSettings>) => {
+    console.log('useUserSettings - updateSettings called with:', updates);
+    console.log('useUserSettings - current settings:', settings);
+    console.log('useUserSettings - isAuthenticated:', isAuthenticated);
+    
     try {
       const newSettings = { ...settings, ...updates };
+      console.log('useUserSettings - newSettings:', newSettings);
 
       if (isAuthenticated) {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
+          console.log('useUserSettings - updating database for user:', user.id);
           const { error } = await supabase
             .from('user_settings')
             .update(updates)
@@ -161,8 +167,10 @@ export const useUserSettings = () => {
             });
             return false;
           }
+          console.log('useUserSettings - database update successful');
         }
       } else {
+        console.log('useUserSettings - saving to localStorage');
         // 保存到本地存储
         if ('super_brain_monitoring' in updates) {
           localStorage.setItem('superBrainMonitoring', JSON.stringify(updates.super_brain_monitoring));
@@ -174,9 +182,11 @@ export const useUserSettings = () => {
           const virtualAccount = JSON.parse(localStorage.getItem('virtualAccount') || '{}');
           virtualAccount.balance = updates.virtual_balance;
           localStorage.setItem('virtualAccount', JSON.stringify(virtualAccount));
+          console.log('useUserSettings - saved to localStorage:', virtualAccount);
         }
       }
 
+      console.log('useUserSettings - setting new settings state:', newSettings);
       setSettings(newSettings);
       return true;
     } catch (error) {
