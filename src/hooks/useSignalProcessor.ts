@@ -113,11 +113,22 @@ export const useSignalProcessor = () => {
 
   // 发送信号事件
   const dispatchSignal = useCallback((signal: SuperBrainSignal) => {
+    console.log('🔥 准备发送信号给AutoTrader:', signal);
+    
     // 发送给AutoTrader的事件
     const autoTradeEvent = new CustomEvent('superBrainSignal', {
       detail: signal
     });
+    
+    // 立即发送事件
     window.dispatchEvent(autoTradeEvent);
+    console.log('📡 superBrainSignal事件已发送');
+    
+    // 延迟再发送一次确保接收
+    setTimeout(() => {
+      window.dispatchEvent(autoTradeEvent);
+      console.log('📡 superBrainSignal事件已重发（延迟确保）');
+    }, 100);
     
     console.log('📡 最强大脑信号已发送给AI自动交易:', signal);
   }, []);
