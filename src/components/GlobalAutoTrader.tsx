@@ -235,7 +235,7 @@ export const GlobalAutoTrader = () => {
                     </span>
                   </div>
                   <div className="text-slate-300">
-                    合约类型: <span className="text-blue-400">{currentAlert.contractType === 'spot' ? '现货' : '期货'}</span>
+                    合约类型: <span className="text-blue-400">{currentAlert.contractType === 'spot' ? '现货交易' : '永续合约'}</span>
                   </div>
                   <div className="text-slate-300">
                     杠杆倍数: <span className="text-orange-400 font-bold">{currentAlert.leverage}x</span>
