@@ -142,8 +142,8 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <p className="text-slate-400">{t('ai.control_center.description')}</p>
       </div>
 
-      {/* Portfolio Overview Cards */}
-      {portfolioData && (
+      {/* Portfolio Overview Cards - Removed per user request */}
+      {/* {portfolioData && (
         <div className="mb-8">
           <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
             <BarChart3 className="w-5 h-5" />
@@ -151,7 +151,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
           </h3>
           <OptimizedPortfolioCards portfolioData={portfolioData} />
         </div>
-      )}
+      )} */}
 
       {/* System Status Overview */}
       <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
