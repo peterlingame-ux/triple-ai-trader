@@ -165,6 +165,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
 
   const toggleMonitoring = () => {
     setIsMonitoring(!isMonitoring);
+    
+    // 发送监控状态变化事件
+    const statusChangeEvent = new CustomEvent('superBrainMonitoringChanged', {
+      detail: { isMonitoring: !isMonitoring }
+    });
+    window.dispatchEvent(statusChangeEvent);
+    
     if (!isMonitoring) {
       setLastCheckTime(new Date());
       toast({

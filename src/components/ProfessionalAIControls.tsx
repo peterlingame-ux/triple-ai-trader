@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft } from "lucide-react";
+import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
 import { CryptoData, NewsArticle } from "@/types/api";
@@ -11,11 +12,25 @@ interface ProfessionalAIControlsProps {
   cryptoData?: CryptoData[];
   newsData?: NewsArticle[];
   onOpenAIControlCenter?: () => void;
+  isSuperBrainMonitoring?: boolean;
 }
 
-export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenAIControlCenter }: ProfessionalAIControlsProps) => {
+export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenAIControlCenter, isSuperBrainMonitoring = false }: ProfessionalAIControlsProps) => {
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [isMonitoring, setIsMonitoring] = useState(false);
+
+  // 监听最强大脑监控状态变化
+  React.useEffect(() => {
+    const handleMonitoringChange = (event: CustomEvent) => {
+      setIsMonitoring(event.detail.isMonitoring);
+    };
+
+    window.addEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
+    return () => {
+      window.removeEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
+    };
+  }, []);
 
   // 如果有活跃的区域，显示对应的组件
   if (activeSection === 'autotrader') {
@@ -49,10 +64,18 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
               <p className="text-sm text-muted-foreground">{t('ai.professional_tools')}</p>
             </div>
           </div>
-          <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">
-            <Activity className="w-3 h-3 mr-1" />
-            {t('status.live')}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">
+              <Activity className="w-3 h-3 mr-1" />
+              {t('status.live')}
+            </Badge>
+            {isMonitoring && (
+              <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 animate-pulse">
+                <Shield className="w-3 h-3 mr-1" />
+                {t('ai.supreme_brain_active')}
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Control Buttons - Side by Side Layout */}
