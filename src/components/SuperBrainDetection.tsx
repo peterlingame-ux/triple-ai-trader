@@ -87,7 +87,33 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       }
 
       if (data) {
-        // 简化弹窗信息，只显示关键交易信息
+        // 根据AI分析结果计算参数
+        const confidence = data.confidence;
+        const stopLossRequired = confidence < 90; // 胜率低于90%建议必须止损
+        
+        // 根据胜率计算建议仓位和安全系数
+        let positionRatio = 10;
+        let safetyFactor = 5;
+        let riskLevel: 'low' | 'medium' | 'high' = 'medium';
+        
+        if (confidence >= 95) {
+          positionRatio = 25;
+          safetyFactor = 9;
+          riskLevel = 'low';
+        } else if (confidence >= 90) {
+          positionRatio = 20;
+          safetyFactor = 8;
+          riskLevel = 'low';
+        } else if (confidence >= 85) {
+          positionRatio = 15;
+          safetyFactor = 7;
+          riskLevel = 'medium';
+        } else {
+          positionRatio = 8;
+          safetyFactor = 5;
+          riskLevel = 'high';
+        }
+
         return {
           id: Date.now().toString(),
           symbol: data.symbol,
@@ -98,7 +124,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           analysis: {
             priceAnalysis: `💰 ${data.symbol}: ${data.action === 'buy' ? '买多' : '买空'}`,
             technicalAnalysis: `🎯 入场: $${data.entry.toLocaleString()} | 止损: $${data.stopLoss.toLocaleString()} | 止盈: $${data.takeProfit.toLocaleString()}`,
-            sentimentAnalysis: `📊 仓位: ${data.position} | 胜率: ${data.confidence}%`
+            sentimentAnalysis: data.reasoning
           },
           alerts: [],
           timestamp: new Date(),
@@ -108,13 +134,19 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
             takeProfit: data.takeProfit,
             position: data.position,
             reasoning: data.reasoning,
-            leverage: data.confidence >= 95 ? '20x' : data.confidence >= 90 ? '15x' : '10x',
-            liquidationSafety: data.confidence >= 95 ? 5 : data.confidence >= 90 ? 4 : 3,
-            canAddPosition: data.confidence >= 85,
-            addPositionRange: {
+            firstTakeProfit: Math.round(data.entry * (data.action === 'buy' ? 1.05 : 0.95)),
+            secondTakeProfit: data.takeProfit,
+            positionRatio: positionRatio,
+            stopLossRequired: stopLossRequired,
+            safetyFactor: safetyFactor,
+            riskLevel: riskLevel,
+            leverage: confidence >= 95 ? '20x' : confidence >= 90 ? '15x' : '10x',
+            liquidationSafety: confidence >= 95 ? 5 : confidence >= 90 ? 4 : 3,
+            canAddPosition: !stopLossRequired, // 只有不必须止损时才可以补仓
+            addPositionRange: !stopLossRequired ? {
               min: Math.round(data.entry * (data.action === 'buy' ? 0.97 : 1.03)),
               max: Math.round(data.entry * (data.action === 'buy' ? 0.94 : 1.06))
-            }
+            } : null // 必须止损时设为null，不显示补仓点
           }
         } as OpportunityAlert;
       }
