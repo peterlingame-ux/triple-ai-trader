@@ -58,69 +58,91 @@ export const useVirtualAccount = () => {
 
   // 执行交易
   const executeTrade = useCallback(async (signal: SuperBrainSignal, strategy: 'conservative' | 'aggressive') => {
-    const tradeSize = (virtualAccount.balance * TRADING_CONFIG.RISK_PERCENTAGE) / 100;
-    const positionSize = tradeSize / signal.entry;
+    console.log('🔥 executeTrade 开始执行:', { signal, strategy, virtualAccount });
     
-    const newPosition: Position = {
-      id: Date.now().toString(),
-      symbol: signal.symbol,
-      type: signal.action === 'buy' ? 'long' : 'short',
-      entryPrice: signal.entry,
-      currentPrice: signal.entry,
-      size: positionSize,
-      pnl: 0,
-      pnlPercent: 0,
-      confidence: signal.confidence,
-      strategy,
-      openTime: new Date(),
-      stopLoss: signal.stopLoss,
-      takeProfit: signal.takeProfit
-    };
+    try {
+      const tradeSize = (virtualAccount.balance * TRADING_CONFIG.RISK_PERCENTAGE) / 100;
+      const positionSize = tradeSize / signal.entry;
+      console.log('🔥 计算交易参数:', { tradeSize, positionSize });
+      
+      const newPosition: Position = {
+        id: Date.now().toString(),
+        symbol: signal.symbol,
+        type: signal.action === 'buy' ? 'long' : 'short',
+        entryPrice: signal.entry,
+        currentPrice: signal.entry,
+        size: positionSize,
+        pnl: 0,
+        pnlPercent: 0,
+        confidence: signal.confidence,
+        strategy,
+        openTime: new Date(),
+        stopLoss: signal.stopLoss,
+        takeProfit: signal.takeProfit
+      };
+      console.log('🔥 创建新持仓:', newPosition);
 
-    // 更新持仓
-    setPositions(prev => [...prev, newPosition]);
-    
-    // 更新虚拟账户
-    const updatedAccount = {
-      ...virtualAccount,
-      balance: virtualAccount.balance - tradeSize,
-      totalTrades: virtualAccount.totalTrades + 1,
-      activePositions: virtualAccount.activePositions + 1,
-    };
-    
-    setVirtualAccount(updatedAccount);
-    await updateSettings({ virtual_balance: updatedAccount.balance });
+      // 更新持仓
+      console.log('🔥 更新持仓列表...');
+      setPositions(prev => [...prev, newPosition]);
+      
+      // 更新虚拟账户
+      console.log('🔥 更新虚拟账户...');
+      const updatedAccount = {
+        ...virtualAccount,
+        balance: virtualAccount.balance - tradeSize,
+        totalTrades: virtualAccount.totalTrades + 1,
+        activePositions: virtualAccount.activePositions + 1,
+      };
+      
+      setVirtualAccount(updatedAccount);
+      
+      console.log('🔥 保存设置到localStorage...');
+      await updateSettings({ virtual_balance: updatedAccount.balance });
+      console.log('✅ 设置保存完成');
 
-    // 保存到数据库（如果用户已认证）
-    if (isAuthenticated) {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase.from('virtual_trades').insert({
-            user_id: user.id,
-            symbol: newPosition.symbol,
-            action: signal.action,
-            entry_price: newPosition.entryPrice,
-            stop_loss: newPosition.stopLoss,
-            take_profit: newPosition.takeProfit,
-            position_size: newPosition.size,
-            confidence: newPosition.confidence,
-            strategy: newPosition.strategy,
-            reasoning: signal.reasoning,
-            status: 'open'
-          });
+      // 保存到数据库（如果用户已认证）
+      if (isAuthenticated) {
+        console.log('🔥 保存到数据库...');
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            await supabase.from('virtual_trades').insert({
+              user_id: user.id,
+              symbol: newPosition.symbol,
+              action: signal.action,
+              entry_price: newPosition.entryPrice,
+              stop_loss: newPosition.stopLoss,
+              take_profit: newPosition.takeProfit,
+              position_size: newPosition.size,
+              confidence: newPosition.confidence,
+              strategy: newPosition.strategy,
+              reasoning: signal.reasoning,
+              status: 'open'
+            });
+            console.log('✅ 数据库保存完成');
+          }
+        } catch (error) {
+          console.error('💥 数据库保存失败:', error);
+          // 不阻止交易完成
         }
-      } catch (error) {
-        console.error('Failed to save trade to database:', error);
+      } else {
+        console.log('🔥 用户未认证，跳过数据库保存');
       }
+
+      console.log('🔥 显示成功提示...');
+      toast({
+        title: "🚀 自动交易执行成功",
+        description: `${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} | 胜率${signal.confidence}%`,
+      });
+
+      console.log('✅ executeTrade 完成，返回持仓:', newPosition);
+      return newPosition;
+      
+    } catch (error) {
+      console.error('💥 executeTrade 执行错误:', error);
+      throw error;
     }
-
-    toast({
-      title: "🚀 自动交易执行成功",
-      description: `${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} | 胜率${signal.confidence}%`,
-    });
-
-    return newPosition;
   }, [virtualAccount, updateSettings, isAuthenticated, toast]);
 
   // 关闭持仓
