@@ -116,15 +116,18 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-500/30">
+              <Activity className="w-3 h-3 mr-1" />
               实时市场数据
             </Badge>
             {isMonitoring && (
               <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 animate-pulse">
+                <Shield className="w-3 h-3 mr-1" />
                 {t('ai.supreme_brain_active')}
               </Badge>
             )}
             {isAutoTraderActive && (
               <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 animate-pulse">
+                <BotIcon className="w-3 h-3 mr-1" />
                 {t('ai.auto_trader_active')}
               </Badge>
             )}
