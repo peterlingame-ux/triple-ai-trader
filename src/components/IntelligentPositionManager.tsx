@@ -114,6 +114,12 @@ export const IntelligentPositionManager = () => {
       };
       setPositions(prev => [typedPosition, ...prev]);
       
+      // 触发事件通知其他组件
+      const updateEvent = new CustomEvent('positionCreated', {
+        detail: typedPosition
+      });
+      window.dispatchEvent(updateEvent);
+      
       toast({
         title: "🤖 AI自动开仓",
         description: `${data.symbol} ${data.type === 'buy' || data.type === 'long' ? '多头' : '空头'}持仓已建立`,
@@ -158,6 +164,12 @@ export const IntelligentPositionManager = () => {
           ? { ...p, current_price: newPrice, pnl, pnl_percent: pnlPercent }
           : p
       ));
+
+      // 触发事件通知其他组件数据已更新
+      const updateEvent = new CustomEvent('positionUpdated', {
+        detail: { id: position.id, pnl, pnl_percent: pnlPercent }
+      });
+      window.dispatchEvent(updateEvent);
     } catch (error) {
       console.error('Error updating position:', error);
     }

@@ -119,7 +119,12 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                   1
                 </Badge>
               </div>
-              <div className="text-2xl font-bold text-purple-100 font-mono">$100,000.00</div>
+              <div className="text-2xl font-bold text-purple-100 font-mono">
+                ${portfolioData.totalValue.toLocaleString('en-US', { 
+                  minimumFractionDigits: 2, 
+                  maximumFractionDigits: 2 
+                })}
+              </div>
               <div className="flex items-center gap-2 text-sm mt-2">
                 <div className="w-2 h-2 rounded-full bg-purple-400"></div>
                 <span className="text-purple-300">模拟交易</span>
@@ -138,10 +143,17 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                 </div>
                 <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse ml-auto"></div>
               </div>
-              <div className="text-2xl font-bold text-emerald-100 font-mono">+$1,247.89</div>
+              <div className="text-2xl font-bold text-emerald-100 font-mono">
+                {portfolioData.dailyChange >= 0 ? '+' : ''}${Math.abs(portfolioData.dailyChange).toLocaleString('en-US', { 
+                  minimumFractionDigits: 2, 
+                  maximumFractionDigits: 2 
+                })}
+              </div>
               <div className="flex items-center gap-2 mt-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                <span className="text-emerald-300 text-sm font-medium">+1.25%</span>
+                <div className={`w-2 h-2 rounded-full ${portfolioData.dailyChange >= 0 ? 'bg-emerald-400' : 'bg-red-400'}`}></div>
+                <span className={`text-sm font-medium ${portfolioData.dailyChange >= 0 ? 'text-emerald-300' : 'text-red-300'}`}>
+                  {portfolioData.dailyChange >= 0 ? '+' : ''}{((portfolioData.dailyChange / 100000) * 100).toFixed(2)}%
+                </span>
               </div>
             </div>
 
@@ -159,10 +171,12 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                   P
                 </Badge>
               </div>
-              <div className="text-2xl font-bold text-amber-100 font-mono">12</div>
+              <div className="text-2xl font-bold text-amber-100 font-mono">{portfolioData.activeTrades}</div>
               <div className="flex items-center gap-2 mt-2">
-                <div className="w-2 h-2 rounded-full bg-amber-400"></div>
-                <span className="text-amber-300 text-sm">正在交易</span>
+                <div className={`w-2 h-2 rounded-full ${portfolioData.activeTrades > 0 ? 'bg-amber-400' : 'bg-slate-400'}`}></div>
+                <span className={`text-sm ${portfolioData.activeTrades > 0 ? 'text-amber-300' : 'text-slate-400'}`}>
+                  {portfolioData.activeTrades > 0 ? '正在交易' : '无交易'}
+                </span>
               </div>
             </div>
           </div>

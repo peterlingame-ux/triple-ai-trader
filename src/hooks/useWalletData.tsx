@@ -58,11 +58,58 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [autoTraderData, setAutoTraderData] = useState<AutoTraderData>({
     virtualBalance: 100000,
     totalPnL: 0,
-    dailyPnL: 1247.89,
-    activeTrades: 12,
+    dailyPnL: 0,
+    activeTrades: 0,
     winRate: 87.5,
-    monthlyPnL: 15847.32
+    monthlyPnL: 0
   });
+
+  // 监听AI交易执行事件来更新数据
+  useEffect(() => {
+    const handleAutoTradeExecuted = (event: CustomEvent) => {
+      const tradeData = event.detail;
+      console.log('WalletProvider received trade execution:', tradeData);
+      
+      // 更新自动交易数据
+      setAutoTraderData(prev => ({
+        ...prev,
+        totalPnL: prev.totalPnL + (tradeData.profit || 0),
+        dailyPnL: prev.dailyPnL + (tradeData.profit || 0),
+        activeTrades: prev.activeTrades + 1,
+      }));
+    };
+
+    // 监听持仓更新事件
+    const handlePositionUpdate = (event: CustomEvent) => {
+      console.log('Position updated:', event.detail);
+    };
+
+    window.addEventListener('autoTradeExecuted', handleAutoTradeExecuted as EventListener);
+    window.addEventListener('positionUpdated', handlePositionUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('autoTradeExecuted', handleAutoTradeExecuted as EventListener);
+      window.removeEventListener('positionUpdated', handlePositionUpdate as EventListener);
+    };
+  }, []);
+
+  // 定期模拟价格变动更新虚拟盈亏
+  useEffect(() => {
+    if (autoTraderData.activeTrades > 0) {
+      const interval = setInterval(() => {
+        setAutoTraderData(prev => {
+          const priceChange = (Math.random() - 0.5) * 50; // -25 to +25
+          return {
+            ...prev,
+            totalPnL: prev.totalPnL + priceChange,
+            dailyPnL: prev.dailyPnL + priceChange * 0.1,
+          };
+        });
+      }, 8000); // 每8秒更新一次
+
+      return () => clearInterval(interval);
+    }
+  }, [autoTraderData.activeTrades]);
 
   // Simulate real wallet data when connected
   useEffect(() => {
