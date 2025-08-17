@@ -228,13 +228,6 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
               </PopoverContent>
             </Popover>
 
-            <Button 
-              variant="outline" 
-              className="bg-slate-800 border-slate-600 text-slate-300 hover:bg-slate-700"
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              交易记录
-            </Button>
           </div>
 
           {/* 核心指标 */}
