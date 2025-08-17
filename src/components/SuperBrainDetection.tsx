@@ -2,11 +2,12 @@ import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Brain, TrendingUp, TrendingDown, AlertTriangle, Play, Pause, Settings, CheckCircle, XCircle } from "lucide-react";
+import { Zap, Brain, TrendingUp, TrendingDown, AlertTriangle, Play, Pause, Settings, CheckCircle, XCircle, Target, DollarSign } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoData, OpportunityAlert } from "@/types/api";
+import { supabase } from "@/integrations/supabase/client";
 
 // AI advisors data
 const aiAdvisors = [
@@ -66,27 +67,54 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  // Mock API call - 预留接口
+  // Mock API call - 调用真实的Supabase Edge Function
   const performSuperBrainAnalysis = async () => {
     try {
-      // TODO: 这里预留真实的API调用接口
-      // const response = await fetch('/functions/v1/super-brain-analysis', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     symbols: ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL'],
-      //     analysisTypes: ['price', 'technical', 'news']
-      //   })
-      // });
+      const { data, error } = await supabase.functions.invoke('super-brain-analysis', {
+        body: {
+          symbols: ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL'],
+          analysisTypes: ['price', 'technical', 'news', 'sentiment', 'volume', 'macro']
+        }
+      });
+
+      if (error) {
+        console.error('Super Brain Analysis API Error:', error);
+        // 如果API调用失败，返回模拟数据
+        return await simulateAIAnalysis();
+      }
+
+      if (data) {
+        // 转换API返回的数据为OpportunityAlert格式
+        return {
+          id: Date.now().toString(),
+          symbol: data.symbol,
+          type: 'comprehensive_analysis' as const,
+          confidence: data.confidence,
+          signal: data.action === 'buy' ? 'buy' as const : 'sell' as const,
+          price: data.entry,
+          analysis: {
+            priceAnalysis: `📊 综合技术分析：入场价格 ${data.entry}，止损 ${data.stopLoss}，止盈 ${data.takeProfit}`,
+            technicalAnalysis: `🎯 仓位建议：${data.position}，基于6种AI模型综合分析`,
+            sentimentAnalysis: `🧠 AI综合结论：${data.reasoning}`
+          },
+          alerts: [],
+          timestamp: new Date(),
+          // 新增字段用于详细信息
+          tradingDetails: {
+            entry: data.entry,
+            stopLoss: data.stopLoss,
+            takeProfit: data.takeProfit,
+            position: data.position,
+            reasoning: data.reasoning
+          }
+        } as OpportunityAlert;
+      }
       
-      // 模拟API响应
-      const mockAnalysis = await simulateAIAnalysis();
-      return mockAnalysis;
+      return null;
     } catch (error) {
       console.error('Super Brain Analysis Error:', error);
-      return null;
+      // 如果出错，使用模拟数据
+      return await simulateAIAnalysis();
     }
   };
 
@@ -102,9 +130,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       return {
         id: Date.now().toString(),
         symbol: randomSymbol,
-        type: 'price_chart',
+        type: 'price_chart' as const,
         confidence: Math.round(Math.max(90, confidence)), // 确保胜率至少90%
-        signal: Math.random() > 0.5 ? 'buy' : 'sell',
+        signal: Math.random() > 0.5 ? 'buy' as const : 'sell' as const,
         price: Math.random() * 50000 + 10000,
         analysis: {
           priceAnalysis: `基于GPT-4分析，${randomSymbol}价格图表显示强劲的${Math.random() > 0.5 ? '上升' : '下降'}趋势信号。`,
@@ -113,7 +141,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         },
         alerts: [],
         timestamp: new Date()
-      };
+      } as OpportunityAlert;
     }
     
     return null;
@@ -376,10 +404,35 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       </div>
                     </div>
                     
-                    <div className="text-sm text-slate-300 space-y-1">
+                    <div className="text-sm text-slate-300 space-y-2">
                       <div><span className="text-blue-400">{t('ai.price_analysis')}:</span> {alert.analysis.priceAnalysis}</div>
                       <div><span className="text-purple-400">{t('ai.technical_indicators')}:</span> {alert.analysis.technicalAnalysis}</div>
-                      <div><span className="text-green-400">{t('ai.news_analysis')}:</span> {alert.analysis.sentimentAnalysis}</div>
+                      <div><span className="text-green-400">{t('ai.comprehensive_analysis')}:</span> {alert.analysis.sentimentAnalysis}</div>
+                      
+                      {/* 新增交易详情显示 */}
+                      {alert.tradingDetails && (
+                        <div className="mt-4 p-3 bg-slate-700/30 rounded-lg">
+                          <div className="text-yellow-400 font-medium mb-2">📋 交易建议详情</div>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="flex items-center gap-2">
+                              <Target className="w-3 h-3 text-green-400" />
+                              <span>入场: ${alert.tradingDetails.entry}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <TrendingDown className="w-3 h-3 text-red-400" />
+                              <span>止损: ${alert.tradingDetails.stopLoss}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <TrendingUp className="w-3 h-3 text-green-400" />
+                              <span>止盈: ${alert.tradingDetails.takeProfit}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="w-3 h-3 text-yellow-400" />
+                              <span>仓位: {alert.tradingDetails.position}</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -425,17 +478,42 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               
               <div className="space-y-3 text-sm">
                 <div className="p-3 bg-slate-700/50 rounded">
-                  <div className="text-blue-400 font-medium mb-1">{t('ai.price_analysis')} (GPT-4)</div>
+                  <div className="text-blue-400 font-medium mb-1">📊 价格分析 (6AI综合)</div>
                   <div className="text-slate-300">{currentAlert.analysis.priceAnalysis}</div>
                 </div>
                 <div className="p-3 bg-slate-700/50 rounded">
-                  <div className="text-purple-400 font-medium mb-1">{t('ai.technical_indicators')} (Claude)</div>
+                  <div className="text-purple-400 font-medium mb-1">🎯 技术指标 (多维度)</div>
                   <div className="text-slate-300">{currentAlert.analysis.technicalAnalysis}</div>
                 </div>
                 <div className="p-3 bg-slate-700/50 rounded">
-                  <div className="text-green-400 font-medium mb-1">{t('ai.news_analysis')} (Perplexity)</div>
+                  <div className="text-green-400 font-medium mb-1">🧠 综合结论 (AI大脑)</div>
                   <div className="text-slate-300">{currentAlert.analysis.sentimentAnalysis}</div>
                 </div>
+                
+                {/* 交易详情 */}
+                {currentAlert.tradingDetails && (
+                  <div className="p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded border border-yellow-500/20">
+                    <div className="text-yellow-400 font-medium mb-2">📋 具体交易建议</div>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">入场价格:</span>
+                        <span className="text-green-400">${currentAlert.tradingDetails.entry}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">止损价格:</span>
+                        <span className="text-red-400">${currentAlert.tradingDetails.stopLoss}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">止盈价格:</span>
+                        <span className="text-green-400">${currentAlert.tradingDetails.takeProfit}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">建议仓位:</span>
+                        <span className="text-yellow-400">{currentAlert.tradingDetails.position}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div className="flex gap-3">

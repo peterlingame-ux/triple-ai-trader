@@ -64,7 +64,7 @@ export interface AIModelConfig {
 export interface OpportunityAlert {
   id: string;
   symbol: string;
-  type: 'price_chart' | 'technical_analysis' | 'news_sentiment' | 'blockchain' | 'defi' | 'policy';
+  type: 'price_chart' | 'technical_analysis' | 'news_sentiment' | 'blockchain' | 'defi' | 'policy' | 'comprehensive_analysis';
   confidence: number;
   signal: 'buy' | 'sell' | 'hold';
   price: number;
@@ -78,6 +78,13 @@ export interface OpportunityAlert {
     policyAnalysis?: string;
   };
   alerts: string[];
+  tradingDetails?: {
+    entry: number;
+    stopLoss: number;
+    takeProfit: number;
+    position: string;
+    reasoning: string;
+  };
 }
 
 export interface TradingSignal {

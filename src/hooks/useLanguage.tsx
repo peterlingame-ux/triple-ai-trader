@@ -315,6 +315,7 @@ const translations = {
      'ai.disclaimer': '⚠️ Investment carries risks, please make decisions carefully',
      'ai.supreme_brain_active': 'Supreme Brain Monitoring Active',
      'ai.auto_trader_active': 'AI Auto Trading Active',
+     'ai.comprehensive_analysis': 'Comprehensive Analysis',
 
       // AI opportunity detection translations - Enhanced
       'ai.brain_detection': 'Supreme Brain AI Detection',
@@ -777,6 +778,7 @@ const translations = {
       'ai.disclaimer': '⚠️ 投资有风险，请谨慎决策',
       'ai.supreme_brain_active': '最强大脑监控已开启',
       'ai.auto_trader_active': 'AI自动赚钱已开启',
+      'ai.comprehensive_analysis': '综合分析',
     'wallet.connect': '连接钱包',
     'wallet.real': '真实钱包',
     'wallet.virtual': 'AI虚拟投资组合',
