@@ -32,7 +32,6 @@ import { TradingStatistics } from "./TradingStatistics";
 import { SuperBrainSignal } from "@/types/trading";
 import { TRADING_STRATEGIES, TRADING_CONFIG } from "@/constants/trading";
 import { formatTradingHistory, validateSignal } from "@/utils/tradingHelpers";
-import { signalBridge } from "@/utils/signalBridge";
 
 export const AutoTrader = () => {
   const { toast } = useToast();
@@ -181,19 +180,112 @@ export const AutoTrader = () => {
     }
   }, [positions, executeTradeWithSignal]);
 
-  // 注册信号处理器到桥接器
+  // 在组件加载时暴露处理函数并检查待处理信号
   useEffect(() => {
-    console.log('🔌 AutoTrader 注册信号处理器');
-    signalBridge.registerHandler(handleSignal);
+    // 暴露处理函数给全局
+    (window as any).autoTraderHandleSignal = handleSignal;
+    
+    // 检查是否有待处理的信号
+    const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
+    if (pendingSignals.length > 0) {
+      console.log('发现待处理信号:', pendingSignals.length);
+      pendingSignals.forEach((signal: SuperBrainSignal) => {
+        console.log('处理待处理信号:', signal);
+        handleSignal(signal);
+      });
+      // 清空已处理的信号
+      localStorage.removeItem('pendingAutoTraderSignals');
+    }
     
     return () => {
-      console.log('🔌 AutoTrader 移除信号处理器');
-      signalBridge.unregisterHandler(handleSignal);
+      delete (window as any).autoTraderHandleSignal;
     };
   }, [handleSignal]);
 
-  // 移除旧的事件监听器系统，现在使用信号桥接器
-  // 移除实时信号检查，现在SuperBrainDetection直接通过桥接器发送信号
+  // 监听SuperBrain信号 - 稳定的事件监听器
+  useEffect(() => {
+    console.log('AutoTrader - 设置superBrainSignal事件监听器');
+    
+    const handleSuperBrainSignal = (event: CustomEvent) => {
+      console.log('AutoTrader - 收到superBrainSignal事件:', event.detail);
+      
+      // 确保事件详情有效
+      if (!event.detail) {
+        console.log('AutoTrader - 信号详情为空，忽略');
+        return;
+      }
+      
+      // 立即处理信号，不依赖状态
+      const signal = event.detail as SuperBrainSignal;
+      console.log('AutoTrader - 开始处理信号:', signal);
+      
+      // 获取最新的设置状态
+      const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+      const currentIsEnabled = currentSettings.auto_trading_enabled || false;
+      
+      console.log('AutoTrader - 当前自动交易状态:', currentIsEnabled);
+      
+      if (!currentIsEnabled) {
+        console.log('AI自动交易未启动，忽略信号:', signal);
+        return;
+      }
+      
+      // 调用处理函数
+      handleSignal(signal);
+    };
+
+    // 立即设置监听器
+    window.addEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
+    
+    // 检查是否有待处理的信号
+    console.log('AutoTrader - 监听器已设置，等待信号...');
+    
+    return () => {
+      console.log('AutoTrader - 清理superBrainSignal事件监听器');
+      window.removeEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
+    };
+  }, [handleSignal]); // 依赖handleSignal确保逻辑更新
+
+  // 实时信号检查
+  useEffect(() => {
+    let realTimeInterval: NodeJS.Timeout;
+    
+    if (isAuthenticated && isEnabled && isSuperBrainActive) {
+      console.log('AutoTrader - 启动实时信号检查');
+      
+      const handleRealTimeSignal = async () => {
+        try {
+          const data = await callSuperBrainAPI();
+          if (data) {
+            const signal: SuperBrainSignal = {
+              symbol: data.symbol,
+              action: data.action,
+              confidence: data.confidence,
+              entry: data.entry,
+              stopLoss: data.stopLoss,
+              takeProfit: data.takeProfit,
+              reasoning: data.reasoning,
+              timestamp: new Date()
+            };
+            
+            window.dispatchEvent(new CustomEvent('superBrainSignal', { detail: signal }));
+          }
+        } catch (error) {
+          console.error('获取实时信号失败:', error);
+        }
+      };
+      
+      realTimeInterval = setInterval(handleRealTimeSignal, TRADING_CONFIG.REAL_TIME_INTERVAL);
+      handleRealTimeSignal();
+    }
+    
+    return () => {
+      if (realTimeInterval) {
+        console.log('AutoTrader - 清理实时信号检查');
+        clearInterval(realTimeInterval);
+      }
+    };
+  }, [isAuthenticated, isEnabled, isSuperBrainActive, callSuperBrainAPI]);
 
   // 策略管理
   const handleStrategySelect = (strategyType: 'conservative' | 'aggressive') => {

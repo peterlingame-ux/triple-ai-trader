@@ -220,9 +220,6 @@ export const TradingDashboard = memo(() => {
           portfolioData={portfolioData}
         />
 
-        {/* AutoTrader Component - 必须渲染才能接收信号 */}
-        <AutoTrader />
-
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
           <AIAdvisorsGrid 
