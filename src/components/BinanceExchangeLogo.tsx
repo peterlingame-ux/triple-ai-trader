@@ -13,15 +13,39 @@ export const BinanceExchangeLogo: React.FC<BinanceExchangeLogoProps> = ({
 }) => {
   return (
     <div className={`relative ${className}`}>
+      {/* Main Binance Logo */}
       <img
         src="/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png"
         alt="Binance Exchange"
         width={size}
         height={size}
-        className={`object-contain ${showGlow ? 'drop-shadow-[0_0_15px_rgba(240,185,11,0.7)]' : ''}`}
+        className={`
+          object-contain transition-all duration-500 relative z-10
+          ${showGlow ? 'brightness-110 drop-shadow-[0_0_20px_rgba(240,185,11,0.8)]' : ''}
+        `}
       />
+      
+      {/* Enhanced Glow Effects for Success State */}
       {showGlow && (
-        <div className="absolute inset-0 rounded-full bg-yellow-400/20 blur-lg -z-10" />
+        <>
+          {/* Inner glow */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400/30 to-amber-400/30 blur-md animate-pulse -z-10" />
+          
+          {/* Middle glow */}
+          <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-yellow-400/20 to-amber-400/20 blur-lg animate-pulse -z-20" 
+               style={{animationDelay: '0.5s'}} />
+          
+          {/* Outer glow */}
+          <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-yellow-400/10 to-amber-400/10 blur-xl animate-pulse -z-30" 
+               style={{animationDelay: '1s'}} />
+          
+          {/* Rotating ring effect */}
+          <div className="absolute inset-0 rounded-full border border-yellow-400/40 animate-spin -z-5" 
+               style={{animationDuration: '3s'}} />
+          
+          {/* Pulsing dot indicators */}
+          <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-400 animate-pulse shadow-lg shadow-green-400/50 z-20" />
+        </>
       )}
     </div>
   );
