@@ -503,41 +503,48 @@ export const AutoTrader = () => {
 
   return (
     <div className="space-y-6">
-      {/* Professional Exchange Header */}
+      {/* AI Auto Trading Header */}
       <div className="bg-card/50 backdrop-blur-sm rounded-xl border border-border/50 p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-semibold text-foreground">AI自动交易 永续</h2>
-            <Badge variant="outline" className="px-2 py-1 text-xs bg-green-500/10 text-green-400 border-green-500/30">
-              多
-            </Badge>
-            <Badge variant="outline" className="px-2 py-1 text-xs">全仓</Badge>
-            <Badge variant="outline" className="px-2 py-1 text-xs flex items-center gap-1">
-              20x <Edit className="w-3 h-3" />
-            </Badge>
+            <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+              <Bot className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground font-orbitron">AI自动赚钱</h2>
+              <p className="text-muted-foreground">智能交易系统 · 自动买卖</p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            {/* Super Brain Status */}
+            <div className="flex items-center gap-2">
+              <Brain className={cn("w-4 h-4", isSuperBrainActive ? 'text-primary' : 'text-muted-foreground')} />
+              <span className={cn("text-sm", isSuperBrainActive ? 'text-primary' : 'text-muted-foreground')}>
+                最强大脑: {isSuperBrainActive ? '已激活' : '未激活'}
+              </span>
+            </div>
+
             <Button
               onClick={toggleAutoTrader}
               disabled={!isSuperBrainActive}
               className={cn(
-                "px-4 py-2",
+                "px-6 py-2",
                 isEnabled 
                   ? 'bg-red-500 hover:bg-red-600 text-white' 
-                  : 'bg-green-500 hover:bg-green-600 text-white',
+                  : 'bg-primary hover:bg-primary/90 text-primary-foreground',
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
               {isEnabled ? (
                 <>
                   <Pause className="w-4 h-4 mr-2" />
-                  停止交易
+                  停止自动交易
                 </>
               ) : (
                 <>
                   <Play className="w-4 h-4 mr-2" />
-                  启动交易
+                  启动自动交易
                 </>
               )}
             </Button>
@@ -546,7 +553,7 @@ export const AutoTrader = () => {
 
         {/* Status Alerts */}
         {!isSuperBrainActive && (
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6">
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-400" />
               <span className="text-amber-300">
@@ -557,7 +564,7 @@ export const AutoTrader = () => {
         )}
 
         {isEnabled && (
-          <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
+          <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-400" />
               <span className="text-green-300">
@@ -566,56 +573,6 @@ export const AutoTrader = () => {
             </div>
           </div>
         )}
-
-        {/* Professional Trading Metrics Grid */}
-        <div className="grid grid-cols-3 gap-6 mb-6">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">收益额 (USDT)</p>
-            <p className={cn(
-              "text-2xl font-bold",
-              virtualAccount.totalPnL >= 0 ? "text-green-400" : "text-red-400"
-            )}>
-              {virtualAccount.totalPnL >= 0 ? '+' : ''}{virtualAccount.totalPnL.toLocaleString()}
-            </p>
-          </div>
-          
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">收益率</p>
-            <p className={cn(
-              "text-2xl font-bold",
-              virtualAccount.totalPnL >= 0 ? "text-green-400" : "text-red-400"
-            )}>
-              {virtualAccount.totalPnL >= 0 ? '+' : ''}{((virtualAccount.totalPnL / virtualAccount.balance) * 100).toFixed(2)}%
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">持仓数量</p>
-            <p className="text-2xl font-bold text-foreground">{virtualAccount.activePositions}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-6">
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">保证金 (USDT)</p>
-            <p className="text-lg font-semibold text-foreground">{virtualAccount.balance.toLocaleString()}</p>
-          </div>
-          
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">维持保证金率</p>
-            <p className="text-lg font-semibold text-foreground">{(virtualAccount.winRate * 10).toFixed(1)}%</p>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">开仓均价</p>
-            <p className="text-lg font-semibold text-foreground">
-              {positions.length > 0 
-                ? positions.reduce((sum, pos) => sum + pos.entryPrice, 0) / positions.length 
-                : 0
-              }
-            </p>
-          </div>
-        </div>
       </div>
 
       <Tabs defaultValue="account" className="space-y-6">
@@ -790,10 +747,75 @@ export const AutoTrader = () => {
         <TabsContent value="positions">
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
             <div className="p-6">
+              {/* Professional Exchange Trading Overview */}
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <h2 className="text-xl font-semibold text-foreground">AI自动交易 永续</h2>
+                  <Badge variant="outline" className="px-2 py-1 text-xs bg-green-500/10 text-green-400 border-green-500/30">
+                    多
+                  </Badge>
+                  <Badge variant="outline" className="px-2 py-1 text-xs">全仓</Badge>
+                  <Badge variant="outline" className="px-2 py-1 text-xs flex items-center gap-1">
+                    20x <Edit className="w-3 h-3" />
+                  </Badge>
+                </div>
+
+                {/* Professional Trading Metrics Grid */}
+                <div className="grid grid-cols-3 gap-6 mb-6">
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">收益额 (USDT)</p>
+                    <p className={cn(
+                      "text-2xl font-bold",
+                      virtualAccount.totalPnL >= 0 ? "text-green-400" : "text-red-400"
+                    )}>
+                      {virtualAccount.totalPnL >= 0 ? '+' : ''}{virtualAccount.totalPnL.toLocaleString()}
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">收益率</p>
+                    <p className={cn(
+                      "text-2xl font-bold",
+                      virtualAccount.totalPnL >= 0 ? "text-green-400" : "text-red-400"
+                    )}>
+                      {virtualAccount.totalPnL >= 0 ? '+' : ''}{((virtualAccount.totalPnL / virtualAccount.balance) * 100).toFixed(2)}%
+                    </p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">持仓数量</p>
+                    <p className="text-2xl font-bold text-foreground">{virtualAccount.activePositions}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-6 mb-6">
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">保证金 (USDT)</p>
+                    <p className="text-lg font-semibold text-foreground">{virtualAccount.balance.toLocaleString()}</p>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">维持保证金率</p>  
+                    <p className="text-lg font-semibold text-foreground">{(virtualAccount.winRate * 10).toFixed(1)}%</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">开仓均价</p>
+                    <p className="text-lg font-semibold text-foreground">
+                      {positions.length > 0 
+                        ? (positions.reduce((sum, pos) => sum + pos.entryPrice, 0) / positions.length).toFixed(2)
+                        : '0'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Position Management Section */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <PieChart className="w-5 h-5 text-yellow-400" />
-                  <h3 className="text-lg font-semibold text-foreground">持仓管理</h3>
+                  <h3 className="text-lg font-semibold text-foreground">持仓详情</h3>
                 </div>
                 <Badge variant="outline" className="text-foreground">
                   {positions.length} 持仓
