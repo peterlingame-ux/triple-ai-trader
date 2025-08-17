@@ -311,10 +311,10 @@ const translations = {
      'ai.trading_interface_opened': 'Trading interface will be opened',
      'ai.technical': 'Technical',
      'ai.sentiment': 'Sentiment',
-     'ai.ai_analysis': 'AI Analysis',
-     'ai.disclaimer': '⚠️ Investment carries risks, please make decisions carefully',
+      'ai.ai_analysis': 'AI Analysis',
+      'ai.disclaimer': '⚠️ Investment carries risks, please make decisions carefully',
 
-     // AI opportunity detection translations - Enhanced
+      // AI opportunity detection translations - Enhanced
       'ai.brain_detection': 'Supreme Brain AI Detection',
       'ai.monitor_opportunities': 'Monitor 90% Win Rate Trading Opportunities',
       'ai.control_center': 'AI Control Center',

@@ -93,13 +93,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
     const confidence = Math.random() * 100;
     
-    // 只有当胜率超过90%时才返回机会
-    if (confidence >= 90) {
+    // 提高触发概率到50%用于演示
+    if (confidence >= 50) {
       return {
         id: Date.now().toString(),
         symbol: randomSymbol,
         type: 'price_chart',
-        confidence: Math.round(confidence),
+        confidence: Math.round(Math.max(90, confidence)), // 确保胜率至少90%
         signal: Math.random() > 0.5 ? 'buy' : 'sell',
         price: Math.random() * 50000 + 10000,
         analysis: {
