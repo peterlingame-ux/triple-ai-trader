@@ -1,4 +1,3 @@
-import { Shield, Zap } from "lucide-react";
 import { TradingStrategy } from "@/types/trading";
 
 // AI顾问常量
@@ -41,22 +40,22 @@ export const AI_ADVISORS = [
   }
 ] as const;
 
-// 交易策略常量
-export const TRADING_STRATEGIES: TradingStrategy[] = [
+// 交易策略常量 - 不包含图标，在组件中动态渲染
+export const TRADING_STRATEGIES = [
   {
-    type: 'conservative',
+    type: 'conservative' as const,
     name: '稳健型',
     description: '胜率大于85%才进行交易，追求稳定收益',
     minConfidence: 85,
-    icon: Shield({ className: "w-5 h-5" }),
+    iconName: 'Shield', // 存储图标名称而不是组件
     color: 'text-blue-400'
   },
   {
-    type: 'aggressive',
+    type: 'aggressive' as const,
     name: '激进型', 
     description: '胜率达到70%就进行交易，追求更多机会',
     minConfidence: 70,
-    icon: Zap({ className: "w-5 h-5" }),
+    iconName: 'Zap', // 存储图标名称而不是组件
     color: 'text-orange-400'
   }
 ];

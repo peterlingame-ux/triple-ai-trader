@@ -20,7 +20,9 @@ import {
   ArrowUp,
   ArrowDown,
   CircleDollarSign,
-  Edit
+  Edit,
+  Shield,
+  Zap
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUserSettings } from "@/hooks/useUserSettings";
@@ -365,7 +367,9 @@ export const AutoTrader = () => {
                   <div className="bg-slate-700/50 rounded-lg p-6">
                     <h3 className="text-lg font-bold text-white mb-4">交易策略</h3>
                     <div className="space-y-3">
-                      {TRADING_STRATEGIES.map((strategy) => (
+                      {TRADING_STRATEGIES.map((strategy) => {
+                        const IconComponent = strategy.iconName === 'Shield' ? Shield : Zap;
+                        return (
                         <div 
                           key={strategy.type}
                           className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
@@ -376,7 +380,9 @@ export const AutoTrader = () => {
                           onClick={() => handleStrategySelect(strategy.type)}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={strategy.color}>{strategy.icon}</div>
+                            <div className={strategy.color}>
+                              <IconComponent className="w-5 h-5" />
+                            </div>
                             <div className="flex-1">
                               <h4 className="font-medium text-white">{strategy.name}</h4>
                               <p className="text-sm text-slate-400">{strategy.description}</p>
@@ -389,7 +395,8 @@ export const AutoTrader = () => {
                             )}
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                     
                     {strategyChanged && (

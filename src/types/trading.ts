@@ -13,7 +13,7 @@ export interface TradingStrategy {
   name: string;
   description: string;
   minConfidence: number;
-  icon: React.ReactNode;
+  iconName: string; // 改为存储图标名称
   color: string;
 }
 
