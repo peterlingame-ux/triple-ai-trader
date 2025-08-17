@@ -1,7 +1,8 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, Box, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { Brain3DErrorBoundary } from './Brain3DErrorBoundary';
 
 // 量子光粒子组件
 const QuantumParticles: React.FC = () => {
@@ -193,96 +194,108 @@ interface Brain3DProps {
   showTitle?: boolean;
 }
 
+// 加载组件
+const LoadingBrain: React.FC = () => (
+  <div className="flex flex-col items-center justify-center h-full">
+    <div className="text-6xl mb-4 animate-pulse">🧠</div>
+    <p className="text-muted-foreground">正在启动量子思维...</p>
+  </div>
+);
+
 export const Brain3D: React.FC<Brain3DProps> = ({ size = 400, showTitle = true }) => {
   return (
-    <div className="relative">
-      {showTitle && (
-        <div className="text-center mb-4">
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-            🧠 AI大脑运算中心
-          </h3>
-          <p className="text-muted-foreground mt-2">量子思维正在高速运转...</p>
-        </div>
-      )}
-      
-      <div 
-        style={{ width: size, height: size }} 
-        className="mx-auto rounded-2xl bg-gradient-to-br from-background/80 to-muted/20 backdrop-blur-sm border shadow-2xl overflow-hidden"
-      >
-        <Canvas
-          camera={{ position: [0, 0, 15], fov: 60 }}
-          style={{ width: '100%', height: '100%' }}
+    <Brain3DErrorBoundary>
+      <div className="relative">
+        {showTitle && (
+          <div className="text-center mb-4">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+              🧠 AI大脑运算中心
+            </h3>
+            <p className="text-muted-foreground mt-2">量子思维正在高速运转...</p>
+          </div>
+        )}
+        
+        <div 
+          style={{ width: size, height: size }} 
+          className="mx-auto rounded-2xl bg-gradient-to-br from-background/80 to-muted/20 backdrop-blur-sm border shadow-2xl overflow-hidden"
         >
-          {/* 环境光 */}
-          <ambientLight intensity={0.3} />
-          
-          {/* 主光源 */}
-          <directionalLight 
-            position={[10, 10, 5]} 
-            intensity={1} 
-            color="#ffffff"
-          />
-          
-          {/* 辅助光源 */}
-          <pointLight 
-            position={[-10, -10, -5]} 
-            intensity={0.5} 
-            color="#ff6b9d"
-          />
-          <pointLight 
-            position={[10, -10, -5]} 
-            intensity={0.5} 
-            color="#6bb6ff"
-          />
-          
-          {/* 聚光灯效果 */}
-          <spotLight
-            position={[0, 20, 0]}
-            angle={0.3}
-            penumbra={1}
-            intensity={0.8}
-            color="#66ffcc"
-          />
+          <Suspense fallback={<LoadingBrain />}>
+            <Canvas
+              camera={{ position: [0, 0, 15], fov: 60 }}
+              style={{ width: '100%', height: '100%' }}
+              gl={{ antialias: true, alpha: true }}
+            >
+              {/* 环境光 */}
+              <ambientLight intensity={0.3} />
+              
+              {/* 主光源 */}
+              <directionalLight 
+                position={[10, 10, 5]} 
+                intensity={1} 
+                color="#ffffff"
+              />
+              
+              {/* 辅助光源 */}
+              <pointLight 
+                position={[-10, -10, -5]} 
+                intensity={0.5} 
+                color="#ff6b9d"
+              />
+              <pointLight 
+                position={[10, -10, -5]} 
+                intensity={0.5} 
+                color="#6bb6ff"
+              />
+              
+              {/* 聚光灯效果 */}
+              <spotLight
+                position={[0, 20, 0]}
+                angle={0.3}
+                penumbra={1}
+                intensity={0.8}
+                color="#66ffcc"
+              />
 
-          {/* 大脑核心 */}
-          <BrainCore />
-          
-          {/* 量子粒子 */}
-          <QuantumParticles />
-          
-          {/* 能量场 */}
-          <EnergyField />
+              {/* 大脑核心 */}
+              <BrainCore />
+              
+              {/* 量子粒子 */}
+              <QuantumParticles />
+              
+              {/* 能量场 */}
+              <EnergyField />
 
-          {/* 状态文字 */}
-          <Text
-            position={[0, -6, 0]}
-            fontSize={0.8}
-            color="#66ffcc"
-            anchorX="center"
-            anchorY="middle"
-            font="/fonts/inter-bold.woff"
-          >
-            QUANTUM PROCESSING
-          </Text>
-        </Canvas>
+              {/* 状态文字 */}
+              <Text
+                position={[0, -6, 0]}
+                fontSize={0.8}
+                color="#66ffcc"
+                anchorX="center"
+                anchorY="middle"
+              >
+                QUANTUM PROCESSING
+              </Text>
+            </Canvas>
+          </Suspense>
+        </div>
+        
+        {/* 状态指示器 */}
+        <div className="flex justify-center mt-4 space-x-4">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full animate-pulse"></div>
+            <span className="text-sm text-muted-foreground">神经活动</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+            <span className="text-sm text-muted-foreground">量子计算</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+            <span className="text-sm text-muted-foreground">数据流动</span>
+          </div>
+        </div>
       </div>
-      
-      {/* 状态指示器 */}
-      <div className="flex justify-center mt-4 space-x-4">
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-gradient-to-r from-pink-400 to-pink-600 rounded-full animate-pulse"></div>
-          <span className="text-sm text-muted-foreground">神经活动</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-          <span className="text-sm text-muted-foreground">量子计算</span>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-          <span className="text-sm text-muted-foreground">数据流动</span>
-        </div>
-      </div>
-    </div>
+    </Brain3DErrorBoundary>
   );
 };
 
