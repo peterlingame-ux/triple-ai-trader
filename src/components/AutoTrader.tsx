@@ -106,6 +106,11 @@ export const AutoTrader = () => {
     };
   });
 
+  // 临时余额输入状态
+  const [tempBalance, setTempBalance] = useState<string>(() => 
+    virtualAccount.balance.toString()
+  );
+
   // AI自动交易配置
   const [isEnabled, setIsEnabled] = useState(() => {
     const saved = localStorage.getItem('autoTraderEnabled');
@@ -320,7 +325,28 @@ export const AutoTrader = () => {
   const updateVirtualBalance = (newBalance: number) => {
     const updatedAccount = { ...virtualAccount, balance: newBalance };
     setVirtualAccount(updatedAccount);
+    setTempBalance(newBalance.toString());
     localStorage.setItem('virtualAccount', JSON.stringify(updatedAccount));
+  };
+
+  // 确认更新余额
+  const confirmBalanceUpdate = () => {
+    const newBalance = Number(tempBalance);
+    if (isNaN(newBalance) || newBalance < 1000) {
+      toast({
+        title: "❌ 余额设置失败",
+        description: "请输入有效的余额金额（最低1000 USDT）",
+        variant: "destructive"
+      });
+      setTempBalance(virtualAccount.balance.toString());
+      return;
+    }
+    
+    updateVirtualBalance(newBalance);
+    toast({
+      title: "✅ 余额更新成功",
+      description: `账户余额已设置为 ${newBalance.toLocaleString()} USDT`,
+    });
   };
 
   // 平仓操作
@@ -470,17 +496,29 @@ export const AutoTrader = () => {
                   <div className="flex items-center gap-2 mt-1">
                     <Input
                       type="number"
-                      value={virtualAccount.balance}
-                      onChange={(e) => updateVirtualBalance(Number(e.target.value))}
+                      value={tempBalance}
+                      onChange={(e) => setTempBalance(e.target.value)}
                       className="bg-slate-800 border-slate-600 text-white"
                       min="1000"
                       max="10000000"
                       step="1000"
+                      placeholder="输入余额金额"
                     />
+                    <Button
+                      size="sm"
+                      onClick={confirmBalanceUpdate}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      disabled={tempBalance === virtualAccount.balance.toString()}
+                    >
+                      确认
+                    </Button>
                     <Button
                       variant="outline" 
                       size="sm"
-                      onClick={() => updateVirtualBalance(100000)}
+                      onClick={() => {
+                        setTempBalance("100000");
+                        updateVirtualBalance(100000);
+                      }}
                       className="border-slate-600 text-slate-300 hover:bg-slate-700"
                     >
                       重置
