@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SecureAPIConfig } from './SecureAPIConfig';
-import { BinanceRealIcon } from './BinanceRealIcon';
+import { BinanceExchangeLogo } from './BinanceExchangeLogo';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,14 +50,10 @@ export function BinanceAPIConfig() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={`relative ${isConfigured ? 'animate-pulse' : ''}`}>
-                  <BinanceRealIcon 
-                    symbol="BNB" 
+                  <BinanceExchangeLogo 
                     size={32}
-                    className={isConfigured ? 'ring-2 ring-primary/50 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]' : ''}
+                    isConfigured={isConfigured}
                   />
-                  {isConfigured && (
-                    <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping"></div>
-                  )}
                 </div>
                 <div>
                   <h3 className="font-semibold">{t('binance.api_config')}</h3>
