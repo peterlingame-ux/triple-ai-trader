@@ -1,4 +1,4 @@
-import { TradingDashboard } from "@/components/TradingDashboard";
+import { AITradingExchange } from "@/components/AITradingExchange";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
@@ -26,7 +26,7 @@ const Index = () => {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Crypto Trading Platform
+            Meta BrainX - AI交易平台
           </h1>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
@@ -51,7 +51,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-      <TradingDashboard />
+      <AITradingExchange />
     </div>
   );
 };
