@@ -1,4 +1,5 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
+import { Brain3D } from "@/components/Brain3D";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
@@ -50,6 +51,12 @@ const Index = () => {
           </div>
         </div>
       </header>
+      
+      {/* AI大脑运算中心 */}
+      <section className="container mx-auto px-4 py-8">
+        <Brain3D size={500} />
+      </section>
+      
       <TradingDashboard />
     </div>
   );
