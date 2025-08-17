@@ -263,7 +263,8 @@ export const AutoTrader = () => {
       }
 
       // 检查是否已有该币种持仓
-      if (positions.some(p => p.symbol === signal.symbol)) {
+      const currentPositions = positions; // 获取当前持仓状态
+      if (currentPositions.some(p => p.symbol === signal.symbol)) {
         setTradingHistory(prev => [
           `💰 ${signal.symbol} 已有持仓，跳过重复交易`,
           ...prev.slice(0, 19)
@@ -318,7 +319,7 @@ export const AutoTrader = () => {
     let realTimeInterval: NodeJS.Timeout;
     if (isAuthenticated && isEnabled && isSuperBrainActive) {
       // 每30秒检查一次实时信号
-      realTimeInterval = setInterval(handleRealTimeSignal, 30000);
+      realTimeInterval = setInterval(() => handleRealTimeSignal(), 30000);
       // 立即执行一次
       handleRealTimeSignal();
     }
@@ -330,7 +331,7 @@ export const AutoTrader = () => {
         clearInterval(realTimeInterval);
       }
     };
-  }, [isEnabled, selectedStrategy, positions, isAuthenticated, isSuperBrainActive, supabase, toast]);
+  }, [isEnabled, selectedStrategy, isAuthenticated, isSuperBrainActive]);
 
   // 执行自动交易
   const executeAutomaticTrade = useCallback(async (signal: SuperBrainSignal) => {
