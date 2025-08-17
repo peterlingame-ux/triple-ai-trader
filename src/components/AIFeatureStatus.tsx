@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Zap, CheckCircle, Clock, TrendingUp, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Brain, Zap, CheckCircle, Clock, TrendingUp, Settings, Power, PowerOff } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface AIFeatureStatusProps {
   className?: string;
@@ -12,6 +14,7 @@ export const AIFeatureStatus = ({ className = "" }: AIFeatureStatusProps) => {
   const [isSuperBrainEnabled, setIsSuperBrainEnabled] = useState(false);
   const [lastSignalTime, setLastSignalTime] = useState<Date | null>(null);
   const [lastTradeTime, setLastTradeTime] = useState<Date | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     // 读取初始状态
@@ -76,6 +79,34 @@ export const AIFeatureStatus = ({ className = "" }: AIFeatureStatusProps) => {
     return `${Math.floor(hours / 24)}天前`;
   };
 
+  const toggleAutoTrading = () => {
+    const newStatus = !isAutoTradingEnabled;
+    setIsAutoTradingEnabled(newStatus);
+    localStorage.setItem('autoTradingEnabled', JSON.stringify(newStatus));
+    
+    toast({
+      title: newStatus ? "🤖 AI自动交易已开启" : "⏸️ AI自动交易已关闭",
+      description: newStatus ? "AI将自动执行高胜率交易信号" : "AI已停止自动交易",
+    });
+  };
+
+  const toggleSuperBrain = () => {
+    const newStatus = !isSuperBrainEnabled;
+    setIsSuperBrainEnabled(newStatus);
+    localStorage.setItem('superBrainMonitoring', JSON.stringify(newStatus));
+    
+    // 发送监控状态变化事件
+    const statusChangeEvent = new CustomEvent('superBrainMonitoringChanged', {
+      detail: { isMonitoring: newStatus }
+    });
+    window.dispatchEvent(statusChangeEvent);
+    
+    toast({
+      title: newStatus ? "🧠 最强大脑检测已开启" : "⏸️ 最强大脑检测已关闭",
+      description: newStatus ? "AI大脑开始监控市场机会" : "AI大脑已停止监控",
+    });
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
       {/* AI控制中心状态 */}
@@ -91,9 +122,21 @@ export const AIFeatureStatus = ({ className = "" }: AIFeatureStatusProps) => {
                 <p className="text-sm text-amber-200/70">配置和管理您的AI交易助手</p>
               </div>
             </div>
-            <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center border border-amber-500/20">
-              <Settings className="w-5 h-5 text-amber-400" />
-            </div>
+            <Button
+              onClick={toggleSuperBrain}
+              variant={isSuperBrainEnabled ? "default" : "outline"}
+              size="sm"
+              className={`${isSuperBrainEnabled 
+                ? 'bg-amber-500 hover:bg-amber-600 text-white' 
+                : 'bg-amber-500/10 hover:bg-amber-500/20 border-amber-500/30 text-amber-400'
+              }`}
+            >
+              {isSuperBrainEnabled ? (
+                <Power className="w-4 h-4" />
+              ) : (
+                <PowerOff className="w-4 h-4" />
+              )}
+            </Button>
           </div>
 
           {isSuperBrainEnabled && (
@@ -152,9 +195,21 @@ export const AIFeatureStatus = ({ className = "" }: AIFeatureStatusProps) => {
                 <p className="text-sm text-emerald-200/70">智能自动交易系统</p>
               </div>
             </div>
-            <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
-              <TrendingUp className="w-5 h-5 text-emerald-400" />
-            </div>
+            <Button
+              onClick={toggleAutoTrading}
+              variant={isAutoTradingEnabled ? "default" : "outline"}
+              size="sm"
+              className={`${isAutoTradingEnabled 
+                ? 'bg-emerald-500 hover:bg-emerald-600 text-white' 
+                : 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+              }`}
+            >
+              {isAutoTradingEnabled ? (
+                <Power className="w-4 h-4" />
+              ) : (
+                <PowerOff className="w-4 h-4" />
+              )}
+            </Button>
           </div>
 
           {isAutoTradingEnabled && (
