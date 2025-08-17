@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoData, OpportunityAlert } from "@/types/api";
 import { supabase } from "@/integrations/supabase/client";
+import { CryptoStaticIcon } from "./Static3DIconShowcase";
+import { CRYPTO_NAMES } from "@/constants/crypto";
 
 // AI advisors data
 const aiAdvisors = [
@@ -449,9 +451,26 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Badge variant="outline" className="text-white bg-slate-600/50">
-                          {alert.symbol}
-                        </Badge>
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <CryptoStaticIcon 
+                            symbol={alert.symbol} 
+                            name={CRYPTO_NAMES[alert.symbol]?.name || alert.symbol}
+                            size={32}
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <div className="font-semibold text-white font-orbitron tracking-wide">{alert.symbol}</div>
+                            <span className="text-sm text-slate-400 font-inter">
+                              {CRYPTO_NAMES[alert.symbol]?.name || 'Cryptocurrency'}
+                            </span>
+                          </div>
+                          <div className="text-xs text-slate-400">
+                            {alert.timestamp.toLocaleString()}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
                         <Badge 
                           variant="outline" 
                           className={`${
@@ -475,9 +494,6 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                         <Badge variant="outline" className="text-yellow-400 border-yellow-400/20">
                           {t('ai.win_rate')} {alert.confidence}%
                         </Badge>
-                      </div>
-                      <div className="text-xs text-slate-400">
-                        {alert.timestamp.toLocaleString()}
                       </div>
                     </div>
                     
@@ -533,20 +549,36 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
             <div className="space-y-4 py-4">
               {/* 主要信号 */}
               <div className="text-center py-6 bg-slate-800/50 rounded-lg">
+                {/* 加密货币图标和信息 */}
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="w-12 h-12 flex items-center justify-center">
+                    <CryptoStaticIcon 
+                      symbol={currentAlert.symbol} 
+                      name={CRYPTO_NAMES[currentAlert.symbol]?.name || currentAlert.symbol}
+                      size={48}
+                      className="hover:scale-110 transition-transform duration-200"
+                    />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-2xl font-bold text-slate-100 font-orbitron tracking-wide">
+                      {currentAlert.symbol}
+                    </div>
+                    <div className="text-sm text-slate-400 font-inter">
+                      {CRYPTO_NAMES[currentAlert.symbol]?.name || 'Cryptocurrency'}
+                    </div>
+                  </div>
+                </div>
+                
                 <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3 ${
                   currentAlert.signal === 'buy' 
-                    ? 'bg-emerald-500/20 text-emerald-400' 
-                    : 'bg-red-500/20 text-red-400'
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
                 }`}>
                   {currentAlert.signal === 'buy' ? 
                     <TrendingUp className="w-4 h-4" /> : 
                     <TrendingDown className="w-4 h-4" />
                   }
                   {currentAlert.signal === 'buy' ? '买入' : '卖出'}
-                </div>
-                
-                <div className="text-2xl font-bold text-slate-100 mb-1">
-                  {currentAlert.symbol}
                 </div>
                 
                 <div className="text-sm text-slate-400">
