@@ -24,6 +24,9 @@ interface TradingAlert {
   duration?: number; // in minutes
   startDate?: Date;
   endDate?: Date;
+  totalCapital?: number;
+  positionPercentage?: number;
+  usedCapital?: number;
 }
 
 export const GlobalAutoTrader = () => {
@@ -71,6 +74,11 @@ export const GlobalAutoTrader = () => {
     const duration = Math.floor(Math.random() * 1440) + 60; // 1-24小时随机持续时间
     const endDate = new Date(startDate.getTime() + duration * 60000);
     
+    // 计算仓位详情
+    const totalCapital = Math.floor(Math.random() * 50000) + 10000; // 总资金 10k-60k
+    const positionPercentage = Math.floor(Math.random() * 25) + 5; // 5%-30%
+    const usedCapital = Math.floor(totalCapital * (positionPercentage / 100));
+    
     const tradeAlert: TradingAlert = {
       symbol: signalData.symbol,
       signal: signalData.action || signalData.signal,
@@ -78,7 +86,7 @@ export const GlobalAutoTrader = () => {
       entry: signalData.entry || signalData.price,
       stopLoss: signalData.stopLoss || signalData.tradingDetails?.stopLoss,
       takeProfit: signalData.takeProfit || signalData.tradingDetails?.takeProfit,
-      position: signalData.position || '轻仓',
+      position: `${positionPercentage}% (${usedCapital.toLocaleString()}美元)`,
       reasoning: signalData.reasoning || signalData.analysis?.priceAnalysis || 'AI综合分析',
       timestamp: new Date(),
       profit: Math.random() > 0.12 ? parseFloat((Math.random() * 500 + 100).toFixed(2)) : -parseFloat((Math.random() * 100 + 20).toFixed(2)),
@@ -88,7 +96,10 @@ export const GlobalAutoTrader = () => {
       hasAddedPosition: Math.random() > 0.7, // 30%概率有补仓
       duration: duration,
       startDate: startDate,
-      endDate: endDate
+      endDate: endDate,
+      totalCapital: totalCapital,
+      positionPercentage: positionPercentage,
+      usedCapital: usedCapital
     };
 
     // 模拟自动执行交易
@@ -239,7 +250,10 @@ export const GlobalAutoTrader = () => {
                     止损价格: <span className="text-red-400 font-mono text-xs">${currentAlert.stopLoss.toLocaleString()}</span>
                   </div>
                   <div className="text-slate-300">
-                    仓位大小: <span className="text-yellow-400">{currentAlert.position}</span>
+                    仓位大小: <span className="text-yellow-400 font-bold">{currentAlert.position}</span>
+                  </div>
+                  <div className="text-slate-300">
+                    总资金: <span className="text-cyan-400 font-mono text-xs">${currentAlert.totalCapital?.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
