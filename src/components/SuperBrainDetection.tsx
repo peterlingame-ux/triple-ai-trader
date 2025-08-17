@@ -273,16 +273,11 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           detail: {
             symbol: alert.symbol,
             action: alert.signal,
-            signal: alert.signal,
             confidence: alert.confidence,
             entry: alert.tradingDetails?.entry || alert.price,
-            stopLoss: alert.tradingDetails?.stopLoss,
-            takeProfit: alert.tradingDetails?.takeProfit,
-            position: alert.tradingDetails?.position,
-            reasoning: alert.tradingDetails?.reasoning || alert.analysis?.priceAnalysis,
-            price: alert.price,
-            tradingDetails: alert.tradingDetails,
-            analysis: alert.analysis,
+            stopLoss: alert.tradingDetails?.stopLoss || (alert.signal === 'buy' ? (alert.price * 0.95) : (alert.price * 1.05)),
+            takeProfit: alert.tradingDetails?.takeProfit || (alert.signal === 'buy' ? (alert.price * 1.10) : (alert.price * 0.90)),
+            reasoning: alert.tradingDetails?.reasoning || alert.analysis?.priceAnalysis || `AI综合分析：${alert.symbol}${alert.signal === 'buy' ? '买入' : '卖出'}信号，胜率${alert.confidence}%`,
             timestamp: alert.timestamp
           }
         });
@@ -292,7 +287,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           symbol: alert.symbol,
           action: alert.signal,
           confidence: alert.confidence,
-          entry: alert.tradingDetails?.entry || alert.price
+          entry: alert.tradingDetails?.entry || alert.price,
+          stopLoss: alert.tradingDetails?.stopLoss,
+          takeProfit: alert.tradingDetails?.takeProfit
         });
         
                         // Display system notification
