@@ -134,9 +134,9 @@ export const ProfessionalDetectionHistory = memo<ProfessionalDetectionHistoryPro
                     <div>
                       <div className="text-slate-500 mb-1">补仓区间:</div>
                       <div className="text-blue-400">
-                        {alert.tradingDetails?.canAddPosition && alert.tradingDetails?.addPositionRange ? 
+                        {!alert.tradingDetails?.stopLossRequired && alert.tradingDetails?.addPositionRange ? 
                           `$${alert.tradingDetails.addPositionRange.min?.toLocaleString()} - $${alert.tradingDetails.addPositionRange.max?.toLocaleString()}` :
-                          '不建议补仓'
+                          '必须止损，不建议补仓'
                         }
                       </div>
                     </div>
@@ -205,12 +205,6 @@ export const ProfessionalDetectionHistory = memo<ProfessionalDetectionHistoryPro
                           <span className="text-emerald-400">{alert.confidence}%</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-500">止损点可否等待</span>
-                          <span className={alert.tradingDetails.stopLossRequired ? 'text-red-400' : 'text-slate-400'}>
-                            {alert.tradingDetails.stopLossRequired ? '不可等待' : '可适当等待'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
                           <span className="text-slate-500">是否必须止损</span>
                           <span className={alert.tradingDetails.stopLossRequired ? 'text-red-400' : 'text-emerald-400'}>
                             {alert.tradingDetails.stopLossRequired ? '必须严格止损' : '可灵活处理'}
@@ -230,21 +224,23 @@ export const ProfessionalDetectionHistory = memo<ProfessionalDetectionHistoryPro
                         </div>
                       </div>
 
-                      {/* Additional Column */}
+                      {/* Additional Column - 只有在不必须止损时才显示补仓信息 */}
                       <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-slate-500">是否可以补仓</span>
-                          <span className={alert.tradingDetails.canAddPosition ? 'text-emerald-400' : 'text-red-400'}>
-                            {alert.tradingDetails.canAddPosition ? '可以补仓' : '不建议补仓'}
-                          </span>
-                        </div>
-                        {alert.tradingDetails.canAddPosition && alert.tradingDetails.addPositionRange && (
-                          <div className="flex justify-between">
-                            <span className="text-slate-500">补仓价格区间</span>
-                            <span className="text-blue-400">
-                              ${alert.tradingDetails.addPositionRange.min?.toLocaleString()} - ${alert.tradingDetails.addPositionRange.max?.toLocaleString()}
-                            </span>
-                          </div>
+                        {!alert.tradingDetails.stopLossRequired && (
+                          <>
+                            <div className="flex justify-between">
+                              <span className="text-slate-500">是否可以补仓</span>
+                              <span className="text-emerald-400">可以补仓</span>
+                            </div>
+                            {alert.tradingDetails.addPositionRange && (
+                              <div className="flex justify-between">
+                                <span className="text-slate-500">补仓价格区间</span>
+                                <span className="text-blue-400">
+                                  ${alert.tradingDetails.addPositionRange.min?.toLocaleString()} - ${alert.tradingDetails.addPositionRange.max?.toLocaleString()}
+                                </span>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

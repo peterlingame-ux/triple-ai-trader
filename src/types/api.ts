@@ -93,10 +93,10 @@ export interface OpportunityAlert {
     leverage?: string;            // 建议杠杆倍数
     liquidationSafety?: number;   // 爆仓安全系数
     canAddPosition?: boolean;     // 是否可以补仓
-    addPositionRange?: {          // 补仓价格区间
+    addPositionRange?: {          // 补仓价格区间 (只有在不必须止损时才有值)
       min: number;
       max: number;
-    };
+    } | null;
   };
 }
 
