@@ -31,6 +31,15 @@ interface Position {
   created_at: string;
   updated_at: string;
   user_id?: string;
+  margin: number;
+  maintenance_margin_rate: number;
+  mark_price: number;
+  liquidation_price?: number;
+  contract_type: string;
+  position_value: number;
+  unrealized_pnl: number;
+  fees: number;
+  funding_fee: number;
 }
 
 export const IntelligentPositionManager = () => {
@@ -80,23 +89,51 @@ export const IntelligentPositionManager = () => {
 
     console.log('准备创建持仓:', signalData);
 
+    // 计算详细交易数据
+    const entryPrice = Number(signalData.entry || signalData.price) || 0;
+    const positionSize = 1000; // 默认仓位大小
+    const leverage = signalData.leverage || 1;
+    const margin = (positionSize * entryPrice) / leverage; // 保证金 = 持仓价值 / 杠杆
+    const positionValue = positionSize * entryPrice; // 持仓价值
+    const markPrice = entryPrice * (1 + (Math.random() - 0.5) * 0.001); // 模拟标记价格
+    
+    // 计算维持保证金率 (通常是0.5%-2%)
+    const maintenanceMarginRate = Math.random() * 1.5 + 0.5;
+    
+    // 计算预估强平价
+    let liquidationPrice;
+    if (signalData.action === 'long' || signalData.type === 'buy') {
+      liquidationPrice = entryPrice * (1 - (1 / leverage) * 0.9); // 多头强平价
+    } else {
+      liquidationPrice = entryPrice * (1 + (1 / leverage) * 0.9); // 空头强平价
+    }
+
     const positionData = {
       user_id: user.id,
       symbol: signalData.symbol,
       type: (signalData.action || signalData.signal) as 'buy' | 'sell' | 'long' | 'short',
       status: 'open' as const,
-      entry_price: Number(signalData.entry || signalData.price) || 0,
-      current_price: Number(signalData.entry || signalData.price) || 0,
+      entry_price: entryPrice,
+      current_price: entryPrice,
       stop_loss: Number(signalData.stopLoss) || null,
       take_profit: Number(signalData.takeProfit) || null,
-      position_size: 1000, // 默认仓位大小
-      leverage: 1,
+      position_size: positionSize,
+      leverage: leverage,
       pnl: Number(signalData.profit) || 0,
       pnl_percent: 0,
       confidence: Number(signalData.confidence) || 0,
       strategy: 'AI_AUTO',
-      trading_type: 'spot',
+      trading_type: signalData.tradingType || 'spot',
       ai_reasoning: signalData.reasoning,
+      margin: margin,
+      maintenance_margin_rate: maintenanceMarginRate,
+      mark_price: markPrice,
+      liquidation_price: liquidationPrice,
+      contract_type: signalData.symbol?.includes('USDT') ? 'perpetual' : 'spot',
+      position_value: positionValue,
+      unrealized_pnl: Number(signalData.profit) || 0,
+      fees: positionValue * 0.001, // 0.1% 手续费
+      funding_fee: 0,
     };
 
     console.log('持仓数据:', positionData);
@@ -152,23 +189,35 @@ export const IntelligentPositionManager = () => {
   const updatePositionPnL = async (position: Position) => {
     const priceChange = (Math.random() - 0.5) * 0.02; // -1% to +1%
     const newPrice = position.current_price * (1 + priceChange);
+    const newMarkPrice = newPrice * (1 + (Math.random() - 0.5) * 0.001);
     
     let pnl = 0;
+    let unrealizedPnl = 0;
+    
     if (position.type === 'buy' || position.type === 'long') {
       pnl = (newPrice - position.entry_price) * (position.position_size / position.entry_price);
+      unrealizedPnl = (newMarkPrice - position.entry_price) * (position.position_size / position.entry_price);
     } else {
       pnl = (position.entry_price - newPrice) * (position.position_size / position.entry_price);
+      unrealizedPnl = (position.entry_price - newMarkPrice) * (position.position_size / position.entry_price);
     }
     
     const pnlPercent = (pnl / position.position_size) * 100;
+    
+    // 更新维持保证金率
+    const newMaintenanceMarginRate = position.maintenance_margin_rate + (Math.random() - 0.5) * 0.1;
 
     try {
       const { error } = await supabase
         .from('positions')
         .update({
           current_price: newPrice,
+          mark_price: newMarkPrice,
           pnl: pnl,
-          pnl_percent: pnlPercent
+          pnl_percent: pnlPercent,
+          unrealized_pnl: unrealizedPnl,
+          maintenance_margin_rate: Math.max(0, newMaintenanceMarginRate),
+          position_value: position.position_size * newPrice
         })
         .eq('id', position.id);
 
@@ -180,7 +229,16 @@ export const IntelligentPositionManager = () => {
       // 更新本地状态
       setPositions(prev => prev.map(p => 
         p.id === position.id 
-          ? { ...p, current_price: newPrice, pnl, pnl_percent: pnlPercent }
+          ? { 
+              ...p, 
+              current_price: newPrice, 
+              mark_price: newMarkPrice,
+              pnl, 
+              pnl_percent: pnlPercent,
+              unrealized_pnl: unrealizedPnl,
+              maintenance_margin_rate: Math.max(0, newMaintenanceMarginRate),
+              position_value: position.position_size * newPrice
+            }
           : p
       ));
 
@@ -449,18 +507,22 @@ export const IntelligentPositionManager = () => {
               <div className="space-y-3">
                 {openPositions.length > 0 ? (
                   openPositions.map((position) => (
-                    <div key={position.id} className="p-4 bg-slate-800/40 rounded-lg">
-                      <div className="flex items-center justify-between mb-3">
+                    <div key={position.id} className="p-6 bg-slate-800/40 rounded-xl border border-slate-700/50">
+                      {/* 顶部标题和操作 */}
+                      <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-bold text-white">{position.symbol}</span>
+                          <span className="text-xl font-bold text-white">{position.symbol}</span>
+                          <Badge className="bg-green-600 text-white px-2 py-1">
+                            {position.contract_type === 'perpetual' ? '永续' : '现货'}
+                          </Badge>
                           <Badge 
                             variant={position.type === 'buy' || position.type === 'long' ? 'default' : 'secondary'}
-                            className={position.type === 'buy' || position.type === 'long' ? 'bg-green-600' : 'bg-red-600'}
+                            className={`${position.type === 'buy' || position.type === 'long' ? 'bg-green-600' : 'bg-red-600'} text-white`}
                           >
-                            {position.type === 'buy' || position.type === 'long' ? '多头' : '空头'}
+                            {position.type === 'buy' || position.type === 'long' ? '多' : '空'}
                           </Badge>
-                          <Badge variant="outline" className="text-yellow-400">
-                            胜率{position.confidence}%
+                          <Badge variant="outline" className="text-amber-400 border-amber-400">
+                            {position.leverage}x
                           </Badge>
                         </div>
                         <Button
@@ -473,33 +535,78 @@ export const IntelligentPositionManager = () => {
                           平仓
                         </Button>
                       </div>
-                      
-                      <div className="grid grid-cols-4 gap-4 text-sm">
+
+                      {/* 盈亏统计 */}
+                      <div className="grid grid-cols-2 gap-6 mb-6">
                         <div>
-                          <div className="text-slate-400">入场价</div>
-                          <div className="text-white font-mono">${position.entry_price.toFixed(2)}</div>
-                        </div>
-                        <div>
-                          <div className="text-slate-400">当前价</div>
-                          <div className="text-white font-mono">${position.current_price.toFixed(2)}</div>
-                        </div>
-                        <div>
-                          <div className="text-slate-400">盈亏</div>
-                          <div className={`font-bold ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {position.pnl >= 0 ? '+' : ''}${position.pnl.toFixed(2)}
+                          <div className="text-sm text-slate-400 mb-1">收益额 (USDT)</div>
+                          <div className={`text-2xl font-bold ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {position.pnl >= 0 ? '+' : ''}{position.pnl.toFixed(2)}
                           </div>
                         </div>
                         <div>
-                          <div className="text-slate-400">收益率</div>
-                          <div className={`font-bold ${position.pnl_percent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          <div className="text-sm text-slate-400 mb-1">收益率</div>
+                          <div className={`text-2xl font-bold ${position.pnl_percent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {position.pnl_percent >= 0 ? '+' : ''}{position.pnl_percent.toFixed(2)}%
                           </div>
                         </div>
                       </div>
 
+                      {/* 详细数据网格 */}
+                      <div className="grid grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <div className="text-slate-400 mb-1">持仓量 ({position.symbol.replace('USDT', '')})</div>
+                          <div className="text-white font-mono text-lg">{(position.position_size / position.entry_price).toFixed(0)}</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 mb-1">保证金 (USDT)</div>
+                          <div className="text-white font-mono text-lg">{position.margin.toLocaleString()}</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 mb-1">维持保证金率</div>
+                          <div className="text-white font-mono text-lg">{position.maintenance_margin_rate.toFixed(1)}%</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 mb-1">开仓均价</div>
+                          <div className="text-white font-mono">${position.entry_price.toFixed(2)}</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 mb-1">标记价格</div>
+                          <div className="text-white font-mono">${(position.mark_price || position.current_price).toFixed(2)}</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400 mb-1">预估强平价</div>
+                          <div className="text-white font-mono">
+                            {position.liquidation_price ? `$${position.liquidation_price.toFixed(2)}` : '--'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 附加信息 */}
+                      <div className="mt-4 pt-4 border-t border-slate-700/50 grid grid-cols-2 gap-4 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">未实现盈亏:</span>
+                          <span className={`font-mono ${(position.unrealized_pnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {(position.unrealized_pnl || 0) >= 0 ? '+' : ''}${(position.unrealized_pnl || 0).toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">手续费:</span>
+                          <span className="text-slate-300 font-mono">${(position.fees || 0).toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">胜率预测:</span>
+                          <span className="text-yellow-400 font-medium">{position.confidence}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">持仓价值:</span>
+                          <span className="text-slate-300 font-mono">${(position.position_value || 0).toLocaleString()}</span>
+                        </div>
+                      </div>
+
                       {position.ai_reasoning && (
-                        <div className="mt-3 p-2 bg-slate-700/30 rounded text-xs text-slate-300">
-                          <strong>AI分析:</strong> {position.ai_reasoning}
+                        <div className="mt-4 p-3 bg-slate-700/30 rounded-lg text-xs text-slate-300">
+                          <strong className="text-blue-400">AI分析:</strong> {position.ai_reasoning}
                         </div>
                       )}
                     </div>

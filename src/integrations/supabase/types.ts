@@ -19,15 +19,23 @@ export type Database = {
           ai_reasoning: string | null
           closed_at: string | null
           confidence: number
+          contract_type: string | null
           created_at: string | null
           current_price: number
           entry_price: number
+          fees: number | null
+          funding_fee: number | null
           id: string
           leverage: number | null
+          liquidation_price: number | null
+          maintenance_margin_rate: number | null
+          margin: number | null
+          mark_price: number | null
           opened_at: string | null
           pnl: number | null
           pnl_percent: number | null
           position_size: number
+          position_value: number | null
           status: string
           stop_loss: number | null
           strategy: string | null
@@ -35,6 +43,7 @@ export type Database = {
           take_profit: number | null
           trading_type: string | null
           type: string
+          unrealized_pnl: number | null
           updated_at: string | null
           user_id: string | null
         }
@@ -42,15 +51,23 @@ export type Database = {
           ai_reasoning?: string | null
           closed_at?: string | null
           confidence: number
+          contract_type?: string | null
           created_at?: string | null
           current_price: number
           entry_price: number
+          fees?: number | null
+          funding_fee?: number | null
           id?: string
           leverage?: number | null
+          liquidation_price?: number | null
+          maintenance_margin_rate?: number | null
+          margin?: number | null
+          mark_price?: number | null
           opened_at?: string | null
           pnl?: number | null
           pnl_percent?: number | null
           position_size: number
+          position_value?: number | null
           status?: string
           stop_loss?: number | null
           strategy?: string | null
@@ -58,6 +75,7 @@ export type Database = {
           take_profit?: number | null
           trading_type?: string | null
           type: string
+          unrealized_pnl?: number | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -65,15 +83,23 @@ export type Database = {
           ai_reasoning?: string | null
           closed_at?: string | null
           confidence?: number
+          contract_type?: string | null
           created_at?: string | null
           current_price?: number
           entry_price?: number
+          fees?: number | null
+          funding_fee?: number | null
           id?: string
           leverage?: number | null
+          liquidation_price?: number | null
+          maintenance_margin_rate?: number | null
+          margin?: number | null
+          mark_price?: number | null
           opened_at?: string | null
           pnl?: number | null
           pnl_percent?: number | null
           position_size?: number
+          position_value?: number | null
           status?: string
           stop_loss?: number | null
           strategy?: string | null
@@ -81,6 +107,7 @@ export type Database = {
           take_profit?: number | null
           trading_type?: string | null
           type?: string
+          unrealized_pnl?: number | null
           updated_at?: string | null
           user_id?: string | null
         }
