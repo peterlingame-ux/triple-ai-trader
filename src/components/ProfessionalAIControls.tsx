@@ -201,7 +201,28 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
               {/* AI自动赚钱 */}
               <div 
                 className="bg-gradient-to-br from-emerald-900/30 via-green-800/20 to-emerald-900/30 border border-emerald-500/30 rounded-xl p-6 cursor-pointer transition-all duration-300 hover:border-emerald-400/50 hover:shadow-lg hover:shadow-emerald-500/10 group"
-                onClick={() => setActiveSection('autotrader')}
+                onClick={() => {
+                  setActiveSection('autotrader');
+                  // 自动启用AI自动交易功能
+                  const autoTraderConfig = {
+                    enabled: true,
+                    strategy: 'conservative',
+                    tradingType: 'futures',
+                    conservativeMinConfidence: 85,
+                    aggressiveMinConfidence: 75,
+                    maxPositions: 5,
+                    riskPerTrade: 2,
+                    virtualBalance: 100000,
+                    allowedSymbols: ['BTC', 'ETH', 'SOL', 'BNB']
+                  };
+                  localStorage.setItem('autoTraderConfig', JSON.stringify(autoTraderConfig));
+                  
+                  // 发送状态变化事件
+                  const event = new CustomEvent('autoTraderStatusChanged', {
+                    detail: { isActive: true }
+                  });
+                  window.dispatchEvent(event);
+                }}
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center border border-emerald-500/30 group-hover:scale-110 transition-transform duration-300">
