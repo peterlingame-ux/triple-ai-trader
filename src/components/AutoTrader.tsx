@@ -83,104 +83,17 @@ export const AutoTrader = () => {
     };
   }, [isEnabled, updateSettings, toast]);
 
-  // 统一的信号处理函数
-  const handleSignal = useCallback((signal: SuperBrainSignal) => {
-    console.log('AutoTrader - 开始处理信号:', signal);
-    
-    try {
-      // 获取当前最新状态
-      const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
-      const currentIsEnabled = currentSettings.auto_trading_enabled || false;
-      const currentStrategy = currentSettings.trading_strategy || 'conservative';
-      
-      console.log('AutoTrader - 当前设置:', { currentIsEnabled, currentStrategy });
-      
-      if (!currentIsEnabled) {
-        console.log('AI自动交易未启动，忽略信号:', signal);
-        toast({
-          title: "信号已忽略",
-          description: "AI自动交易未启动",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // 验证信号有效性
-      if (!validateSignal(signal)) {
-        console.log('信号验证失败:', signal);
-        toast({
-          title: "信号验证失败",
-          description: "信号格式不正确",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      const strategy = TRADING_STRATEGIES.find(s => s.type === currentStrategy);
-      console.log('AutoTrader - 当前策略:', strategy);
-      
-      // 记录收到信号
-      const receivedHistory = formatTradingHistory('signal_received', signal.symbol, signal.action, {
-        confidence: signal.confidence
-      });
-      setTradingHistory(prev => [...receivedHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - receivedHistory.length)]);
-
-      // 检查策略要求
-      if (!strategy || signal.confidence < strategy.minConfidence) {
-        console.log('信号胜率不足，被忽略:', {
-          confidence: signal.confidence,
-          required: strategy?.minConfidence
-        });
-        
-        const ignoredHistory = formatTradingHistory('signal_ignored', signal.symbol, signal.action, {
-          confidence: signal.confidence,
-          strategyName: strategy?.name,
-          minConfidence: strategy?.minConfidence
-        });
-        setTradingHistory(prev => [...ignoredHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - ignoredHistory.length)]);
-        
-        toast({
-          title: "信号被忽略",
-          description: `${signal.symbol}胜率${signal.confidence}%低于${strategy?.name}要求(${strategy?.minConfidence}%)`,
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // 检查重复持仓
-      if (positions.some(p => p.symbol === signal.symbol)) {
-        console.log('检测到重复持仓，忽略信号:', signal.symbol);
-        const duplicateHistory = formatTradingHistory('duplicate_position', signal.symbol, signal.action, {});
-        setTradingHistory(prev => [...duplicateHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - duplicateHistory.length)]);
-        
-        toast({
-          title: "重复持仓",
-          description: `${signal.symbol}已有持仓，忽略新信号`,
-          variant: "destructive"
-        });
-        return;
-      }
-
-      // 执行交易
-      console.log('AutoTrader - 准备执行交易:', signal);
-      executeTradeWithSignal(signal, currentStrategy);
-      
-    } catch (error) {
-      console.error('AutoTrader - 信号处理错误:', error);
-      toast({
-        title: "信号处理失败",
-        description: "处理交易信号时发生错误",
-        variant: "destructive"
-      });
-    }
-  }, [positions, executeTrade, toast, setTradingHistory]);
-
   // 执行交易并记录历史
   const executeTradeWithSignal = useCallback(async (signal: SuperBrainSignal, strategy: 'conservative' | 'aggressive') => {
+    console.log('🔥 executeTradeWithSignal 开始:', { signal, strategy });
+    
     try {
+      console.log('🔥 调用 executeTrade...');
       const position = await executeTrade(signal, strategy);
+      console.log('🔥 executeTrade 返回结果:', position);
       
       if (position) {
+        console.log('✅ 交易执行成功，创建历史记录');
         const strategyData = TRADING_STRATEGIES.find(s => s.type === strategy);
         const executedHistory = formatTradingHistory('trade_executed', signal.symbol, signal.action, {
           entry: signal.entry,
@@ -192,16 +105,80 @@ export const AutoTrader = () => {
         });
         
         setTradingHistory(prev => [...executedHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - executedHistory.length)]);
+        
+        toast({
+          title: "交易执行成功!",
+          description: `${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'}订单已执行`,
+        });
+      } else {
+        console.log('❌ executeTrade 返回空值');
       }
     } catch (error) {
-      console.error('执行交易失败:', error);
+      console.error('💥 executeTradeWithSignal 执行失败:', error);
       toast({
         title: "交易执行失败",
         description: "请检查账户余额和网络连接",
         variant: "destructive"
       });
     }
-  }, [executeTrade, toast]);
+  }, [executeTrade, toast, setTradingHistory]);
+
+  // 统一的信号处理函数
+  const handleSignal = useCallback((signal: SuperBrainSignal) => {
+    console.log('🔥 AutoTrader - handleSignal 开始，信号:', signal);
+    
+    try {
+      // 步骤1: 检查设置
+      const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+      const currentIsEnabled = currentSettings.auto_trading_enabled || false;
+      const currentStrategy = currentSettings.trading_strategy || 'conservative';
+      
+      console.log('🔥 步骤1 - 当前设置:', { currentIsEnabled, currentStrategy });
+      
+      if (!currentIsEnabled) {
+        console.log('❌ 停止：AI自动交易未启动');
+        return;
+      }
+
+      // 步骤2: 验证信号
+      console.log('🔥 步骤2 - 验证信号...');
+      if (!validateSignal(signal)) {
+        console.log('❌ 停止：信号验证失败');
+        return;
+      }
+      console.log('✅ 信号验证通过');
+      
+      // 步骤3: 检查策略
+      const strategy = TRADING_STRATEGIES.find(s => s.type === currentStrategy);
+      console.log('🔥 步骤3 - 策略检查:', { 
+        strategy: strategy?.name, 
+        required: strategy?.minConfidence, 
+        actual: signal.confidence 
+      });
+      
+      if (!strategy || signal.confidence < strategy.minConfidence) {
+        console.log('❌ 停止：胜率不足，需要', strategy?.minConfidence, '实际', signal.confidence);
+        return;
+      }
+      console.log('✅ 策略检查通过');
+
+      // 步骤4: 检查重复持仓
+      console.log('🔥 步骤4 - 检查重复持仓，当前持仓:', positions);
+      if (positions.some(p => p.symbol === signal.symbol)) {
+        console.log('❌ 停止：重复持仓');
+        return;
+      }
+      console.log('✅ 无重复持仓');
+
+      // 步骤5: 执行交易
+      console.log('🔥 步骤5 - 开始执行交易...');
+      executeTradeWithSignal(signal, currentStrategy);
+      console.log('🔥 executeTradeWithSignal 调用完成');
+      
+    } catch (error) {
+      console.error('💥 handleSignal 错误:', error);
+    }
+  }, [positions, executeTradeWithSignal]);
 
   // 在组件加载时暴露处理函数并检查待处理信号
   useEffect(() => {
