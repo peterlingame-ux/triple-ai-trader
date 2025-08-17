@@ -338,7 +338,7 @@ export const AutoTrader = () => {
       symbol: signal.symbol,
       type: signal.action === 'buy' ? 'long' : 'short',
       entryPrice: signal.entry,
-      currentPrice: signal.entry,
+      currentPrice: signal.entry, // 初始为入场价格
       size: positionSize,
       pnl: 0,
       pnlPercent: 0,
@@ -527,30 +527,84 @@ export const AutoTrader = () => {
     });
   };
 
-  // 定期更新持仓价格（模拟）
+  // 获取真实市场价格的函数（为后续API接入做准备）
+  const fetchRealMarketPrice = useCallback(async (symbol: string): Promise<number> => {
+    try {
+      // 调用super-brain-analysis获取真实价格数据
+      const { data, error } = await supabase.functions.invoke('super-brain-analysis', {
+        body: {
+          symbols: [symbol],
+          analysisTypes: ['price']
+        }
+      });
+
+      if (data && !error && data.entry) {
+        console.log(`获取${symbol}真实价格:`, data.entry);
+        return data.entry;
+      }
+    } catch (error) {
+      console.error(`获取${symbol}价格失败:`, error);
+    }
+    
+    // 如果API调用失败，返回当前价格（保持不变）
+    return 0;
+  }, [supabase]);
+
+  // 定期更新持仓价格（使用真实数据）
   useEffect(() => {
     if (positions.length === 0) return;
 
-    const interval = setInterval(() => {
-      setPositions(prev => prev.map(position => {
-        const priceChange = (Math.random() - 0.5) * 0.02; // ±1%随机变化
-        const newPrice = position.currentPrice * (1 + priceChange);
-        const pnl = position.type === 'long' 
-          ? (newPrice - position.entryPrice) * position.size
-          : (position.entryPrice - newPrice) * position.size;
-        const pnlPercent = (pnl / (position.entryPrice * position.size)) * 100;
+    const updatePositionPrices = async () => {
+      const updatedPositions = await Promise.all(
+        positions.map(async (position) => {
+          try {
+            // 获取真实价格
+            const realPrice = await fetchRealMarketPrice(position.symbol);
+            const newPrice = realPrice > 0 ? realPrice : position.currentPrice;
+            
+            // 计算盈亏
+            const pnl = position.type === 'long' 
+              ? (newPrice - position.entryPrice) * position.size
+              : (position.entryPrice - newPrice) * position.size;
+            const pnlPercent = (pnl / (position.entryPrice * position.size)) * 100;
 
-        return {
-          ...position,
-          currentPrice: newPrice,
-          pnl: pnl,
-          pnlPercent: pnlPercent
-        };
-      }));
-    }, 5000); // 每5秒更新一次
+            return {
+              ...position,
+              currentPrice: newPrice,
+              pnl: pnl,
+              pnlPercent: pnlPercent
+            };
+          } catch (error) {
+            console.error(`更新${position.symbol}价格失败:`, error);
+            // 如果获取失败，使用小幅随机变化作为备选
+            const priceChange = (Math.random() - 0.5) * 0.01; // ±0.5%随机变化
+            const newPrice = position.currentPrice * (1 + priceChange);
+            const pnl = position.type === 'long' 
+              ? (newPrice - position.entryPrice) * position.size
+              : (position.entryPrice - newPrice) * position.size;
+            const pnlPercent = (pnl / (position.entryPrice * position.size)) * 100;
+
+            return {
+              ...position,
+              currentPrice: newPrice,
+              pnl: pnl,
+              pnlPercent: pnlPercent
+            };
+          }
+        })
+      );
+      
+      setPositions(updatedPositions);
+    };
+
+    // 立即更新一次
+    updatePositionPrices();
+    
+    // 每30秒更新一次真实价格
+    const interval = setInterval(updatePositionPrices, 30000);
 
     return () => clearInterval(interval);
-  }, [positions.length]);
+  }, [positions.length, fetchRealMarketPrice]);
 
   return (
     <div className="space-y-6">
