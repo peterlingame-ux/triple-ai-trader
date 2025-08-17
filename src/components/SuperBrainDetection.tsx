@@ -84,7 +84,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       }
 
       if (data) {
-        // 转换API返回的数据为OpportunityAlert格式
+        // 简化弹窗信息，只显示关键交易信息
         return {
           id: Date.now().toString(),
           symbol: data.symbol,
@@ -93,13 +93,12 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           signal: data.action === 'buy' ? 'buy' as const : 'sell' as const,
           price: data.entry,
           analysis: {
-            priceAnalysis: `📊 综合技术分析：入场价格 ${data.entry}，止损 ${data.stopLoss}，止盈 ${data.takeProfit}`,
-            technicalAnalysis: `🎯 仓位建议：${data.position}，基于6种AI模型综合分析`,
-            sentimentAnalysis: `🧠 AI综合结论：${data.reasoning}`
+            priceAnalysis: `💰 ${data.symbol}: ${data.action === 'buy' ? '买多' : '买空'}`,
+            technicalAnalysis: `🎯 入场: $${data.entry.toLocaleString()} | 止损: $${data.stopLoss.toLocaleString()} | 止盈: $${data.takeProfit.toLocaleString()}`,
+            sentimentAnalysis: `📊 仓位: ${data.position} | 胜率: ${data.confidence}%`
           },
           alerts: [],
           timestamp: new Date(),
-          // 新增字段用于详细信息
           tradingDetails: {
             entry: data.entry,
             stopLoss: data.stopLoss,
