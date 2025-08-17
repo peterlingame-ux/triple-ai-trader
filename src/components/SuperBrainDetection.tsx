@@ -328,151 +328,132 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
 
       {/* Alert Dialog */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
-        <DialogContent className="max-w-lg bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-md bg-slate-900 border-slate-700">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-white">
-              <Brain className="w-6 h-6 text-yellow-400" />
+            <DialogTitle className="flex items-center gap-2 text-white text-lg">
+              <Brain className="w-5 h-5 text-yellow-400" />
               高胜率交易机会
             </DialogTitle>
           </DialogHeader>
           
           {currentAlert && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <CryptoStaticIcon symbol={currentAlert.symbol} name={currentAlert.symbol} className="w-10 h-10" />
+                <div className="flex items-center gap-2">
+                  <CryptoStaticIcon symbol={currentAlert.symbol} name={currentAlert.symbol} className="w-8 h-8" />
                   <div>
-                    <h3 className="text-xl font-bold text-white">{currentAlert.symbol}</h3>
-                    <p className="text-slate-400">{currentAlert.timestamp.toLocaleString()}</p>
+                    <h3 className="text-lg font-bold text-white">{currentAlert.symbol}</h3>
+                    <p className="text-xs text-slate-400">{currentAlert.timestamp.toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge 
                     variant={currentAlert.signal === 'buy' ? 'default' : 'destructive'}
-                    className={`text-lg px-4 py-2 ${currentAlert.signal === 'buy' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
+                    className={`text-sm px-3 py-1 ${currentAlert.signal === 'buy' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
                   >
-                    {currentAlert.signal === 'buy' ? '买入信号' : '卖出信号'}
+                    {currentAlert.signal === 'buy' ? '买入' : '卖出'}
                   </Badge>
-                  <Badge variant="outline" className="border-yellow-400 text-yellow-400 text-lg px-4 py-2">
-                    胜率 {currentAlert.confidence}%
+                  <Badge variant="outline" className="border-yellow-400 text-yellow-400 text-sm px-3 py-1">
+                    {currentAlert.confidence}%
                   </Badge>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-3">
-                  <div className="bg-slate-800 rounded-lg p-4">
-                    <h4 className="font-medium text-white mb-2">价格分析</h4>
-                    <p className="text-sm text-slate-300">{currentAlert.analysis.priceAnalysis}</p>
-                  </div>
-                  <div className="bg-slate-800 rounded-lg p-4">
-                    <h4 className="font-medium text-white mb-2">技术分析</h4>
-                    <p className="text-sm text-slate-300">{currentAlert.analysis.technicalAnalysis}</p>
-                  </div>
+              <div className="grid grid-cols-1 gap-3">
+                <div className="bg-slate-800 rounded-lg p-3">
+                  <h4 className="font-medium text-white mb-2 text-sm">价格分析</h4>
+                  <p className="text-xs text-slate-300">{currentAlert.analysis.priceAnalysis}</p>
                 </div>
-                <div className="bg-slate-800 rounded-lg p-4">
-                  <h4 className="font-medium text-white mb-2">综合分析</h4>
-                  <p className="text-sm text-slate-300">{currentAlert.analysis.sentimentAnalysis}</p>
+                <div className="bg-slate-800 rounded-lg p-3">
+                  <h4 className="font-medium text-white mb-2 text-sm">技术分析</h4>
+                  <p className="text-xs text-slate-300">{currentAlert.analysis.technicalAnalysis}</p>
+                </div>
+                <div className="bg-slate-800 rounded-lg p-3">
+                  <h4 className="font-medium text-white mb-2 text-sm">综合分析</h4>
+                  <p className="text-xs text-slate-300">{currentAlert.analysis.sentimentAnalysis}</p>
                 </div>
               </div>
               
               {currentAlert.tradingDetails && (
-                <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-6 space-y-6">
-                  <h4 className="font-medium text-white text-lg mb-4">交易参数</h4>
+                <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-4 space-y-4">
+                  <h4 className="font-medium text-white text-sm">交易参数</h4>
                   
                   {/* Entry Price Range */}
-                  <div className="bg-slate-900/50 rounded-lg p-4">
-                    <h5 className="text-white font-medium mb-3">入场价格区间</h5>
-                    <div className="text-2xl font-bold text-white mb-2">
+                  <div className="bg-slate-900/50 rounded-lg p-3">
+                    <h5 className="text-white font-medium mb-2 text-sm">入场价格区间</h5>
+                    <div className="text-lg font-bold text-white mb-1">
                       ${currentAlert.tradingDetails.entry.toLocaleString()}
                     </div>
-                    <div className="text-sm text-slate-400">
-                      建议区间: ${(currentAlert.tradingDetails.entry * 0.998).toLocaleString()} - ${(currentAlert.tradingDetails.entry * 1.002).toLocaleString()}
+                    <div className="text-xs text-slate-400">
+                      ${(currentAlert.tradingDetails.entry * 0.998).toLocaleString()} - ${(currentAlert.tradingDetails.entry * 1.002).toLocaleString()}
                     </div>
                   </div>
 
                   {/* Position & Win Rate */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">建议仓位</h5>
-                      <div className="text-xl font-bold text-blue-400">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-slate-900/50 rounded-lg p-3">
+                      <h5 className="text-slate-400 text-xs mb-1">建议仓位</h5>
+                      <div className="text-lg font-bold text-blue-400">
                         {currentAlert.confidence >= 95 ? '25%' :
                          currentAlert.confidence >= 90 ? '20%' :
                          currentAlert.confidence >= 85 ? '15%' : '8%'}
                       </div>
-                      <div className="text-xs text-slate-500">
-                        {currentAlert.tradingDetails.position}
-                      </div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">AI分析胜率</h5>
-                      <div className="text-xl font-bold text-yellow-400">
+                    <div className="bg-slate-900/50 rounded-lg p-3">
+                      <h5 className="text-slate-400 text-xs mb-1">AI分析胜率</h5>
+                      <div className="text-lg font-bold text-yellow-400">
                         {currentAlert.confidence}%
-                      </div>
-                      <div className="text-xs text-slate-500">
-                        综合6大模型分析
                       </div>
                     </div>
                   </div>
 
                   {/* Technical Parameters */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">入场价格</h5>
-                      <div className="text-lg font-bold text-white">
-                        ${currentAlert.tradingDetails.entry.toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">止损价格</h5>
-                      <div className="text-lg font-bold text-red-400">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-slate-900/50 rounded-lg p-3">
+                      <h5 className="text-slate-400 text-xs mb-1">止损价格</h5>
+                      <div className="text-sm font-bold text-red-400">
                         ${currentAlert.tradingDetails.stopLoss.toLocaleString()}
                       </div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">止盈价格</h5>
-                      <div className="text-lg font-bold text-green-400">
+                    <div className="bg-slate-900/50 rounded-lg p-3">
+                      <h5 className="text-slate-400 text-xs mb-1">止盈价格</h5>
+                      <div className="text-sm font-bold text-green-400">
                         ${currentAlert.tradingDetails.takeProfit.toLocaleString()}
                       </div>
                     </div>
                   </div>
 
                   {/* Additional Parameters */}
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">风险等级</h5>
-                      <div className={`text-lg font-bold ${
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="bg-slate-900/50 rounded-lg p-2">
+                      <h5 className="text-slate-400 text-xs mb-1">风险</h5>
+                      <div className={`text-sm font-bold ${
                         currentAlert.tradingDetails.riskLevel === 'low' ? 'text-green-400' :
                         currentAlert.tradingDetails.riskLevel === 'medium' ? 'text-yellow-400' : 'text-red-400'
                       }`}>
-                        {currentAlert.tradingDetails.riskLevel === 'low' ? '低风险' :
-                         currentAlert.tradingDetails.riskLevel === 'medium' ? '中风险' : '高风险'}
+                        {currentAlert.tradingDetails.riskLevel === 'low' ? '低' :
+                         currentAlert.tradingDetails.riskLevel === 'medium' ? '中' : '高'}
                       </div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">杠杆倍数</h5>
-                      <div className="text-lg font-bold text-purple-400">
+                    <div className="bg-slate-900/50 rounded-lg p-2">
+                      <h5 className="text-slate-400 text-xs mb-1">杠杆</h5>
+                      <div className="text-sm font-bold text-purple-400">
                         {currentAlert.tradingDetails.leverage}
                       </div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-4">
-                      <h5 className="text-slate-400 text-sm mb-2">加仓机会</h5>
-                      <div className="text-lg font-bold text-blue-400">
+                    <div className="bg-slate-900/50 rounded-lg p-2">
+                      <h5 className="text-slate-400 text-xs mb-1">加仓</h5>
+                      <div className="text-sm font-bold text-blue-400">
                         {currentAlert.confidence >= 90 ? '有' : '无'}
                       </div>
-                      {currentAlert.confidence >= 90 && (
-                        <div className="text-xs text-slate-500">
-                          -{((currentAlert.tradingDetails.entry * 0.985).toLocaleString())}
-                        </div>
-                      )}
                     </div>
                   </div>
 
                   {/* Risk Warning */}
                   {currentAlert.confidence < 90 && (
-                    <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-3">
-                      <div className="text-red-400 text-sm font-medium">
-                        ⚠️ 风险提醒: 必须设置止损，安全系数 {(100 - currentAlert.confidence)}%
+                    <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-2">
+                      <div className="text-red-400 text-xs font-medium">
+                        ⚠️ 必须设置止损，安全系数 {(100 - currentAlert.confidence)}%
                       </div>
                     </div>
                   )}
