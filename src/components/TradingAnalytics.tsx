@@ -39,29 +39,48 @@ export const TradingAnalytics = () => {
 
   // 模拟根据日期范围获取数据
   const fetchStatsForDateRange = (range: DateRange | undefined) => {
-    if (!range?.from || !range.to) return;
+    if (!range?.from || !range.to) {
+      // 如果没有日期范围，使用默认的1个月数据
+      const today = new Date();
+      const oneMonthAgo = new Date(today);
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+      range = { from: oneMonthAgo, to: today };
+    }
 
     const daysDiff = Math.ceil((range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24));
     
     // 根据时间范围模拟不同的数据
     const baseMultiplier = Math.max(1, daysDiff / 30); // 基于月份的倍数
     
+    // 确保数据始终有值，使用随机种子确保每次渲染数据一致
+    const seed = Math.floor(daysDiff / 7); // 基于周数作为种子
+    const random = () => Math.sin(seed * 9999) * 0.5 + 0.5; // 伪随机函数
+    
+    const totalTrades = Math.max(5, Math.floor(random() * 30 * baseMultiplier + 10));
+    const profitableTrades = Math.max(Math.floor(totalTrades * 0.6), Math.floor(random() * totalTrades * 0.8 + totalTrades * 0.4));
+    
     setStats({
-      aiAccuracy: Math.min(99, Math.floor(85 + Math.random() * 10)),
-      activeSignals: Math.floor(Math.random() * 15 * baseMultiplier),
-      periodReturn: parseFloat((Math.random() * 50 * baseMultiplier - 10).toFixed(1)),
-      profitableTrades: Math.floor(Math.random() * 20 * baseMultiplier),
-      totalTrades: Math.floor(Math.random() * 30 * baseMultiplier + 5),
-      totalProfit: parseFloat((Math.random() * 5000 * baseMultiplier - 1000).toFixed(2)),
-      avgWinRate: Math.floor(70 + Math.random() * 25),
-      bestTrade: parseFloat((Math.random() * 1000 + 200).toFixed(2)),
-      worstTrade: -parseFloat((Math.random() * 500 + 50).toFixed(2)),
+      aiAccuracy: Math.max(85, Math.min(99, Math.floor(85 + random() * 12))),
+      activeSignals: Math.max(1, Math.floor(random() * 15 * baseMultiplier + 2)),
+      periodReturn: parseFloat((random() * 60 * baseMultiplier - 15 + (baseMultiplier > 2 ? 10 : 0)).toFixed(1)),
+      profitableTrades: profitableTrades,
+      totalTrades: totalTrades,
+      totalProfit: parseFloat((random() * 8000 * baseMultiplier - 2000 + (profitableTrades > totalTrades * 0.7 ? 1000 : -500)).toFixed(2)),
+      avgWinRate: Math.max(60, Math.floor(65 + random() * 30)),
+      bestTrade: parseFloat((random() * 1500 + 300).toFixed(2)),
+      worstTrade: -parseFloat((random() * 600 + 100).toFixed(2)),
     });
   };
 
   useEffect(() => {
+    // 立即更新数据
     fetchStatsForDateRange(dateRange);
   }, [dateRange]);
+
+  // 页面加载时立即获取数据
+  useEffect(() => {
+    fetchStatsForDateRange(dateRange);
+  }, []);
 
   const formatCurrency = (amount: number) => {
     return `${amount >= 0 ? '+' : ''}$${Math.abs(amount).toLocaleString()}`;
