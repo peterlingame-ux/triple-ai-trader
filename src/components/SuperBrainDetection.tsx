@@ -509,272 +509,89 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         </div>
       </Card>
 
-      {/* Alert Dialog - 极致紧凑型专业弹窗 */}
+      {/* 专业交易弹窗 - 简洁清晰 */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
-        <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-yellow-400/30 text-white max-w-xs p-3 shadow-xl">
-          <DialogHeader className="pb-1">
-            <DialogTitle className="flex items-center justify-center gap-1 text-xs font-bold">
-              <Brain className="w-3 h-3 text-yellow-400" />
-              <span className="text-yellow-400 text-xs">
-                最强大脑检测到高胜率机会！
-              </span>
+        <DialogContent className="max-w-md bg-slate-900 border-slate-700 text-slate-100">
+          <DialogHeader className="pb-4 border-b border-slate-700">
+            <DialogTitle className="text-lg font-semibold text-slate-100 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-blue-400" />
+              交易信号
             </DialogTitle>
           </DialogHeader>
-          
+
           {currentAlert && (
-            <div className="space-y-2">
-              {/* 核心信息区域 */}
-              <div className="text-center bg-gradient-to-r from-yellow-500/10 to-amber-500/10 rounded p-2 border border-yellow-400/20">
-                <div className="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-yellow-400/20 to-amber-400/20 rounded-full border border-yellow-400/40 mb-1">
-                  <span className="text-sm font-bold text-yellow-400">{currentAlert.symbol}</span>
+            <div className="space-y-4 py-4">
+              {/* 主要信号 */}
+              <div className="text-center py-6 bg-slate-800/50 rounded-lg">
+                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-3 ${
+                  currentAlert.signal === 'buy' 
+                    ? 'bg-emerald-500/20 text-emerald-400' 
+                    : 'bg-red-500/20 text-red-400'
+                }`}>
+                  {currentAlert.signal === 'buy' ? 
+                    <TrendingUp className="w-4 h-4" /> : 
+                    <TrendingDown className="w-4 h-4" />
+                  }
+                  {currentAlert.signal === 'buy' ? '买入' : '卖出'}
                 </div>
                 
-                <Badge 
-                  variant="outline" 
-                  className={`text-xs px-2 py-0.5 font-bold border mb-1 ${
-                    currentAlert.signal === 'buy' 
-                      ? 'text-green-400 border-green-400/40 bg-green-400/10' 
-                      : 'text-red-400 border-red-400/40 bg-red-400/10'
-                  }`}
-                >
-                  {currentAlert.signal === 'buy' ? '↗ 卖出信号' : '↘ 卖出信号'}
-                </Badge>
+                <div className="text-2xl font-bold text-slate-100 mb-1">
+                  {currentAlert.symbol}
+                </div>
                 
-                <div className="text-lg font-black text-yellow-400">
-                  胜率 {currentAlert.confidence}%
+                <div className="text-sm text-slate-400">
+                  胜率 <span className="text-emerald-400 font-semibold">{currentAlert.confidence}%</span>
                 </div>
               </div>
 
-              {/* 分析结果展示 - 极致紧凑版 */}
-              <div className="space-y-1.5">
-                {/* 价格分析 */}
-                <div className="bg-slate-800/60 rounded p-1.5 border border-blue-400/20">
-                  <div className="flex items-center gap-1 mb-0.5">
-                    <span className="text-blue-400 text-xs">📊</span>
-                    <span className="text-blue-400 font-medium text-xs">价格分析 (6AI综合)</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <DollarSign className="w-2.5 h-2.5 text-yellow-400" />
-                    <span className="text-yellow-400 text-xs font-medium">
-                      {currentAlert.symbol}: 卖空
-                    </span>
-                  </div>
-                </div>
-
-                {/* 技术指标 */}
-                <div className="bg-slate-800/60 rounded p-1.5 border border-purple-400/20">
-                  <div className="flex items-center gap-1 mb-0.5">
-                    <span className="text-purple-400 text-xs">🎯</span>
-                    <span className="text-purple-400 font-medium text-xs">技术指标 (多维度)</span>
-                  </div>
-                  {currentAlert.tradingDetails && (
-                    <div className="grid grid-cols-3 gap-1 text-xs">
-                      <div className="text-center">
-                        <div className="text-slate-500 text-xs">入场</div>
-                        <div className="text-green-400 font-mono text-xs">${currentAlert.tradingDetails.entry.toLocaleString()}</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-slate-500 text-xs">止损</div>
-                        <div className="text-red-400 font-mono text-xs">${currentAlert.tradingDetails.stopLoss.toLocaleString()}</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-slate-500 text-xs">止盈</div>
-                        <div className="text-green-400 font-mono text-xs">${currentAlert.tradingDetails.takeProfit.toLocaleString()}</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* 综合结论 */}
-                <div className="bg-slate-800/60 rounded p-1.5 border border-green-400/20">
-                  <div className="flex items-center gap-1 mb-0.5">
-                    <span className="text-green-400 text-xs">🧠</span>
-                    <span className="text-green-400 font-medium text-xs">综合结论 (AI大脑)</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 bg-gradient-to-r from-green-400 to-blue-400 rounded-full"></div>
-                    <span className="text-white text-xs">
-                      仓位: 轻仓 | 胜率: {currentAlert.confidence}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 交易信息 - 极致紧凑版 */}
-              <div className="bg-gradient-to-br from-indigo-900/20 to-purple-900/20 rounded p-2 border border-indigo-400/30">
-                <div className="flex items-center gap-1 mb-1">
-                  <span className="text-indigo-400 text-xs">💱</span>
-                  <span className="text-indigo-400 font-bold text-xs">交易信息</span>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-1 mb-1 text-xs">
-                  <div>
-                    <span className="text-slate-500">货币种类:</span>
-                    <div className="text-white font-bold">{currentAlert.symbol}</div>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">交易方向:</span>
-                    <div className={`font-bold ${
-                      currentAlert.signal === 'buy' ? 'text-green-400' : 'text-red-400'
-                    }`}>
-                      永续合约{currentAlert.signal === 'buy' ? '做多' : '做空'}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-1 mb-1 text-xs">
-                  <div>
-                    <span className="text-slate-500">合约类型:</span>
-                    <div className="text-blue-400 font-medium">永续合约</div>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">杠杆倍数:</span>
-                    <div className="text-yellow-400 font-bold">
-                      {(() => {
-                        if (currentAlert.tradingDetails?.position === '重仓') return '20x';
-                        if (currentAlert.tradingDetails?.position === '中仓') return '15x';
-                        return '10x';
-                      })()}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-slate-800/40 rounded p-1">
-                  <div className="text-slate-500 text-xs mb-0.5">爆仓点安全等级:</div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, i) => {
-                        const safetyLevel = currentAlert.confidence >= 95 ? 5 : currentAlert.confidence >= 90 ? 4 : 3;
-                        return (
-                          <div
-                            key={i}
-                            className={`w-1 h-2 rounded-sm ${
-                              i < safetyLevel ? 'bg-green-400' : 'bg-slate-600'
-                            }`}
-                          />
-                        );
-                      })}
-                    </div>
-                    <span className="text-xs font-medium text-green-400">
-                      {(() => {
-                        const safetyLevel = currentAlert.confidence >= 95 ? 5 : currentAlert.confidence >= 90 ? 4 : 3;
-                        if (safetyLevel === 5) return '极安全';
-                        if (safetyLevel === 4) return '很安全';
-                        if (safetyLevel === 3) return '安全';
-                        if (safetyLevel === 2) return '中等';
-                        return '谨慎';
-                      })()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* 具体交易建议 - 极致紧凑版 */}
+              {/* 交易信息 */}
               {currentAlert.tradingDetails && (
-                <div className="bg-gradient-to-br from-amber-900/20 to-yellow-900/20 rounded p-2 border border-amber-400/30">
-                  <div className="flex items-center gap-1 mb-1">
-                    <span className="text-amber-400 text-xs">📋</span>
-                    <span className="text-amber-400 font-bold text-xs">具体交易建议</span>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">入场价格</span>
+                    <span className="text-sm font-medium text-slate-100">
+                      ${currentAlert.tradingDetails.entry?.toLocaleString()}
+                    </span>
                   </div>
-
-                  {/* 价格区间 */}
-                  <div className="grid grid-cols-2 gap-1 mb-1">
-                    <div className="bg-slate-800/40 rounded p-1 text-center">
-                      <div className="text-slate-500 text-xs">入场价格</div>
-                      <div className="text-green-400 font-mono text-xs font-bold">
-                        ${currentAlert.tradingDetails.entry.toLocaleString()}
-                      </div>
-                    </div>
-                    <div className="bg-slate-800/40 rounded p-1 text-center">
-                      <div className="text-slate-500 text-xs">止损价格</div>
-                      <div className="text-red-400 font-mono text-xs font-bold">
-                        ${currentAlert.tradingDetails.stopLoss.toLocaleString()}
-                      </div>
-                    </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">止损价位</span>
+                    <span className="text-sm font-medium text-red-400">
+                      ${currentAlert.tradingDetails.stopLoss?.toLocaleString()}
+                    </span>
                   </div>
-
-                  {/* 止盈设置 */}
-                  <div className="grid grid-cols-2 gap-1 mb-1">
-                    <div className="bg-slate-800/40 rounded p-1 text-center">
-                      <div className="text-slate-500 text-xs">第一止盈</div>
-                      <div className="text-green-400 font-mono text-xs">$--</div>
-                    </div>
-                    <div className="bg-slate-800/40 rounded p-1 text-center">
-                      <div className="text-slate-500 text-xs">第二止盈</div>
-                      <div className="text-green-400 font-mono text-xs">$--</div>
-                    </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">止盈价位</span>
+                    <span className="text-sm font-medium text-emerald-400">
+                      ${currentAlert.tradingDetails.takeProfit?.toLocaleString()}
+                    </span>
                   </div>
-
-                  {/* 风控参数 - 单行显示 */}
-                  <div className="bg-slate-800/20 rounded p-1 space-y-0.5">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-xs">建议仓位:</span>
-                      <span className="text-yellow-400 font-bold text-xs">10%</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-xs">安全系数:</span>
-                      <div className="flex items-center gap-1">
-                        <span className="text-white font-mono text-xs">5/10</span>
-                        <div className="flex gap-0.5">
-                          {[...Array(10)].map((_, i) => (
-                            <div 
-                              key={i} 
-                              className={`w-0.5 h-1 rounded-sm ${
-                                i < 5 ? 'bg-green-400' : 'bg-slate-600'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-xs">必须止损:</span>
-                      <span className="text-green-400 font-medium text-xs">否</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-xs">风险等级:</span>
-                      <Badge 
-                        variant="outline" 
-                        className="text-xs px-1 py-0 text-red-400 border-red-400"
-                      >
-                        高风险
-                      </Badge>
-                    </div>
+                  
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-sm text-slate-400">建议仓位</span>
+                    <span className="text-sm font-medium text-blue-400">
+                      {currentAlert.tradingDetails.position}
+                    </span>
                   </div>
                 </div>
               )}
-              
-              {/* 操作按钮 */}
-              <div className="flex gap-1 pt-1">
-                <Button 
-                  onClick={() => setShowAlert(false)}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 bg-slate-700/50 hover:bg-slate-600/50 border-slate-500 text-slate-300 text-xs py-1 h-7"
-                >
-                  知道了
-                </Button>
-                <Button 
-                  onClick={() => {
-                    setShowAlert(false);
-                    toast({
-                      title: "交易接口预留",
-                      description: "请配置交易API以启用自动交易",
-                    });
-                  }}
-                  size="sm"
-                  className="flex-1 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white border-0 text-xs py-1 h-7 font-bold"
-                >
-                  立即交易
-                </Button>
-              </div>
 
-              {/* 免责声明 */}
-              <div className="text-center text-xs text-slate-500 border-t border-slate-700 pt-1 mt-1">
-                ⚠️ 投资有风险，交易需谨慎
+              {/* 操作按钮 */}
+              <div className="flex gap-3 pt-4">
+                <Button
+                  onClick={() => setShowAlert(false)}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  确认
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAlert(false)}
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800"
+                >
+                  忽略
+                </Button>
               </div>
             </div>
           )}
