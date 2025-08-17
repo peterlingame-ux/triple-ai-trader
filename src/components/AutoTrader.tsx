@@ -122,8 +122,8 @@ export const AutoTrader = () => {
     {
       type: 'conservative',
       name: '稳健型',
-      description: '胜率大于90%才进行交易，追求稳定收益',
-      minConfidence: 90,
+      description: '胜率大于85%才进行交易，追求稳定收益', // 降低门槛从90%到85%
+      minConfidence: 85, // 降低门槛
       icon: <Shield className="w-5 h-5" />,
       color: 'text-blue-400'
     },
@@ -180,28 +180,42 @@ export const AutoTrader = () => {
 
   // 监听最强大脑交易信号
   useEffect(() => {
+    // 处理最强大脑信号
     const handleSuperBrainSignal = (event: CustomEvent) => {
       if (!isEnabled) return;
-
-      const signalData = event.detail;
-      const signal: SuperBrainSignal = {
-        symbol: signalData.symbol,
-        action: signalData.action, // 修正：使用action而不是signal
-        confidence: signalData.confidence,
-        entry: signalData.entry || signalData.price,
-        stopLoss: signalData.stopLoss || 0,
-        takeProfit: signalData.takeProfit || 0,
-        reasoning: signalData.reasoning || signalData.analysis?.sentimentAnalysis || '',
-        timestamp: new Date()
-      };
-
-      // 检查策略要求
+      
+      const signal = event.detail as SuperBrainSignal;
       const strategy = strategies.find(s => s.type === selectedStrategy);
+      
+      // 添加详细的调试日志
+      console.log('收到最强大脑信号:', {
+        symbol: signal.symbol,
+        action: signal.action,
+        confidence: signal.confidence,
+        entry: signal.entry,
+        strategy: selectedStrategy,
+        minRequired: strategy?.minConfidence
+      });
+      
+      // 记录收到信号
+      setTradingHistory(prev => [
+        `📡 收到${signal.symbol}信号：${signal.action === 'buy' ? '买入' : '卖出'}，胜率${signal.confidence}%`,
+        ...prev.slice(0, 19)
+      ]);
+
       if (!strategy || signal.confidence < strategy.minConfidence) {
         setTradingHistory(prev => [
-          `⚠️ ${signal.symbol} 信号胜率${signal.confidence}%低于${strategy?.name}策略要求${strategy?.minConfidence}%，忽略`,
-          ...prev.slice(0, 19)
+          `⚠️ ${signal.symbol} 信号胜率${signal.confidence}%低于${strategy?.name}策略要求${strategy?.minConfidence}%，已忽略`,
+          `💡 提示：切换到激进型策略(70%门槛)可执行此信号`,
+          ...prev.slice(0, 18)
         ]);
+        
+        // 给用户策略提示
+        toast({
+          title: "信号被忽略",
+          description: `${signal.symbol}胜率${signal.confidence}%低于${strategy?.name}要求。切换到激进型策略可执行`,
+          variant: "destructive"
+        });
         return;
       }
 
@@ -236,6 +250,8 @@ export const AutoTrader = () => {
 
   // 执行自动交易
   const executeAutomaticTrade = useCallback(async (signal: SuperBrainSignal) => {
+    console.log('执行自动交易:', signal);
+    
     const tradeSize = (virtualAccount.balance * riskPerTrade) / 100;
     const positionSize = tradeSize / signal.entry;
     
@@ -259,43 +275,53 @@ export const AutoTrader = () => {
     setPositions(prev => [...prev, newPosition]);
     
     // 更新虚拟账户
-    setVirtualAccount(prev => ({
-      ...prev,
-      balance: prev.balance - tradeSize,
-      totalTrades: prev.totalTrades + 1,
-      activePositions: prev.activePositions + 1
-    }));
+    const updatedAccount = {
+      ...virtualAccount,
+      balance: virtualAccount.balance - tradeSize,
+      totalTrades: virtualAccount.totalTrades + 1,
+      activePositions: virtualAccount.activePositions + 1
+    };
+    setVirtualAccount(updatedAccount);
+    await updateSettings({ virtual_balance: updatedAccount.balance });
 
     // 添加交易历史
     const strategyName = strategies.find(s => s.type === selectedStrategy)?.name;
     setTradingHistory(prev => [
-      `🚀 ${strategyName} ${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} $${signal.entry.toFixed(2)} 胜率${signal.confidence}%`,
-      ...prev.slice(0, 19)
+      `✅ 自动执行：${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} $${signal.entry.toLocaleString()}`,
+      `📊 ${strategyName}策略 | 胜率${signal.confidence}% | 仓位${positionSize.toFixed(4)}`,
+      `🎯 止损$${signal.stopLoss.toLocaleString()} | 止盈$${signal.takeProfit.toLocaleString()}`,
+      ...prev.slice(0, 17)
     ]);
 
-    // 保存到数据库
-    try {
-      await supabase.from('positions').insert({
-        symbol: newPosition.symbol,
-        type: newPosition.type,
-        entry_price: newPosition.entryPrice,
-        current_price: newPosition.currentPrice,
-        position_size: newPosition.size,
-        stop_loss: newPosition.stopLoss,
-        take_profit: newPosition.takeProfit,
-        confidence: newPosition.confidence,
-        strategy: newPosition.strategy,
-        status: 'open'
-      });
-    } catch (error) {
-      console.error('Failed to save position to database:', error);
+    // 保存到数据库（如果用户已认证）
+    if (isAuthenticated) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from('virtual_trades').insert({
+            user_id: user.id,
+            symbol: newPosition.symbol,
+            action: signal.action,
+            entry_price: newPosition.entryPrice,
+            stop_loss: newPosition.stopLoss,
+            take_profit: newPosition.takeProfit,
+            position_size: newPosition.size,
+            confidence: newPosition.confidence,
+            strategy: newPosition.strategy,
+            reasoning: signal.reasoning,
+            status: 'open'
+          });
+        }
+      } catch (error) {
+        console.error('Failed to save trade to database:', error);
+      }
     }
 
     toast({
-      title: "自动交易执行成功",
-      description: `${strategyName}策略 ${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} ${positionSize.toFixed(4)}`,
+      title: "🚀 自动交易执行成功",
+      description: `${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} | 胜率${signal.confidence}%`,
     });
-  }, [virtualAccount.balance, riskPerTrade, selectedStrategy]);
+  }, [virtualAccount, riskPerTrade, selectedStrategy, strategies, updateSettings, isAuthenticated, toast]);
 
   // 启动/停止AI自动交易
   const toggleAutoTrader = async () => {
