@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useUserSettings } from "@/hooks/useUserSettings";
 import { VirtualAccount, Position, SuperBrainSignal } from "@/types/trading";
@@ -21,6 +21,16 @@ export const useVirtualAccount = () => {
 
   const [positions, setPositions] = useState<Position[]>([]);
 
+  // 监听设置变化，同步虚拟账户余额
+  useEffect(() => {
+    if (settings.virtual_balance !== undefined && settings.virtual_balance !== virtualAccount.balance) {
+      console.log('useVirtualAccount - 同步余额变化:', settings.virtual_balance);
+      setVirtualAccount(prev => ({
+        ...prev,
+        balance: settings.virtual_balance || TRADING_CONFIG.DEFAULT_BALANCE
+      }));
+    }
+  }, [settings.virtual_balance, virtualAccount.balance]);
   // 更新虚拟账户余额
   const updateBalance = useCallback(async (newBalance: number) => {
     if (newBalance < TRADING_CONFIG.MIN_BALANCE) {
@@ -35,11 +45,7 @@ export const useVirtualAccount = () => {
     const success = await updateSettings({ virtual_balance: newBalance });
     
     if (success) {
-      setVirtualAccount(prev => ({
-        ...prev,
-        balance: newBalance
-      }));
-      
+      // 不需要手动更新状态，useEffect会自动同步
       toast({
         title: "✅ 余额更新成功",
         description: `虚拟账户余额已设置为 ${newBalance.toLocaleString()} USDT`,
