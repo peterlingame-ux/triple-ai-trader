@@ -129,6 +129,34 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       const isLong = Math.random() > 0.5;
       const confidence = Math.floor(Math.random() * 8) + 92; // 92-99%胜率
       
+      // 计算详细交易参数
+      const stopLoss = Math.round(basePrice * (isLong ? 0.95 : 1.05));
+      const firstTakeProfit = Math.round(basePrice * (isLong ? 1.08 : 0.92));
+      const secondTakeProfit = Math.round(basePrice * (isLong ? 1.15 : 0.85));
+      
+      // 根据胜率计算建议仓位和安全系数
+      let positionRatio = 10; // 默认10%
+      let safetyFactor = 5;
+      let riskLevel: 'low' | 'medium' | 'high' = 'medium';
+      
+      if (confidence >= 95) {
+        positionRatio = 25; // 高胜率，建议25%
+        safetyFactor = 9;
+        riskLevel = 'low';
+      } else if (confidence >= 90) {
+        positionRatio = 20; // 中高胜率，建议20%
+        safetyFactor = 8;
+        riskLevel = 'low';
+      } else if (confidence >= 85) {
+        positionRatio = 15; // 中等胜率，建议15%
+        safetyFactor = 7;
+        riskLevel = 'medium';
+      } else {
+        positionRatio = 8; // 较低胜率，建议8%
+        safetyFactor = 5;
+        riskLevel = 'high';
+      }
+      
       return {
         id: Date.now().toString(),
         symbol: randomSymbol,
@@ -145,10 +173,16 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         timestamp: new Date(),
         tradingDetails: {
           entry: Math.round(basePrice),
-          stopLoss: Math.round(basePrice * (isLong ? 0.95 : 1.05)),
+          stopLoss: stopLoss,
           takeProfit: Math.round(basePrice * (isLong ? 1.12 : 0.88)),
-          position: '中仓',
-          reasoning: `最强大脑6AI模型综合分析：价格图表、技术指标、新闻情绪、市场情绪、成交量、宏观环境全部指向${isLong ? '多头' : '空头'}机会，高胜率交易信号确认。`
+          position: confidence >= 95 ? '重仓' : confidence >= 90 ? '中仓' : '轻仓',
+          reasoning: `最强大脑6AI模型综合分析：价格图表、技术指标、新闻情绪、市场情绪、成交量、宏观环境全部指向${isLong ? '多头' : '空头'}机会，高胜率交易信号确认。`,
+          firstTakeProfit: firstTakeProfit,
+          secondTakeProfit: secondTakeProfit,
+          positionRatio: positionRatio,
+          stopLossRequired: confidence < 90, // 胜率低于90%建议必须止损
+          safetyFactor: safetyFactor,
+          riskLevel: riskLevel,
         }
       } as OpportunityAlert;
     }
@@ -521,24 +555,77 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                 
                 {/* 交易详情 */}
                 {currentAlert.tradingDetails && (
-                  <div className="p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded border border-yellow-500/20">
-                    <div className="text-yellow-400 font-medium mb-2">📋 具体交易建议</div>
+                  <div className="p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-lg border border-yellow-500/20 space-y-4">
+                    <div className="text-yellow-400 font-medium mb-3">📋 具体交易建议</div>
+                    
+                    {/* 基础交易信息 */}
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div className="flex justify-between">
                         <span className="text-slate-400">入场价格:</span>
-                        <span className="text-green-400">${currentAlert.tradingDetails.entry}</span>
+                        <span className="text-green-400 font-mono">${currentAlert.tradingDetails.entry.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-400">止损价格:</span>
-                        <span className="text-red-400">${currentAlert.tradingDetails.stopLoss}</span>
+                        <span className="text-red-400 font-mono">${currentAlert.tradingDetails.stopLoss.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">止盈价格:</span>
-                        <span className="text-green-400">${currentAlert.tradingDetails.takeProfit}</span>
+                        <span className="text-slate-400">第一止盈:</span>
+                        <span className="text-green-400 font-mono">${currentAlert.tradingDetails.firstTakeProfit?.toLocaleString() || '--'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">建议仓位:</span>
-                        <span className="text-yellow-400">{currentAlert.tradingDetails.position}</span>
+                        <span className="text-slate-400">第二止盈:</span>
+                        <span className="text-green-400 font-mono">${currentAlert.tradingDetails.secondTakeProfit?.toLocaleString() || '--'}</span>
+                      </div>
+                    </div>
+
+                    {/* 仓位管理信息 */}
+                    <div className="border-t border-yellow-500/20 pt-3">
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">建议仓位:</span>
+                          <span className="text-yellow-400 font-medium">{currentAlert.tradingDetails.positionRatio || 10}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">安全系数:</span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-white font-mono">{currentAlert.tradingDetails.safetyFactor || 5}/10</span>
+                            <div className="flex">
+                              {[...Array(10)].map((_, i) => (
+                                <div 
+                                  key={i} 
+                                  className={`w-1 h-2 ${i < (currentAlert.tradingDetails?.safetyFactor || 5) ? 'bg-green-400' : 'bg-slate-600'} mr-0.5`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">必须止损:</span>
+                          <div className="flex items-center gap-1">
+                            {currentAlert.tradingDetails.stopLossRequired ? (
+                              <>
+                                <AlertTriangle className="w-3 h-3 text-red-400" />
+                                <span className="text-red-400 text-xs font-medium">是</span>
+                              </>
+                            ) : (
+                              <span className="text-green-400 text-xs font-medium">否</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">风险等级:</span>
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              currentAlert.tradingDetails.riskLevel === 'low' ? 'text-green-400 border-green-400' :
+                              currentAlert.tradingDetails.riskLevel === 'medium' ? 'text-yellow-400 border-yellow-400' :
+                              'text-red-400 border-red-400'
+                            }`}
+                          >
+                            {currentAlert.tradingDetails.riskLevel === 'low' ? '低风险' : 
+                             currentAlert.tradingDetails.riskLevel === 'medium' ? '中风险' : '高风险'}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
                   </div>

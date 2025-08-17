@@ -84,6 +84,12 @@ export interface OpportunityAlert {
     takeProfit: number;
     position: string;
     reasoning: string;
+    firstTakeProfit?: number;     // 第一止盈点
+    secondTakeProfit?: number;    // 第二止盈点
+    positionRatio?: number;       // 建议仓位比例(%)
+    stopLossRequired?: boolean;   // 是否建议必须止损
+    safetyFactor?: number;        // 安全系数(1-10)
+    riskLevel?: 'low' | 'medium' | 'high'; // 风险等级
   };
 }
 
