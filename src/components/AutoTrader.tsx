@@ -85,59 +85,95 @@ export const AutoTrader = () => {
 
   // 统一的信号处理函数
   const handleSignal = useCallback((signal: SuperBrainSignal) => {
-    console.log('AutoTrader - 收到信号处理:', signal);
+    console.log('AutoTrader - 开始处理信号:', signal);
     
-    // 获取当前最新状态
-    const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
-    const currentIsEnabled = currentSettings.auto_trading_enabled || false;
-    const currentStrategy = currentSettings.trading_strategy || 'conservative';
-    
-    if (!currentIsEnabled) {
-      console.log('AI自动交易未启动，忽略信号:', signal);
-      return;
-    }
-
-    // 验证信号有效性
-    if (!validateSignal(signal)) {
-      console.log('信号验证失败:', signal);
-      return;
-    }
-    
-    const strategy = TRADING_STRATEGIES.find(s => s.type === currentStrategy);
-    
-    // 记录收到信号
-    const receivedHistory = formatTradingHistory('signal_received', signal.symbol, signal.action, {
-      confidence: signal.confidence
-    });
-    setTradingHistory(prev => [...receivedHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - receivedHistory.length)]);
-
-    // 检查策略要求
-    if (!strategy || signal.confidence < strategy.minConfidence) {
-      const ignoredHistory = formatTradingHistory('signal_ignored', signal.symbol, signal.action, {
-        confidence: signal.confidence,
-        strategyName: strategy?.name,
-        minConfidence: strategy?.minConfidence
-      });
-      setTradingHistory(prev => [...ignoredHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - ignoredHistory.length)]);
+    try {
+      // 获取当前最新状态
+      const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+      const currentIsEnabled = currentSettings.auto_trading_enabled || false;
+      const currentStrategy = currentSettings.trading_strategy || 'conservative';
       
+      console.log('AutoTrader - 当前设置:', { currentIsEnabled, currentStrategy });
+      
+      if (!currentIsEnabled) {
+        console.log('AI自动交易未启动，忽略信号:', signal);
+        toast({
+          title: "信号已忽略",
+          description: "AI自动交易未启动",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // 验证信号有效性
+      if (!validateSignal(signal)) {
+        console.log('信号验证失败:', signal);
+        toast({
+          title: "信号验证失败",
+          description: "信号格式不正确",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      const strategy = TRADING_STRATEGIES.find(s => s.type === currentStrategy);
+      console.log('AutoTrader - 当前策略:', strategy);
+      
+      // 记录收到信号
+      const receivedHistory = formatTradingHistory('signal_received', signal.symbol, signal.action, {
+        confidence: signal.confidence
+      });
+      setTradingHistory(prev => [...receivedHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - receivedHistory.length)]);
+
+      // 检查策略要求
+      if (!strategy || signal.confidence < strategy.minConfidence) {
+        console.log('信号胜率不足，被忽略:', {
+          confidence: signal.confidence,
+          required: strategy?.minConfidence
+        });
+        
+        const ignoredHistory = formatTradingHistory('signal_ignored', signal.symbol, signal.action, {
+          confidence: signal.confidence,
+          strategyName: strategy?.name,
+          minConfidence: strategy?.minConfidence
+        });
+        setTradingHistory(prev => [...ignoredHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - ignoredHistory.length)]);
+        
+        toast({
+          title: "信号被忽略",
+          description: `${signal.symbol}胜率${signal.confidence}%低于${strategy?.name}要求(${strategy?.minConfidence}%)`,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // 检查重复持仓
+      if (positions.some(p => p.symbol === signal.symbol)) {
+        console.log('检测到重复持仓，忽略信号:', signal.symbol);
+        const duplicateHistory = formatTradingHistory('duplicate_position', signal.symbol, signal.action, {});
+        setTradingHistory(prev => [...duplicateHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - duplicateHistory.length)]);
+        
+        toast({
+          title: "重复持仓",
+          description: `${signal.symbol}已有持仓，忽略新信号`,
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // 执行交易
+      console.log('AutoTrader - 准备执行交易:', signal);
+      executeTradeWithSignal(signal, currentStrategy);
+      
+    } catch (error) {
+      console.error('AutoTrader - 信号处理错误:', error);
       toast({
-        title: "信号被忽略",
-        description: `${signal.symbol}胜率${signal.confidence}%低于${strategy?.name}要求。切换到激进型策略可执行`,
+        title: "信号处理失败",
+        description: "处理交易信号时发生错误",
         variant: "destructive"
       });
-      return;
     }
-
-    // 检查重复持仓
-    if (positions.some(p => p.symbol === signal.symbol)) {
-      const duplicateHistory = formatTradingHistory('duplicate_position', signal.symbol, signal.action, {});
-      setTradingHistory(prev => [...duplicateHistory, ...prev.slice(0, TRADING_CONFIG.MAX_HISTORY_ITEMS - duplicateHistory.length)]);
-      return;
-    }
-
-    // 执行交易
-    executeTradeWithSignal(signal, currentStrategy);
-  }, [positions, executeTrade, toast]);
+  }, [positions, executeTrade, toast, setTradingHistory]);
 
   // 执行交易并记录历史
   const executeTradeWithSignal = useCallback(async (signal: SuperBrainSignal, strategy: 'conservative' | 'aggressive') => {
@@ -173,16 +209,43 @@ export const AutoTrader = () => {
     
     const handleSuperBrainSignal = (event: CustomEvent) => {
       console.log('AutoTrader - 收到superBrainSignal事件:', event.detail);
-      handleSignal(event.detail as SuperBrainSignal);
+      
+      // 确保事件详情有效
+      if (!event.detail) {
+        console.log('AutoTrader - 信号详情为空，忽略');
+        return;
+      }
+      
+      // 立即处理信号，不依赖状态
+      const signal = event.detail as SuperBrainSignal;
+      console.log('AutoTrader - 开始处理信号:', signal);
+      
+      // 获取最新的设置状态
+      const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
+      const currentIsEnabled = currentSettings.auto_trading_enabled || false;
+      
+      console.log('AutoTrader - 当前自动交易状态:', currentIsEnabled);
+      
+      if (!currentIsEnabled) {
+        console.log('AI自动交易未启动，忽略信号:', signal);
+        return;
+      }
+      
+      // 调用处理函数
+      handleSignal(signal);
     };
 
+    // 立即设置监听器
     window.addEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
+    
+    // 检查是否有待处理的信号
+    console.log('AutoTrader - 监听器已设置，等待信号...');
     
     return () => {
       console.log('AutoTrader - 清理superBrainSignal事件监听器');
       window.removeEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
     };
-  }, []); // 空依赖，确保监听器稳定
+  }, [handleSignal]); // 依赖handleSignal确保逻辑更新
 
   // 实时信号检查
   useEffect(() => {
