@@ -4,15 +4,19 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   ArrowUp, ArrowDown, Activity, Power, PowerOff, 
-  Calendar, BarChart3, Settings, Zap, Brain 
+  Calendar, BarChart3, Settings, Zap, Brain, CalendarDays
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
 import { CryptoData, NewsArticle } from "@/types/api";
 import { useWalletData } from "@/hooks/useWalletData";
 import { useTimeBasedStats } from "@/hooks/useTimeBasedStats";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface TradingExchangePanelProps {
   cryptoData?: CryptoData[];
@@ -31,6 +35,11 @@ export const TradingExchangePanel = ({
   const { getPortfolioData } = useWalletData();
   const { stats, timeRanges, selectedTimeRange, setSelectedTimeRange, isLoading } = useTimeBasedStats();
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [customDateRange, setCustomDateRange] = useState<{from: Date | undefined, to: Date | undefined}>({
+    from: undefined,
+    to: undefined
+  });
+  const [isCustomRange, setIsCustomRange] = useState(false);
   
   // Get portfolio data
   const portfolioData = getPortfolioData();
@@ -207,18 +216,85 @@ export const TradingExchangePanel = ({
                 <Calendar className="w-4 h-4 text-slate-400" />
                 <span className="text-xs text-slate-400 uppercase tracking-wide">数据统计时间段:</span>
               </div>
-              <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
-                <SelectTrigger className="w-24 h-7 bg-slate-700/50 border-slate-600 text-slate-300 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-600">
-                  {timeRanges.map((range) => (
-                    <SelectItem key={range.value} value={range.value} className="text-slate-300 focus:bg-slate-700 text-xs">
-                      {range.label}
+              
+              <div className="flex items-center gap-2">
+                {/* Preset Time Range Selector */}
+                <Select 
+                  value={isCustomRange ? "custom" : selectedTimeRange} 
+                  onValueChange={(value) => {
+                    if (value === "custom") {
+                      setIsCustomRange(true);
+                    } else {
+                      setIsCustomRange(false);
+                      setSelectedTimeRange(value);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-24 h-7 bg-slate-700/50 border-slate-600 text-slate-300 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-800 border-slate-600 z-50">
+                    {timeRanges.map((range) => (
+                      <SelectItem key={range.value} value={range.value} className="text-slate-300 focus:bg-slate-700 text-xs">
+                        {range.label}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="custom" className="text-slate-300 focus:bg-slate-700 text-xs">
+                      自定义
                     </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  </SelectContent>
+                </Select>
+
+                {/* Custom Date Range Picker */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className={cn(
+                        "h-7 bg-slate-700/50 border-slate-600 text-slate-300 text-xs hover:bg-slate-600/50",
+                        !customDateRange.from && !customDateRange.to && "text-slate-400"
+                      )}
+                    >
+                      <CalendarDays className="w-3 h-3 mr-1" />
+                      {customDateRange.from ? (
+                        customDateRange.to ? (
+                          <>
+                            {format(customDateRange.from, "MM/dd")} -{" "}
+                            {format(customDateRange.to, "MM/dd")}
+                          </>
+                        ) : (
+                          format(customDateRange.from, "MM/dd")
+                        )
+                      ) : (
+                        "选择日期"
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-600 z-50" align="end">
+                    <CalendarComponent
+                      initialFocus
+                      mode="range"
+                      defaultMonth={customDateRange.from}
+                      selected={{
+                        from: customDateRange.from,
+                        to: customDateRange.to
+                      }}
+                      onSelect={(range) => {
+                        setCustomDateRange({
+                          from: range?.from,
+                          to: range?.to
+                        });
+                        if (range?.from && range?.to) {
+                          setIsCustomRange(true);
+                        }
+                      }}
+                      numberOfMonths={2}
+                      className={cn("p-3 pointer-events-auto bg-slate-800 text-slate-300")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
 
             {/* Stats Grid */}
