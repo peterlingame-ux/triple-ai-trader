@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon, BarChart3, Calendar, TrendingUp } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { AutoTrader } from "./AutoTrader";
+import { SimpleTradingInterface } from "./SimpleTradingInterface";
 import { CryptoData, NewsArticle } from "@/types/api";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { useWalletData } from "@/hooks/useWalletData";
@@ -87,7 +87,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
   if (activeSection === 'autotrader') {
     return (
       <div className="space-y-4">
-        <AutoTrader />
+        <SimpleTradingInterface />
       </div>
     );
   }
