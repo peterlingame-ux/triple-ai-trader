@@ -152,7 +152,6 @@ export const GlobalAutoTrader = () => {
           : 'bg-slate-600 hover:bg-slate-700'
         } text-white`}
       >
-        <Brain className="w-4 h-4 mr-2" />
         {isAutoTradingEnabled ? 'AI自动交易中' : 'AI自动交易关闭'}
       </Button>
     </div>
@@ -170,7 +169,6 @@ export const GlobalAutoTrader = () => {
             : 'bg-slate-600 hover:bg-slate-700'
           } text-white`}
         >
-          <Brain className="w-4 h-4 mr-2" />
           {isAutoTradingEnabled ? 'AI自动交易中' : 'AI自动交易关闭'}
         </Button>
       </div>
