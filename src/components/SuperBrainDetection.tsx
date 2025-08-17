@@ -164,7 +164,122 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   }, []);
 
   return (
-    <>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Brain className="w-8 h-8 text-yellow-400" />
+          <div>
+            <h2 className="text-2xl font-bold text-white">最强大脑检测</h2>
+            <p className="text-muted-foreground">6AI模型综合分析，90%+胜率机会检测</p>
+          </div>
+        </div>
+        <Badge variant={isMonitoring ? "default" : "secondary"} className="px-4 py-2">
+          {isMonitoring ? "运行中" : "已停止"}
+        </Badge>
+      </div>
+
+      {/* Control Panel */}
+      <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-lg p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <Zap className={`w-6 h-6 ${isMonitoring ? 'text-yellow-400' : 'text-gray-400'}`} />
+            <div>
+              <h3 className="text-lg font-semibold text-white">智能监控系统</h3>
+              <p className="text-sm text-muted-foreground">
+                实时分析6大维度：价格、技术、新闻、情绪、成交量、宏观
+              </p>
+            </div>
+          </div>
+          <Button
+            onClick={toggleMonitoring}
+            variant={isMonitoring ? "destructive" : "default"}
+            className="px-6 py-3"
+          >
+            {isMonitoring ? "停止监控" : "开始监控"}
+          </Button>
+        </div>
+
+        {/* Status Indicators */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="bg-slate-800/30 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-green-400" />
+              <span className="text-sm font-medium text-white">分析精度</span>
+            </div>
+            <div className="text-2xl font-bold text-green-400">90%+</div>
+          </div>
+          
+          <div className="bg-slate-800/30 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Target className="w-5 h-5 text-blue-400" />
+              <span className="text-sm font-medium text-white">检测频率</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-400">60秒</div>
+          </div>
+          
+          <div className="bg-slate-800/30 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Brain className="w-5 h-5 text-purple-400" />
+              <span className="text-sm font-medium text-white">AI模型</span>
+            </div>
+            <div className="text-2xl font-bold text-purple-400">6层</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Analysis Dimensions */}
+      <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">分析维度</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg">
+              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+              <span className="text-white">📊 价格趋势分析</span>
+              <Badge variant="outline" className="ml-auto">实时</Badge>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg">
+              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+              <span className="text-white">🎯 技术指标分析</span>
+              <Badge variant="outline" className="ml-auto">多维度</Badge>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+              <span className="text-white">📰 新闻情绪分析</span>
+              <Badge variant="outline" className="ml-auto">NLP</Badge>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg">
+              <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+              <span className="text-white">💭 市场情绪分析</span>
+              <Badge variant="outline" className="ml-auto">深度学习</Badge>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg">
+              <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
+              <span className="text-white">📈 成交量分析</span>
+              <Badge variant="outline" className="ml-auto">大数据</Badge>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-slate-800/30 rounded-lg">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span className="text-white">🌍 宏观环境分析</span>
+              <Badge variant="outline" className="ml-auto">全球</Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Warning */}
+      <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-yellow-400">
+          <AlertTriangle className="w-5 h-5" />
+          <span className="font-medium">风险提示</span>
+        </div>
+        <p className="text-sm text-yellow-300 mt-2">
+          最强大脑检测仅提供分析参考，不构成投资建议。所有投资决策请基于您自己的判断，投资有风险，入市需谨慎。
+        </p>
+      </div>
+
       {/* 超级大脑检测高胜率机会弹窗 */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
         <DialogContent className="sm:max-w-[600px] bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 border-slate-700 text-white">
@@ -313,6 +428,6 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           )}
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
