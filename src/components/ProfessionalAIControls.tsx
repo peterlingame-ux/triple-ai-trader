@@ -87,6 +87,14 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
   if (activeSection === 'autotrader') {
     return (
       <div className="space-y-4">
+        <Button 
+          variant="outline" 
+          onClick={() => setActiveSection(null)}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          返回{t('ai.control_center')}
+        </Button>
         <AutoTrader />
       </div>
     );
