@@ -379,7 +379,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               {currentAlert.tradingDetails && (
                 <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-4">
                   <h4 className="font-medium text-white mb-3">交易参数</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm mb-4">
                     <div>
                       <div className="text-slate-400">入场价格</div>
                       <div className="text-white font-medium">${currentAlert.tradingDetails.entry.toLocaleString()}</div>
@@ -411,6 +411,71 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       <div className="text-purple-400 font-medium">{currentAlert.tradingDetails.leverage}</div>
                     </div>
                   </div>
+                  
+                  {/* 新增详细交易参数 */}
+                  <div className="border-t border-slate-600 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <div className="bg-slate-700/50 rounded-lg p-3">
+                        <div className="text-slate-400 text-xs mb-1">入场价格区间</div>
+                        <div className="text-white font-medium">
+                          ${(currentAlert.tradingDetails.entry * 0.998).toFixed(0)} - ${(currentAlert.tradingDetails.entry * 1.002).toFixed(0)}
+                        </div>
+                        <div className="text-slate-500 text-xs">±0.2% 范围内</div>
+                      </div>
+                      
+                      <div className="bg-slate-700/50 rounded-lg p-3">
+                        <div className="text-slate-400 text-xs mb-1">建议仓位%</div>
+                        <div className="text-blue-400 font-medium text-lg">
+                          {currentAlert.tradingDetails.positionRatio}%
+                        </div>
+                        <div className="text-slate-500 text-xs">总资金占比</div>
+                      </div>
+                      
+                      <div className="bg-slate-700/50 rounded-lg p-3">
+                        <div className="text-slate-400 text-xs mb-1">AI分析胜率</div>
+                        <div className="text-yellow-400 font-bold text-lg">
+                          {currentAlert.confidence}%
+                        </div>
+                        <div className="text-slate-500 text-xs">六大API综合</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* 补仓区间信息 */}
+                  {currentAlert.tradingDetails.canAddPosition && currentAlert.tradingDetails.addPositionRange && (
+                    <div className="border-t border-slate-600 pt-4 mt-4">
+                      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          <div className="text-blue-400 font-medium text-sm">补仓机会</div>
+                        </div>
+                        <div className="text-white text-sm">
+                          补仓区间: ${currentAlert.tradingDetails.addPositionRange.min.toLocaleString()} - ${currentAlert.tradingDetails.addPositionRange.max.toLocaleString()}
+                        </div>
+                        <div className="text-slate-400 text-xs mt-1">
+                          {currentAlert.signal === 'buy' ? '价格回调3-6%时可考虑补仓' : '价格反弹3-6%时可考虑补仓'}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* 止损必要性提示 */}
+                  {currentAlert.tradingDetails.stopLossRequired && (
+                    <div className="border-t border-slate-600 pt-4 mt-4">
+                      <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                          <div className="text-red-400 font-medium text-sm">必须止损</div>
+                        </div>
+                        <div className="text-white text-sm">
+                          胜率低于90%，建议严格执行止损策略
+                        </div>
+                        <div className="text-slate-400 text-xs mt-1">
+                          安全系数: {currentAlert.tradingDetails.safetyFactor}/10
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
