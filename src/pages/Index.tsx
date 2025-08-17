@@ -1,7 +1,6 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
 import { GlobalAutoTrader } from "@/components/GlobalAutoTrader";
 import { IntelligentPositionManager } from "@/components/IntelligentPositionManager";
-import { AIFeatureStatus } from "@/components/AIFeatureStatus";
 import { TradingAnalytics } from "@/components/TradingAnalytics";
 import { DetectionHistory } from "@/components/DetectionHistory";
 import { useAuth } from "@/hooks/useAuth";
@@ -59,12 +58,9 @@ const Index = () => {
       </header>
       <TradingDashboard />
       <div className="container mx-auto px-4 py-8 space-y-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <IntelligentPositionManager />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
           <div className="lg:col-span-1">
-            <AIFeatureStatus />
+            <IntelligentPositionManager />
           </div>
         </div>
         <TradingAnalytics />
