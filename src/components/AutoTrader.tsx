@@ -216,8 +216,12 @@ export const AutoTrader = () => {
 
   // 监听最强大脑交易信号
   useEffect(() => {
+    console.log('AutoTrader - 设置事件监听器, isEnabled:', isEnabled, 'selectedStrategy:', selectedStrategy);
+    
     // 处理最强大脑信号
     const handleSuperBrainSignal = (event: CustomEvent) => {
+      console.log('AutoTrader - 收到事件，isEnabled:', isEnabled, 'event:', event.detail);
+      
       if (!isEnabled) {
         console.log('AI自动交易未启动，忽略信号:', event.detail);
         return;
@@ -307,6 +311,7 @@ export const AutoTrader = () => {
       }
     };
 
+    console.log('AutoTrader - 注册superBrainSignal事件监听器');
     window.addEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
     
     // 定期检查实时信号（仅当AI自动交易和最强大脑都启动时）
@@ -319,6 +324,7 @@ export const AutoTrader = () => {
     }
     
     return () => {
+      console.log('AutoTrader - 移除事件监听器');
       window.removeEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
       if (realTimeInterval) {
         clearInterval(realTimeInterval);
