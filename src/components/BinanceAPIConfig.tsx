@@ -122,28 +122,28 @@ export function BinanceAPIConfig() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* Binance Logo with Professional Styling */}
-              <div className={`
-                relative p-3 rounded-xl border transition-all duration-500
-                ${connectionStatus === 'success' 
-                  ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border-yellow-500/40 shadow-lg shadow-yellow-500/30' 
-                  : 'bg-gradient-to-br from-slate-700/30 to-slate-600/30 border-slate-600/50'
-                }
-              `}>
-                <BinanceExchangeLogo 
-                  size={48} 
-                  showGlow={connectionStatus === 'success'} 
-                  className="flex-shrink-0"
-                />
-                {connectionStatus === 'success' && (
-                  <>
-                    {/* Glow rings for success state */}
-                    <div className="absolute inset-0 rounded-xl bg-yellow-400/10 animate-pulse" />
-                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 blur-sm -z-10" />
-                    <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-yellow-500/10 to-amber-500/10 blur-md -z-20" />
-                  </>
-                )}
-              </div>
+               {/* Binance Logo with Professional Styling - 无边框融入背景 */}
+               <div className={`
+                 relative p-3 rounded-xl border-0 transition-all duration-500 bg-transparent
+                 ${connectionStatus === 'success' 
+                   ? 'shadow-lg shadow-yellow-500/20' 
+                   : ''
+                 }
+               `}>
+                 <BinanceExchangeLogo 
+                   size={48} 
+                   showGlow={connectionStatus === 'success'} 
+                   className="flex-shrink-0"
+                 />
+                 {connectionStatus === 'success' && (
+                   <>
+                     {/* 柔和发光效果，无边框 */}
+                     <div className="absolute inset-0 rounded-xl bg-yellow-400/5 animate-pulse" />
+                     <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-yellow-500/8 to-amber-500/8 blur-sm -z-10" />
+                     <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-yellow-500/4 to-amber-500/4 blur-md -z-20" />
+                   </>
+                 )}
+               </div>
               
               {/* Content */}
               <div className="space-y-2">
@@ -220,10 +220,10 @@ export function BinanceAPIConfig() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className={`
-                relative p-3 rounded-xl border transition-all duration-500
+                relative p-3 rounded-xl border-0 transition-all duration-500 bg-transparent
                 ${connectionStatus === 'success' 
-                  ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border-yellow-500/40' 
-                  : 'bg-gradient-to-br from-slate-700/30 to-slate-600/30 border-slate-600/50'
+                  ? 'shadow-lg shadow-yellow-500/20' 
+                  : ''
                 }
               `}>
                 <BinanceExchangeLogo 
@@ -233,8 +233,8 @@ export function BinanceAPIConfig() {
                 />
                 {connectionStatus === 'success' && (
                   <>
-                    <div className="absolute inset-0 rounded-xl bg-yellow-400/10 animate-pulse" />
-                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-yellow-500/20 to-amber-500/20 blur-sm -z-10" />
+                    <div className="absolute inset-0 rounded-xl bg-yellow-400/5 animate-pulse" />
+                    <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-yellow-500/8 to-amber-500/8 blur-sm -z-10" />
                   </>
                 )}
               </div>
