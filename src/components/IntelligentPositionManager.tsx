@@ -223,9 +223,63 @@ export const IntelligentPositionManager = () => {
     };
   }, [isAuthenticated, user]);
 
-  // 初始化数据
+  // 初始化数据和实时订阅
   useEffect(() => {
+    if (!isAuthenticated || !user) return;
+
     fetchPositions();
+
+    // 设置实时订阅
+    const channel = supabase
+      .channel('positions_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'positions',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('New position inserted:', payload);
+          const newPosition: Position = payload.new as Position;
+          setPositions(prev => [newPosition, ...prev]);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'positions',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('Position updated:', payload);
+          const updatedPosition: Position = payload.new as Position;
+          setPositions(prev => prev.map(p => 
+            p.id === updatedPosition.id ? updatedPosition : p
+          ));
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'positions',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('Position deleted:', payload);
+          setPositions(prev => prev.filter(p => p.id !== payload.old.id));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isAuthenticated, user]);
 
   // 定期更新持仓盈亏
