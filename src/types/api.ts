@@ -92,6 +92,11 @@ export interface OpportunityAlert {
     riskLevel?: 'low' | 'medium' | 'high'; // 风险等级
     leverage?: string;            // 建议杠杆倍数
     liquidationSafety?: number;   // 爆仓安全系数
+    canAddPosition?: boolean;     // 是否可以补仓
+    addPositionRange?: {          // 补仓价格区间
+      min: number;
+      max: number;
+    };
   };
 }
 

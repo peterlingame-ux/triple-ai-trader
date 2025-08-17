@@ -107,6 +107,11 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
             reasoning: data.reasoning,
             leverage: data.confidence >= 95 ? '20x' : data.confidence >= 90 ? '15x' : '10x',
             liquidationSafety: data.confidence >= 95 ? 5 : data.confidence >= 90 ? 4 : 3,
+            canAddPosition: data.confidence >= 85,
+            addPositionRange: {
+              min: Math.round(data.entry * (data.action === 'buy' ? 0.97 : 1.03)),
+              max: Math.round(data.entry * (data.action === 'buy' ? 0.94 : 1.06))
+            }
           }
         } as OpportunityAlert;
       }
@@ -187,6 +192,11 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           riskLevel: riskLevel,
           leverage: confidence >= 95 ? '20x' : confidence >= 90 ? '15x' : '10x',
           liquidationSafety: confidence >= 95 ? 5 : confidence >= 90 ? 4 : 3,
+          canAddPosition: confidence >= 85, // 胜率85%以上可以补仓
+          addPositionRange: {
+            min: Math.round(basePrice * (isLong ? 0.97 : 1.03)), // 做多时3%回调可补仓，做空时3%反弹可补仓  
+            max: Math.round(basePrice * (isLong ? 0.94 : 1.06))  // 做多时6%回调仍可补仓，做空时6%反弹仍可补仓
+          }
         }
       } as OpportunityAlert;
     }
@@ -633,7 +643,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                     </span>
                   </div>
                   
-                  <div className="flex justify-between items-center py-2">
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
                     <span className="text-sm text-slate-400">安全系数等级</span>
                     <span className={`text-sm font-medium ${
                       (currentAlert.tradingDetails.safetyFactor || 5) >= 8 ? 'text-emerald-400' : 
@@ -645,6 +655,25 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       }
                     </span>
                   </div>
+
+                  {/* 补仓建议 */}
+                  <div className="flex justify-between items-center py-2 border-b border-slate-800">
+                    <span className="text-sm text-slate-400">是否可以补仓</span>
+                    <span className={`text-sm font-medium ${
+                      currentAlert.tradingDetails.canAddPosition ? 'text-emerald-400' : 'text-red-400'
+                    }`}>
+                      {currentAlert.tradingDetails.canAddPosition ? '可以补仓' : '不建议补仓'}
+                    </span>
+                  </div>
+                  
+                  {currentAlert.tradingDetails.canAddPosition && currentAlert.tradingDetails.addPositionRange && (
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-sm text-slate-400">补仓价格区间</span>
+                      <span className="text-sm font-medium text-blue-400">
+                        ${currentAlert.tradingDetails.addPositionRange.min?.toLocaleString()} - ${currentAlert.tradingDetails.addPositionRange.max?.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 
