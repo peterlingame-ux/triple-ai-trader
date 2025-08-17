@@ -502,34 +502,102 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       <div><span className="text-purple-400">ai.technical_indicators:</span> 入场: ${alert.tradingDetails?.entry?.toLocaleString()} | 止损: ${alert.tradingDetails?.stopLoss?.toLocaleString()} | 止盈: ${alert.tradingDetails?.takeProfit?.toLocaleString()}</div>
                       <div><span className="text-green-400">综合分析:</span> 仓位: {alert.tradingDetails?.position} | 胜率: {alert.confidence}%</div>
                       
-                      {/* 新增交易详情显示 */}
+                      {/* 完整交易详情显示 - 与弹窗完全一致 */}
                       {alert.tradingDetails && (
-                        <div className="mt-4 p-3 bg-slate-700/30 rounded-lg">
-                          <div className="text-yellow-400 font-medium mb-2">📋 交易建议详情</div>
-                          <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div className="flex items-center gap-2">
-                              <Target className="w-3 h-3 text-green-400" />
-                              <span>入场: ${alert.tradingDetails.entry?.toLocaleString()}</span>
+                        <div className="mt-4 p-3 bg-slate-700/30 rounded-lg space-y-2">
+                          <div className="text-yellow-400 font-medium mb-3">📋 交易建议详情</div>
+                          
+                          {/* 交易基本信息 */}
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">本次交易类型</span>
+                              <span className="text-slate-100">永续合约</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <TrendingDown className="w-3 h-3 text-red-400" />
-                              <span>止损: ${alert.tradingDetails.stopLoss?.toLocaleString()}</span>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">交易方向</span>
+                              <span className={alert.signal === 'buy' ? 'text-emerald-400' : 'text-red-400'}>
+                                {alert.signal === 'buy' ? '做多' : '做空'}
+                              </span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <TrendingUp className="w-3 h-3 text-green-400" />
-                              <span>止盈: ${alert.tradingDetails.takeProfit?.toLocaleString()}</span>
+                            
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">建议杠杆倍数</span>
+                              <span className="text-blue-400">{alert.tradingDetails.leverage || '10x'}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <DollarSign className="w-3 h-3 text-yellow-400" />
-                              <span>仓位: {alert.tradingDetails.position}</span>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">建议仓位比例</span>
+                              <span className="text-blue-400">{alert.tradingDetails.positionRatio || 10}% 总仓位</span>
                             </div>
-                            {/* 补仓信息 */}
+                            
+                            <div className="flex justify-between col-span-2">
+                              <span className="text-slate-400">入场价格建议区间</span>
+                              <span className="text-slate-100">
+                                ${(alert.tradingDetails.entry * 0.998).toFixed(0)} - ${(alert.tradingDetails.entry * 1.002).toFixed(0)}
+                              </span>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">止损价位</span>
+                              <span className="text-red-400">${alert.tradingDetails.stopLoss?.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">第一止盈点</span>
+                              <span className="text-emerald-400">
+                                ${alert.tradingDetails.firstTakeProfit?.toLocaleString() || alert.tradingDetails.takeProfit?.toLocaleString()}
+                              </span>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">第二止盈点</span>
+                              <span className="text-emerald-400">
+                                ${alert.tradingDetails.secondTakeProfit?.toLocaleString() || (alert.tradingDetails.takeProfit * 1.05).toFixed(0)}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">交易胜率分析</span>
+                              <span className="text-emerald-400">{alert.confidence}%</span>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">止损点可否等待</span>
+                              <span className={alert.tradingDetails.stopLossRequired ? 'text-red-400' : 'text-yellow-400'}>
+                                {alert.tradingDetails.stopLossRequired ? '不可等待' : '可适当等待'}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">是否必须止损</span>
+                              <span className={alert.tradingDetails.stopLossRequired ? 'text-red-400' : 'text-emerald-400'}>
+                                {alert.tradingDetails.stopLossRequired ? '必须严格止损' : '可灵活处理'}
+                              </span>
+                            </div>
+                            
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">安全系数等级</span>
+                              <span className={
+                                (alert.tradingDetails.safetyFactor || 5) >= 8 ? 'text-emerald-400' : 
+                                (alert.tradingDetails.safetyFactor || 5) >= 6 ? 'text-yellow-400' : 'text-red-400'
+                              }>
+                                {alert.tradingDetails.safetyFactor || 5}/10 {
+                                  (alert.tradingDetails.safetyFactor || 5) >= 8 ? '(高安全)' : 
+                                  (alert.tradingDetails.safetyFactor || 5) >= 6 ? '(中等安全)' : '(注意风险)'
+                                }
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">是否可以补仓</span>
+                              <span className={alert.tradingDetails.canAddPosition ? 'text-emerald-400' : 'text-red-400'}>
+                                {alert.tradingDetails.canAddPosition ? '可以补仓' : '不建议补仓'}
+                              </span>
+                            </div>
+                            
+                            {/* 补仓价格区间 */}
                             {alert.tradingDetails.canAddPosition && alert.tradingDetails.addPositionRange && (
-                              <>
-                                <div className="flex items-center gap-2 col-span-2">
-                                  <span className="text-blue-400">补仓区间: ${alert.tradingDetails.addPositionRange.min?.toLocaleString()} - ${alert.tradingDetails.addPositionRange.max?.toLocaleString()}</span>
-                                </div>
-                              </>
+                              <div className="flex justify-between col-span-2">
+                                <span className="text-slate-400">补仓价格区间</span>
+                                <span className="text-blue-400">
+                                  ${alert.tradingDetails.addPositionRange.min?.toLocaleString()} - ${alert.tradingDetails.addPositionRange.max?.toLocaleString()}
+                                </span>
+                              </div>
                             )}
                           </div>
                         </div>
