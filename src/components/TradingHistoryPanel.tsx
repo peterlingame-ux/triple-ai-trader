@@ -3,13 +3,16 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   TrendingUp, TrendingDown, Clock, DollarSign, 
-  Filter, Search, ChevronLeft
+  Filter, Search, ChevronLeft, Eye
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { PositionDetailsCard } from "./PositionDetailsCard";
+import { Position as TradingPosition } from "@/types/trading";
 
 interface Position {
   id: string;
@@ -25,6 +28,18 @@ interface Position {
   closed_at?: string;
   confidence: number;
   leverage: number;
+  margin?: number;
+  maintenance_margin_rate?: number;
+  mark_price?: number;
+  liquidation_price?: number;
+  margin_mode?: string;
+  contract_type?: string;
+  take_profit?: number;
+  stop_loss?: number;
+  fees?: number;
+  funding_fee?: number;
+  // 数据库可能返回的其他字段
+  [key: string]: any;
 }
 
 interface TradingHistoryPanelProps {
@@ -46,9 +61,15 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
   const fetchPositions = async () => {
     try {
       setLoading(true);
+      
+      // 获取当前用户
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
       let query = supabase
         .from('positions')
         .select('*')
+        .eq('user_id', user.id)  // 添加用户过滤
         .order('opened_at', { ascending: false });
 
       // Apply date range filter
@@ -77,6 +98,36 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
     } finally {
       setLoading(false);
     }
+  };
+
+  // 转换数据库Position为Trading Position以供详情显示
+  const convertToTradingPosition = (dbPosition: Position): TradingPosition => {
+    return {
+      id: dbPosition.id,
+      symbol: dbPosition.symbol,
+      type: dbPosition.type as 'long' | 'short',
+      entryPrice: dbPosition.entry_price,
+      currentPrice: dbPosition.current_price || dbPosition.mark_price || 0,
+      size: dbPosition.position_size,
+      pnl: dbPosition.pnl,
+      pnlPercent: dbPosition.pnl_percent,
+      confidence: dbPosition.confidence,
+      strategy: 'conservative', // 默认策略，可以后续从数据库读取
+      openTime: new Date(dbPosition.opened_at),
+      stopLoss: dbPosition.stop_loss || 0,
+      takeProfit: dbPosition.take_profit || 0,
+      contractType: (dbPosition.contract_type as 'spot' | 'perpetual' | 'futures') || 'perpetual',
+      leverage: dbPosition.leverage,
+      positionAmount: dbPosition.position_size / dbPosition.entry_price,
+      margin: dbPosition.margin || 0,
+      maintenanceMarginRate: dbPosition.maintenance_margin_rate || 1.0,
+      markPrice: dbPosition.mark_price || dbPosition.current_price || 0,
+      liquidationPrice: dbPosition.liquidation_price || 0,
+      marginMode: (dbPosition.margin_mode as 'isolated' | 'cross') || 'cross',
+      unrealizedPnl: dbPosition.pnl,
+      fees: dbPosition.fees || 0,
+      fundingFee: dbPosition.funding_fee || 0,
+    };
   };
 
   const getTotalStats = () => {
@@ -218,10 +269,24 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
                         <div className={`text-xs ${getPnLColor(position.pnl_percent || 0)}`}>
                           ({(position.pnl_percent || 0) >= 0 ? '+' : ''}{(position.pnl_percent || 0).toFixed(2)}%)
                         </div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-6 px-2">
+                              <Eye className="h-3 w-3 mr-1" />
+                              详情
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl">
+                            <DialogHeader>
+                              <DialogTitle>持仓详情 - {position.symbol}</DialogTitle>
+                            </DialogHeader>
+                            <PositionDetailsCard position={convertToTradingPosition(position)} />
+                          </DialogContent>
+                        </Dialog>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-4 text-xs">
+                    <div className="grid grid-cols-4 gap-4 text-xs">
                       <div>
                         <span className="text-slate-400">开仓价:</span>
                         <span className="text-white ml-1 font-mono">
@@ -229,15 +294,15 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-400">当前价:</span>
+                        <span className="text-slate-400">标记价:</span>
                         <span className="text-white ml-1 font-mono">
-                          ${position.current_price?.toFixed(4)}
+                          ${(position.mark_price || position.current_price)?.toFixed(4)}
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-400">仓位:</span>
+                        <span className="text-slate-400">保证金:</span>
                         <span className="text-white ml-1 font-mono">
-                          {position.position_size?.toFixed(4)}
+                          ${(position.margin || 0).toFixed(2)}
                         </span>
                       </div>
                       <div>
@@ -247,15 +312,27 @@ export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => 
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-400">信心度:</span>
+                        <span className="text-slate-400">仓位量:</span>
                         <span className="text-white ml-1 font-mono">
-                          {position.confidence}%
+                          {position.position_size?.toFixed(4)}
                         </span>
                       </div>
                       <div>
-                        <span className="text-slate-400">开仓时间:</span>
+                        <span className="text-slate-400">强平价:</span>
+                        <span className="text-orange-400 ml-1 font-mono">
+                          ${(position.liquidation_price || 0).toFixed(2)}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400">维持保证金率:</span>
                         <span className="text-white ml-1 font-mono">
-                          {format(new Date(position.opened_at), 'MM/dd HH:mm')}
+                          {(position.maintenance_margin_rate || 0).toFixed(2)}%
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400">信心度:</span>
+                        <span className="text-white ml-1 font-mono">
+                          {position.confidence}%
                         </span>
                       </div>
                     </div>

@@ -31,6 +31,18 @@ export interface Position {
   openTime: Date;
   stopLoss: number;
   takeProfit: number;
+  // 新增交易参数
+  contractType: 'spot' | 'perpetual' | 'futures'; // 合约类型
+  leverage: number; // 杠杆倍数 (如 20x)
+  positionAmount: number; // 持仓量 (币的数量)
+  margin: number; // 保证金 (USDT)
+  maintenanceMarginRate: number; // 维持保证金率 (%)
+  markPrice: number; // 标记价格
+  liquidationPrice: number; // 预估强平价
+  marginMode: 'isolated' | 'cross'; // 仓位模式 (逐仓/全仓)
+  unrealizedPnl: number; // 未实现盈亏
+  fees: number; // 交易手续费
+  fundingFee: number; // 资金费率
 }
 
 export interface SuperBrainSignal {

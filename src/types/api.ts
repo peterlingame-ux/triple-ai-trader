@@ -121,6 +121,23 @@ export interface Position {
   pnl: number;
   pnlPercent: number;
   timestamp: Date;
+  // 新增交易参数
+  contractType: 'spot' | 'perpetual' | 'futures';
+  leverage: number;
+  positionAmount: number;
+  margin: number;
+  maintenanceMarginRate: number;
+  markPrice: number;
+  liquidationPrice: number;
+  marginMode: 'isolated' | 'cross';
+  unrealizedPnl: number;
+  fees: number;
+  fundingFee: number;
+  confidence: number;
+  strategy: 'conservative' | 'aggressive';
+  openTime: Date;
+  stopLoss: number;
+  takeProfit: number;
 }
 
 export interface TradingStats {

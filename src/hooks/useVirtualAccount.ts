@@ -4,6 +4,7 @@ import { useUserSettings } from "@/hooks/useUserSettings";
 import { VirtualAccount, Position, SuperBrainSignal } from "@/types/trading";
 import { TRADING_CONFIG } from "@/constants/trading";
 import { supabase } from "@/integrations/supabase/client";
+import { calculateLiquidationPrice } from "@/utils/tradingCalculations";
 
 // 统一的虚拟账户管理
 export const useVirtualAccount = () => {
@@ -78,7 +79,19 @@ export const useVirtualAccount = () => {
         strategy,
         openTime: new Date(),
         stopLoss: signal.stopLoss,
-        takeProfit: signal.takeProfit
+        takeProfit: signal.takeProfit,
+        // 新增交易参数 - 默认值
+        contractType: 'perpetual',
+        leverage: 20, // 默认20倍杠杆
+        positionAmount: positionSize / signal.entry, // 持仓量 (币的数量)
+        margin: tradeSize / 20, // 保证金 = 交易金额 / 杠杆
+        maintenanceMarginRate: 1.0, // 默认维持保证金率 1%
+        markPrice: signal.entry, // 标记价格初始等于入场价
+        liquidationPrice: calculateLiquidationPrice(signal.entry, signal.action === 'buy' ? 'long' : 'short', 20),
+        marginMode: 'cross', // 默认全仓模式
+        unrealizedPnl: 0,
+        fees: tradeSize * 0.001, // 默认0.1%手续费
+        fundingFee: 0, // 初始资金费率为0
       };
       console.log('🔥 创建新持仓:', newPosition);
 
