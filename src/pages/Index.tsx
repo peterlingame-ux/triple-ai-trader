@@ -3,6 +3,7 @@ import { GlobalAutoTrader } from "@/components/GlobalAutoTrader";
 import { IntelligentPositionManager } from "@/components/IntelligentPositionManager";
 import { AIFeatureStatus } from "@/components/AIFeatureStatus";
 import { TradingAnalytics } from "@/components/TradingAnalytics";
+import { DetectionHistory } from "@/components/DetectionHistory";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
@@ -33,6 +34,7 @@ const Index = () => {
             Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
+            <DetectionHistory />
             {isAuthenticated ? (
               <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
