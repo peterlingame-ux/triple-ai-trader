@@ -11,6 +11,7 @@ import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
 // import { AIOpportunityAlert } from "./AIOpportunityAlert"; // Temporarily disabled
 import { UserProfile } from "./UserProfile";
+import { ProfessionalTradingExchange } from "./ProfessionalTradingExchange";
 
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
@@ -19,7 +20,7 @@ import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 // Portfolio cards moved to AI Control Center
-import { BarChart3, Brain, RefreshCw } from "lucide-react";
+import { BarChart3, Brain, RefreshCw, Zap, ArrowUp } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
@@ -33,6 +34,7 @@ export const TradingDashboard = memo(() => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
   const [advisorStates, setAdvisorStates] = useState<Record<string, boolean>>({});
+  const [showTradingExchange, setShowTradingExchange] = useState(false);
 
   // Listen for AI Control Center open events - 优化事件监听
   const handleOpenAIControlCenter = useCallback(() => {
@@ -220,6 +222,32 @@ export const TradingDashboard = memo(() => {
           portfolioData={portfolioData}
         />
 
+        {/* AI Trading Exchange Button */}
+        <div className="mb-6">
+          <Card className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 border-slate-600 backdrop-blur-sm hover:from-slate-700/50 hover:to-slate-600/50 transition-all duration-300 cursor-pointer"
+                onClick={() => setShowTradingExchange(true)}>
+            <div className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <Zap className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">AI自动赚钱</h3>
+                    <p className="text-slate-400">智能自动交易系统</p>
+                  </div>
+                </div>
+                <Button 
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium px-8 py-3"
+                >
+                  进入交易
+                  <ArrowUp className="w-5 h-5 ml-2 rotate-45" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
         {/* AI Advisors Section - Three Column Grid */}
         <div className="mb-6">
           <AIAdvisorsGrid 
@@ -231,6 +259,12 @@ export const TradingDashboard = memo(() => {
 
         {/* Upcoming Advisors Section */}
         <UpcomingAdvisors />
+
+        {/* Professional Trading Exchange Modal */}
+        <ProfessionalTradingExchange 
+          open={showTradingExchange}
+          onClose={() => setShowTradingExchange(false)}
+        />
       </div>
       </div>
     </div>
