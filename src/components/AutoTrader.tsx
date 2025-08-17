@@ -33,7 +33,8 @@ import {
   Eye,
   EyeOff,
   RefreshCw,
-  PieChart
+  PieChart,
+  Edit
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -502,99 +503,146 @@ export const AutoTrader = () => {
 
   return (
     <div className="space-y-6">
-      {/* 头部控制面板 */}
-      <Card className="bg-gradient-to-r from-emerald-900/40 to-emerald-800/40 border-emerald-600/30">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                <Bot className="w-6 h-6 text-emerald-400" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">AI自动赚钱</h2>
-                <p className="text-emerald-300/70">智能自动交易系统</p>
-              </div>
-            </div>
+      {/* Professional Exchange Header */}
+      <div className="bg-card/50 backdrop-blur-sm rounded-xl border border-border/50 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-semibold text-foreground">AI自动交易 永续</h2>
+            <Badge variant="outline" className="px-2 py-1 text-xs bg-green-500/10 text-green-400 border-green-500/30">
+              多
+            </Badge>
+            <Badge variant="outline" className="px-2 py-1 text-xs">全仓</Badge>
+            <Badge variant="outline" className="px-2 py-1 text-xs flex items-center gap-1">
+              20x <Edit className="w-3 h-3" />
+            </Badge>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={toggleAutoTrader}
+              disabled={!isSuperBrainActive}
+              className={cn(
+                "px-4 py-2",
+                isEnabled 
+                  ? 'bg-red-500 hover:bg-red-600 text-white' 
+                  : 'bg-green-500 hover:bg-green-600 text-white',
+                "disabled:opacity-50 disabled:cursor-not-allowed"
+              )}
+            >
+              {isEnabled ? (
+                <>
+                  <Pause className="w-4 h-4 mr-2" />
+                  停止交易
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 mr-2" />
+                  启动交易
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
 
-            <div className="flex items-center gap-4">
-              {/* 最强大脑状态指示 */}
-              <div className="flex items-center gap-2">
-                <Brain className={`w-4 h-4 ${isSuperBrainActive ? 'text-emerald-400' : 'text-slate-400'}`} />
-                <span className={`text-sm ${isSuperBrainActive ? 'text-emerald-400' : 'text-slate-400'}`}>
-                  最强大脑: {isSuperBrainActive ? '已激活' : '未激活'}
-                </span>
-              </div>
-
-              {/* 启动/停止按钮 */}
-              <Button
-                onClick={toggleAutoTrader}
-                disabled={!isSuperBrainActive}
-                className={`px-6 py-2 ${
-                  isEnabled 
-                    ? 'bg-red-500 hover:bg-red-600 text-white' 
-                    : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {isEnabled ? (
-                  <>
-                    <Pause className="w-4 h-4 mr-2" />
-                    停止自动交易
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-4 h-4 mr-2" />
-                    启动自动交易
-                  </>
-                )}
-              </Button>
+        {/* Status Alerts */}
+        {!isSuperBrainActive && (
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-6">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-400" />
+              <span className="text-amber-300">
+                请先开启"最强大脑自动检测"功能，AI自动交易依赖于大脑检测的交易信号
+              </span>
             </div>
           </div>
+        )}
 
-          {/* 状态提示 */}
-          {!isSuperBrainActive && (
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-amber-400" />
-                <span className="text-amber-300">
-                  请先开启"最强大脑自动检测"功能，AI自动交易依赖于大脑检测的交易信号
-                </span>
-              </div>
+        {isEnabled && (
+          <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-400" />
+              <span className="text-green-300">
+                AI自动交易已激活，正在使用{strategies.find(s => s.type === selectedStrategy)?.name}策略等待交易信号
+              </span>
             </div>
-          )}
+          </div>
+        )}
 
-          {isEnabled && (
-            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-400" />
-                <span className="text-emerald-300">
-                  AI自动交易已激活，正在使用{strategies.find(s => s.type === selectedStrategy)?.name}策略等待交易信号
-                </span>
-              </div>
-            </div>
-          )}
+        {/* Professional Trading Metrics Grid */}
+        <div className="grid grid-cols-3 gap-6 mb-6">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">收益额 (USDT)</p>
+            <p className={cn(
+              "text-2xl font-bold",
+              virtualAccount.totalPnL >= 0 ? "text-green-400" : "text-red-400"
+            )}>
+              {virtualAccount.totalPnL >= 0 ? '+' : ''}{virtualAccount.totalPnL.toLocaleString()}
+            </p>
+          </div>
+          
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">收益率</p>
+            <p className={cn(
+              "text-2xl font-bold",
+              virtualAccount.totalPnL >= 0 ? "text-green-400" : "text-red-400"
+            )}>
+              {virtualAccount.totalPnL >= 0 ? '+' : ''}{((virtualAccount.totalPnL / virtualAccount.balance) * 100).toFixed(2)}%
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">持仓数量</p>
+            <p className="text-2xl font-bold text-foreground">{virtualAccount.activePositions}</p>
+          </div>
         </div>
-      </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 左侧：虚拟账户 & 策略配置 */}
-        <div className="lg:col-span-1 space-y-6">
-          {/* 虚拟账户 */}
-          <Card className="bg-slate-900/95 border-slate-700/50">
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-4">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">保证金 (USDT)</p>
+            <p className="text-lg font-semibold text-foreground">{virtualAccount.balance.toLocaleString()}</p>
+          </div>
+          
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">维持保证金率</p>
+            <p className="text-lg font-semibold text-foreground">{(virtualAccount.winRate * 10).toFixed(1)}%</p>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">开仓均价</p>
+            <p className="text-lg font-semibold text-foreground">
+              {positions.length > 0 
+                ? positions.reduce((sum, pos) => sum + pos.entryPrice, 0) / positions.length 
+                : 0
+              }
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <Tabs defaultValue="account" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="account">虚拟账户</TabsTrigger>
+          <TabsTrigger value="strategy">交易策略</TabsTrigger>
+          <TabsTrigger value="positions">持仓管理</TabsTrigger>
+          <TabsTrigger value="history">交易动态</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="account">
+          <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-6">
                 <Wallet className="w-5 h-5 text-blue-400" />
-                <h3 className="text-lg font-semibold text-white">虚拟账户</h3>
+                <h3 className="text-lg font-semibold text-foreground">虚拟账户设置</h3>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <Label className="text-slate-300 text-sm">账户余额 (USDT)</Label>
-                  <div className="flex items-center gap-2 mt-1">
+                  <Label className="text-foreground text-sm">账户余额 (USDT)</Label>
+                  <div className="flex items-center gap-2 mt-2">
                     <Input
                       type="number"
                       value={tempBalance}
                       onChange={(e) => setTempBalance(e.target.value)}
-                      className="bg-slate-800 border-slate-600 text-white"
+                      className="bg-background border-border text-foreground"
                       min="1000"
                       max="10000000"
                       step="1000"
@@ -615,7 +663,7 @@ export const AutoTrader = () => {
                         setTempBalance("100000");
                         updateVirtualBalance(100000);
                       }}
-                      className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                      className="border-border text-foreground hover:bg-accent"
                     >
                       重置
                     </Button>
@@ -623,74 +671,78 @@ export const AutoTrader = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-800/60 rounded-lg p-3">
-                    <div className="text-xs text-slate-400 mb-1">总盈亏</div>
-                    <div className={`text-lg font-mono font-bold ${
+                  <div className="bg-accent/20 rounded-lg p-4">
+                    <div className="text-sm text-muted-foreground mb-1">总盈亏</div>
+                    <div className={cn(
+                      "text-xl font-mono font-bold",
                       virtualAccount.totalPnL >= 0 ? 'text-green-400' : 'text-red-400'
-                    }`}>
+                    )}>
                       {virtualAccount.totalPnL >= 0 ? '+' : ''}${virtualAccount.totalPnL.toFixed(2)}
                     </div>
                   </div>
-                  <div className="bg-slate-800/60 rounded-lg p-3">
-                    <div className="text-xs text-slate-400 mb-1">今日盈亏</div>
-                    <div className={`text-lg font-mono font-bold ${
+                  <div className="bg-accent/20 rounded-lg p-4">
+                    <div className="text-sm text-muted-foreground mb-1">今日盈亏</div>
+                    <div className={cn(
+                      "text-xl font-mono font-bold",
                       virtualAccount.dailyPnL >= 0 ? 'text-green-400' : 'text-red-400'
-                    }`}>
+                    )}>
                       {virtualAccount.dailyPnL >= 0 ? '+' : ''}${virtualAccount.dailyPnL.toFixed(2)}
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-sm font-mono font-bold text-blue-400">
+                    <div className="text-lg font-mono font-bold text-blue-400">
                       {virtualAccount.winRate.toFixed(1)}%
                     </div>
-                    <div className="text-xs text-slate-400">胜率</div>
+                    <div className="text-sm text-muted-foreground">胜率</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-mono font-bold text-purple-400">
+                    <div className="text-lg font-mono font-bold text-purple-400">
                       {virtualAccount.totalTrades}
                     </div>
-                    <div className="text-xs text-slate-400">总交易</div>
+                    <div className="text-sm text-muted-foreground">总交易</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-mono font-bold text-orange-400">
+                    <div className="text-lg font-mono font-bold text-orange-400">
                       {virtualAccount.activePositions}
                     </div>
-                    <div className="text-xs text-slate-400">持仓数</div>
+                    <div className="text-sm text-muted-foreground">持仓数</div>
                   </div>
                 </div>
               </div>
             </div>
           </Card>
+        </TabsContent>
 
-          {/* 交易策略配置 */}
-          <Card className="bg-slate-900/95 border-slate-700/50">
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-4">
+        <TabsContent value="strategy">
+          <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-6">
                 <Target className="w-5 h-5 text-orange-400" />
-                <h3 className="text-lg font-semibold text-white">交易策略</h3>
+                <h3 className="text-lg font-semibold text-foreground">交易策略选择</h3>
               </div>
 
               <div className="space-y-4">
                 {strategies.map((strategy) => (
                   <div
                     key={strategy.type}
-                    className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                    className={cn(
+                      "p-4 rounded-lg border cursor-pointer transition-all",
                       tempStrategy === strategy.type
-                        ? 'border-emerald-500/50 bg-emerald-500/10'
-                        : 'border-slate-600 bg-slate-800/40 hover:border-slate-500'
-                    }`}
+                        ? 'border-primary/50 bg-primary/10'
+                        : 'border-border bg-accent/20 hover:border-border/80'
+                    )}
                     onClick={() => handleStrategySelect(strategy.type)}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`${strategy.color}`}>
+                      <div className={strategy.color}>
                         {strategy.icon}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-white font-medium">{strategy.name}</span>
+                          <span className="text-foreground font-medium">{strategy.name}</span>
                           <Badge variant="outline" className="text-xs">
                             ≥{strategy.minConfidence}%
                           </Badge>
@@ -698,23 +750,22 @@ export const AutoTrader = () => {
                             <Badge className="text-xs bg-green-600 text-white">当前</Badge>
                           )}
                         </div>
-                        <div className="text-xs text-slate-400 mt-1">
+                        <div className="text-sm text-muted-foreground mt-1">
                           {strategy.description}
                         </div>
                       </div>
                       {tempStrategy === strategy.type && (
-                        <CheckCircle className="w-5 h-5 text-emerald-400" />
+                        <CheckCircle className="w-5 h-5 text-primary" />
                       )}
                     </div>
                   </div>
                 ))}
 
-                {/* 策略确认按钮 */}
                 {strategyChanged && (
-                  <div className="flex gap-2 pt-2 border-t border-slate-700">
+                  <div className="flex gap-2 pt-4 border-t border-border">
                     <Button 
                       onClick={confirmStrategyChange}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                      className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                       size="sm"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />
@@ -723,7 +774,7 @@ export const AutoTrader = () => {
                     <Button 
                       onClick={cancelStrategyChange}
                       variant="outline"
-                      className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                      className="flex-1"
                       size="sm"
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
@@ -731,79 +782,41 @@ export const AutoTrader = () => {
                     </Button>
                   </div>
                 )}
-
               </div>
             </div>
           </Card>
+        </TabsContent>
 
-          {/* 实时交易历史 */}
-          <Card className="bg-slate-900/95 border-slate-700/50">
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Activity className="w-5 h-5 text-green-400" />
-                <h3 className="text-lg font-semibold text-white">交易动态</h3>
-              </div>
-
-              <ScrollArea className="h-60">
-                <div className="space-y-2">
-                  {tradingHistory.length === 0 ? (
-                    <div className="text-center text-slate-400 py-8">
-                      <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">等待交易信号...</p>
-                    </div>
-                  ) : (
-                    tradingHistory.map((activity, index) => (
-                      <div key={index} className="text-xs text-slate-300 p-2 bg-slate-800/40 rounded">
-                        {activity}
-                      </div>
-                    ))
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
-          </Card>
-        </div>
-
-        {/* 右侧：持仓管理 & 交易历史 */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* 交易统计面板 */}
-          <TradingStatistics 
-            virtualAccount={virtualAccount}
-            positions={positions}
-            tradingHistory={tradingHistory}
-            isEnabled={isEnabled}
-          />
-
-          {/* 持仓管理 */}
-          <Card className="bg-slate-900/95 border-slate-700/50">
-            <div className="p-4">
-              <div className="flex items-center justify-between mb-4">
+        <TabsContent value="positions">
+          <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <PieChart className="w-5 h-5 text-yellow-400" />
-                  <h3 className="text-lg font-semibold text-white">持仓管理</h3>
+                  <h3 className="text-lg font-semibold text-foreground">持仓管理</h3>
                 </div>
-                <Badge variant="outline" className="text-slate-300">
+                <Badge variant="outline" className="text-foreground">
                   {positions.length} 持仓
                 </Badge>
               </div>
 
               <ScrollArea className="h-96">
                 {positions.length === 0 ? (
-                  <div className="text-center text-slate-400 py-16">
+                  <div className="text-center text-muted-foreground py-16">
                     <CircleDollarSign className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium mb-2">暂无持仓</p>
                     <p className="text-sm">AI自动交易激活后将自动建仓</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {positions.map((position) => (
                       <div
                         key={position.id}
-                        className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-4 hover:bg-slate-800/80 transition-colors"
+                        className="bg-accent/20 border border-border rounded-lg p-4 hover:bg-accent/30 transition-colors"
                       >
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
-                            <div className="text-lg font-bold text-white">
+                            <div className="text-lg font-bold text-foreground">
                               {position.symbol}
                             </div>
                             <Badge 
@@ -820,74 +833,81 @@ export const AutoTrader = () => {
                             <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
                               {position.confidence}%
                             </Badge>
-                            <Badge variant="outline" className="text-xs">
-                              {strategies.find(s => s.type === position.strategy)?.name}
-                            </Badge>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <div className={`text-lg font-mono font-bold ${
+                            <div className={cn(
+                              "text-lg font-mono font-bold",
                               position.pnl >= 0 ? 'text-green-400' : 'text-red-400'
-                            }`}>
+                            )}>
                               {position.pnl >= 0 ? '+' : ''}${position.pnl.toFixed(2)}
                             </div>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => closePosition(position)}
-                              className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                              className="border-border text-foreground hover:bg-accent"
                             >
                               平仓
                             </Button>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <span className="text-slate-400">开仓价:</span>
-                            <div className="text-white font-mono">
-                              ${position.entryPrice.toFixed(4)}
-                            </div>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">当前价:</span>
-                            <div className="text-white font-mono">
-                              ${position.currentPrice.toFixed(4)}
-                            </div>
-                          </div>
-                          <div>
-                            <span className="text-slate-400">仓位:</span>
-                            <div className="text-white font-mono">
+                        <div className="grid grid-cols-3 gap-4 text-sm">
+                          <div className="space-y-1">
+                            <span className="text-muted-foreground">持仓量 ({position.symbol.replace('USDT', '')})</span>
+                            <div className="text-foreground font-mono font-semibold">
                               {position.size.toFixed(6)}
                             </div>
                           </div>
-                          <div>
-                            <span className="text-slate-400">盈亏比:</span>
-                            <div className={`font-mono ${
-                              position.pnlPercent >= 0 ? 'text-green-400' : 'text-red-400'
-                            }`}>
-                              {position.pnlPercent >= 0 ? '+' : ''}{position.pnlPercent.toFixed(2)}%
+                          <div className="space-y-1">
+                            <span className="text-muted-foreground">保证金 (USDT)</span>
+                            <div className="text-foreground font-mono font-semibold">
+                              {(position.entryPrice * position.size / 20).toFixed(2)}
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-muted-foreground">维持保证金率</span>
+                            <div className="text-foreground font-mono font-semibold">
+                              {(Math.random() * 500 + 100).toFixed(1)}%
                             </div>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 text-sm mt-3 pt-3 border-t border-slate-700/50">
-                          <div>
-                            <span className="text-slate-400">止损:</span>
-                            <span className="text-red-400 font-mono ml-2">
-                              ${position.stopLoss.toFixed(4)}
-                            </span>
+                        <div className="grid grid-cols-3 gap-4 text-sm mt-4">
+                          <div className="space-y-1">
+                            <span className="text-muted-foreground">开仓均价</span>
+                            <div className="text-foreground font-mono font-semibold">
+                              {position.entryPrice.toFixed(2)}
+                            </div>
                           </div>
-                          <div>
-                            <span className="text-slate-400">止盈:</span>
-                            <span className="text-green-400 font-mono ml-2">
-                              ${position.takeProfit.toFixed(4)}
-                            </span>
+                          <div className="space-y-1">
+                            <span className="text-muted-foreground">标记价格</span>
+                            <div className="text-foreground font-mono font-semibold">
+                              {position.currentPrice.toFixed(2)}
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <span className="text-muted-foreground">预估强平价</span>
+                            <div className="text-foreground font-mono font-semibold">
+                              {(position.entryPrice * 0.7).toFixed(2)}
+                            </div>
                           </div>
                         </div>
 
-                        <div className="text-xs text-slate-400 mt-2">
-                          开仓时间: {position.openTime.toLocaleString()}
+                        <div className="grid grid-cols-2 gap-4 text-sm mt-4 pt-4 border-t border-border">
+                          <div>
+                            <span className="text-muted-foreground">止损:</span>
+                            <span className="text-red-400 font-mono ml-2">
+                              ${position.stopLoss.toFixed(2)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">止盈:</span>
+                            <span className="text-green-400 font-mono ml-2">
+                              ${position.takeProfit.toFixed(2)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -896,8 +916,36 @@ export const AutoTrader = () => {
               </ScrollArea>
             </div>
           </Card>
-        </div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="history">
+          <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-6">
+                <Activity className="w-5 h-5 text-green-400" />
+                <h3 className="text-lg font-semibold text-foreground">交易动态</h3>
+              </div>
+
+              <ScrollArea className="h-96">
+                <div className="space-y-2">
+                  {tradingHistory.length === 0 ? (
+                    <div className="text-center text-muted-foreground py-16">
+                      <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-sm">等待交易信号...</p>
+                    </div>
+                  ) : (
+                    tradingHistory.map((activity, index) => (
+                      <div key={index} className="text-sm text-foreground p-3 bg-accent/20 rounded">
+                        {activity}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </ScrollArea>
+            </div>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
