@@ -167,6 +167,20 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         });
         window.dispatchEvent(globalEvent);
         
+        // 触发AI自动交易事件
+        const autoTradeEvent = new CustomEvent('superBrainTradingSignal', {
+          detail: {
+            symbol: alert.symbol,
+            signal: alert.signal,
+            confidence: alert.confidence,
+            price: alert.price,
+            tradingDetails: alert.tradingDetails,
+            analysis: alert.analysis,
+            timestamp: alert.timestamp
+          }
+        });
+        window.dispatchEvent(autoTradeEvent);
+        
         // Display system notification
         toast({
           title: t('ai.high_probability_opportunity'),

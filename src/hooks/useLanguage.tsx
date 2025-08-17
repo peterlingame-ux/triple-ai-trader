@@ -316,6 +316,8 @@ const translations = {
      'ai.supreme_brain_active': 'Supreme Brain Monitoring Active',
      'ai.auto_trader_active': 'AI Auto Trading Active',
      'ai.comprehensive_analysis': 'Comprehensive Analysis',
+     'ai.super_brain_connection': 'SuperBrain Connection',
+     'ai.auto_execute_trades': 'Auto Execute Trades Based on SuperBrain Signals',
 
       // AI opportunity detection translations - Enhanced
       'ai.brain_detection': 'Supreme Brain AI Detection',
@@ -779,6 +781,8 @@ const translations = {
       'ai.supreme_brain_active': '最强大脑监控已开启',
       'ai.auto_trader_active': 'AI自动赚钱已开启',
       'ai.comprehensive_analysis': '综合分析',
+      'ai.super_brain_connection': '最强大脑联动',
+      'ai.auto_execute_trades': '基于最强大脑信号自动执行交易',
     'wallet.connect': '连接钱包',
     'wallet.real': '真实钱包',
     'wallet.virtual': 'AI虚拟投资组合',

@@ -230,6 +230,68 @@ export const AutoTrader = () => {
     });
   }, [stats, positions, config.virtualBalance]);
 
+  // 监听最强大脑交易信号
+  useEffect(() => {
+    const handleSuperBrainSignal = async (event: CustomEvent) => {
+      // 只有当AI自动交易开启时才响应
+      if (!config.enabled) {
+        console.log('AutoTrader disabled, ignoring SuperBrain signal');
+        return;
+      }
+
+      const signalData = event.detail;
+      console.log('AutoTrader received SuperBrain signal:', signalData);
+
+      // 检查信号强度是否符合配置要求
+      const minConfidence = config.strategy === 'conservative' 
+        ? config.conservativeMinConfidence 
+        : config.aggressiveMinConfidence;
+
+      if (signalData.confidence < minConfidence) {
+        console.log(`Signal confidence ${signalData.confidence}% below threshold ${minConfidence}%`);
+        setTradingActivity(prev => [
+          `⚠️ 信号强度${signalData.confidence}%低于设定阈值${minConfidence}%，忽略交易`,
+          ...prev.slice(0, 19)
+        ]);
+        return;
+      }
+
+      // 检查是否已有该币种的持仓
+      const existingPosition = positions.find(p => 
+        p.symbol === signalData.symbol && p.status === 'open'
+      );
+
+      if (existingPosition) {
+        console.log(`Already have open position for ${signalData.symbol}`);
+        setTradingActivity(prev => [
+          `💰 ${signalData.symbol}已有持仓，跳过本次信号`,
+          ...prev.slice(0, 19)
+        ]);
+        return;
+      }
+
+      // 检查最大持仓数限制
+      const openPositions = positions.filter(p => p.status === 'open').length;
+      if (openPositions >= config.maxPositions) {
+        console.log(`Max positions reached: ${openPositions}/${config.maxPositions}`);
+        setTradingActivity(prev => [
+          `⚠️ 已达最大持仓数${config.maxPositions}，无法开新仓`,
+          ...prev.slice(0, 19)
+        ]);
+        return;
+      }
+
+      // 执行自动交易
+      await executeAutoTrade(signalData);
+    };
+
+    window.addEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
+    
+    return () => {
+      window.removeEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
+    };
+  }, [config, positions]);
+
   // Real-time sync of active trades count
   useEffect(() => {
     const activeTradesCount = positions.filter(p => p.status === 'open').length;
@@ -689,6 +751,115 @@ export const AutoTrader = () => {
     });
   };
 
+  // 执行自动交易的核心函数
+  const executeAutoTrade = async (signalData: any) => {
+    try {
+      const { symbol, signal, confidence, price, tradingDetails } = signalData;
+      
+      // 计算交易金额（基于风险百分比）
+      const riskAmount = (config.virtualBalance * config.riskPerTrade) / 100;
+      const entryPrice = tradingDetails?.entry || price;
+      const stopLoss = tradingDetails?.stopLoss || (entryPrice * (signal === 'buy' ? 0.95 : 1.05));
+      const takeProfit = tradingDetails?.takeProfit || (entryPrice * (signal === 'buy' ? 1.1 : 0.9));
+      
+      // 根据止损距离计算仓位大小
+      const stopDistance = Math.abs(entryPrice - stopLoss) / entryPrice;
+      const maxPositionSize = riskAmount / stopDistance;
+      const positionSize = Math.min(maxPositionSize, config.virtualBalance * 0.1); // 最大10%仓位
+      
+      // 创建新的交易信号
+      const newSignal: TradingSignal = {
+        id: `signal_${Date.now()}`,
+        symbol,
+        type: signal === 'buy' ? 'long' : 'short',
+        tradingType: config.tradingType,
+        confidence,
+        entry: entryPrice,
+        stopLoss,
+        takeProfit,
+        reasoning: `🧠 最强大脑AI分析：${tradingDetails?.reasoning || '综合6种AI模型分析结果'}`,
+        timestamp: new Date(),
+        status: 'executed',
+        strategy: config.strategy,
+        leverage: config.tradingType === 'futures' ? config.leverage : undefined,
+        aiAnalysis: {
+          technicalScore: confidence,
+          fundamentalScore: confidence,
+          marketSentiment: signal === 'buy' ? 'bullish' : 'bearish',
+          riskLevel: confidence > 85 ? 'low' : confidence > 70 ? 'medium' : 'high'
+        }
+      };
+
+      // 创建新的持仓
+      const newPosition: Position = {
+        id: `pos_${Date.now()}`,
+        symbol,
+        type: signal === 'buy' ? 'long' : 'short',
+        tradingType: config.tradingType,
+        entry: entryPrice,
+        size: positionSize,
+        currentPrice: entryPrice,
+        pnl: 0,
+        pnlPercent: 0,
+        openTime: new Date(),
+        status: 'open',
+        strategy: config.strategy,
+        stopLoss,
+        takeProfit,
+        highestProfit: 0,
+        maxDrawdown: 0,
+        leverage: config.tradingType === 'futures' ? config.leverage : undefined,
+        margin: config.tradingType === 'futures' ? positionSize / config.leverage : undefined,
+        liquidationPrice: config.tradingType === 'futures' 
+          ? (signal === 'buy' ? entryPrice * 0.8 : entryPrice * 1.2) 
+          : undefined
+      };
+
+      // 更新状态
+      setSignals(prev => [newSignal, ...prev.slice(0, 19)]);
+      setPositions(prev => [newPosition, ...prev]);
+      
+      // 更新虚拟余额
+      setConfig(prev => ({
+        ...prev,
+        virtualBalance: prev.virtualBalance - positionSize
+      }));
+
+      // 记录交易活动
+      const actionText = signal === 'buy' ? '买入' : '卖出';
+      setTradingActivity(prev => [
+        `🚀 基于最强大脑分析自动${actionText} ${symbol}`,
+        `💰 入场价格: $${entryPrice.toFixed(2)} | 仓位: ${(positionSize/1000).toFixed(1)}K`,
+        `🎯 止损: $${stopLoss.toFixed(2)} | 止盈: $${takeProfit.toFixed(2)}`,
+        `🧠 AI胜率: ${confidence}% | 策略: ${config.strategy}`,
+        ...prev.slice(0, 16)
+      ]);
+
+      // 显示成功通知
+      toast({
+        title: `🚀 AI自动交易执行成功`,
+        description: `基于最强大脑分析，自动${actionText} ${symbol}，胜率 ${confidence}%`,
+        duration: 8000,
+      });
+
+      console.log('Auto trade executed successfully:', newPosition);
+
+    } catch (error) {
+      console.error('Auto trade execution failed:', error);
+      
+      setTradingActivity(prev => [
+        `❌ 自动交易执行失败: ${error.message}`,
+        ...prev.slice(0, 19)
+      ]);
+
+      toast({
+        title: '自动交易失败',
+        description: '执行交易时发生错误，请检查配置',
+        duration: 5000,
+      });
+    }
+  };
+
   const closePosition = (positionId: string) => {
     const position = positions.find(p => p.id === positionId);
     if (!position) return;
@@ -815,7 +986,7 @@ export const AutoTrader = () => {
               )}
               <Badge variant="outline" className={`${config.enabled ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-red-500/20 text-red-400 border-red-500/50'}`}>
                 <div className={`w-2 h-2 rounded-full mr-2 ${config.enabled ? 'bg-emerald-400 animate-pulse' : 'bg-red-400'}`}></div>
-                {config.enabled ? '运行中' : '已停止'}
+                {config.enabled ? '运行中 (接收最强大脑信号)' : '已停止'}
               </Badge>
             </div>
           </DialogTitle>
@@ -845,7 +1016,29 @@ export const AutoTrader = () => {
                 </div>
               </div>
               
-              <div className="space-y-4">
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium text-white">🧠 最强大脑联动</h4>
+                      <Badge variant="outline" className={config.enabled ? "bg-blue-500/20 text-blue-400 border-blue-500/50" : "bg-gray-500/20 text-gray-400"}>
+                        {config.enabled ? "已启用" : "未启用"}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-slate-400 mb-3">
+                      当最强大脑检测到高胜率交易机会时，AI自动赚钱将根据信号自动执行交易
+                    </p>
+                    {config.enabled && (
+                      <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="text-xs text-blue-300 space-y-1">
+                          <div>• 监听最强大脑交易信号</div>
+                          <div>• 根据策略自动过滤信号强度</div>
+                          <div>• 自动执行符合条件的交易</div>
+                          <div>• 严格遵守仓位和风险管理</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-slate-300 text-sm mb-2 block">{t('trading.strategy')}</label>
