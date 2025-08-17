@@ -60,9 +60,14 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
 
   // 计算统计数据
   const calculateStats = () => {
-    const totalValue = virtualAccount.balance + positions.reduce((sum, pos) => sum + pos.pnl, 0);
-    const initialBalance = 100000; // 初始余额
-    const totalReturn = ((totalValue - initialBalance) / initialBalance) * 100;
+    // AI虚拟投资组合价值 = 账户余额 + 当前持仓的浮动盈亏
+    const currentPositionsPnL = positions.reduce((sum, pos) => sum + pos.pnl, 0);
+    const totalValue = virtualAccount.balance + currentPositionsPnL;
+    
+    // 使用虚拟账户的当前余额作为基准，而不是固定的100000
+    const baseBalance = virtualAccount.balance; // 当前账户余额作为投资组合基础价值
+    const totalReturn = virtualAccount.totalPnL !== 0 ? 
+      (virtualAccount.totalPnL / baseBalance) * 100 : 0;
     
     // 计算盈利交易数
     const profitableTrades = tradingHistory.filter(h => h.includes('✅')).length;
@@ -74,12 +79,13 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
       : 0;
 
     return {
-      totalValue,
+      totalValue: baseBalance, // 直接使用账户余额作为投资组合价值
       totalReturn,
       profitableTrades,
       totalExecutedTrades,
       avgConfidence,
-      activeSignals: positions.length
+      activeSignals: positions.length,
+      currentPositionsPnL
     };
   };
 
@@ -109,7 +115,13 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
             <div className="text-2xl font-bold text-white mb-1">
               ${stats.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            <div className="text-xs text-slate-400">总价值</div>
+            <div className="text-xs text-slate-400">
+              总价值 {stats.currentPositionsPnL !== 0 && (
+                <span className={`ml-1 ${stats.currentPositionsPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  ({stats.currentPositionsPnL >= 0 ? '+' : ''}${stats.currentPositionsPnL.toFixed(2)} 持仓浮盈)
+                </span>
+              )}
+            </div>
           </div>
         </Card>
 
