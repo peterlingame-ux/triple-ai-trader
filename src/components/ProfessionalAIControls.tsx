@@ -3,10 +3,12 @@ import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon } from "lucide-react";
+import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon, BarChart3 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
 import { CryptoData, NewsArticle } from "@/types/api";
+import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
+import { useWalletData } from "@/hooks/useWalletData";
 
 interface ProfessionalAIControlsProps {
   cryptoData?: CryptoData[];
@@ -17,7 +19,11 @@ interface ProfessionalAIControlsProps {
 
 export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenAIControlCenter, isSuperBrainMonitoring = false }: ProfessionalAIControlsProps) => {
   const { t } = useLanguage();
+  const { getPortfolioData } = useWalletData();
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  
+  // Get portfolio data for the cards
+  const portfolioData = getPortfolioData();
   
   // 从localStorage读取初始状态
   const [isMonitoring, setIsMonitoring] = useState(() => {
@@ -93,8 +99,18 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
 
   // 默认显示控制面板
   return (
-    <Card className="bg-gradient-to-r from-slate-900/95 via-blue-950/90 to-slate-900/95 border-border/50 backdrop-blur-xl">
-      <div className="p-6">
+    <div className="space-y-6">
+      {/* Portfolio Overview Section */}
+      <div>
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart3 className="w-5 h-5 text-foreground" />
+          <h2 className="text-xl font-bold text-foreground font-orbitron">{t('portfolio.overview')}</h2>
+        </div>
+        <OptimizedPortfolioCards portfolioData={portfolioData} />
+      </div>
+
+      <Card className="bg-gradient-to-r from-slate-900/95 via-blue-950/90 to-slate-900/95 border-border/50 backdrop-blur-xl">
+        <div className="p-6">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -184,5 +200,6 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
         </div>
       </div>
     </Card>
+    </div>
   );
 };
