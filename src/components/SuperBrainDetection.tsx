@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Brain, TrendingUp, TrendingDown, AlertTriangle, Play, Pause, Settings, CheckCircle, XCircle, Target, DollarSign } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoData, OpportunityAlert } from "@/types/api";
@@ -61,6 +62,8 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   });
   const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [currentAlert, setCurrentAlert] = useState<OpportunityAlert | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -164,8 +167,10 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           const newAlerts = [alert, ...prev.slice(0, 9)]; // 保持最多10条记录
           return newAlerts;
         });
+        setCurrentAlert(alert);
+        setShowAlert(true);
         
-        // 只触发全局弹窗事件，不显示本地弹窗
+        // 触发全局弹窗事件
         const globalEvent = new CustomEvent('superBrainOpportunity', {
           detail: alert
         });
@@ -185,12 +190,17 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         });
         window.dispatchEvent(autoTradeEvent);
         
-        // 移除重复的toast通知，由GlobalOpportunityAlert处理
+        // Display system notification
+        toast({
+          title: t('ai.high_probability_opportunity'),
+          description: `${alert.symbol} ${alert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}，${t('ai.win_rate')}${alert.confidence}%`,
+          duration: 15000, // 15 second reminder
+        });
       }
     } catch (error) {
       console.error('Detection analysis error:', error);
     }
-  }, []);
+  }, [toast, t]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -454,6 +464,109 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           )}
         </div>
       </Card>
+
+      {/* Alert Dialog */}
+      <Dialog open={showAlert} onOpenChange={setShowAlert}>
+        <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-yellow-400">
+              <Brain className="w-6 h-6" />
+              {t('ai.high_probability_opportunity')}
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              {t('ai.high_probability_opportunity')}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {currentAlert && (
+            <div className="space-y-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-white mb-2">
+                  {currentAlert.symbol}
+                </div>
+                <Badge 
+                  variant="outline" 
+                  className={`text-lg px-4 py-2 ${
+                    currentAlert.signal === 'buy' 
+                      ? 'text-green-400 border-green-400/20' 
+                      : 'text-red-400 border-red-400/20'
+                  }`}
+                >
+                  {currentAlert.signal === 'buy' ? t('ai.buy_signal') : t('ai.sell_signal')}
+                </Badge>
+                <div className="text-3xl font-bold text-yellow-400 mt-2">
+                  {t('ai.win_rate')} {currentAlert.confidence}%
+                </div>
+              </div>
+              
+              <div className="space-y-3 text-sm">
+                <div className="p-3 bg-slate-700/50 rounded">
+                  <div className="text-blue-400 font-medium mb-1">📊 价格分析 (6AI综合)</div>
+                  <div className="text-slate-300">{currentAlert.analysis.priceAnalysis}</div>
+                </div>
+                <div className="p-3 bg-slate-700/50 rounded">
+                  <div className="text-purple-400 font-medium mb-1">🎯 技术指标 (多维度)</div>
+                  <div className="text-slate-300">{currentAlert.analysis.technicalAnalysis}</div>
+                </div>
+                <div className="p-3 bg-slate-700/50 rounded">
+                  <div className="text-green-400 font-medium mb-1">🧠 综合结论 (AI大脑)</div>
+                  <div className="text-slate-300">{currentAlert.analysis.sentimentAnalysis}</div>
+                </div>
+                
+                {/* 交易详情 */}
+                {currentAlert.tradingDetails && (
+                  <div className="p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded border border-yellow-500/20">
+                    <div className="text-yellow-400 font-medium mb-2">📋 具体交易建议</div>
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">入场价格:</span>
+                        <span className="text-green-400">${currentAlert.tradingDetails.entry}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">止损价格:</span>
+                        <span className="text-red-400">${currentAlert.tradingDetails.stopLoss}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">止盈价格:</span>
+                        <span className="text-green-400">${currentAlert.tradingDetails.takeProfit}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">建议仓位:</span>
+                        <span className="text-yellow-400">{currentAlert.tradingDetails.position}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex gap-3">
+                <Button 
+                  onClick={() => setShowAlert(false)}
+                  className="flex-1 bg-slate-600 hover:bg-slate-500"
+                >
+                  {t('ai.got_it')}
+                </Button>
+                <Button 
+                  onClick={() => {
+                    setShowAlert(false);
+                    toast({
+                      title: t('ai.api_interface_reserved'),
+                      description: t('ai.configure_trading_api'),
+                    });
+                  }}
+                  className={`flex-1 ${
+                    currentAlert.signal === 'buy'
+                      ? 'bg-green-500 hover:bg-green-600'
+                      : 'bg-red-500 hover:bg-red-600'
+                  }`}
+                >
+                  {t('ai.trade_now')}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
