@@ -356,9 +356,30 @@ export const AutoTrader = () => {
                     </div>
                     
                     {!isSuperBrainActive && (
-                      <div className="flex items-center gap-2 text-amber-400 text-sm">
-                        <AlertTriangle className="w-4 h-4" />
-                        需要先启用最强大脑监测功能
+                      <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4 mt-4">
+                        <div className="flex items-center gap-2 text-amber-400 mb-3">
+                          <AlertTriangle className="w-5 h-5" />
+                          <span className="font-medium">无法启动AI自动交易</span>
+                        </div>
+                        <p className="text-amber-300 text-sm mb-3">
+                          AI自动交易需要最强大脑检测提供交易信号，请先启用最强大脑监测功能获取市场分析数据。
+                        </p>
+                        <Button 
+                          size="sm" 
+                          className="bg-amber-600 hover:bg-amber-700 text-black font-medium"
+                          onClick={() => {
+                            // 滚动到最强大脑部分或触发启用
+                            const event = new CustomEvent('scrollToSuperBrain');
+                            window.dispatchEvent(event);
+                            toast({
+                              title: "请启用最强大脑监测",
+                              description: "在上方找到最强大脑AI监测功能并启用",
+                            });
+                          }}
+                        >
+                          <Brain className="w-4 h-4 mr-2" />
+                          去启用最强大脑监测
+                        </Button>
                       </div>
                     )}
                   </div>
