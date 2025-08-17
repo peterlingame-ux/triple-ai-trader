@@ -336,55 +336,75 @@ export const AutoTrader = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* 左侧控制区 */}
                 <div className="space-y-6">
-                  {/* 主开关 */}
-                  <div className="bg-slate-700/50 rounded-lg p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h3 className="text-xl font-bold text-white mb-2">AI自动交易</h3>
-                        <p className="text-slate-400 text-sm">
-                          基于最强大脑信号自动执行交易策略
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className={`w-3 h-3 rounded-full ${isEnabled ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`}></div>
-                        <Switch
-                          checked={isEnabled}
-                          onCheckedChange={toggleAutoTrader}
-                          disabled={!isSuperBrainActive}
-                        />
-                      </div>
-                    </div>
-                    
-                    {!isSuperBrainActive && (
-                      <div className="bg-amber-900/20 border border-amber-500/30 rounded-lg p-4 mt-4">
-                        <div className="flex items-center gap-2 text-amber-400 mb-3">
-                          <AlertTriangle className="w-5 h-5" />
-                          <span className="font-medium">无法启动AI自动交易</span>
-                        </div>
-                        <p className="text-amber-300 text-sm mb-3">
-                          AI自动交易需要最强大脑检测提供交易信号，请先启用最强大脑监测功能获取市场分析数据。
-                        </p>
-                        <Button 
-                          size="sm" 
-                          className="bg-amber-600 hover:bg-amber-700 text-black font-medium"
-                          onClick={() => {
-                            // 滚动到最强大脑部分或触发启用
-                            const event = new CustomEvent('scrollToSuperBrain');
-                            window.dispatchEvent(event);
-                            toast({
-                              title: "请启用最强大脑监测",
-                              description: "在上方找到最强大脑AI监测功能并启用",
-                            });
-                          }}
-                        >
-                          <Brain className="w-4 h-4 mr-2" />
-                          去启用最强大脑监测
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+                   {/* 主开关 */}
+                   <div className="bg-slate-700/50 rounded-lg p-6">
+                     <div className="flex items-center justify-between mb-4">
+                       <div>
+                         <h3 className="text-xl font-bold text-white mb-2">AI自动交易</h3>
+                         <p className="text-slate-400 text-sm">
+                           基于最强大脑信号自动执行交易策略
+                         </p>
+                       </div>
+                       <div className="flex items-center gap-4">
+                         <div className={`w-3 h-3 rounded-full ${isEnabled ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`}></div>
+                         <Switch
+                           checked={isEnabled}
+                           onCheckedChange={toggleAutoTrader}
+                           disabled={!isSuperBrainActive}
+                         />
+                       </div>
+                     </div>
+                     
+                     {/* 依赖提示 - 始终显示 */}
+                     <div className={`rounded-lg p-4 border-2 ${
+                       isSuperBrainActive 
+                         ? 'bg-green-900/20 border-green-500/30' 
+                         : 'bg-amber-900/20 border-amber-500/30'
+                     }`}>
+                       <div className="flex items-center gap-2 mb-3">
+                         {isSuperBrainActive ? (
+                           <>
+                             <CheckCircle className="w-5 h-5 text-green-400" />
+                             <span className="font-medium text-green-400">最强大脑监测已启用</span>
+                           </>
+                         ) : (
+                           <>
+                             <AlertTriangle className="w-5 h-5 text-amber-400" />
+                             <span className="font-medium text-amber-400">需要启用最强大脑监测</span>
+                           </>
+                         )}
+                       </div>
+                       
+                       <p className={`text-sm mb-3 ${
+                         isSuperBrainActive ? 'text-green-300' : 'text-amber-300'
+                       }`}>
+                         {isSuperBrainActive 
+                           ? '正在接收交易信号，AI自动交易可以正常工作'
+                           : 'AI自动交易需要最强大脑检测提供交易信号，请先启用最强大脑监测功能获取市场分析数据'
+                         }
+                       </p>
+                       
+                       {!isSuperBrainActive && (
+                         <Button 
+                           size="sm" 
+                           className="bg-amber-600 hover:bg-amber-700 text-black font-medium"
+                           onClick={() => {
+                             // 滚动到页面顶部的最强大脑部分
+                             window.scrollTo({ top: 0, behavior: 'smooth' });
+                              toast({
+                                title: "请向上滚动",
+                                description: `在页面上方找到"最强大脑AI监测"功能并点击"开始监控"`,
+                              });
+                           }}
+                         >
+                           <Brain className="w-4 h-4 mr-2" />
+                           找到最强大脑监测功能
+                         </Button>
+                       )}
+                     </div>
+                   </div>
 
-                  {/* 策略选择 */}
+                   {/* 策略选择 */}
                   <div className="bg-slate-700/50 rounded-lg p-6">
                     <h3 className="text-lg font-bold text-white mb-4">交易策略</h3>
                     <div className="space-y-3">
