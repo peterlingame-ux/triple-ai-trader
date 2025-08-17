@@ -19,13 +19,17 @@ import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 // Portfolio cards moved to AI Control Center
-import { BarChart3, Brain, RefreshCw } from "lucide-react";
+import { BarChart3, Brain, RefreshCw, Activity } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
 
 
-export const TradingDashboard = memo(() => {
+interface TradingDashboardProps {
+  onOpenAITrading?: () => void;
+}
+
+export const TradingDashboard = memo(({ onOpenAITrading }: TradingDashboardProps) => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
@@ -136,6 +140,27 @@ export const TradingDashboard = memo(() => {
 
         {/* 币安API配置 */}
         <BinanceAPIConfig />
+
+        {/* AI自动交易入口 */}
+        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+          <div className="p-6 text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Activity className="h-8 w-8 text-primary" />
+              <h3 className="text-xl font-bold">AI自动交易系统</h3>
+            </div>
+            <p className="text-muted-foreground mb-4">
+              使用AI分析和自动执行交易策略，实现智能化投资管理
+            </p>
+            <Button 
+              onClick={onOpenAITrading} 
+              size="lg" 
+              className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              <Activity className="h-5 w-5" />
+              开启AI自动交易
+            </Button>
+          </div>
+        </Card>
 
         {/* Crypto Cards Grid */}
         <div>

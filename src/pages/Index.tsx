@@ -1,13 +1,16 @@
 import { AITradingExchange } from "@/components/AITradingExchange";
+import { TradingDashboard } from "@/components/TradingDashboard";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useState } from "react";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
+  const [showAITrading, setShowAITrading] = useState(false);
 
 
   if (loading) {
@@ -51,7 +54,11 @@ const Index = () => {
           </div>
         </div>
       </header>
-      <AITradingExchange />
+      {showAITrading ? (
+        <AITradingExchange onBack={() => setShowAITrading(false)} />
+      ) : (
+        <TradingDashboard onOpenAITrading={() => setShowAITrading(true)} />
+      )}
     </div>
   );
 };

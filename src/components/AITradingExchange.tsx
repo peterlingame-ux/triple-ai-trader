@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Play, Square, TrendingUp, TrendingDown, Activity, BarChart3, Settings, DollarSign } from "lucide-react";
+import { Play, Square, TrendingUp, TrendingDown, Activity, BarChart3, Settings, DollarSign, ArrowLeft } from "lucide-react";
 
 interface TradingSignal {
   symbol: string;
@@ -46,7 +46,11 @@ interface TradingParams {
   takeProfitPercent: number;
 }
 
-export const AITradingExchange = () => {
+interface AITradingExchangeProps {
+  onBack?: () => void;
+}
+
+export const AITradingExchange = ({ onBack }: AITradingExchangeProps) => {
   const [isTrading, setIsTrading] = useState(false);
   const [positions, setPositions] = useState<Position[]>([]);
   const [tradingHistory, setTradingHistory] = useState<any[]>([]);
@@ -158,10 +162,18 @@ export const AITradingExchange = () => {
       <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Activity className="h-5 w-5 text-primary" />
-              AI自动交易系统
-            </CardTitle>
+            <div className="flex items-center gap-3">
+              {onBack && (
+                <Button variant="ghost" size="sm" onClick={onBack} className="gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  返回
+                </Button>
+              )}
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Activity className="h-5 w-5 text-primary" />
+                AI自动交易系统
+              </CardTitle>
+            </div>
             <div className="flex items-center gap-3">
               <Badge variant={isTrading ? "default" : "secondary"} className="px-3 py-1">
                 {isTrading ? "运行中" : "已停止"}
