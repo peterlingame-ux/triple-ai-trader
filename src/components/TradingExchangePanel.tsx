@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
-import { TradingHistoryPanel } from "./TradingHistoryPanel";
 import { CryptoData, NewsArticle } from "@/types/api";
 import { useWalletData } from "@/hooks/useWalletData";
 import { useTimeBasedStats } from "@/hooks/useTimeBasedStats";
@@ -210,7 +209,7 @@ export const TradingExchangePanel = ({
           </div>
 
           {/* Statistics Section */}
-          <div className="bg-slate-800/40 border border-slate-700/50 rounded-lg p-4 mb-4">
+          <div className="bg-slate-800/40 border border-slate-700/50 rounded-lg p-4">
             {/* Time Selector */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
@@ -360,9 +359,6 @@ export const TradingExchangePanel = ({
           </div>
         </div>
       </Card>
-
-      {/* Trading History Panel - Separate from main card */}
-      <TradingHistoryPanel />
     </div>
   );
 };
