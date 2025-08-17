@@ -631,7 +631,15 @@ export const AutoTrader = () => {
   }, []);
 
   const toggleAutoTrader = () => {
-    setConfig(prev => ({ ...prev, enabled: !prev.enabled }));
+    const newEnabled = !config.enabled;
+    setConfig(prev => ({ ...prev, enabled: newEnabled }));
+    
+    // 发送AI自动赚钱状态变化事件
+    const statusChangeEvent = new CustomEvent('autoTraderStatusChanged', {
+      detail: { isActive: newEnabled }
+    });
+    window.dispatchEvent(statusChangeEvent);
+    
     const message = config.enabled ? t('autotrader.stopped') : `${t('autotrader.started')} (${config.strategy === 'conservative' ? t('autotrader.conservative_strategy') : t('autotrader.aggressive_strategy')})`;
     
     setTradingActivity(prev => [

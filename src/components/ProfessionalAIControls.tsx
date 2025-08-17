@@ -3,7 +3,7 @@ import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield } from "lucide-react";
+import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { AutoTrader } from "./AutoTrader";
 import { CryptoData, NewsArticle } from "@/types/api";
@@ -19,6 +19,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
   const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [isMonitoring, setIsMonitoring] = useState(false);
+  const [isAutoTraderActive, setIsAutoTraderActive] = useState(false);
 
   // 监听最强大脑监控状态变化
   React.useEffect(() => {
@@ -26,9 +27,16 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
       setIsMonitoring(event.detail.isMonitoring);
     };
 
+    const handleAutoTraderChange = (event: CustomEvent) => {
+      setIsAutoTraderActive(event.detail.isActive);
+    };
+
     window.addEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
+    window.addEventListener('autoTraderStatusChanged', handleAutoTraderChange as EventListener);
+    
     return () => {
       window.removeEventListener('superBrainMonitoringChanged', handleMonitoringChange as EventListener);
+      window.removeEventListener('autoTraderStatusChanged', handleAutoTraderChange as EventListener);
     };
   }, []);
 
@@ -73,6 +81,12 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
               <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/30 animate-pulse">
                 <Shield className="w-3 h-3 mr-1" />
                 {t('ai.supreme_brain_active')}
+              </Badge>
+            )}
+            {isAutoTraderActive && (
+              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 animate-pulse">
+                <BotIcon className="w-3 h-3 mr-1" />
+                {t('ai.auto_trader_active')}
               </Badge>
             )}
           </div>
