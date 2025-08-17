@@ -137,7 +137,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     if (Math.random() < 0.85) {
       const basePrice = Math.random() * 50000 + 30000;
       const isLong = Math.random() > 0.5;
-      const confidence = Math.floor(Math.random() * 8) + 92; // 92-99%胜率
+      const confidence = Math.floor(Math.random() * 20) + 80; // 80-99%胜率，这样能看到不同情况
       
       // 计算详细交易参数
       const stopLoss = Math.round(basePrice * (isLong ? 0.95 : 1.05));
