@@ -207,7 +207,7 @@ export const useUserSettings = () => {
     }
 
     try {
-      // 调用后台监控服务
+      // 立即执行一次后台监控
       const { data, error } = await supabase.functions.invoke('background-monitor');
       
       if (error) {
@@ -216,10 +216,51 @@ export const useUserSettings = () => {
       }
 
       console.log('Background monitor started:', data);
+      
+      // 启动定期监控 - 每5分钟检查一次
+      const intervalId = setInterval(async () => {
+        try {
+          console.log('🔄 执行定期后台监控检查...');
+          const { data: monitorData, error: monitorError } = await supabase.functions.invoke('background-monitor');
+          
+          if (monitorError) {
+            console.error('定期监控检查出错:', monitorError);
+          } else {
+            console.log('✅ 定期监控检查完成:', monitorData);
+          }
+        } catch (err) {
+          console.error('定期监控异常:', err);
+        }
+      }, 5 * 60 * 1000); // 5分钟
+
+      // 存储interval ID以便后续清理
+      (window as any).superBrainMonitorInterval = intervalId;
+      
+      toast({
+        title: "🧠 后台监控已启动",
+        description: "AI将每5分钟自动检测交易机会并执行自动下单",
+        variant: "default"
+      });
+      
       return true;
     } catch (error) {
       console.error('Error in startBackgroundMonitoring:', error);
       return false;
+    }
+  };
+
+  // 停止后台监控
+  const stopBackgroundMonitoring = async () => {
+    if ((window as any).superBrainMonitorInterval) {
+      clearInterval((window as any).superBrainMonitorInterval);
+      (window as any).superBrainMonitorInterval = null;
+      console.log('🛑 后台监控已停止');
+      
+      toast({
+        title: "🛑 后台监控已停止",
+        description: "AI自动交易监控已关闭",
+        variant: "default"
+      });
     }
   };
 
@@ -229,6 +270,7 @@ export const useUserSettings = () => {
     isAuthenticated,
     updateSettings,
     startBackgroundMonitoring,
+    stopBackgroundMonitoring,
     refreshSettings: () => {
       if (isAuthenticated) {
         supabase.auth.getUser().then(({ data: { user } }) => {

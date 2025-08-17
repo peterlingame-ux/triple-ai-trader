@@ -61,7 +61,7 @@ interface SuperBrainDetectionProps {
 export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBrainDetectionProps) => {
   const { toast } = useToast();
   const { t } = useLanguage();
-  const { settings, isAuthenticated, updateSettings, startBackgroundMonitoring } = useUserSettings();
+  const { settings, isAuthenticated, updateSettings, startBackgroundMonitoring, stopBackgroundMonitoring } = useUserSettings();
   
   // 使用数据库设置初始化状态
   const [isMonitoring, setIsMonitoring] = useState(settings.super_brain_monitoring);
@@ -333,6 +333,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     // 如果是启动监控且用户已认证，启动后台监控
     if (newStatus && isAuthenticated) {
       await startBackgroundMonitoring();
+    } else if (!newStatus) {
+      // 如果关闭监控，停止后台监控
+      await stopBackgroundMonitoring();
     }
     
     // 发送监控状态变化事件
