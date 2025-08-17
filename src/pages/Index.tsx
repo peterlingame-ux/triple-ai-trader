@@ -1,4 +1,5 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
+import { GlobalAutoTrader } from "@/components/GlobalAutoTrader";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
@@ -52,6 +53,7 @@ const Index = () => {
         </div>
       </header>
       <TradingDashboard />
+      <GlobalAutoTrader />
     </div>
   );
 };

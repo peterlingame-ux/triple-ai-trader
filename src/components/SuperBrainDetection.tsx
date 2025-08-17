@@ -176,12 +176,18 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         });
         window.dispatchEvent(globalEvent);
         
-        // 触发AI自动交易事件
+        // 触发AI自动交易事件 - 发送给GlobalAutoTrader
         const autoTradeEvent = new CustomEvent('superBrainTradingSignal', {
           detail: {
             symbol: alert.symbol,
+            action: alert.signal,
             signal: alert.signal,
             confidence: alert.confidence,
+            entry: alert.tradingDetails?.entry || alert.price,
+            stopLoss: alert.tradingDetails?.stopLoss,
+            takeProfit: alert.tradingDetails?.takeProfit,
+            position: alert.tradingDetails?.position,
+            reasoning: alert.tradingDetails?.reasoning || alert.analysis?.priceAnalysis,
             price: alert.price,
             tradingDetails: alert.tradingDetails,
             analysis: alert.analysis,
