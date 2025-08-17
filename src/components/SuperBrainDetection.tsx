@@ -104,7 +104,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
             stopLoss: data.stopLoss,
             takeProfit: data.takeProfit,
             position: data.position,
-            reasoning: data.reasoning
+            reasoning: data.reasoning,
+            leverage: data.confidence >= 95 ? '20x' : data.confidence >= 90 ? '15x' : '10x',
+            liquidationSafety: data.confidence >= 95 ? 5 : data.confidence >= 90 ? 4 : 3,
           }
         } as OpportunityAlert;
       }
@@ -183,6 +185,8 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           stopLossRequired: confidence < 90, // 胜率低于90%建议必须止损
           safetyFactor: safetyFactor,
           riskLevel: riskLevel,
+          leverage: confidence >= 95 ? '20x' : confidence >= 90 ? '15x' : '10x',
+          liquidationSafety: confidence >= 95 ? 5 : confidence >= 90 ? 4 : 3,
         }
       } as OpportunityAlert;
     }
@@ -591,6 +595,75 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                     <div className="w-1.5 h-1.5 bg-gradient-to-r from-green-400 to-blue-400 rounded-full"></div>
                     <span className="text-white text-xs">
                       仓位: 轻仓 | 胜率: {currentAlert.confidence}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 交易信息 - 极致紧凑版 */}
+              <div className="bg-gradient-to-br from-indigo-900/20 to-purple-900/20 rounded p-2 border border-indigo-400/30">
+                <div className="flex items-center gap-1 mb-1">
+                  <span className="text-indigo-400 text-xs">💱</span>
+                  <span className="text-indigo-400 font-bold text-xs">交易信息</span>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-1 mb-1 text-xs">
+                  <div>
+                    <span className="text-slate-500">货币种类:</span>
+                    <div className="text-white font-bold">{currentAlert.symbol}</div>
+                  </div>
+                  <div>
+                    <span className="text-slate-500">交易方向:</span>
+                    <div className={`font-bold ${
+                      currentAlert.signal === 'buy' ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      永续合约{currentAlert.signal === 'buy' ? '做多' : '做空'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-1 mb-1 text-xs">
+                  <div>
+                    <span className="text-slate-500">合约类型:</span>
+                    <div className="text-blue-400 font-medium">永续合约</div>
+                  </div>
+                  <div>
+                    <span className="text-slate-500">杠杆倍数:</span>
+                    <div className="text-yellow-400 font-bold">
+                      {(() => {
+                        if (currentAlert.tradingDetails?.position === '重仓') return '20x';
+                        if (currentAlert.tradingDetails?.position === '中仓') return '15x';
+                        return '10x';
+                      })()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/40 rounded p-1">
+                  <div className="text-slate-500 text-xs mb-0.5">爆仓点安全等级:</div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-0.5">
+                      {[...Array(5)].map((_, i) => {
+                        const safetyLevel = currentAlert.confidence >= 95 ? 5 : currentAlert.confidence >= 90 ? 4 : 3;
+                        return (
+                          <div
+                            key={i}
+                            className={`w-1 h-2 rounded-sm ${
+                              i < safetyLevel ? 'bg-green-400' : 'bg-slate-600'
+                            }`}
+                          />
+                        );
+                      })}
+                    </div>
+                    <span className="text-xs font-medium text-green-400">
+                      {(() => {
+                        const safetyLevel = currentAlert.confidence >= 95 ? 5 : currentAlert.confidence >= 90 ? 4 : 3;
+                        if (safetyLevel === 5) return '极安全';
+                        if (safetyLevel === 4) return '很安全';
+                        if (safetyLevel === 3) return '安全';
+                        if (safetyLevel === 2) return '中等';
+                        return '谨慎';
+                      })()}
                     </span>
                   </div>
                 </div>
