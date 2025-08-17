@@ -24,6 +24,7 @@ export type Database = {
           current_price: number
           entry_price: number
           fees: number | null
+          first_take_profit: number | null
           funding_fee: number | null
           id: string
           leverage: number | null
@@ -31,13 +32,20 @@ export type Database = {
           maintenance_margin_rate: number | null
           margin: number | null
           mark_price: number | null
+          market_condition: string | null
           opened_at: string | null
           pnl: number | null
           pnl_percent: number | null
+          position_ratio: number | null
           position_size: number
           position_value: number | null
+          risk_level: string | null
+          safety_factor: number | null
+          second_take_profit: number | null
+          signal_strength: number | null
           status: string
           stop_loss: number | null
+          stop_loss_required: boolean | null
           strategy: string | null
           symbol: string
           take_profit: number | null
@@ -56,6 +64,7 @@ export type Database = {
           current_price: number
           entry_price: number
           fees?: number | null
+          first_take_profit?: number | null
           funding_fee?: number | null
           id?: string
           leverage?: number | null
@@ -63,13 +72,20 @@ export type Database = {
           maintenance_margin_rate?: number | null
           margin?: number | null
           mark_price?: number | null
+          market_condition?: string | null
           opened_at?: string | null
           pnl?: number | null
           pnl_percent?: number | null
+          position_ratio?: number | null
           position_size: number
           position_value?: number | null
+          risk_level?: string | null
+          safety_factor?: number | null
+          second_take_profit?: number | null
+          signal_strength?: number | null
           status?: string
           stop_loss?: number | null
+          stop_loss_required?: boolean | null
           strategy?: string | null
           symbol: string
           take_profit?: number | null
@@ -88,6 +104,7 @@ export type Database = {
           current_price?: number
           entry_price?: number
           fees?: number | null
+          first_take_profit?: number | null
           funding_fee?: number | null
           id?: string
           leverage?: number | null
@@ -95,13 +112,20 @@ export type Database = {
           maintenance_margin_rate?: number | null
           margin?: number | null
           mark_price?: number | null
+          market_condition?: string | null
           opened_at?: string | null
           pnl?: number | null
           pnl_percent?: number | null
+          position_ratio?: number | null
           position_size?: number
           position_value?: number | null
+          risk_level?: string | null
+          safety_factor?: number | null
+          second_take_profit?: number | null
+          signal_strength?: number | null
           status?: string
           stop_loss?: number | null
+          stop_loss_required?: boolean | null
           strategy?: string | null
           symbol?: string
           take_profit?: number | null

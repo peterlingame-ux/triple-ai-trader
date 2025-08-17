@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Activity, TrendingUp, TrendingDown, DollarSign, Brain, Target, Zap, XCircle } from "lucide-react";
+import { Zap, CircleDollarSign, Brain, Activity, ArrowLeft, Shield, BotIcon, BarChart3, Target, XCircle, AlertTriangle, TrendingUp, TrendingDown, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useAuth } from "@/hooks/useAuth";
@@ -40,6 +40,14 @@ interface Position {
   unrealized_pnl: number;
   fees: number;
   funding_fee: number;
+  first_take_profit?: number;
+  second_take_profit?: number;
+  position_ratio: number;
+  stop_loss_required: boolean;
+  safety_factor: number;
+  risk_level: string;
+  signal_strength: number;
+  market_condition?: string;
 }
 
 export const IntelligentPositionManager = () => {
@@ -108,6 +116,40 @@ export const IntelligentPositionManager = () => {
       liquidationPrice = entryPrice * (1 + (1 / leverage) * 0.9); // 空头强平价
     }
 
+    // 计算止盈点和建议参数
+    const priceRange = Math.abs(Number(signalData.takeProfit || entryPrice * 1.05) - entryPrice);
+    const firstTakeProfit = signalData.takeProfit ? Number(signalData.takeProfit) : 
+      (signalData.action === 'long' || signalData.type === 'buy') ? 
+        entryPrice + priceRange * 0.6 : entryPrice - priceRange * 0.6;
+    
+    const secondTakeProfit = signalData.takeProfit ? Number(signalData.takeProfit) * 1.2 : 
+      (signalData.action === 'long' || signalData.type === 'buy') ? 
+        entryPrice + priceRange * 1.2 : entryPrice - priceRange * 1.2;
+
+    // 根据胜率计算建议仓位比例和安全系数
+    const confidence = Number(signalData.confidence) || 0;
+    let positionRatio = 5; // 默认5%
+    let safetyFactor = 5; // 默认安全系数5
+    let riskLevel = 'medium';
+
+    if (confidence >= 90) {
+      positionRatio = 20; // 高胜率，建议20%
+      safetyFactor = 8;
+      riskLevel = 'low';
+    } else if (confidence >= 80) {
+      positionRatio = 15; // 中高胜率，建议15%
+      safetyFactor = 7;
+      riskLevel = 'low';
+    } else if (confidence >= 70) {
+      positionRatio = 10; // 中等胜率，建议10%
+      safetyFactor = 6;
+      riskLevel = 'medium';
+    } else {
+      positionRatio = 5; // 低胜率，建议5%
+      safetyFactor = 4;
+      riskLevel = 'high';
+    }
+
     const positionData = {
       user_id: user.id,
       symbol: signalData.symbol,
@@ -121,7 +163,7 @@ export const IntelligentPositionManager = () => {
       leverage: leverage,
       pnl: Number(signalData.profit) || 0,
       pnl_percent: 0,
-      confidence: Number(signalData.confidence) || 0,
+      confidence: confidence,
       strategy: 'AI_AUTO',
       trading_type: signalData.tradingType || 'spot',
       ai_reasoning: signalData.reasoning,
@@ -134,6 +176,14 @@ export const IntelligentPositionManager = () => {
       unrealized_pnl: Number(signalData.profit) || 0,
       fees: positionValue * 0.001, // 0.1% 手续费
       funding_fee: 0,
+      first_take_profit: firstTakeProfit,
+      second_take_profit: secondTakeProfit,
+      position_ratio: positionRatio,
+      stop_loss_required: confidence < 85, // 胜率低于85%建议必须止损
+      safety_factor: safetyFactor,
+      risk_level: riskLevel,
+      signal_strength: confidence,
+      market_condition: confidence >= 80 ? '强势趋势' : confidence >= 60 ? '震荡趋势' : '弱势趋势',
     };
 
     console.log('持仓数据:', positionData);
@@ -553,7 +603,7 @@ export const IntelligentPositionManager = () => {
                       </div>
 
                       {/* 详细数据网格 */}
-                      <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div className="grid grid-cols-3 gap-4 text-sm mb-4">
                         <div>
                           <div className="text-slate-400 mb-1">持仓量 ({position.symbol.replace('USDT', '')})</div>
                           <div className="text-white font-mono text-lg">{(position.position_size / position.entry_price).toFixed(0)}</div>
@@ -580,6 +630,90 @@ export const IntelligentPositionManager = () => {
                             {position.liquidation_price ? `$${position.liquidation_price.toFixed(2)}` : '--'}
                           </div>
                         </div>
+                      </div>
+
+                      {/* 交易建议详情 */}
+                      <div className="bg-slate-700/30 rounded-lg p-4 mb-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Brain className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm font-medium text-blue-400">AI交易建议</span>
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs ${
+                              position.risk_level === 'low' ? 'text-green-400 border-green-400' :
+                              position.risk_level === 'medium' ? 'text-yellow-400 border-yellow-400' :
+                              'text-red-400 border-red-400'
+                            }`}
+                          >
+                            {position.risk_level === 'low' ? '低风险' : 
+                             position.risk_level === 'medium' ? '中风险' : '高风险'}
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">建议仓位:</span>
+                              <span className="text-yellow-400 font-medium">{position.position_ratio}%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">安全系数:</span>
+                              <div className="flex items-center gap-1">
+                                <span className="text-white font-mono">{position.safety_factor}/10</span>
+                                <div className="flex">
+                                  {[...Array(10)].map((_, i) => (
+                                    <div 
+                                      key={i} 
+                                      className={`w-1 h-2 ${i < position.safety_factor ? 'bg-green-400' : 'bg-slate-600'} mr-0.5`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">信号强度:</span>
+                              <span className="text-blue-400 font-medium">{position.signal_strength}%</span>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">第一止盈:</span>
+                              <span className="text-green-400 font-mono">
+                                ${position.first_take_profit ? position.first_take_profit.toFixed(2) : '--'}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-slate-400">第二止盈:</span>
+                              <span className="text-green-400 font-mono">
+                                ${position.second_take_profit ? position.second_take_profit.toFixed(2) : '--'}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-slate-400">必须止损:</span>
+                              <div className="flex items-center gap-1">
+                                {position.stop_loss_required ? (
+                                  <>
+                                    <AlertTriangle className="w-3 h-3 text-red-400" />
+                                    <span className="text-red-400 text-xs">是</span>
+                                  </>
+                                ) : (
+                                  <span className="text-green-400 text-xs">否</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {position.market_condition && (
+                          <div className="mt-3 pt-3 border-t border-slate-600/30">
+                            <div className="flex items-center gap-2">
+                              <TrendingUp className="w-3 h-3 text-slate-400" />
+                              <span className="text-xs text-slate-400">市场状况:</span>
+                              <span className="text-xs text-slate-300">{position.market_condition}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* 附加信息 */}
