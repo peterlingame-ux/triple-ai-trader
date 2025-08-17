@@ -268,13 +268,6 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
             </div>
           </div>
 
-          {/* 时间统计 */}
-          <div className="mt-6 pt-4 border-t border-slate-700">
-            <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
-              <BarChart3 className="w-4 h-4" />
-              <span>数据统计时间: {format(subMonths(new Date(), 1), 'yyyy/M/d')} - {format(new Date(), 'yyyy/M/d')}</span>
-            </div>
-          </div>
 
           {/* 状态指示 */}
           {!isEnabled && (
