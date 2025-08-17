@@ -1,5 +1,4 @@
 import React from 'react';
-import binanceRealLogo from '@/assets/binance-real-logo.png';
 
 interface BinanceExchangeLogoProps {
   className?: string;
@@ -14,9 +13,9 @@ export const BinanceExchangeLogo: React.FC<BinanceExchangeLogoProps> = ({
 }) => {
   return (
     <div className={`relative ${className}`}>
-      {/* Main Binance Logo */}
+      {/* Main Binance Logo - 使用在线图片作为备选 */}
       <img
-        src={binanceRealLogo}
+        src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png"
         alt="Binance Exchange"
         width={size}
         height={size}
@@ -24,6 +23,16 @@ export const BinanceExchangeLogo: React.FC<BinanceExchangeLogoProps> = ({
           object-contain transition-all duration-500 relative z-10
           ${showGlow ? 'brightness-110 drop-shadow-[0_0_20px_rgba(240,185,11,0.8)]' : ''}
         `}
+        onError={(e) => {
+          // Fallback to a solid color if image fails to load
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+          target.parentElement!.innerHTML += `
+            <div class="w-${size} h-${size} bg-yellow-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+              B
+            </div>
+          `;
+        }}
       />
       
       {/* Enhanced Glow Effects for Success State */}

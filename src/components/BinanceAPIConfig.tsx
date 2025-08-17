@@ -16,6 +16,9 @@ export function BinanceAPIConfig() {
   const [isConfigured, setIsConfigured] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
 
+  // 添加调试日志
+  console.log('BinanceAPIConfig render:', { isAuthenticated, isExpanded, isConfigured, connectionStatus });
+
   useEffect(() => {
     if (isAuthenticated) {
       checkConfiguration();
@@ -55,6 +58,15 @@ export function BinanceAPIConfig() {
   };
 
   const getStatusBadge = () => {
+    // 未登录状态
+    if (!isAuthenticated) {
+      return (
+        <Badge variant="secondary" className="bg-slate-700/50 text-slate-300 border-slate-600/50 text-xs px-3 py-1">
+          需要登录
+        </Badge>
+      );
+    }
+
     if (!isConfigured) {
       return (
         <Badge variant="secondary" className="bg-slate-700/50 text-slate-300 border-slate-600/50 text-xs px-3 py-1">
@@ -139,7 +151,7 @@ export function BinanceAPIConfig() {
                   <h3 className="text-lg font-bold text-foreground font-orbitron tracking-wide">
                     Binance API 配置
                   </h3>
-                  {connectionStatus === 'success' && (
+                  {connectionStatus === 'success' && isAuthenticated && (
                     <div className="flex items-center gap-1">
                       <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                       <div className="w-2 h-2 rounded-full bg-green-400/60 animate-pulse" style={{animationDelay: '0.5s'}} />
@@ -150,7 +162,7 @@ export function BinanceAPIConfig() {
                 <div className="flex items-center gap-2">
                   {getStatusBadge()}
                   <span className="text-xs text-muted-foreground">
-                    配置您的 Binance API 以获取实时交易数据
+                    {isAuthenticated ? "配置您的 Binance API 以获取实时交易数据" : "请先登录以配置 API"}
                   </span>
                 </div>
               </div>
@@ -163,11 +175,12 @@ export function BinanceAPIConfig() {
                 size="sm" 
                 className={`
                   h-10 w-10 p-0 rounded-lg transition-all duration-300
-                  ${connectionStatus === 'success' 
+                  ${connectionStatus === 'success' && isAuthenticated
                     ? 'hover:bg-yellow-500/20 hover:border-yellow-500/50' 
                     : 'hover:bg-slate-700/50'
                   }
                 `}
+                disabled={!isAuthenticated}
               >
                 <Settings className="w-5 h-5" />
               </Button>
@@ -176,7 +189,7 @@ export function BinanceAPIConfig() {
                 size="sm" 
                 className={`
                   h-10 w-10 p-0 rounded-lg transition-all duration-300
-                  ${connectionStatus === 'success' 
+                  ${connectionStatus === 'success' && isAuthenticated
                     ? 'hover:bg-yellow-500/20 hover:border-yellow-500/50' 
                     : 'hover:bg-slate-700/50'
                   }
