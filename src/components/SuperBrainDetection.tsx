@@ -498,9 +498,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                     </div>
                     
                     <div className="text-sm text-slate-300 space-y-2">
-                      <div><span className="text-blue-400">{t('ai.price_analysis')}:</span> {alert.analysis.priceAnalysis}</div>
-                      <div><span className="text-purple-400">{t('ai.technical_indicators')}:</span> {alert.analysis.technicalAnalysis}</div>
-                      <div><span className="text-green-400">{t('ai.comprehensive_analysis')}:</span> {alert.analysis.sentimentAnalysis}</div>
+                      <div><span className="text-blue-400">价格分析:</span> {alert.symbol}: {alert.signal === 'buy' ? '买多' : '买空'}</div>
+                      <div><span className="text-purple-400">ai.technical_indicators:</span> 入场: ${alert.tradingDetails?.entry?.toLocaleString()} | 止损: ${alert.tradingDetails?.stopLoss?.toLocaleString()} | 止盈: ${alert.tradingDetails?.takeProfit?.toLocaleString()}</div>
+                      <div><span className="text-green-400">综合分析:</span> 仓位: {alert.tradingDetails?.position} | 胜率: {alert.confidence}%</div>
                       
                       {/* 新增交易详情显示 */}
                       {alert.tradingDetails && (
@@ -509,20 +509,28 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div className="flex items-center gap-2">
                               <Target className="w-3 h-3 text-green-400" />
-                              <span>入场: ${alert.tradingDetails.entry}</span>
+                              <span>入场: ${alert.tradingDetails.entry?.toLocaleString()}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <TrendingDown className="w-3 h-3 text-red-400" />
-                              <span>止损: ${alert.tradingDetails.stopLoss}</span>
+                              <span>止损: ${alert.tradingDetails.stopLoss?.toLocaleString()}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <TrendingUp className="w-3 h-3 text-green-400" />
-                              <span>止盈: ${alert.tradingDetails.takeProfit}</span>
+                              <span>止盈: ${alert.tradingDetails.takeProfit?.toLocaleString()}</span>
                             </div>
                             <div className="flex items-center gap-2">
                               <DollarSign className="w-3 h-3 text-yellow-400" />
                               <span>仓位: {alert.tradingDetails.position}</span>
                             </div>
+                            {/* 补仓信息 */}
+                            {alert.tradingDetails.canAddPosition && alert.tradingDetails.addPositionRange && (
+                              <>
+                                <div className="flex items-center gap-2 col-span-2">
+                                  <span className="text-blue-400">补仓区间: ${alert.tradingDetails.addPositionRange.min?.toLocaleString()} - ${alert.tradingDetails.addPositionRange.max?.toLocaleString()}</span>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       )}
