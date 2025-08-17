@@ -70,6 +70,20 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         
         // 发送信号给AutoTrader
         const signal = convertToSignal(alert);
+        
+        // 直接调用AutoTrader的处理函数，不依赖事件
+        const autoTraderHandleSignal = (window as any).autoTraderHandleSignal;
+        if (autoTraderHandleSignal) {
+          console.log('直接调用AutoTrader处理函数');
+          autoTraderHandleSignal(signal);
+        } else {
+          // 备用：存储信号供AutoTrader读取
+          const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
+          pendingSignals.push(signal);
+          localStorage.setItem('pendingAutoTraderSignals', JSON.stringify(pendingSignals));
+          console.log('信号已存储，等待AutoTrader处理');
+        }
+        
         dispatchSignal(signal);
         
         // 显示通知

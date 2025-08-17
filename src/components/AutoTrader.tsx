@@ -203,6 +203,28 @@ export const AutoTrader = () => {
     }
   }, [executeTrade, toast]);
 
+  // 在组件加载时暴露处理函数并检查待处理信号
+  useEffect(() => {
+    // 暴露处理函数给全局
+    (window as any).autoTraderHandleSignal = handleSignal;
+    
+    // 检查是否有待处理的信号
+    const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
+    if (pendingSignals.length > 0) {
+      console.log('发现待处理信号:', pendingSignals.length);
+      pendingSignals.forEach((signal: SuperBrainSignal) => {
+        console.log('处理待处理信号:', signal);
+        handleSignal(signal);
+      });
+      // 清空已处理的信号
+      localStorage.removeItem('pendingAutoTraderSignals');
+    }
+    
+    return () => {
+      delete (window as any).autoTraderHandleSignal;
+    };
+  }, [handleSignal]);
+
   // 监听SuperBrain信号 - 稳定的事件监听器
   useEffect(() => {
     console.log('AutoTrader - 设置superBrainSignal事件监听器');
