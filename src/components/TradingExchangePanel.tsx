@@ -358,11 +358,11 @@ export const TradingExchangePanel = ({
               </span>
             </div>
           </div>
-
-          {/* Trading History Panel */}
-          <TradingHistoryPanel className="mt-4" />
         </div>
       </Card>
+
+      {/* Trading History Panel - Separate from main card */}
+      <TradingHistoryPanel />
     </div>
   );
 };

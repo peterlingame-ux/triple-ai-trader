@@ -50,7 +50,11 @@ export const TradingHistoryPanel = ({ className = "" }: TradingHistoryPanelProps
 
   // 获取交易记录
   const fetchPositions = async () => {
-    if (!user) return;
+    if (!user) {
+      // 如果没有登录，显示模拟数据示例
+      setPositions([]);
+      return;
+    }
     
     setLoading(true);
     try {
@@ -226,6 +230,12 @@ export const TradingHistoryPanel = ({ className = "" }: TradingHistoryPanelProps
               <div className="text-center py-8">
                 <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-slate-400" />
                 <p className="text-slate-400">加载交易记录中...</p>
+              </div>
+            ) : !user ? (
+              <div className="text-center py-8">
+                <Activity className="w-12 h-12 mx-auto mb-2 text-slate-600" />
+                <p className="text-slate-400">请登录查看交易记录</p>
+                <p className="text-xs text-slate-500 mt-1">您需要登录后才能查看和管理交易历史</p>
               </div>
             ) : positions.length === 0 ? (
               <div className="text-center py-8">
