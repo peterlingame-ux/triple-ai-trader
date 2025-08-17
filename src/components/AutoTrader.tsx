@@ -308,15 +308,15 @@ export const AutoTrader = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <Bot className="w-8 h-8 text-blue-400" />
-          <h2 className="text-3xl font-bold text-white">AI自动赚钱</h2>
-          <DollarSign className="w-8 h-8 text-green-400" />
+      <div className="text-center mb-6">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <Bot className="w-6 h-6 text-blue-400" />
+          <h2 className="text-2xl font-bold text-white">AI自动赚钱</h2>
+          <DollarSign className="w-6 h-6 text-green-400" />
         </div>
-        <p className="text-slate-400 max-w-2xl mx-auto">
+        <p className="text-slate-400 max-w-2xl mx-auto text-sm">
           智能识别最强大脑信号，自动执行高胜率交易策略
         </p>
       </div>
