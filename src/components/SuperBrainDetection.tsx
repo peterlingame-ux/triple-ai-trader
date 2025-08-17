@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CryptoStaticIcon } from "./Static3DIconShowcase";
 import { CRYPTO_NAMES } from "@/constants/crypto";
 import { ProfessionalDetectionHistory } from "./ProfessionalDetectionHistory";
+import { useUserSettings } from "@/hooks/useUserSettings";
 
 // AI advisors data
 const aiAdvisors = [
@@ -58,17 +59,21 @@ interface SuperBrainDetectionProps {
 }
 
 export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBrainDetectionProps) => {
-  // 从localStorage读取初始状态
-  const [isMonitoring, setIsMonitoring] = useState(() => {
-    const saved = localStorage.getItem('superBrainMonitoring');
-    return saved ? JSON.parse(saved) : false;
-  });
+  const { toast } = useToast();
+  const { t } = useLanguage();
+  const { settings, isAuthenticated, updateSettings, startBackgroundMonitoring } = useUserSettings();
+  
+  // 使用数据库设置初始化状态
+  const [isMonitoring, setIsMonitoring] = useState(settings.super_brain_monitoring);
   const [alerts, setAlerts] = useState<OpportunityAlert[]>([]);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const [currentAlert, setCurrentAlert] = useState<OpportunityAlert | null>(null);
-  const { toast } = useToast();
-  const { t } = useLanguage();
+
+  // 监听设置变化，同步状态
+  useEffect(() => {
+    setIsMonitoring(settings.super_brain_monitoring);
+  }, [settings]);
 
   // Mock API call - 调用真实的Supabase Edge Function
   const performSuperBrainAnalysis = async () => {
@@ -311,12 +316,24 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     };
   }, [isMonitoring, performAnalysis]);
 
-  const toggleMonitoring = () => {
+  const toggleMonitoring = async () => {
     const newStatus = !isMonitoring;
+    
+    // 更新数据库设置
+    const success = await updateSettings({ 
+      super_brain_monitoring: newStatus 
+    });
+    
+    if (!success) {
+      return;
+    }
+
     setIsMonitoring(newStatus);
     
-    // 保存状态到localStorage
-    localStorage.setItem('superBrainMonitoring', JSON.stringify(newStatus));
+    // 如果是启动监控且用户已认证，启动后台监控
+    if (newStatus && isAuthenticated) {
+      await startBackgroundMonitoring();
+    }
     
     // 发送监控状态变化事件
     const statusChangeEvent = new CustomEvent('superBrainMonitoringChanged', {
@@ -328,7 +345,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       setLastCheckTime(new Date());
       toast({
         title: '监控已启动',
-        description: 'AI 6大脑模型正在分析市场机会...',
+        description: `AI 6大脑模型正在分析市场机会...${isAuthenticated ? '后台监控已启动' : '本地监控模式'}`,
       });
     } else {
       toast({

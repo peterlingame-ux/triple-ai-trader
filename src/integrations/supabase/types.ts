@@ -188,6 +188,111 @@ export type Database = {
         }
         Relationships: []
       }
+      user_settings: {
+        Row: {
+          auto_trading_enabled: boolean
+          created_at: string
+          id: string
+          max_positions: number
+          monitoring_symbols: string[]
+          risk_per_trade: number
+          super_brain_monitoring: boolean
+          trading_strategy: string
+          updated_at: string
+          user_id: string
+          virtual_balance: number
+        }
+        Insert: {
+          auto_trading_enabled?: boolean
+          created_at?: string
+          id?: string
+          max_positions?: number
+          monitoring_symbols?: string[]
+          risk_per_trade?: number
+          super_brain_monitoring?: boolean
+          trading_strategy?: string
+          updated_at?: string
+          user_id: string
+          virtual_balance?: number
+        }
+        Update: {
+          auto_trading_enabled?: boolean
+          created_at?: string
+          id?: string
+          max_positions?: number
+          monitoring_symbols?: string[]
+          risk_per_trade?: number
+          super_brain_monitoring?: boolean
+          trading_strategy?: string
+          updated_at?: string
+          user_id?: string
+          virtual_balance?: number
+        }
+        Relationships: []
+      }
+      virtual_trades: {
+        Row: {
+          action: string
+          closed_at: string | null
+          confidence: number
+          created_at: string
+          entry_price: number
+          id: string
+          opened_at: string
+          pnl: number | null
+          pnl_percent: number | null
+          position_size: number
+          reasoning: string | null
+          status: string
+          stop_loss: number
+          strategy: string
+          symbol: string
+          take_profit: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          closed_at?: string | null
+          confidence: number
+          created_at?: string
+          entry_price: number
+          id?: string
+          opened_at?: string
+          pnl?: number | null
+          pnl_percent?: number | null
+          position_size: number
+          reasoning?: string | null
+          status?: string
+          stop_loss: number
+          strategy: string
+          symbol: string
+          take_profit: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          closed_at?: string | null
+          confidence?: number
+          created_at?: string
+          entry_price?: number
+          id?: string
+          opened_at?: string
+          pnl?: number | null
+          pnl_percent?: number | null
+          position_size?: number
+          reasoning?: string | null
+          status?: string
+          stop_loss?: number
+          strategy?: string
+          symbol?: string
+          take_profit?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

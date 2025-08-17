@@ -38,6 +38,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useUserSettings } from "@/hooks/useUserSettings";
 
 interface VirtualAccount {
   balance: number;
@@ -86,40 +87,30 @@ interface SuperBrainSignal {
 
 export const AutoTrader = () => {
   const { toast } = useToast();
+  const { settings, isAuthenticated, updateSettings, startBackgroundMonitoring } = useUserSettings();
   
-  // 检查最强大脑监测状态
-  const [isSuperBrainActive, setIsSuperBrainActive] = useState(() => {
-    const saved = localStorage.getItem('superBrainMonitoring');
-    return saved ? JSON.parse(saved) : false;
-  });
-
-  // 虚拟账户
-  const [virtualAccount, setVirtualAccount] = useState<VirtualAccount>(() => {
-    const saved = localStorage.getItem('virtualAccount');
-    return saved ? JSON.parse(saved) : {
-      balance: 100000,
-      totalPnL: 0,
-      dailyPnL: 0,
-      winRate: 0,
-      totalTrades: 0,
-      activePositions: 0
-    };
-  });
+  // 使用数据库设置初始化状态
+  const [isSuperBrainActive, setIsSuperBrainActive] = useState(settings.super_brain_monitoring);
+  const [isEnabled, setIsEnabled] = useState(settings.auto_trading_enabled);
+  
+  // 虚拟账户从设置读取
+  const [virtualAccount, setVirtualAccount] = useState<VirtualAccount>(() => ({
+    balance: settings.virtual_balance || 100000,
+    totalPnL: 0,
+    dailyPnL: 0,
+    winRate: 0,
+    totalTrades: 0,
+    activePositions: 0
+  }));
 
   // 临时余额输入状态
-  const [tempBalance, setTempBalance] = useState<string>(() => 
+  const [tempBalance, setTempBalance] = useState<string>(
     virtualAccount.balance.toString()
   );
 
-  // AI自动交易配置
-  const [isEnabled, setIsEnabled] = useState(() => {
-    const saved = localStorage.getItem('autoTraderEnabled');
-    return saved ? JSON.parse(saved) : false;
-  });
-
-  const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>('conservative');
-  const [maxPositions, setMaxPositions] = useState(5);
-  const [riskPerTrade, setRiskPerTrade] = useState(2); // 每笔交易风险百分比
+  const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>(settings.trading_strategy || 'conservative');
+  const [maxPositions, setMaxPositions] = useState(settings.max_positions || 5);
+  const [riskPerTrade, setRiskPerTrade] = useState(settings.risk_per_trade || 2);
   
   // 持仓管理
   const [positions, setPositions] = useState<Position[]>([]);
@@ -145,6 +136,26 @@ export const AutoTrader = () => {
       color: 'text-orange-400'
     }
   ];
+
+  // 监听设置变化，同步状态
+  useEffect(() => {
+    setIsSuperBrainActive(settings.super_brain_monitoring);
+    setIsEnabled(settings.auto_trading_enabled);
+    setSelectedStrategy(settings.trading_strategy || 'conservative');
+    setMaxPositions(settings.max_positions || 5);
+    setRiskPerTrade(settings.risk_per_trade || 2);
+    
+    const newVirtualAccount = {
+      balance: settings.virtual_balance || 100000,
+      totalPnL: virtualAccount.totalPnL,
+      dailyPnL: virtualAccount.dailyPnL,
+      winRate: virtualAccount.winRate,
+      totalTrades: virtualAccount.totalTrades,
+      activePositions: virtualAccount.activePositions
+    };
+    setVirtualAccount(newVirtualAccount);
+    setTempBalance((settings.virtual_balance || 100000).toString());
+  }, [settings]);
 
   // 监听最强大脑状态变化
   useEffect(() => {
@@ -287,7 +298,7 @@ export const AutoTrader = () => {
   }, [virtualAccount.balance, riskPerTrade, selectedStrategy]);
 
   // 启动/停止AI自动交易
-  const toggleAutoTrader = () => {
+  const toggleAutoTrader = async () => {
     if (!isSuperBrainActive) {
       toast({
         title: "无法启动AI自动交易",
@@ -298,8 +309,22 @@ export const AutoTrader = () => {
     }
 
     const newState = !isEnabled;
+    
+    // 更新数据库设置
+    const success = await updateSettings({ 
+      auto_trading_enabled: newState 
+    });
+    
+    if (!success) {
+      return;
+    }
+
     setIsEnabled(newState);
-    localStorage.setItem('autoTraderEnabled', JSON.stringify(newState));
+    
+    // 如果是启动后台监控，调用后台服务
+    if (newState && isAuthenticated) {
+      await startBackgroundMonitoring();
+    }
     
     // 发送状态变化事件
     window.dispatchEvent(new CustomEvent('autoTraderStatusChanged', {
@@ -309,7 +334,7 @@ export const AutoTrader = () => {
     toast({
       title: newState ? "AI自动交易已启动" : "AI自动交易已停止",
       description: newState 
-        ? `${strategies.find(s => s.type === selectedStrategy)?.name}策略已激活，等待交易信号...`
+        ? `${strategies.find(s => s.type === selectedStrategy)?.name}策略已激活，${isAuthenticated ? '后台监控已启动' : '本地监控模式'}`
         : "自动交易功能已关闭",
     });
 
@@ -322,11 +347,13 @@ export const AutoTrader = () => {
   };
 
   // 设置虚拟账户余额
-  const updateVirtualBalance = (newBalance: number) => {
+  const updateVirtualBalance = async (newBalance: number) => {
     const updatedAccount = { ...virtualAccount, balance: newBalance };
     setVirtualAccount(updatedAccount);
     setTempBalance(newBalance.toString());
-    localStorage.setItem('virtualAccount', JSON.stringify(updatedAccount));
+    
+    // 更新数据库设置
+    await updateSettings({ virtual_balance: newBalance });
   };
 
   // 确认更新余额
