@@ -39,6 +39,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { useUserSettings } from "@/hooks/useUserSettings";
+import { TradingStatistics } from "./TradingStatistics";
 
 interface VirtualAccount {
   balance: number;
@@ -302,11 +303,19 @@ export const AutoTrader = () => {
     setPositions(prev => [...prev, newPosition]);
     
     // 更新虚拟账户
+    const newTotalPnL = virtualAccount.totalPnL;
+    const newDailyPnL = virtualAccount.dailyPnL; // 暂时保持不变，等交易结果再更新
+    const newTotalTrades = virtualAccount.totalTrades + 1;
+    const newWinRate = virtualAccount.winRate; // 暫時保持不變
+    
     const updatedAccount = {
       ...virtualAccount,
       balance: virtualAccount.balance - tradeSize,
-      totalTrades: virtualAccount.totalTrades + 1,
-      activePositions: virtualAccount.activePositions + 1
+      totalTrades: newTotalTrades,
+      activePositions: virtualAccount.activePositions + 1,
+      totalPnL: newTotalPnL,
+      dailyPnL: newDailyPnL,
+      winRate: newWinRate
     };
     setVirtualAccount(updatedAccount);
     await updateSettings({ virtual_balance: updatedAccount.balance });
@@ -775,8 +784,17 @@ export const AutoTrader = () => {
           </Card>
         </div>
 
-        {/* 右侧：持仓管理 */}
-        <div className="lg:col-span-2">
+        {/* 右侧：持仓管理 & 交易历史 */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* 交易统计面板 */}
+          <TradingStatistics 
+            virtualAccount={virtualAccount}
+            positions={positions}
+            tradingHistory={tradingHistory}
+            isEnabled={isEnabled}
+          />
+
+          {/* 持仓管理 */}
           <Card className="bg-slate-900/95 border-slate-700/50">
             <div className="p-4">
               <div className="flex items-center justify-between mb-4">
