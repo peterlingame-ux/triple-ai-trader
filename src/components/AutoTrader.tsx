@@ -533,6 +533,15 @@ export const AutoTrader = () => {
 
   // 同步数据到WalletProvider
   useEffect(() => {
+    console.log('📈 AutoTrader syncing data:', {
+      virtualBalance: config.virtualBalance,
+      totalPnL: stats.totalPnL,
+      dailyPnL: stats.dailyPnL,
+      activeTrades: positions.filter(p => p.status === 'open').length,
+      winRate: stats.winRate,
+      monthlyPnL: stats.monthlyPnL
+    });
+    
     updateAutoTraderData({
       virtualBalance: config.virtualBalance,
       totalPnL: stats.totalPnL,
@@ -547,18 +556,27 @@ export const AutoTrader = () => {
   useEffect(() => {
     if (!config.enabled) return;
 
+    console.log('🚀 AutoTrader enabled - starting simulation updates');
+
     const simulateActivity = () => {
+      console.log('⏰ Simulating activity update...');
       setStats(prevStats => {
+        const randomChange = (Math.random() - 0.5) * 50; // 加大波动范围
         const newStats = {
           ...prevStats,
-          dailyPnL: prevStats.dailyPnL + (Math.random() - 0.5) * 20, // 小幅波动
+          dailyPnL: Math.max(0, prevStats.dailyPnL + randomChange), // 确保不为负数
+          totalPnL: prevStats.totalPnL + randomChange * 0.1, // 总PnL变化更小
         };
+        console.log('💹 Simulated stats update:', newStats);
         return newStats;
       });
     };
 
-    // 每30秒更新一次，显示系统在活跃监控
-    const interval = setInterval(simulateActivity, 30000);
+    // 首次立即执行一次
+    simulateActivity();
+    
+    // 每5秒更新一次，显示系统在活跃监控
+    const interval = setInterval(simulateActivity, 5000); // 改为5秒更频繁
     return () => clearInterval(interval);
   }, [config.enabled]);
 

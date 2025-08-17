@@ -124,24 +124,33 @@ export const WalletProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateAutoTraderData = (data: Partial<AutoTraderData>) => {
-    setAutoTraderData(prev => ({ ...prev, ...data }));
+    console.log('🔄 AutoTrader data updated:', data);
+    setAutoTraderData(prev => {
+      const newData = { ...prev, ...data };
+      console.log('📊 New AutoTrader state:', newData);
+      return newData;
+    });
   };
 
   const getPortfolioData = () => {
     if (walletData.isConnected) {
-      return {
+      const data = {
         totalValue: walletData.balance,
         dailyChange: walletData.dailyChange,
         activeTrades: walletData.activeTrades,
         source: 'wallet' as const
       };
+      console.log('💳 Portfolio data (wallet):', data);
+      return data;
     } else {
-      return {
+      const data = {
         totalValue: autoTraderData.virtualBalance + autoTraderData.totalPnL,
         dailyChange: autoTraderData.dailyPnL,
         activeTrades: autoTraderData.activeTrades,
         source: 'autotrader' as const
       };
+      console.log('🤖 Portfolio data (autotrader):', data, 'Raw autoTraderData:', autoTraderData);
+      return data;
     }
   };
 

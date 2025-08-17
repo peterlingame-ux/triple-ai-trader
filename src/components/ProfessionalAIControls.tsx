@@ -24,6 +24,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
   
   // Get portfolio data for the cards
   const portfolioData = getPortfolioData();
+  console.log('🎯 ProfessionalAIControls portfolio data:', portfolioData);
   
   // 从localStorage读取初始状态
   const [isMonitoring, setIsMonitoring] = useState(() => {
