@@ -112,8 +112,6 @@ export const AutoTrader = () => {
   const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>(settings.trading_strategy || 'conservative');
   const [tempStrategy, setTempStrategy] = useState<'conservative' | 'aggressive'>(settings.trading_strategy || 'conservative'); // 临时策略选择
   const [strategyChanged, setStrategyChanged] = useState(false); // 策略是否有变更
-  const [maxPositions, setMaxPositions] = useState(settings.max_positions || 5);
-  const [riskPerTrade, setRiskPerTrade] = useState(settings.risk_per_trade || 2);
   
   // 持仓管理
   const [positions, setPositions] = useState<Position[]>([]);
@@ -151,8 +149,6 @@ export const AutoTrader = () => {
     setSelectedStrategy(settings.trading_strategy || 'conservative');
     setTempStrategy(settings.trading_strategy || 'conservative');
     setStrategyChanged(false);
-    setMaxPositions(settings.max_positions || 5);
-    setRiskPerTrade(settings.risk_per_trade || 2);
     
     // 只有当设置中的余额与当前虚拟账户余额不同时才更新
     if (settings.virtual_balance !== undefined && settings.virtual_balance !== virtualAccount.balance) {
@@ -171,7 +167,7 @@ export const AutoTrader = () => {
       setVirtualAccount(newVirtualAccount);
       setTempBalance(settings.virtual_balance.toString());
     }
-  }, [settings.virtual_balance, settings.super_brain_monitoring, settings.auto_trading_enabled, settings.trading_strategy, settings.max_positions, settings.risk_per_trade]); // 只依赖具体的设置字段
+  }, [settings.virtual_balance, settings.super_brain_monitoring, settings.auto_trading_enabled, settings.trading_strategy]); // 只依赖具体的设置字段
 
   // 确认策略更改
   const confirmStrategyChange = async () => {
@@ -258,15 +254,6 @@ export const AutoTrader = () => {
         return;
       }
 
-      // 检查持仓限制
-      if (positions.length >= maxPositions) {
-        setTradingHistory(prev => [
-          `⚠️ ${signal.symbol} 已达最大持仓数${maxPositions}，跳过交易`,
-          ...prev.slice(0, 19)
-        ]);
-        return;
-      }
-
       // 检查是否已有该币种持仓
       if (positions.some(p => p.symbol === signal.symbol)) {
         setTradingHistory(prev => [
@@ -285,13 +272,13 @@ export const AutoTrader = () => {
     return () => {
       window.removeEventListener('superBrainTradingSignal', handleSuperBrainSignal as EventListener);
     };
-  }, [isEnabled, selectedStrategy, maxPositions, positions]);
+  }, [isEnabled, selectedStrategy, positions]);
 
   // 执行自动交易
   const executeAutomaticTrade = useCallback(async (signal: SuperBrainSignal) => {
     console.log('执行自动交易:', signal);
     
-    const tradeSize = (virtualAccount.balance * riskPerTrade) / 100;
+    const tradeSize = (virtualAccount.balance * 2) / 100; // 固定2%风险
     const positionSize = tradeSize / signal.entry;
     
     const newPosition: Position = {
@@ -368,7 +355,7 @@ export const AutoTrader = () => {
       title: "🚀 自动交易执行成功",
       description: `${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'} | 胜率${signal.confidence}%`,
     });
-  }, [virtualAccount, riskPerTrade, selectedStrategy, strategies, updateSettings, isAuthenticated, toast]);
+  }, [virtualAccount, selectedStrategy, strategies, updateSettings, isAuthenticated, toast]);
 
   // 启动/停止AI自动交易
   const toggleAutoTrader = async () => {
@@ -745,33 +732,6 @@ export const AutoTrader = () => {
                   </div>
                 )}
 
-                <div className="pt-4 border-t border-slate-700">
-                  <div className="space-y-3">
-                    <div>
-                      <Label className="text-slate-300 text-sm">最大持仓数</Label>
-                      <Input
-                        type="number"
-                        value={maxPositions}
-                        onChange={(e) => setMaxPositions(Number(e.target.value))}
-                        className="bg-slate-800 border-slate-600 text-white mt-1"
-                        min="1"
-                        max="10"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-slate-300 text-sm">单笔风险 (%)</Label>
-                      <Input
-                        type="number"
-                        value={riskPerTrade}
-                        onChange={(e) => setRiskPerTrade(Number(e.target.value))}
-                        className="bg-slate-800 border-slate-600 text-white mt-1"
-                        min="0.5"
-                        max="10"
-                        step="0.5"
-                      />
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </Card>
@@ -823,7 +783,7 @@ export const AutoTrader = () => {
                   <h3 className="text-lg font-semibold text-white">持仓管理</h3>
                 </div>
                 <Badge variant="outline" className="text-slate-300">
-                  {positions.length}/{maxPositions} 持仓
+                  {positions.length} 持仓
                 </Badge>
               </div>
 

@@ -10,8 +10,6 @@ interface UserSettings {
   super_brain_monitoring: boolean;
   auto_trading_enabled: boolean;
   trading_strategy: 'conservative' | 'aggressive';
-  max_positions: number;
-  risk_per_trade: number;
   virtual_balance: number;
   monitoring_symbols: string[];
 }
@@ -124,7 +122,7 @@ async function processAutoTrading(supabase: any, settings: UserSettings, signal:
       return
     }
 
-    // 检查当前持仓数量
+    // 检查当前持仓数量（简化为基本检查）
     const { data: currentTrades, error: tradesError } = await supabase
       .from('virtual_trades')
       .select('id')
@@ -136,13 +134,8 @@ async function processAutoTrading(supabase: any, settings: UserSettings, signal:
       return
     }
 
-    if (currentTrades && currentTrades.length >= settings.max_positions) {
-      console.log(`Max positions reached for user ${settings.user_id}`)
-      return
-    }
-
-    // 计算仓位大小
-    const riskAmount = (settings.virtual_balance * settings.risk_per_trade) / 100
+    // 计算仓位大小（固定2%风险）
+    const riskAmount = (settings.virtual_balance * 2) / 100
     const stopLossDistance = Math.abs(signal.entry - signal.stopLoss)
     const positionSize = stopLossDistance > 0 ? riskAmount / stopLossDistance : riskAmount / signal.entry * 0.02
 

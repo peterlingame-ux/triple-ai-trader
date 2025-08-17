@@ -8,8 +8,6 @@ interface UserSettings {
   super_brain_monitoring: boolean;
   auto_trading_enabled: boolean;
   trading_strategy: 'conservative' | 'aggressive';
-  max_positions: number;
-  risk_per_trade: number;
   virtual_balance: number;
   monitoring_symbols: string[];
   created_at?: string;
@@ -20,8 +18,6 @@ const defaultSettings: UserSettings = {
   super_brain_monitoring: false,
   auto_trading_enabled: false,
   trading_strategy: 'conservative',
-  max_positions: 5,
-  risk_per_trade: 2.0,
   virtual_balance: 100000,
   monitoring_symbols: ['BTC', 'ETH', 'BNB', 'XRP', 'ADA', 'SOL']
 };
