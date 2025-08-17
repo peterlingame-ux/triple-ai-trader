@@ -109,6 +109,8 @@ export const AutoTrader = () => {
   );
 
   const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>(settings.trading_strategy || 'conservative');
+  const [tempStrategy, setTempStrategy] = useState<'conservative' | 'aggressive'>(settings.trading_strategy || 'conservative'); // 临时策略选择
+  const [strategyChanged, setStrategyChanged] = useState(false); // 策略是否有变更
   const [maxPositions, setMaxPositions] = useState(settings.max_positions || 5);
   const [riskPerTrade, setRiskPerTrade] = useState(settings.risk_per_trade || 2);
   
@@ -142,6 +144,8 @@ export const AutoTrader = () => {
     setIsSuperBrainActive(settings.super_brain_monitoring);
     setIsEnabled(settings.auto_trading_enabled);
     setSelectedStrategy(settings.trading_strategy || 'conservative');
+    setTempStrategy(settings.trading_strategy || 'conservative');
+    setStrategyChanged(false);
     setMaxPositions(settings.max_positions || 5);
     setRiskPerTrade(settings.risk_per_trade || 2);
     
@@ -157,7 +161,30 @@ export const AutoTrader = () => {
     setTempBalance((settings.virtual_balance || 100000).toString());
   }, [settings]);
 
-  // 监听最强大脑状态变化
+  // 确认策略更改
+  const confirmStrategyChange = async () => {
+    const success = await updateSettings({ trading_strategy: tempStrategy });
+    if (success) {
+      setSelectedStrategy(tempStrategy);
+      setStrategyChanged(false);
+      toast({
+        title: "策略更新成功",
+        description: `已切换到${strategies.find(s => s.type === tempStrategy)?.name}策略`,
+      });
+    }
+  };
+
+  // 取消策略更改
+  const cancelStrategyChange = () => {
+    setTempStrategy(selectedStrategy);
+    setStrategyChanged(false);
+  };
+
+  // 处理策略选择
+  const handleStrategySelect = (strategyType: 'conservative' | 'aggressive') => {
+    setTempStrategy(strategyType);
+    setStrategyChanged(strategyType !== selectedStrategy);
+  };
   useEffect(() => {
     const handleMonitoringChange = (event: CustomEvent) => {
       setIsSuperBrainActive(event.detail.isMonitoring);
@@ -635,11 +662,11 @@ export const AutoTrader = () => {
                   <div
                     key={strategy.type}
                     className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                      selectedStrategy === strategy.type
+                      tempStrategy === strategy.type
                         ? 'border-emerald-500/50 bg-emerald-500/10'
                         : 'border-slate-600 bg-slate-800/40 hover:border-slate-500'
                     }`}
-                    onClick={() => setSelectedStrategy(strategy.type)}
+                    onClick={() => handleStrategySelect(strategy.type)}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`${strategy.color}`}>
@@ -651,17 +678,43 @@ export const AutoTrader = () => {
                           <Badge variant="outline" className="text-xs">
                             ≥{strategy.minConfidence}%
                           </Badge>
+                          {selectedStrategy === strategy.type && !strategyChanged && (
+                            <Badge className="text-xs bg-green-600 text-white">当前</Badge>
+                          )}
                         </div>
                         <div className="text-xs text-slate-400 mt-1">
                           {strategy.description}
                         </div>
                       </div>
-                      {selectedStrategy === strategy.type && (
+                      {tempStrategy === strategy.type && (
                         <CheckCircle className="w-5 h-5 text-emerald-400" />
                       )}
                     </div>
                   </div>
                 ))}
+
+                {/* 策略确认按钮 */}
+                {strategyChanged && (
+                  <div className="flex gap-2 pt-2 border-t border-slate-700">
+                    <Button 
+                      onClick={confirmStrategyChange}
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+                      size="sm"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      确定策略
+                    </Button>
+                    <Button 
+                      onClick={cancelStrategyChange}
+                      variant="outline"
+                      className="flex-1 border-slate-600 text-slate-300 hover:bg-slate-700"
+                      size="sm"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      取消更改
+                    </Button>
+                  </div>
+                )}
 
                 <div className="pt-4 border-t border-slate-700">
                   <div className="space-y-3">
