@@ -1,16 +1,13 @@
-import { AITradingExchange } from "@/components/AITradingExchange";
 import { TradingDashboard } from "@/components/TradingDashboard";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useState } from "react";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
-  const [showAITrading, setShowAITrading] = useState(false);
 
 
   if (loading) {
@@ -29,7 +26,7 @@ const Index = () => {
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Meta BrainX - AI交易平台
+            Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
@@ -54,11 +51,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-      {showAITrading ? (
-        <AITradingExchange onBack={() => setShowAITrading(false)} />
-      ) : (
-        <TradingDashboard onOpenAITrading={() => setShowAITrading(true)} />
-      )}
+      <TradingDashboard />
     </div>
   );
 };
