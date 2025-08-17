@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
 import { SuperBrainDetection } from "./SuperBrainDetection";
+import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { logger } from "@/utils/errorHandler";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -19,13 +20,21 @@ import vitalikAvatar from "@/assets/vitalik-buterin-cartoon-avatar.png";
 import justinAvatar from "@/assets/justin-sun-cartoon-avatar.png";
 import trumpAvatar from "@/assets/donald-trump-cartoon-avatar.png";
 
+interface PortfolioData {
+  totalValue: number;
+  dailyChange: number;
+  activeTrades: number;
+  source: 'wallet' | 'autotrader';
+}
+
 interface AIControlCenterProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   advisorStates?: Record<string, boolean>;
+  portfolioData?: PortfolioData;
 }
 
-export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AIControlCenterProps) => {
+export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfolioData }: AIControlCenterProps) => {
   const { t, currentLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
@@ -132,6 +141,17 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {} }: AICo
         <h2 className="text-3xl font-bold text-white mb-2">{t('ai.control_center.title')}</h2>
         <p className="text-slate-400">{t('ai.control_center.description')}</p>
       </div>
+
+      {/* Portfolio Overview Cards */}
+      {portfolioData && (
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5" />
+            {t('portfolio.overview')}
+          </h3>
+          <OptimizedPortfolioCards portfolioData={portfolioData} />
+        </div>
+      )}
 
       {/* System Status Overview */}
       <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">

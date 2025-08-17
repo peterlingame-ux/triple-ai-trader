@@ -18,7 +18,7 @@ import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
-import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
+// Portfolio cards moved to AI Control Center
 import { BarChart3, Brain, RefreshCw } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
@@ -132,8 +132,7 @@ export const TradingDashboard = memo(() => {
         {/* AI Opportunity Alert - Temporarily disabled due to API issues */}
         {/* <AIOpportunityAlert /> */}
 
-        {/* Portfolio Overview with Dynamic Data Source */}
-        <OptimizedPortfolioCards portfolioData={portfolioData} />
+        {/* Portfolio Overview moved to AI Control Center */}
 
         {/* 币安API配置 */}
         <BinanceAPIConfig />
@@ -218,6 +217,7 @@ export const TradingDashboard = memo(() => {
           open={showAIControlCenter} 
           onOpenChange={setShowAIControlCenter}
           advisorStates={advisorStates}
+          portfolioData={portfolioData}
         />
 
         {/* AI Advisors Section - Three Column Grid */}
