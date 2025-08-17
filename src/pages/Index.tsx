@@ -1,7 +1,6 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
 import { GlobalAutoTrader } from "@/components/GlobalAutoTrader";
 import { IntelligentPositionManager } from "@/components/IntelligentPositionManager";
-import { TradingAnalytics } from "@/components/TradingAnalytics";
 import { DetectionHistory } from "@/components/DetectionHistory";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -63,7 +62,6 @@ const Index = () => {
             <IntelligentPositionManager />
           </div>
         </div>
-        <TradingAnalytics />
       </div>
       <GlobalAutoTrader />
     </div>
