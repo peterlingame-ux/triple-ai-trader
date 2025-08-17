@@ -1,13 +1,21 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
+import { GlobalOpportunityAlert } from "@/components/GlobalOpportunityAlert";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import { OpportunityAlert } from "@/types/api";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
+
+  const handleOpportunityAction = (alert: OpportunityAlert) => {
+    // 处理购买/卖出操作
+    console.log('处理交易操作:', alert);
+    // 这里可以集成实际的交易逻辑
+  };
 
   if (loading) {
     return (
@@ -51,6 +59,7 @@ const Index = () => {
         </div>
       </header>
       <TradingDashboard />
+      <GlobalOpportunityAlert onTakeAction={handleOpportunityAction} />
     </div>
   );
 };

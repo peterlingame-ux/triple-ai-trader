@@ -129,6 +129,12 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         setCurrentAlert(alert);
         setShowAlert(true);
         
+        // 触发全局弹窗事件
+        const globalEvent = new CustomEvent('superBrainOpportunity', {
+          detail: alert
+        });
+        window.dispatchEvent(globalEvent);
+        
         // Display system notification
         toast({
           title: t('ai.high_probability_opportunity'),
