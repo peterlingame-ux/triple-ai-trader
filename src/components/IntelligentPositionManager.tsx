@@ -73,26 +73,33 @@ export const IntelligentPositionManager = () => {
 
   // 创建新持仓
   const createPosition = async (signalData: any) => {
-    if (!isAuthenticated || !user) return;
+    if (!isAuthenticated || !user) {
+      console.log('用户未登录，无法创建持仓');
+      return;
+    }
+
+    console.log('准备创建持仓:', signalData);
 
     const positionData = {
       user_id: user.id,
       symbol: signalData.symbol,
       type: (signalData.action || signalData.signal) as 'buy' | 'sell' | 'long' | 'short',
       status: 'open' as const,
-      entry_price: signalData.entry || signalData.price,
-      current_price: signalData.entry || signalData.price,
-      stop_loss: signalData.stopLoss,
-      take_profit: signalData.takeProfit,
+      entry_price: Number(signalData.entry || signalData.price) || 0,
+      current_price: Number(signalData.entry || signalData.price) || 0,
+      stop_loss: Number(signalData.stopLoss) || null,
+      take_profit: Number(signalData.takeProfit) || null,
       position_size: 1000, // 默认仓位大小
       leverage: 1,
-      pnl: 0,
+      pnl: Number(signalData.profit) || 0,
       pnl_percent: 0,
-      confidence: signalData.confidence,
+      confidence: Number(signalData.confidence) || 0,
       strategy: 'AI_AUTO',
       trading_type: 'spot',
       ai_reasoning: signalData.reasoning,
     };
+
+    console.log('持仓数据:', positionData);
 
     try {
       const { data, error } = await supabase
@@ -102,9 +109,16 @@ export const IntelligentPositionManager = () => {
         .single();
 
       if (error) {
-        console.error('Error creating position:', error);
+        console.error('创建持仓失败:', error);
+        toast({
+          title: "❌ 创建持仓失败",
+          description: error.message,
+          variant: "destructive",
+        });
         return;
       }
+
+      console.log('持仓创建成功:', data);
 
       // 添加到本地状态，确保类型安全
       const typedPosition: Position = {
@@ -121,11 +135,16 @@ export const IntelligentPositionManager = () => {
       window.dispatchEvent(updateEvent);
       
       toast({
-        title: "🤖 AI自动开仓",
-        description: `${data.symbol} ${data.type === 'buy' || data.type === 'long' ? '多头' : '空头'}持仓已建立`,
+        title: "🤖 AI自动开仓成功",
+        description: `${data.symbol} ${data.type === 'buy' || data.type === 'long' ? '多头' : '空头'}持仓已建立，预计盈亏: ${signalData.profit ? '$' + signalData.profit.toFixed(2) : '计算中...'}`,
       });
     } catch (error) {
-      console.error('Error creating position:', error);
+      console.error('创建持仓异常:', error);
+      toast({
+        title: "❌ 系统异常",
+        description: "持仓创建失败，请稍后重试",
+        variant: "destructive",
+      });
     }
   };
 
@@ -210,17 +229,24 @@ export const IntelligentPositionManager = () => {
   useEffect(() => {
     const handleAutoTradeExecuted = (event: CustomEvent) => {
       const tradeData = event.detail;
-      console.log('收到自动交易执行信号:', tradeData);
-      createPosition(tradeData);
+      console.log('🎯 收到自动交易执行信号:', tradeData);
+      if (tradeData && tradeData.symbol && tradeData.confidence) {
+        createPosition(tradeData);
+      } else {
+        console.log('⚠️ 交易信号数据不完整，跳过创建持仓');
+      }
     };
 
     const handleSuperBrainSignal = (event: CustomEvent) => {
       const signalData = event.detail;
-      console.log('收到超级大脑信号:', signalData);
+      console.log('🧠 收到超级大脑信号:', signalData);
       
-      // 只处理高胜率信号
-      if (signalData.confidence >= 85) {
+      // 处理高胜率信号并确保数据完整
+      if (signalData && signalData.confidence >= 85 && signalData.symbol && signalData.entry) {
+        console.log('✅ 高胜率信号符合条件，创建持仓');
         createPosition(signalData);
+      } else {
+        console.log('⚠️ 超级大脑信号不符合条件或数据不完整，跳过');
       }
     };
 
