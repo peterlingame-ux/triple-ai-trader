@@ -119,7 +119,6 @@ export const TradingExchangePanel = ({
   if (activeSection === 'history') {
     return (
       <TradingHistoryPanel 
-        onBack={() => setActiveSection(null)}
         dateRange={customDateRange}
       />
     );

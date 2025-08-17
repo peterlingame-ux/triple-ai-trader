@@ -28,14 +28,13 @@ interface Position {
 }
 
 interface TradingHistoryPanelProps {
-  onBack: () => void;
   dateRange?: {
     from: Date | undefined;
     to: Date | undefined;
   };
 }
 
-export const TradingHistoryPanel = ({ onBack, dateRange }: TradingHistoryPanelProps) => {
+export const TradingHistoryPanel = ({ dateRange }: TradingHistoryPanelProps) => {
   const [positions, setPositions] = useState<Position[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<'all' | 'open' | 'closed'>('all');
