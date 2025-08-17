@@ -60,12 +60,15 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
 
   // 计算统计数据
   const calculateStats = () => {
+    // 调试日志
+    console.log('TradingStatistics - virtualAccount.balance:', virtualAccount.balance);
+    
     // AI虚拟投资组合价值 = 账户余额 + 当前持仓的浮动盈亏
     const currentPositionsPnL = positions.reduce((sum, pos) => sum + pos.pnl, 0);
     const totalValue = virtualAccount.balance + currentPositionsPnL;
     
-    // 使用虚拟账户的当前余额作为基准，而不是固定的100000
-    const baseBalance = virtualAccount.balance; // 当前账户余额作为投资组合基础价值
+    // 直接使用传入的账户余额
+    const baseBalance = virtualAccount.balance;
     const totalReturn = virtualAccount.totalPnL !== 0 ? 
       (virtualAccount.totalPnL / baseBalance) * 100 : 0;
     
@@ -79,7 +82,7 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
       : 0;
 
     return {
-      totalValue: baseBalance, // 直接使用账户余额作为投资组合价值
+      totalValue: virtualAccount.balance, // 直接使用传入的账户余额
       totalReturn,
       profitableTrades,
       totalExecutedTrades,
@@ -135,7 +138,7 @@ export const TradingStatistics = ({ virtualAccount, positions, tradingHistory, i
               {virtualAccount.dailyPnL >= 0 ? '+' : ''}${virtualAccount.dailyPnL.toFixed(2)}
             </div>
             <div className={`text-xs ${virtualAccount.dailyPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {virtualAccount.dailyPnL >= 0 ? '+' : ''}{((virtualAccount.dailyPnL / 100000) * 100).toFixed(2)}%
+              {virtualAccount.dailyPnL >= 0 ? '+' : ''}{((virtualAccount.dailyPnL / virtualAccount.balance) * 100).toFixed(2)}%
             </div>
           </div>
         </Card>

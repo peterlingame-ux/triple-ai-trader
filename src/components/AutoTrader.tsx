@@ -96,12 +96,12 @@ export const AutoTrader = () => {
   
   // 虚拟账户从设置读取
   const [virtualAccount, setVirtualAccount] = useState<VirtualAccount>(() => ({
-    balance: settings.virtual_balance || 100000,
+    balance: settings.virtual_balance || 1000, // 使用更合理的默认值
     totalPnL: 0,
     dailyPnL: 0,
     winRate: 0,
     totalTrades: 0,
-    activePositions: 0
+    activePositions: 0  
   }));
 
   // 临时余额输入状态
@@ -142,6 +142,9 @@ export const AutoTrader = () => {
 
   // 监听设置变化，同步状态
   useEffect(() => {
+    console.log('AutoTrader - settings changed:', settings);
+    console.log('AutoTrader - settings.virtual_balance:', settings.virtual_balance);
+    
     setIsSuperBrainActive(settings.super_brain_monitoring);
     setIsEnabled(settings.auto_trading_enabled);
     setSelectedStrategy(settings.trading_strategy || 'conservative');
@@ -150,16 +153,20 @@ export const AutoTrader = () => {
     setMaxPositions(settings.max_positions || 5);
     setRiskPerTrade(settings.risk_per_trade || 2);
     
-    const newVirtualAccount = {
-      balance: settings.virtual_balance || 100000,
-      totalPnL: virtualAccount.totalPnL,
-      dailyPnL: virtualAccount.dailyPnL,
-      winRate: virtualAccount.winRate,
-      totalTrades: virtualAccount.totalTrades,
-      activePositions: virtualAccount.activePositions
-    };
-    setVirtualAccount(newVirtualAccount);
-    setTempBalance((settings.virtual_balance || 100000).toString());
+    // 确保虚拟账户余额与设置同步
+    if (settings.virtual_balance !== undefined) {
+      const newVirtualAccount = {
+        balance: settings.virtual_balance,
+        totalPnL: virtualAccount.totalPnL,
+        dailyPnL: virtualAccount.dailyPnL,  
+        winRate: virtualAccount.winRate,
+        totalTrades: virtualAccount.totalTrades,
+        activePositions: virtualAccount.activePositions
+      };
+      console.log('AutoTrader - updating virtualAccount to:', newVirtualAccount);
+      setVirtualAccount(newVirtualAccount);
+      setTempBalance(settings.virtual_balance.toString());
+    }
   }, [settings]);
 
   // 确认策略更改
