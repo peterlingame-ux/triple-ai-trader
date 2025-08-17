@@ -33,7 +33,7 @@ export const GlobalAutoTrader = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentAlert, setCurrentAlert] = useState<TradingAlert | null>(null);
   const [tradingHistory, setTradingHistory] = useState<TradingAlert[]>([]);
-  const [isAutoTradingEnabled, setIsAutoTradingEnabled] = useState(true);
+  const [isAutoTradingEnabled, setIsAutoTradingEnabled] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
 
