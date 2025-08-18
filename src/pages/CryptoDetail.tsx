@@ -9,6 +9,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { CryptoStaticIcon } from '@/components/Static3DIconShowcase';
 import { formatPrice, formatVolume } from '@/utils/cryptoDataUtils';
 import { useToast } from '@/hooks/use-toast';
+import { BinanceKlineChart } from '@/components/BinanceKlineChart';
 
 interface CryptoDetailData {
   symbol: string;
@@ -226,12 +227,15 @@ const CryptoDetail = () => {
           </CardContent>
         </Card>
 
+        {/* K线图 */}
+        <BinanceKlineChart symbol={data.symbol} />
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 订单簿 */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                订单簿
+                实时订单簿
                 <Badge variant="outline">
                   价差: {data.liquidity.spreadPercent.toFixed(4)}%
                 </Badge>
@@ -240,22 +244,28 @@ const CryptoDetail = () => {
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold text-success mb-2">买盘 (Bids)</h4>
+                  <h4 className="font-semibold text-success mb-2 flex items-center gap-1">
+                    <TrendingUp className="w-4 h-4" />
+                    买盘 (Bids)
+                  </h4>
                   <div className="space-y-1">
                     {data.bids.map((bid, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span className="text-success font-mono">${bid.price.toFixed(4)}</span>
+                      <div key={index} className="flex justify-between text-sm bg-success/5 p-1 rounded">
+                        <span className="text-success font-mono font-bold">${bid.price.toFixed(4)}</span>
                         <span className="text-muted-foreground">{bid.quantity.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-destructive mb-2">卖盘 (Asks)</h4>
+                  <h4 className="font-semibold text-destructive mb-2 flex items-center gap-1">
+                    <TrendingDown className="w-4 h-4" />
+                    卖盘 (Asks)
+                  </h4>
                   <div className="space-y-1">
                     {data.asks.map((ask, index) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span className="text-destructive font-mono">${ask.price.toFixed(4)}</span>
+                      <div key={index} className="flex justify-between text-sm bg-destructive/5 p-1 rounded">
+                        <span className="text-destructive font-mono font-bold">${ask.price.toFixed(4)}</span>
                         <span className="text-muted-foreground">{ask.quantity.toFixed(2)}</span>
                       </div>
                     ))}
@@ -263,72 +273,78 @@ const CryptoDetail = () => {
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-muted-foreground">买盘深度: </span>
-                  <span className="font-mono">{data.liquidity.bidDepth.toFixed(2)}</span>
+                <div className="text-center p-2 bg-success/10 rounded">
+                  <span className="text-muted-foreground block">买盘深度</span>
+                  <span className="font-mono font-bold text-success">{data.liquidity.bidDepth.toFixed(2)}</span>
                 </div>
-                <div>
-                  <span className="text-muted-foreground">卖盘深度: </span>
-                  <span className="font-mono">{data.liquidity.askDepth.toFixed(2)}</span>
+                <div className="text-center p-2 bg-destructive/10 rounded">
+                  <span className="text-muted-foreground block">卖盘深度</span>
+                  <span className="font-mono font-bold text-destructive">{data.liquidity.askDepth.toFixed(2)}</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* 技术指标 */}
+          {/* 实时交易信息 */}
           <Card>
             <CardHeader>
-              <CardTitle>技术分析</CardTitle>
+              <CardTitle>实时交易数据</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm text-muted-foreground">RSI (14)</label>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-lg">{data.rsi.toFixed(2)}</span>
+                  <div className="text-center p-3 bg-card rounded-lg border">
+                    <label className="text-sm text-muted-foreground block">RSI (14)</label>
+                    <div className="flex items-center justify-center gap-2 mt-1">
+                      <span className="font-mono text-xl font-bold">{data.rsi.toFixed(2)}</span>
                       <Badge variant={data.rsi > 70 ? "destructive" : data.rsi < 30 ? "default" : "secondary"}>
                         {data.rsi > 70 ? "超买" : data.rsi < 30 ? "超卖" : "中性"}
                       </Badge>
                     </div>
                   </div>
-                  <div>
-                    <label className="text-sm text-muted-foreground">市场情绪</label>
-                    <div>
-                      <Badge variant={data.marketSentiment === 'bullish' ? "default" : "destructive"}>
-                        {data.marketSentiment === 'bullish' ? '看涨' : '看跌'}
+                  <div className="text-center p-3 bg-card rounded-lg border">
+                    <label className="text-sm text-muted-foreground block">市场情绪</label>
+                    <div className="mt-1">
+                      <Badge 
+                        variant={data.marketSentiment === 'bullish' ? "default" : "destructive"}
+                        className="text-base px-4 py-1"
+                      >
+                        {data.marketSentiment === 'bullish' ? '🐂 看涨' : '🐻 看跌'}
                       </Badge>
                     </div>
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  <div className="flex justify-between">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center p-2 bg-success/10 rounded">
                     <span className="text-muted-foreground">支撑位:</span>
-                    <span className="font-mono text-success">${data.support.toFixed(4)}</span>
+                    <span className="font-mono font-bold text-success">${data.support.toFixed(4)}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center p-2 bg-destructive/10 rounded">
                     <span className="text-muted-foreground">阻力位:</span>
-                    <span className="font-mono text-destructive">${data.resistance.toFixed(4)}</span>
+                    <span className="font-mono font-bold text-destructive">${data.resistance.toFixed(4)}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center p-2 bg-muted rounded">
                     <span className="text-muted-foreground">MA20:</span>
-                    <span className="font-mono">${data.ma20.toFixed(4)}</span>
+                    <span className="font-mono font-bold">${data.ma20.toFixed(4)}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center p-2 bg-muted rounded">
                     <span className="text-muted-foreground">MA50:</span>
-                    <span className="font-mono">${data.ma50.toFixed(4)}</span>
+                    <span className="font-mono font-bold">${data.ma50.toFixed(4)}</span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t">
-                  <div className="flex justify-between mb-2">
-                    <span className="text-muted-foreground">最佳买价:</span>
-                    <span className="font-mono text-success">${data.bidPrice.toFixed(4)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">最佳卖价:</span>
-                    <span className="font-mono text-destructive">${data.askPrice.toFixed(4)}</span>
+                  <h4 className="font-semibold mb-3">最佳报价</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center p-2 bg-success/10 rounded">
+                      <span className="text-muted-foreground">最佳买价:</span>
+                      <span className="font-mono font-bold text-success">${data.bidPrice.toFixed(4)}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-destructive/10 rounded">
+                      <span className="text-muted-foreground">最佳卖价:</span>
+                      <span className="font-mono font-bold text-destructive">${data.askPrice.toFixed(4)}</span>
+                    </div>
                   </div>
                 </div>
               </div>
