@@ -1,5 +1,4 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
-import { ProfessionalTradingView } from "@/components/ProfessionalTradingView";
 import { NotificationToast, notificationTemplates, createNotification } from "@/components/NotificationToast";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -97,7 +96,7 @@ const Index = () => {
         </div>
       </header>
       
-      <ProfessionalTradingView />
+      <TradingDashboard onAddNotification={addNotification} />
       
       {/* 右下角通知组件 */}
       <NotificationToast 
