@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { formatPrice, formatVolume, formatMarketCap } from "@/utils/cryptoDataUtils";
-import { CryptoIcon } from "./CryptoIcon";
+import { CryptoStaticIcon } from "./Static3DIconShowcase";
 
 interface CompactCryptoCardProps {
   symbol: string;
@@ -34,7 +34,7 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="flex-shrink-0">
-            <CryptoIcon symbol={symbol} size={32} />
+            <CryptoStaticIcon symbol={symbol} name={symbol} className="w-8 h-8" />
           </div>
           <div>
             <h3 className="text-foreground font-semibold text-sm font-mono tracking-wider">{symbol}</h3>
