@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
+import { DEFAULT_SYMBOLS, CRYPTO_NAMES } from '@/constants/crypto';
 
 interface CryptoData {
   symbol: string;
@@ -39,130 +40,8 @@ interface NewsArticle {
   };
   sentiment: 'bullish' | 'bearish' | 'neutral';
   impact: 'high' | 'medium' | 'low';
-  time?: string; // For backward compatibility
+  time?: string;
 }
-
-// 扩展的加密货币符号列表 - 包含top 100
-const DEFAULT_SYMBOLS = [
-  // Top 10
-  "BTC", "ETH", "USDT", "BNB", "XRP", "USDC", "STETH", "ADA", "SOL", "DOGE",
-  // Top 11-30
-  "TRX", "TON", "AVAX", "DOT", "MATIC", "SHIB", "LTC", "BCH", "LINK", "XLM",
-  "UNI", "ATOM", "ETC", "HBAR", "FIL", "ICP", "CRO", "APT", "NEAR", "VET",
-  // Top 31-60
-  "GRT", "ALGO", "QNT", "MANA", "SAND", "AAVE", "MKR", "LRC", "ENJ", "BAT",
-  "ZEC", "COMP", "YFI", "SNX", "1INCH", "REN", "KNC", "CRV", "UMA", "BAL",
-  // Top 61-100
-  "SUSHI", "FTM", "FLOW", "EGLD", "ONE", "HIVE", "THETA", "TFUEL", "KAVA", "BAND",
-  "RVN", "ZIL", "ICX", "ONT", "QTUM", "WAVES", "SC", "DGB", "LSK", "ARK",
-  "NANO", "IOST", "ZEN", "MAID", "REP", "KMD", "DCR", "STRAT", "NXT", "SYS",
-  // 新兴和热门币种
-  "PEPE", "BONK", "WIF", "FLOKI", "BABYDOGE", "SAFE", "MEME", "WOJAK", "TURBO", "LADYS", "TRUMP",
-  // 新增币种
-  "OKB", "PENGU"
-];
-
-// 加密货币名称映射（中英文）
-const CRYPTO_NAMES = {
-  // Top 10
-  "BTC": { name: "Bitcoin", cn: "比特币" },
-  "ETH": { name: "Ethereum", cn: "以太坊" },
-  "USDT": { name: "Tether", cn: "泰达币" },
-  "BNB": { name: "Binance Coin", cn: "币安币" },
-  "XRP": { name: "Ripple", cn: "瑞波币" },
-  "USDC": { name: "USD Coin", cn: "美元币" },
-  "STETH": { name: "Staked Ether", cn: "质押以太坊" },
-  "ADA": { name: "Cardano", cn: "卡尔达诺" },
-  "SOL": { name: "Solana", cn: "索拉纳" },
-  "DOGE": { name: "Dogecoin", cn: "狗狗币" },
-  // Top 11-30
-  "TRX": { name: "TRON", cn: "波场" },
-  "TON": { name: "Toncoin", cn: "Ton币" },
-  "AVAX": { name: "Avalanche", cn: "雪崩协议" },
-  "DOT": { name: "Polkadot", cn: "波卡" },
-  "MATIC": { name: "Polygon", cn: "马蹄链" },
-  "SHIB": { name: "Shiba Inu", cn: "柴犬币" },
-  "LTC": { name: "Litecoin", cn: "莱特币" },
-  "BCH": { name: "Bitcoin Cash", cn: "比特币现金" },
-  "LINK": { name: "Chainlink", cn: "链环" },
-  "XLM": { name: "Stellar", cn: "恒星币" },
-  "UNI": { name: "Uniswap", cn: "Uniswap" },
-  "ATOM": { name: "Cosmos", cn: "宇宙币" },
-  "ETC": { name: "Ethereum Classic", cn: "以太经典" },
-  "HBAR": { name: "Hedera", cn: "哈希图" },
-  "FIL": { name: "Filecoin", cn: "文件币" },
-  "ICP": { name: "Internet Computer", cn: "互联网计算机" },
-  "CRO": { name: "Cronos", cn: "Cronos" },
-  "APT": { name: "Aptos", cn: "Aptos" },
-  "NEAR": { name: "NEAR Protocol", cn: "NEAR协议" },
-  "VET": { name: "VeChain", cn: "唯链" },
-  // 其他币种...
-  "GRT": { name: "The Graph", cn: "图协议" },
-  "ALGO": { name: "Algorand", cn: "算法币" },
-  "QNT": { name: "Quant", cn: "量子链" },
-  "MANA": { name: "Decentraland", cn: "虚拟世界" },
-  "SAND": { name: "The Sandbox", cn: "沙盒" },
-  "AAVE": { name: "Aave", cn: "Aave" },
-  "MKR": { name: "Maker", cn: "制造者" },
-  "LRC": { name: "Loopring", cn: "路印协议" },
-  "ENJ": { name: "Enjin Coin", cn: "恩金币" },
-  "BAT": { name: "Basic Attention Token", cn: "注意力币" },
-  "ZEC": { name: "Zcash", cn: "零币" },
-  "COMP": { name: "Compound", cn: "复合币" },
-  "YFI": { name: "yearn.finance", cn: "渴望金融" },
-  "SNX": { name: "Synthetix", cn: "合成资产" },
-  "1INCH": { name: "1inch", cn: "1inch" },
-  "REN": { name: "Ren", cn: "任币" },
-  "KNC": { name: "Kyber Network", cn: "凯伯网络" },
-  "CRV": { name: "Curve DAO Token", cn: "曲线" },
-  "UMA": { name: "UMA", cn: "通用市场准入" },
-  "BAL": { name: "Balancer", cn: "平衡器" },
-  "SUSHI": { name: "SushiSwap", cn: "寿司" },
-  "FTM": { name: "Fantom", cn: "幻影币" },
-  "FLOW": { name: "Flow", cn: "Flow" },
-  "EGLD": { name: "MultiversX", cn: "多元宇宙" },
-  "ONE": { name: "Harmony", cn: "和谐币" },
-  "HIVE": { name: "Hive", cn: "蜂巢币" },
-  "THETA": { name: "Theta Network", cn: "Theta网络" },
-  "TFUEL": { name: "Theta Fuel", cn: "Theta燃料" },
-  "KAVA": { name: "Kava", cn: "Kava" },
-  "BAND": { name: "Band Protocol", cn: "Band协议" },
-  "RVN": { name: "Ravencoin", cn: "渡鸦币" },
-  "ZIL": { name: "Zilliqa", cn: "Zilliqa" },
-  "ICX": { name: "ICON", cn: "图标" },
-  "ONT": { name: "Ontology", cn: "本体" },
-  "QTUM": { name: "Qtum", cn: "量子链" },
-  "WAVES": { name: "Waves", cn: "波浪币" },
-  "SC": { name: "Siacoin", cn: "云储币" },
-  "DGB": { name: "DigiByte", cn: "极特币" },
-  "LSK": { name: "Lisk", cn: "应用链" },
-  "ARK": { name: "Ark", cn: "方舟币" },
-  "NANO": { name: "Nano", cn: "纳诺币" },
-  "IOST": { name: "IOST", cn: "IOST" },
-  "ZEN": { name: "Horizen", cn: "ZEN" },
-  "MAID": { name: "MaidSafeCoin", cn: "安全网络币" },
-  "REP": { name: "Augur", cn: "预测市场" },
-  "KMD": { name: "Komodo", cn: "科莫多币" },
-  "DCR": { name: "Decred", cn: "德信币" },
-  "STRAT": { name: "Stratis", cn: "斯特拉迪斯" },
-  "NXT": { name: "NXT", cn: "未来币" },
-  "SYS": { name: "Syscoin", cn: "系统币" },
-  // Meme coins
-  "PEPE": { name: "Pepe", cn: "佩佩币" },
-  "BONK": { name: "Bonk", cn: "Bonk" },
-  "WIF": { name: "dogwifhat", cn: "戴帽狗" },
-  "FLOKI": { name: "FLOKI", cn: "弗洛基" },
-  "BABYDOGE": { name: "Baby Doge Coin", cn: "小狗币" },
-  "SAFE": { name: "SafeMoon", cn: "安全月球" },
-  "MEME": { name: "Memecoin", cn: "模因币" },
-  "WOJAK": { name: "Wojak", cn: "沃伊扎克" },
-  "TURBO": { name: "Turbo", cn: "涡轮币" },
-  "LADYS": { name: "Milady", cn: "女士币" },
-  "TRUMP": { name: "TrumpCoin", cn: "特朗普币" },
-  // 新增币种
-  "OKB": { name: "OKB", cn: "欧易币" },
-  "PENGU": { name: "Pudgy Penguins", cn: "胖企鹅" }
-};
 
 export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   // Memoize symbols to prevent unnecessary re-renders
@@ -173,35 +52,31 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     return symbols.map((symbol, index) => {
       // 为不同加密货币设置合理的基础价格
       const basePrices: Record<string, number> = {
-        'BTC': 43000, 'ETH': 2500, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 300,
-        'XRP': 0.6, 'ADA': 0.5, 'SOL': 100, 'DOGE': 0.08, 'MATIC': 0.9,
-        'DOT': 7, 'AVAX': 35, 'LINK': 14, 'LTC': 70, 'UNI': 6,
-        'ATOM': 8, 'ICP': 5, 'NEAR': 2, 'APT': 9, 'FTM': 0.4,
-        // 新增币种价格
-        'OKB': 45, 'PENGU': 0.035
+        'BTC': 115000, 'ETH': 4200, 'USDT': 1.0, 'USDC': 1.0, 'BNB': 838,
+        'XRP': 3.2, 'ADA': 1.1, 'SOL': 200, 'DOGE': 0.32, 'AVAX': 55,
+        'DOT': 8.5, 'MATIC': 0.95, 'LINK': 25, 'LTC': 120, 'UNI': 15,
+        'ATOM': 12, 'ICP': 15, 'NEAR': 6.8, 'APT': 14, 'FTM': 0.85,
+        'OKB': 60, 'PENGU': 0.035, 'PEPE': 0.000018, 'BONK': 0.000045
       };
       
       const basePrice = basePrices[symbol] || (Math.random() * 10 + 1);
-      const currentPrice = basePrice * (0.95 + Math.random() * 0.1); // ±5%变动
+      const currentPrice = basePrice * (0.95 + Math.random() * 0.1);
       
-      // 生成合理的OHLC数据
-      const change24hPercent = (Math.random() - 0.5) * 8; // ±4%变动
+      const change24hPercent = (Math.random() - 0.5) * 8;
       const yesterdayPrice = currentPrice / (1 + change24hPercent / 100);
       
-      // 确保高低价格的逻辑关系
       const high24h = Math.max(currentPrice, yesterdayPrice) * (1 + Math.random() * 0.03);
       const low24h = Math.min(currentPrice, yesterdayPrice) * (1 - Math.random() * 0.03);
       const change24h = currentPrice - yesterdayPrice;
       
-      // 生成合理的技术指标
-      const rsi = 30 + Math.random() * 40; // RSI在30-70之间比较合理
+      const rsi = 30 + Math.random() * 40;
       const ma20 = currentPrice * (0.98 + Math.random() * 0.04);
       const ma50 = currentPrice * (0.96 + Math.random() * 0.08);
       
       return {
         symbol,
         name: getTokenName(symbol),
-        price: Math.round(currentPrice * 100000) / 100000, // 保留5位小数
+        price: Math.round(currentPrice * 100000) / 100000,
         change24h: Math.round(change24h * 100) / 100,
         changePercent24h: Math.round(change24hPercent * 100) / 100,
         volume24h: Math.round(Math.random() * 1000000000),
@@ -231,8 +106,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(false);
 
-  const generateMockNews = (): NewsArticle[] => {
+  const generateMockNews = useCallback((): NewsArticle[] => {
     if (language === 'zh') {
       return [
         {
@@ -271,7 +147,6 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       ];
     }
     
-    // Default English news
     return [
       {
         title: "Bitcoin ETF Trading Volume Hits Record $3.2B Daily",
@@ -307,11 +182,6 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         time: "2 hours ago"
       }
     ];
-  };
-  
-  // 当语言变化时更新新闻数据
-  useEffect(() => {
-    setNewsData(generateMockNews());
   }, [language]);
   
   // 获取币安API配置
@@ -342,7 +212,6 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
 
   const fetchFromBinanceAPI = useCallback(async (config: any): Promise<CryptoData[]> => {
     try {
-      // 调用币安API Edge Function获取实时数据
       const { data, error } = await supabase.functions.invoke('binance-api', {
         body: {
           symbols: memoizedSymbols,
@@ -360,7 +229,6 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         throw new Error('Invalid data format from Binance API');
       }
 
-      // 转换币安API数据格式为组件需要的格式
       const convertedData: CryptoData[] = data.map((item: any, index: number) => {
         const symbol = item.symbol;
         const price = parseFloat(item.price) || 0;
@@ -370,10 +238,9 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         const low24h = parseFloat(item.lowPrice) || 0;
         const volume24h = parseFloat(item.volume) || 0;
         
-        // 计算技术指标（基于实际数据）
-        const rsi = 50 + (priceChangePercent * 2); // 简化的RSI计算
-        const ma20 = price * (1 - priceChangePercent / 200); // 简化的MA20
-        const ma50 = price * (1 - priceChangePercent / 400); // 简化的MA50
+        const rsi = 50 + (priceChangePercent * 2);
+        const ma20 = price * (1 - priceChangePercent / 200);
+        const ma50 = price * (1 - priceChangePercent / 400);
         
         return {
           symbol,
@@ -384,7 +251,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
           volume24h: Math.round(volume24h),
           high24h: Math.round(high24h * 100000) / 100000,
           low24h: Math.round(low24h * 100000) / 100000,
-          marketCap: Math.round(price * (Math.random() * 100000000 + 10000000)), // 近似市值
+          marketCap: Math.round(price * (Math.random() * 100000000 + 10000000)),
           marketCapRank: index + 1,
           circulatingSupply: Math.round(Math.random() * 1000000000),
           totalSupply: Math.round(Math.random() * 1000000000),
@@ -408,12 +275,11 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     }
   }, [memoizedSymbols]);
   
-  const fetchCryptoData = useCallback(async () => {
+  const fetchCryptoData = useCallback(async (showToast = true) => {
     try {
       setLoading(true);
       setError(null);
       
-      // 优先尝试币安API配置
       console.log('检查币安API配置...');
       const binanceConfig = await getBinanceConfig();
       console.log('币安配置结果:', binanceConfig);
@@ -421,77 +287,83 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       if (binanceConfig.isConfigured) {
         try {
           console.log('使用币安API获取数据...');
-          // 使用币安API获取数据
           const binanceData = await fetchFromBinanceAPI(binanceConfig);
           if (binanceData.length > 0) {
             console.log('币安API数据获取成功，条数:', binanceData.length);
             setCryptoData(binanceData);
-            toast({
-              title: "数据已更新",
-              description: "使用币安API实时数据",
-            });
+            setIsRealTimeEnabled(true);
+            if (showToast) {
+              toast({
+                title: "实时数据已连接",
+                description: `使用币安API获取 ${binanceData.length} 种货币实时数据`,
+              });
+            }
             return;
           }
         } catch (binanceError) {
           console.error('币安API调用失败:', binanceError);
+          setIsRealTimeEnabled(false);
           console.log('回退到模拟数据');
         }
       } else {
         console.log('币安API未配置，使用模拟数据');
+        setIsRealTimeEnabled(false);
       }
       
-      // 直接使用模拟数据，不尝试调用可能失败的API端点
       const mockData = generateMockData(memoizedSymbols);
       setCryptoData(mockData);
       
-      toast({
-        title: "数据已更新", 
-        description: binanceConfig.isConfigured ? "币安API未返回数据，使用模拟数据" : "使用模拟数据（API接口预留中）",
-      });
+    } catch (error) {
+      console.error('获取加密货币数据失败:', error);
+      setError('Failed to fetch crypto data');
+      setIsRealTimeEnabled(false);
       
-    } catch (err) {
-      console.error('数据获取错误:', err);
-      const fallbackData = generateMockData(memoizedSymbols);
-      setCryptoData(fallbackData);
-      setError('网络错误，使用模拟数据');
+      const mockData = generateMockData(memoizedSymbols);
+      setCryptoData(mockData);
+      
+      if (showToast) {
+        toast({
+          title: "连接失败",
+          description: "使用演示数据",
+          variant: "destructive"
+        });
+      }
     } finally {
       setLoading(false);
     }
-  }, [memoizedSymbols, generateMockData, toast, getBinanceConfig, fetchFromBinanceAPI]);
-
-  const fetchNewsData = useCallback(async () => {
-    // 直接使用模拟数据，避免API调用失败
-    setNewsData(generateMockNews());
-  }, [language]);
-
+  }, [memoizedSymbols, getBinanceConfig, fetchFromBinanceAPI, generateMockData, toast]);
+  
+  // Initial data fetch
   useEffect(() => {
-    fetchCryptoData();
-    fetchNewsData();
-
-    // 大幅减少更新频率以提高性能
-    const interval = setInterval(() => {
-      fetchCryptoData();
-    }, 300000); // 5分钟更新一次
-
-    // 新闻每30分钟更新
-    const newsInterval = setInterval(() => {
-      fetchNewsData();
-    }, 1800000);
-
+    fetchCryptoData(true);
+  }, [memoizedSymbols]);
+  
+  // 自动刷新实时数据
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (isRealTimeEnabled) {
+      // 每30秒自动刷新数据
+      interval = setInterval(() => {
+        fetchCryptoData(false);
+      }, 30000);
+    }
+    
     return () => {
-      clearInterval(interval);
-      clearInterval(newsInterval);
+      if (interval) {
+        clearInterval(interval);
+      }
     };
-  }, [fetchCryptoData, fetchNewsData]);
+  }, [isRealTimeEnabled, fetchCryptoData]);
+  
+  // Language change effect
+  useEffect(() => {
+    setNewsData(generateMockNews());
+  }, [generateMockNews]);
 
   const refreshData = useCallback(() => {
-    fetchCryptoData();
-    fetchNewsData();
-    toast({
-      title: "数据已刷新",
-      description: "最新加密货币市场数据已加载",
-    });
-  }, [fetchCryptoData, fetchNewsData, toast]);
+    fetchCryptoData(true);
+  }, [fetchCryptoData]);
 
   return {
     cryptoData,
@@ -499,6 +371,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     loading,
     error,
     refreshData,
+    isRealTimeEnabled
   };
 };
 
@@ -514,25 +387,20 @@ export const getTokenChineseName = (symbol: string): string => {
   return tokenInfo?.cn || symbol;
 };
 
-// 搜索过滤函数
+// 过滤加密货币数据的辅助函数
 export const filterCryptoData = (data: CryptoData[], searchQuery: string): CryptoData[] => {
   if (!searchQuery.trim()) return data;
   
-  const query = searchQuery.toLowerCase();
-  
-  return data.filter(crypto => {
-    const symbol = crypto.symbol.toLowerCase();
-    const name = getTokenName(crypto.symbol).toLowerCase();
-    const chineseName = getTokenChineseName(crypto.symbol).toLowerCase();
-    
-    return symbol.includes(query) || 
-           name.includes(query) || 
-           chineseName.includes(query);
-  });
+  const query = searchQuery.toLowerCase().trim();
+  return data.filter(crypto => 
+    crypto.symbol.toLowerCase().includes(query) ||
+    crypto.name.toLowerCase().includes(query) ||
+    getTokenChineseName(crypto.symbol).toLowerCase().includes(query)
+  );
 };
 
-// 获取所有支持的加密货币列表
-export const getAllSupportedCryptos = (): Array<{symbol: string, name: string, chineseName: string}> => {
+// 获取所有支持的加密货币
+export const getAllSupportedCryptos = () => {
   return DEFAULT_SYMBOLS.map(symbol => ({
     symbol,
     name: getTokenName(symbol),

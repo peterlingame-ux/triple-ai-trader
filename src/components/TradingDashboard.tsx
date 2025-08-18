@@ -27,7 +27,7 @@ import { AIControlCenter } from "./AIControlCenter";
 
 export const TradingDashboard = memo(() => {
   const { t } = useLanguage();
-  const { cryptoData, newsData, loading, error, refreshData } = useCryptoData();
+  const { cryptoData, newsData, loading, error, refreshData, isRealTimeEnabled } = useCryptoData();
   const { getPortfolioData, isWalletConnected } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
@@ -140,11 +140,19 @@ export const TradingDashboard = memo(() => {
         {/* Crypto Cards Grid */}
         <div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              {t('market.overview')}
-              {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
-            </h2>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+                <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
+                {t('market.overview')}
+                {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
+              </h2>
+              {isRealTimeEnabled && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  实时数据
+                </div>
+              )}
+            </div>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
               <Button 
                 variant="outline" 
