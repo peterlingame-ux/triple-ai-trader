@@ -70,16 +70,10 @@ export const TradingDashboard = memo(() => {
   }, []);
 
   const handleOpenTrading = useCallback((symbol: string) => {
-    console.log('=== handleOpenTrading called ===');
-    console.log('Symbol:', symbol);
-    console.log('Current state - showTradingPanel:', showTradingPanel);
-    console.log('Current state - selectedTradingSymbol:', selectedTradingSymbol);
-    
+    console.log('handleOpenTrading called with symbol:', symbol);
     setSelectedTradingSymbol(symbol);
     setShowTradingPanel(true);
-    
-    console.log('After setState - should show panel for:', symbol);
-  }, [showTradingPanel, selectedTradingSymbol]);
+  }, []);
 
   const handleCloseTradingPanel = useCallback(() => {
     setShowTradingPanel(false);
