@@ -292,10 +292,12 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
             console.log('币安API数据获取成功，条数:', binanceData.length);
             setCryptoData(binanceData);
             setIsRealTimeEnabled(true);
+            // 清除API配置警告标记，因为现在已经成功配置了
+            localStorage.removeItem('binanceAPIWarningShown');
             if (showToast) {
               toast({
                 title: "实时数据已连接",
-                description: `使用币安API获取 ${binanceData.length} 种货币实时数据`,
+                description: `已自动连接币安API，获取 ${binanceData.length} 种货币实时数据`,
               });
             }
             return;

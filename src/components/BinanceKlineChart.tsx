@@ -102,11 +102,16 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
       const config = await getBinanceConfig();
       
       if (!config.isConfigured) {
-        toast({
-          title: "API未配置",
-          description: "请先配置币安API密钥",
-          variant: "destructive"
-        });
+        // 只在未显示过API配置提醒时才显示，避免重复弹出
+        const hasShownAPIWarning = localStorage.getItem('binanceAPIWarningShown');
+        if (!hasShownAPIWarning) {
+          toast({
+            title: "API未配置",
+            description: "请先配置币安API密钥后可获取实时数据",
+            variant: "destructive"
+          });
+          localStorage.setItem('binanceAPIWarningShown', 'true');
+        }
         return;
       }
 
