@@ -117,7 +117,7 @@ const getAiAdvisorsData = (language: string) => [
     tags: language === 'zh' ? ["房地产", "品牌", "政治"] : ["Real Estate", "Branding", "Politics"]
   },
   {
-    name: language === 'zh' ? "神秘顾问" : "Mystery Advisor",
+    name: language === 'zh' ? "神秘顾问 #1" : "Mystery Advisor #1",
     specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
     confidence: 0,
     recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
@@ -133,6 +133,101 @@ const getAiAdvisorsData = (language: string) => [
     mainAchievements: language === 'zh' ? ["未公开", "保密中", "敬请期待"] : ["Classified", "Confidential", "Coming Soon"],
     currentHoldings: ["???", "???", "???"],
     tags: language === 'zh' ? ["神秘", "未知", "即将到来"] : ["Mystery", "Unknown", "Coming Soon"],
+    isLocked: true
+  },
+  {
+    name: language === 'zh' ? "神秘顾问 #2" : "Mystery Advisor #2",
+    specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
+    confidence: 0,
+    recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
+    netWorth: "???",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzkiIGZpbGw9IiM0QjU1NjMiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik00MCAyNUM0MS4xIDI1IDQyIDI1LjkgNDIgMjdWMzVDNDIgMzYuMSA0MS4xIDM3IDQwIDM3QzM4LjkgMzcgMzggMzYuMSAzOCAzNVYyN0MzOCAyNS45IDM4LjkgMjUgNDAgMjVaIiBmaWxsPSIjOUI5Q0E0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjMiIGZpbGw9IiM5QjlDQTQiLz4KPC9zdmc+",
+    backgroundColor: "bg-gradient-to-br from-purple-900 via-indigo-800 to-gray-700",
+    borderColor: "border-purple-600/50",
+    accentColor: "text-purple-400",
+    isSpecial: false,
+    investmentStyle: language === 'zh' ? "未知" : "Unknown",
+    historicalReturn: "???",
+    famousQuote: language === 'zh' ? "神秘的力量正在积聚..." : "Mysterious forces are gathering...",
+    mainAchievements: language === 'zh' ? ["顶级机密", "传奇投资者", "隐秘大师"] : ["Top Secret", "Legendary Investor", "Hidden Master"],
+    currentHoldings: ["???", "???", "???"],
+    tags: language === 'zh' ? ["神秘", "传奇", "隐秘"] : ["Mystery", "Legend", "Hidden"],
+    isLocked: true
+  },
+  {
+    name: language === 'zh' ? "神秘顾问 #3" : "Mystery Advisor #3",
+    specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
+    confidence: 0,
+    recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
+    netWorth: "???",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzkiIGZpbGw9IiM0QjU1NjMiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik00MCAyNUM0MS4xIDI1IDQyIDI1LjkgNDIgMjdWMzVDNDIgMzYuMSA0MS4xIDM3IDQwIDM3QzM4LjkgMzcgMzggMzYuMSAzOCAzNVYyN0MzOCAyNS45IDM4LjkgMjUgNDAgMjVaIiBmaWxsPSIjOUI5Q0E0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjMiIGZpbGw9IiM5QjlDQTQiLz4KPC9zdmc+",
+    backgroundColor: "bg-gradient-to-br from-emerald-900 via-green-800 to-gray-700",
+    borderColor: "border-emerald-600/50",
+    accentColor: "text-emerald-400",
+    isSpecial: false,
+    investmentStyle: language === 'zh' ? "未知" : "Unknown",
+    historicalReturn: "???",
+    famousQuote: language === 'zh' ? "真相就在不远处..." : "Truth lies just ahead...",
+    mainAchievements: language === 'zh' ? ["隐藏高手", "秘密策略师", "市场幽灵"] : ["Hidden Expert", "Secret Strategist", "Market Ghost"],
+    currentHoldings: ["???", "???", "???"],
+    tags: language === 'zh' ? ["神秘", "策略", "幽灵"] : ["Mystery", "Strategy", "Ghost"],
+    isLocked: true
+  },
+  {
+    name: language === 'zh' ? "神秘顾问 #4" : "Mystery Advisor #4",
+    specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
+    confidence: 0,
+    recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
+    netWorth: "???",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzkiIGZpbGw9IiM0QjU1NjMiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik00MCAyNUM0MS4xIDI1IDQyIDI1LjkgNDIgMjdWMzVDNDIgMzYuMUE0MS4xIDM3IDQwIDM3QzM4LjkgMzcgMzggMzYuMSAzOCAzNVYyN0MzOCAyNS45IDM4LjkgMjUgNDAgMjVaIiBmaWxsPSIjOUI5Q0E0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjMiIGZpbGw9IiM5QjlDQTQiLz4KPC9zdmc+",
+    backgroundColor: "bg-gradient-to-br from-red-900 via-pink-800 to-gray-700",
+    borderColor: "border-red-600/50",
+    accentColor: "text-red-400",
+    isSpecial: false,
+    investmentStyle: language === 'zh' ? "未知" : "Unknown",
+    historicalReturn: "???",
+    famousQuote: language === 'zh' ? "时机即将到来..." : "The time is almost here...",
+    mainAchievements: language === 'zh' ? ["传奇人物", "暗中操盘", "神秘力量"] : ["Legendary Figure", "Shadow Trader", "Mysterious Power"],
+    currentHoldings: ["???", "???", "???"],
+    tags: language === 'zh' ? ["神秘", "传奇", "力量"] : ["Mystery", "Legend", "Power"],
+    isLocked: true
+  },
+  {
+    name: language === 'zh' ? "神秘顾问 #5" : "Mystery Advisor #5",
+    specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
+    confidence: 0,
+    recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
+    netWorth: "???",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzkiIGZpbGw9IiM0QjU1NjMiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik00MCAyNUM0MS4xIDI1IDQyIDI1LjkgNDIgMjdWMzVDNDIgMzYuMSA0MS4xIDM3IDQwIDM3QzM4LjkgMzcgMzggMzYuMSAzOCAzNVYyN0MzOCAyNS45IDM4LjkgMjUgNDAgMjVaIiBmaWxsPSIjOUI5Q0E0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjMiIGZpbGw9IiM5QjlDQTQiLz4KPC9zdmc+",
+    backgroundColor: "bg-gradient-to-br from-blue-900 via-cyan-800 to-gray-700",
+    borderColor: "border-blue-600/50",
+    accentColor: "text-blue-400",
+    isSpecial: false,
+    investmentStyle: language === 'zh' ? "未知" : "Unknown",
+    historicalReturn: "???",
+    famousQuote: language === 'zh' ? "未来即将展现..." : "The future will unfold...",
+    mainAchievements: language === 'zh' ? ["未来先知", "隐秘导师", "神话人物"] : ["Future Oracle", "Hidden Mentor", "Mythical Figure"],
+    currentHoldings: ["???", "???", "???"],
+    tags: language === 'zh' ? ["神秘", "未来", "神话"] : ["Mystery", "Future", "Myth"],
+    isLocked: true
+  },
+  {
+    name: language === 'zh' ? "神秘顾问 #6" : "Mystery Advisor #6",
+    specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
+    confidence: 0,
+    recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
+    netWorth: "???",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzkiIGZpbGw9IiM0QjU1NjMiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik00MCAyNUM0MS4xIDI1IDQyIDI1LjkgNDIgMjdWMzVDNDIgMzYuMSA0MS4xIDM3IDQwIDM3QzM4LjkgMzcgMzggMzYuMSAzOCAzNVYyN0MzOCAyNS45IDM4LjkgMjUgNDAgMjVaIiBmaWxsPSIjOUI5Q0E0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjMiIGZpbGw9IiM5QjlDQTQiLz4KPC9zdmc+",
+    backgroundColor: "bg-gradient-to-br from-amber-900 via-orange-800 to-gray-700",
+    borderColor: "border-amber-600/50",
+    accentColor: "text-amber-400",
+    isSpecial: false,
+    investmentStyle: language === 'zh' ? "未知" : "Unknown",
+    historicalReturn: "???",
+    famousQuote: language === 'zh' ? "最后的秘密即将公开..." : "The final secret will be revealed...",
+    mainAchievements: language === 'zh' ? ["最终大师", "终极导师", "至高顾问"] : ["Ultimate Master", "Final Mentor", "Supreme Advisor"],
+    currentHoldings: ["???", "???", "???"],
+    tags: language === 'zh' ? ["神秘", "终极", "至高"] : ["Mystery", "Ultimate", "Supreme"],
     isLocked: true
   }
 ];
@@ -153,7 +248,12 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
     "Vitalik Buterin": true,
     "Justin Sun": true,
     "Donald Trump": true,
-    [language === 'zh' ? "神秘顾问" : "Mystery Advisor"]: false
+    [language === 'zh' ? "神秘顾问 #1" : "Mystery Advisor #1"]: false,
+    [language === 'zh' ? "神秘顾问 #2" : "Mystery Advisor #2"]: false,
+    [language === 'zh' ? "神秘顾问 #3" : "Mystery Advisor #3"]: false,
+    [language === 'zh' ? "神秘顾问 #4" : "Mystery Advisor #4"]: false,
+    [language === 'zh' ? "神秘顾问 #5" : "Mystery Advisor #5"]: false,
+    [language === 'zh' ? "神秘顾问 #6" : "Mystery Advisor #6"]: false
   });
 
   // Get localized advisor data
@@ -195,8 +295,8 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
         </h2>
       </div>
 
-      {/* Seven Column Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
+      {/* Twelve Column Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-4">
         {aiAdvisors.map((advisor, index) => (
           <CompactAdvisorCard
             key={index}
