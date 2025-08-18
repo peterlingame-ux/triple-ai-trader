@@ -536,42 +536,36 @@ export const CryptoIcon: React.FC<CryptoIconProps> = ({
     setIsLoading(false);
   }, []);
 
-  // 显示默认图标 - 优化设计配合币安实时数据
+  // 显示默认图标
   if (hasError || iconUrls.length === 0) {
-    const displayText = symbol.length <= 4 ? symbol : symbol.substring(0, 3);
-    
     return (
       <div 
-        className={`relative rounded-full overflow-hidden flex items-center justify-center font-bold text-white shadow-xl border border-white/30 backdrop-blur-sm hover:scale-105 transition-all duration-300 ${className}`}
+        className={`relative rounded-full overflow-hidden flex items-center justify-center font-bold text-white shadow-lg ${className}`}
         style={{ 
           width: size, 
           height: size,
-          background: `linear-gradient(135deg, ${cryptoColor}, ${cryptoColor}cc)`,
-          boxShadow: `0 4px 12px ${cryptoColor}40`
+          background: `linear-gradient(135deg, ${cryptoColor}, ${cryptoColor}aa)`
         }}
       >
-        <span style={{ fontSize: Math.max(8, size * 0.35) }}>
-          {displayText}
+        <span style={{ fontSize: size * 0.4 }}>
+          {symbol.charAt(0)}
         </span>
-        <div className="absolute inset-0 rounded-full ring-1 ring-white/20"></div>
-        
-        {/* 实时数据指示器 - 表示使用币安实时数据 */}
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
+        <div className="absolute inset-0 rounded-full ring-1 ring-white/30"></div>
       </div>
     );
   }
 
   return (
     <div 
-      className={`relative rounded-full overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 ${className}`}
+      className={`relative rounded-full overflow-hidden bg-white shadow-sm ${className}`}
       style={{ width: size, height: size }}
     >
       {isLoading && (
         <div 
-          className="absolute inset-0 rounded-full flex items-center justify-center backdrop-blur-sm"
+          className="absolute inset-0 rounded-full flex items-center justify-center"
           style={{ background: `linear-gradient(135deg, ${cryptoColor}33, ${cryptoColor}11)` }}
         >
-          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
         </div>
       )}
       <img
@@ -586,11 +580,7 @@ export const CryptoIcon: React.FC<CryptoIconProps> = ({
           transition: 'opacity 0.3s ease-in-out'
         }}
       />
-      
-      {/* 实时数据指示器 - 绿色圆点表示币安实时数据 */}
-      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-lg animate-pulse"></div>
-      
-      <div className="absolute inset-0 rounded-full ring-1 ring-black/10 hover:ring-2 hover:ring-primary/50 transition-all duration-300"></div>
+      <div className="absolute inset-0 rounded-full ring-1 ring-black/10 group-hover:ring-2 group-hover:ring-primary/40 transition-all duration-300"></div>
     </div>
   );
 };
