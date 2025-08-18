@@ -326,7 +326,7 @@ export const AutoTrader = () => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Bot className="w-8 h-8 text-blue-400" />
-          <h2 className="text-3xl font-bold text-white">AI自动赚钱</h2>
+          <h2 className="text-3xl font-bold text-white">Super BrainX自动赚钱</h2>
           <DollarSign className="w-8 h-8 text-green-400" />
         </div>
         <p className="text-slate-400 max-w-2xl mx-auto">

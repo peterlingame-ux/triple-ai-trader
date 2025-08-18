@@ -216,7 +216,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                     <CircleDollarSign className="w-6 h-6 text-emerald-400" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-emerald-100 font-inter mb-1">AI自动赚钱</h4>
+                    <h4 className="text-lg font-semibold text-emerald-100 font-inter mb-1">Super BrainX自动赚钱</h4>
                     <p className="text-sm text-emerald-300/80">智能自动交易系统</p>
                   </div>
                   <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">

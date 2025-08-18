@@ -208,7 +208,7 @@ export const TradingExchangePanel = ({
                   <Zap className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-emerald-100">AI自动赚钱</div>
+                  <div className="text-sm font-semibold text-emerald-100">Super BrainX自动赚钱</div>
                   <div className="text-xs text-emerald-300/70">智能自动交易系统</div>
                 </div>
                 <div className="ml-auto">
