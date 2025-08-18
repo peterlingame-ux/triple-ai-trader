@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { formatPrice, formatVolume, formatMarketCap } from "@/utils/cryptoDataUtils";
-import { CryptoIcon } from "./CryptoIcon";
+import CryptoIcon from "./CryptoIcon";
 
 interface CompactCryptoCardProps {
   symbol: string;
