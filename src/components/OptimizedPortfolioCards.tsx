@@ -1,14 +1,14 @@
 import { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, TrendingUp, Wallet, Bot, Sparkles, Activity, CircleDollarSign } from "lucide-react";
+import { BarChart3, TrendingUp, Bot, Sparkles, Activity, CircleDollarSign } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface PortfolioData {
   totalValue: number;
   dailyChange: number;
   activeTrades: number;
-  source: 'wallet' | 'autotrader';
+  source: 'autotrader';
 }
 
 interface OptimizedPortfolioCardsProps {
@@ -31,11 +31,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center border border-accent/20 shadow-lg">
-                  {source === 'wallet' ? (
-                    <Wallet className="w-6 h-6 text-accent drop-shadow-sm" />
-                  ) : (
-                    <Bot className="w-6 h-6 text-accent drop-shadow-sm" />
-                  )}
+                  <Bot className="w-6 h-6 text-accent drop-shadow-sm" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-accent rounded-full flex items-center justify-center">
                   <Sparkles className="w-2 h-2 text-accent-foreground" />
@@ -44,7 +40,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-sm font-semibold text-muted-foreground">
-                    {source === 'wallet' ? t('wallet.real') : t('portfolio.ai_virtual')}
+                    {t('portfolio.ai_virtual')}
                   </h3>
                   {source === 'autotrader' && (
                     <Badge className="text-xs bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 border-blue-500/30 px-2 py-0.5">
@@ -64,7 +60,7 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
             <div className="flex items-center gap-2">
               <CircleDollarSign className="w-3 h-3 text-muted-foreground/60" />
               <p className="text-xs text-muted-foreground/60">
-                {source === 'wallet' ? t('portfolio.real_time_sync') : t('portfolio.simulated_trading')}
+                {t('portfolio.simulated_trading')}
               </p>
             </div>
           </div>
@@ -96,11 +92,6 @@ export const OptimizedPortfolioCards = memo<OptimizedPortfolioCardsProps>(({ por
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-sm font-semibold text-muted-foreground">{t('portfolio.daily_change')}</h3>
-                  {source === 'wallet' && (
-                    <Badge className="text-xs bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-green-300 border-green-500/30 px-2 py-0.5">
-                      {t('portfolio.real_time')}
-                    </Badge>
-                  )}
                 </div>
                 <p className="text-xs text-muted-foreground/70">{t('portfolio.profit_loss')}</p>
               </div>

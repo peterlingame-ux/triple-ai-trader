@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CryptoCard } from "./CryptoCard";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { WalletConnector } from "./WalletConnector";
+
 
 import { AutoTrader } from "./AutoTrader";
 import { UpcomingAdvisors } from "./UpcomingAdvisors";
@@ -28,7 +28,7 @@ import { AIControlCenter } from "./AIControlCenter";
 export const TradingDashboard = memo(() => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, refreshData, isRealTimeEnabled } = useCryptoData();
-  const { getPortfolioData, isWalletConnected } = useWalletData();
+  const { getPortfolioData } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
@@ -54,7 +54,7 @@ export const TradingDashboard = memo(() => {
     [cryptoData, searchQuery]
   );
 
-  // Get portfolio data from either wallet or auto-trader
+  // Get portfolio data from auto-trader
   const portfolioData = useMemo(() => getPortfolioData(), [getPortfolioData]);
   const { totalValue, dailyChange, activeTrades, source } = portfolioData;
 
@@ -119,7 +119,7 @@ export const TradingDashboard = memo(() => {
               {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
                 <UserProfile />
-                <WalletConnector />
+                
                 <LanguageSwitcher />
               </div>
             </div>

@@ -25,7 +25,7 @@ interface PortfolioData {
   totalValue: number;
   dailyChange: number;
   activeTrades: number;
-  source: 'wallet' | 'autotrader';
+  source: 'autotrader';
 }
 
 interface AIControlCenterProps {

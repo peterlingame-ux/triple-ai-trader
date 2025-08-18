@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "./hooks/useLanguage";
-import { WalletProvider } from "./hooks/useWalletData";
+import { AutoTraderProvider } from "./hooks/useWalletData";
 import { OptimizedErrorBoundary } from "./components/OptimizedErrorBoundary";
 import { errorRecoverySystem } from "./utils/errorRecovery";
 import { useEffect } from "react";
@@ -24,7 +24,7 @@ const App = () => {
     <OptimizedErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <LanguageProvider>
-          <WalletProvider>
+          <AutoTraderProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
@@ -37,7 +37,7 @@ const App = () => {
                 </Routes>
               </BrowserRouter>
             </TooltipProvider>
-          </WalletProvider>
+          </AutoTraderProvider>
         </LanguageProvider>
       </QueryClientProvider>
     </OptimizedErrorBoundary>
