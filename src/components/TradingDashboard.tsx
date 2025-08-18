@@ -84,64 +84,49 @@ export const TradingDashboard = memo(() => {
       {/* Main content with backdrop blur */}
       <div className="relative z-10 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto space-y-4 sm:space-y-8">
-        {/* Professional Header Design - Enhanced Layout */}
+        {/* Professional Header Design - Mobile Optimized */}
         <div className="relative">
-          {/* Enhanced glassmorphism background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-800/90 to-slate-900/95 backdrop-blur-3xl rounded-2xl border border-white/10 shadow-2xl"></div>
+          {/* Background with enhanced glassmorphism */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl"></div>
           
-          {/* Content with proper professional spacing */}
-          <div className="relative px-8 py-6">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              
-              {/* Left Section - Brand Identity (4 columns) */}
-              <div className="lg:col-span-4">
-                <div className="space-y-3">
-                  <h1 className="text-4xl lg:text-5xl xl:text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight leading-none">
+          {/* Content */}
+          <div className="relative px-4 sm:px-10 py-4 sm:py-8">
+            <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+              {/* Left Section - Brand */}
+              <div className="flex items-center gap-4 sm:gap-8">
+                <div className="space-y-1 sm:space-y-2">
+                  <h1 className="text-3xl sm:text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
                     Meta BrainX
                   </h1>
-                  <p className="text-base lg:text-lg text-slate-300/90 font-inter font-medium tracking-wide max-w-md">
+                  <p className="text-sm sm:text-lg text-slate-300 font-inter font-medium tracking-wide">
                     {t('app.subtitle')}
                   </p>
                 </div>
               </div>
               
-              {/* Center Section - Status & Indicators (4 columns) */}
-              <div className="lg:col-span-4 flex justify-center">
-                <div className="flex flex-col items-center gap-4">
-                  {/* Real-time Status Badge */}
-                  <div className="relative group">
-                    <Badge variant="outline" className="px-6 py-3 bg-gradient-to-r from-green-500/15 to-emerald-500/15 text-green-300 border-green-400/30 backdrop-blur-md hover:from-green-500/25 hover:to-emerald-500/25 transition-all duration-300 shadow-lg">
-                      <div className="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse shadow-lg shadow-green-400/60"></div>
-                      <Brain className="w-5 h-5 mr-2" />
-                      <span className="font-semibold tracking-wide">{t('status.live')}</span>
-                    </Badge>
-                    <div className="absolute -inset-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-xl -z-10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  </div>
-                  
-                  {/* Enhanced User Profile - Center Position */}
-                  <div className="transform hover:scale-105 transition-transform duration-300">
-                    <UserProfile />
-                  </div>
+              {/* Center Section - Status Indicator - Mobile: Full Width */}
+              <div className="flex items-center justify-center sm:justify-start gap-4">
+                <div className="relative">
+                  <Badge variant="outline" className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full mr-2 sm:mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <Brain className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                    {t('status.live')}
+                  </Badge>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
               
-              {/* Right Section - Controls & Settings (4 columns) */}
-              <div className="lg:col-span-4 flex justify-end">
-                <div className="flex items-center gap-4">
-                  <LanguageSwitcher />
-                </div>
+              {/* Right Section - User Controls - Professional Cards Layout */}
+              <div className="flex items-center gap-3">
+                <UserProfile />
+                
+                <LanguageSwitcher />
               </div>
-              
             </div>
           </div>
           
-          {/* Professional accent line */}
-          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3/4 h-0.5 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent"></div>
-          
-          {/* Corner accents for premium feel */}
-          <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-amber-400/30 rounded-tl-lg"></div>
-          <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-amber-400/30 rounded-tr-lg"></div>
-          
+          {/* Subtle bottom accent */}
+          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent blur-sm"></div>
         </div>
 
         {/* AI Opportunity Alert - Temporarily disabled due to API issues */}
