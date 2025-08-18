@@ -261,46 +261,187 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
           </div>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={elonAvatar} alt="Elon Musk" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">{t('ai.control_center.news_engine')}</div>
+              <div className="relative w-8 h-8 mx-auto mb-2">
+                <img 
+                  src={elonAvatar} 
+                  alt="Elon Musk" 
+                  className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                    aiConfigs.openai.enabled 
+                      ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                      : 'opacity-60'
+                  }`} 
+                />
+                {aiConfigs.openai.enabled && (
+                  <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                )}
+              </div>
+              <div className={`text-sm font-medium transition-colors duration-300 ${
+                aiConfigs.openai.enabled ? 'text-green-300' : 'text-white'
+              }`}>
+                {t('ai.control_center.news_engine')}
+              </div>
               <div className="text-xs text-slate-400">Elon Musk</div>
+              {aiConfigs.openai.enabled && (
+                <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+              )}
             </div>
+            
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={warrenAvatar} alt="Warren Buffett" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">{t('ai.control_center.technical_engine')}</div>
+              <div className="relative w-8 h-8 mx-auto mb-2">
+                <img 
+                  src={warrenAvatar} 
+                  alt="Warren Buffett" 
+                  className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                    aiConfigs.claude.enabled 
+                      ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                      : 'opacity-60'
+                  }`} 
+                />
+                {aiConfigs.claude.enabled && (
+                  <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                )}
+              </div>
+              <div className={`text-sm font-medium transition-colors duration-300 ${
+                aiConfigs.claude.enabled ? 'text-green-300' : 'text-white'
+              }`}>
+                {t('ai.control_center.technical_engine')}
+              </div>
               <div className="text-xs text-slate-400">Warren Buffett</div>
+              {aiConfigs.claude.enabled && (
+                <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+              )}
             </div>
+            
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={billAvatar} alt="Bill Gates" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">{t('ai.control_center.bigdata_engine')}</div>
+              <div className="relative w-8 h-8 mx-auto mb-2">
+                <img 
+                  src={billAvatar} 
+                  alt="Bill Gates" 
+                  className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                    aiConfigs.grok.enabled 
+                      ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                      : 'opacity-60'
+                  }`} 
+                />
+                {aiConfigs.grok.enabled && (
+                  <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                )}
+              </div>
+              <div className={`text-sm font-medium transition-colors duration-300 ${
+                aiConfigs.grok.enabled ? 'text-green-300' : 'text-white'
+              }`}>
+                {t('ai.control_center.bigdata_engine')}
+              </div>
               <div className="text-xs text-slate-400">Bill Gates</div>
+              {aiConfigs.grok.enabled && (
+                <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+              )}
             </div>
+            
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">{t('ai.control_center.blockchain_engine')}</div>
+              <div className="relative w-8 h-8 mx-auto mb-2">
+                <img 
+                  src={vitalikAvatar} 
+                  alt="Vitalik Buterin" 
+                  className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                    aiConfigs.vitalik.enabled 
+                      ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                      : 'opacity-60'
+                  }`} 
+                />
+                {aiConfigs.vitalik.enabled && (
+                  <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                )}
+              </div>
+              <div className={`text-sm font-medium transition-colors duration-300 ${
+                aiConfigs.vitalik.enabled ? 'text-green-300' : 'text-white'
+              }`}>
+                {t('ai.control_center.blockchain_engine')}
+              </div>
               <div className="text-xs text-slate-400">Vitalik Buterin</div>
+              {aiConfigs.vitalik.enabled && (
+                <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+              )}
             </div>
+            
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={justinAvatar} alt="Justin Sun" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">{t('ai.control_center.defi_engine')}</div>
+              <div className="relative w-8 h-8 mx-auto mb-2">
+                <img 
+                  src={justinAvatar} 
+                  alt="Justin Sun" 
+                  className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                    aiConfigs.justin.enabled 
+                      ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                      : 'opacity-60'
+                  }`} 
+                />
+                {aiConfigs.justin.enabled && (
+                  <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                )}
+              </div>
+              <div className={`text-sm font-medium transition-colors duration-300 ${
+                aiConfigs.justin.enabled ? 'text-green-300' : 'text-white'
+              }`}>
+                {t('ai.control_center.defi_engine')}
+              </div>
               <div className="text-xs text-slate-400">Justin Sun</div>
+              {aiConfigs.justin.enabled && (
+                <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+              )}
             </div>
+            
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={trumpAvatar} alt="Donald Trump" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
-              <div className="text-sm text-white font-medium">{t('ai.control_center.policy_engine')}</div>
+              <div className="relative w-8 h-8 mx-auto mb-2">
+                <img 
+                  src={trumpAvatar} 
+                  alt="Donald Trump" 
+                  className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                    aiConfigs.trump.enabled 
+                      ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                      : 'opacity-60'
+                  }`} 
+                />
+                {aiConfigs.trump.enabled && (
+                  <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                )}
+              </div>
+              <div className={`text-sm font-medium transition-colors duration-300 ${
+                aiConfigs.trump.enabled ? 'text-green-300' : 'text-white'
+              }`}>
+                {t('ai.control_center.policy_engine')}
+              </div>
               <div className="text-xs text-slate-400">Donald Trump</div>
+              {aiConfigs.trump.enabled && (
+                <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+              )}
             </div>
             
             {/* Custom APIs */}
             {customApis.map((api) => (
               <div key={api.id} className="text-center p-4 bg-slate-700/30 rounded-lg">
-                <img 
-                  src={api.avatar || predefinedAvatars[0].url} 
-                  alt={api.name} 
-                  className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" 
-                />
-                <div className="text-sm text-white font-medium">{api.provider}</div>
+                <div className="relative w-8 h-8 mx-auto mb-2">
+                  <img 
+                    src={api.avatar || predefinedAvatars[0].url} 
+                    alt={api.name} 
+                    className={`w-8 h-8 rounded-full object-cover transition-all duration-300 ${
+                      api.enabled 
+                        ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                        : 'opacity-60'
+                    }`} 
+                  />
+                  {api.enabled && (
+                    <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                  )}
+                </div>
+                <div className={`text-sm font-medium transition-colors duration-300 ${
+                  api.enabled ? 'text-green-300' : 'text-white'
+                }`}>
+                  {api.provider}
+                </div>
                 <div className="text-xs text-slate-400">{api.name}</div>
+                {api.enabled && (
+                  <div className="text-xs text-green-400 font-medium mt-1">● 已启用</div>
+                )}
               </div>
             ))}
           </div>
