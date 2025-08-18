@@ -4,20 +4,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Car3DModel } from './Car3DModel';
 import { Car, Sparkles } from 'lucide-react';
 
+// Import car logos
+import ferrariLogo from '@/assets/car-logos/ferrari-logo.png';
+import lamborghiniLogo from '@/assets/car-logos/lamborghini-logo.png';
+import porscheLogo from '@/assets/car-logos/porsche-logo.png';
+import mclarenLogo from '@/assets/car-logos/mclaren-logo.png';
+import bugattiLogo from '@/assets/car-logos/bugatti-logo.png';
+import astonMartinLogo from '@/assets/car-logos/aston-martin-logo.png';
+
 interface CarBrand {
   id: string;
   name: string;
   color: string;
   emoji: string;
+  logo: string;
 }
 
 const carBrands: CarBrand[] = [
-  { id: 'ferrari', name: '法拉利', color: '#DC143C', emoji: '🏎️' },
-  { id: 'lamborghini', name: '兰博基尼', color: '#FFD700', emoji: '🚗' },
-  { id: 'porsche', name: '保时捷', color: '#C0C0C0', emoji: '🏁' },
-  { id: 'mclaren', name: '迈凯伦', color: '#FF6600', emoji: '🚀' },
-  { id: 'bugatti', name: '布加迪', color: '#000080', emoji: '💎' },
-  { id: 'aston_martin', name: '阿斯顿马丁', color: '#006400', emoji: '🎯' },
+  { id: 'ferrari', name: '法拉利', color: '#DC143C', emoji: '🏎️', logo: ferrariLogo },
+  { id: 'lamborghini', name: '兰博基尼', color: '#FFD700', emoji: '🚗', logo: lamborghiniLogo },
+  { id: 'porsche', name: '保时捷', color: '#C0C0C0', emoji: '🏁', logo: porscheLogo },
+  { id: 'mclaren', name: '迈凯伦', color: '#FF6600', emoji: '🚀', logo: mclarenLogo },
+  { id: 'bugatti', name: '布加迪', color: '#000080', emoji: '💎', logo: bugattiLogo },
+  { id: 'aston_martin', name: '阿斯顿马丁', color: '#006400', emoji: '🎯', logo: astonMartinLogo },
 ];
 
 interface CarSelectorProps {
@@ -59,9 +68,13 @@ export const CarSelector: React.FC<CarSelectorProps> = ({
           />
         </div>
         
-        {/* Brand indicator */}
-        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-accent to-accent/80 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
-          <span className="text-xs">{selectedBrand.emoji}</span>
+        {/* Brand indicator with real logo */}
+        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 backdrop-blur-sm">
+          <img 
+            src={selectedBrand.logo} 
+            alt={selectedBrand.name}
+            className="w-6 h-6 object-contain"
+          />
         </div>
       </div>
 
@@ -71,7 +84,11 @@ export const CarSelector: React.FC<CarSelectorProps> = ({
           <SelectTrigger className="w-32 h-8 text-xs bg-gradient-to-r from-slate-700/50 to-slate-600/50 border-accent/30 hover:border-accent/50 transition-all duration-200">
             <SelectValue>
               <div className="flex items-center gap-1.5">
-                <span>{selectedBrand.emoji}</span>
+                <img 
+                  src={selectedBrand.logo} 
+                  alt={selectedBrand.name}
+                  className="w-4 h-4 object-contain"
+                />
                 <span className="truncate font-medium">{selectedBrand.name}</span>
               </div>
             </SelectValue>
@@ -84,7 +101,11 @@ export const CarSelector: React.FC<CarSelectorProps> = ({
                 className="text-foreground hover:bg-slate-700/50 cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <span>{brand.emoji}</span>
+                  <img 
+                    src={brand.logo} 
+                    alt={brand.name}
+                    className="w-5 h-5 object-contain"
+                  />
                   <span className="font-medium">{brand.name}</span>
                   <div 
                     className="w-3 h-3 rounded-full border border-white/20"
