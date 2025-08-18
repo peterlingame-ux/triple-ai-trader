@@ -5,15 +5,39 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Camera, User, Edit3, Upload, X } from 'lucide-react';
+import { Camera, User, Edit3, Upload, X, Globe } from 'lucide-react';
 import { removeBackground, loadImage } from '@/utils/backgroundRemoval';
+import { FlagIcon } from '@/components/FlagIcon';
 
 interface UserProfileData {
   name: string;
   avatar: string;
   initials: string;
+  nationality: string;
 }
+
+const countries = [
+  { code: 'cn', name: '中国' },
+  { code: 'us', name: '美国' },
+  { code: 'jp', name: '日本' },
+  { code: 'kr', name: '韩国' },
+  { code: 'sg', name: '新加坡' },
+  { code: 'hk', name: '香港' },
+  { code: 'tw', name: '台湾' },
+  { code: 'gb', name: '英国' },
+  { code: 'de', name: '德国' },
+  { code: 'fr', name: '法国' },
+  { code: 'ca', name: '加拿大' },
+  { code: 'au', name: '澳大利亚' },
+  { code: 'th', name: '泰国' },
+  { code: 'my', name: '马来西亚' },
+  { code: 'ph', name: '菲律宾' },
+  { code: 'in', name: '印度' },
+  { code: 'id', name: '印度尼西亚' },
+  { code: 'vn', name: '越南' },
+];
 import { useLanguage } from "@/hooks/useLanguage";
 
 export const UserProfile = () => {
@@ -21,11 +45,13 @@ export const UserProfile = () => {
   const [profileData, setProfileData] = useState<UserProfileData>({
     name: '',
     avatar: '',
-    initials: ''
+    initials: '',
+    nationality: 'cn'
   });
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState('');
   const [tempAvatar, setTempAvatar] = useState('');
+  const [tempNationality, setTempNationality] = useState('cn');
   const [isUploading, setIsUploading] = useState(false);
   const [removeBackgroundEnabled, setRemoveBackgroundEnabled] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,9 +62,15 @@ export const UserProfile = () => {
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
       const parsed = JSON.parse(savedProfile);
-      setProfileData(parsed);
-      setTempName(parsed.name);
-      setTempAvatar(parsed.avatar);
+      // Handle backward compatibility for existing profiles without nationality
+      const profileWithDefaults = {
+        nationality: 'cn',
+        ...parsed
+      };
+      setProfileData(profileWithDefaults);
+      setTempName(profileWithDefaults.name);
+      setTempAvatar(profileWithDefaults.avatar);
+      setTempNationality(profileWithDefaults.nationality);
     }
   }, []);
 
@@ -58,7 +90,8 @@ export const UserProfile = () => {
     const updatedProfile = {
       name: tempName,
       avatar: tempAvatar,
-      initials
+      initials,
+      nationality: tempNationality
     };
     
     setProfileData(updatedProfile);
@@ -154,6 +187,7 @@ export const UserProfile = () => {
   const cancelEdit = () => {
     setTempName(profileData.name);
     setTempAvatar(profileData.avatar);
+    setTempNationality(profileData.nationality);
     setIsEditing(false);
   };
 
@@ -183,9 +217,11 @@ export const UserProfile = () => {
                 <h3 className="text-base font-semibold text-accent truncate">
                   {profileData.name || 'LINYUAN'}
                 </h3>
+                <FlagIcon countryCode={profileData.nationality} size="sm" />
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
               </div>
-              <p className="text-sm text-accent/70 truncate">
+              <p className="text-sm text-accent/70 truncate flex items-center gap-1">
+                <Globe className="w-3 h-3" />
                 {t('profile.personal')}
               </p>
             </div>
@@ -280,6 +316,34 @@ export const UserProfile = () => {
               placeholder={t('profile.name_placeholder')}
               className="bg-slate-700 border-slate-600 text-foreground"
             />
+          </div>
+
+          {/* Nationality Section */}
+          <div className="space-y-2">
+            <Label htmlFor="nationality" className="text-sm font-medium flex items-center gap-2">
+              <Globe className="w-4 h-4" />
+              国籍
+            </Label>
+            <Select value={tempNationality} onValueChange={setTempNationality}>
+              <SelectTrigger className="bg-slate-700 border-slate-600 text-foreground">
+                <SelectValue>
+                  <div className="flex items-center gap-2">
+                    <FlagIcon countryCode={tempNationality} size="sm" />
+                    <span>{countries.find(c => c.code === tempNationality)?.name}</span>
+                  </div>
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600 z-50">
+                {countries.map((country) => (
+                  <SelectItem key={country.code} value={country.code} className="text-foreground hover:bg-slate-600">
+                    <div className="flex items-center gap-2">
+                      <FlagIcon countryCode={country.code} size="sm" />
+                      <span>{country.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Action Buttons */}
