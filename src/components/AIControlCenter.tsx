@@ -6,12 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
+import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu, Upload, Image } from "lucide-react";
 import { BinanceKlineChart } from "./BinanceKlineChart";
 import { SuperBrainDetection } from "./SuperBrainDetection";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { logger } from "@/utils/errorHandler";
 import { useLanguage } from "@/hooks/useLanguage";
+import { supabase } from "@/integrations/supabase/client";
 
 // Import avatars
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
@@ -77,6 +78,8 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
 
   // Custom avatar URL state
   const [customAvatarUrl, setCustomAvatarUrl] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const cryptoOptions = [
     { symbol: "BTC", name: "Bitcoin", price: 43832.346, change: 85.23, changePercent: 0.19 },
@@ -163,7 +166,64 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     }
   }, [analysisQuery, selectedCrypto, aiConfigs, isAnalyzing]);
 
-  // Handle adding custom API
+  // Handle file upload
+  const handleFileUpload = useCallback(async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      alert('请选择图片文件');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      alert('文件大小不能超过5MB');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `avatar-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `public/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (error) {
+        throw error;
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      setNewApiForm(prev => ({ ...prev, avatar: publicUrl }));
+      setCustomAvatarUrl(publicUrl);
+      setUploadProgress(100);
+      
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('上传失败，请重试');
+    } finally {
+      setIsUploading(false);
+      setTimeout(() => setUploadProgress(0), 1000);
+    }
+  }, []);
+
+  // Handle drag and drop
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileUpload(files[0]);
+    }
+  }, [handleFileUpload]);
   const handleAddCustomApi = useCallback(() => {
     if (!newApiForm.name.trim() || !newApiForm.provider.trim() || !newApiForm.apiKey.trim()) {
       return;
@@ -876,7 +936,66 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                   <label className="text-sm text-slate-300 block mb-2">自定义头像</label>
                   
                   {/* Avatar Upload Section */}
-                  <div className="space-y-3">
+                  <div className="space-y-4">
+                    {/* File Upload Area */}
+                    <div
+                      className="relative border-2 border-dashed border-slate-600 rounded-lg p-6 transition-colors hover:border-purple-400 hover:bg-purple-500/5"
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        disabled={isUploading}
+                      />
+                      
+                      <div className="text-center">
+                        <div className="flex flex-col items-center gap-3">
+                          {isUploading ? (
+                            <>
+                              <div className="w-8 h-8 border-2 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
+                              <div className="text-sm text-slate-400">上传中... {uploadProgress}%</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
+                                <Upload className="w-6 h-6 text-purple-400" />
+                              </div>
+                              <div className="space-y-1">
+                                <div className="text-sm text-slate-300 font-medium">
+                                  点击或拖拽图片到这里上传
+                                </div>
+                                <div className="text-xs text-slate-400">
+                                  支持 JPG、PNG、GIF 格式，最大5MB
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Upload Progress Bar */}
+                      {isUploading && (
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <div className="w-full bg-slate-700 rounded-full h-1">
+                            <div 
+                              className="bg-purple-400 h-1 rounded-full transition-all duration-300"
+                              style={{ width: `${uploadProgress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* OR Divider */}
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 h-px bg-slate-600"></div>
+                      <span className="text-xs text-slate-400 px-2">或者</span>
+                      <div className="flex-1 h-px bg-slate-600"></div>
+                    </div>
+
                     {/* URL Input */}
                     <div>
                       <Input
@@ -889,26 +1008,30 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                           }
                         }}
                         className="bg-slate-600/50 border-slate-500 text-white"
+                        disabled={isUploading}
                       />
                     </div>
 
                     {/* Avatar Preview */}
                     {(customAvatarUrl || newApiForm.avatar) && (
-                      <div className="flex items-center gap-3 p-3 bg-slate-600/30 rounded-lg">
+                      <div className="flex items-center gap-3 p-4 bg-slate-600/30 rounded-lg border border-purple-500/20">
                         <div className="relative">
                           <img 
                             src={customAvatarUrl || newApiForm.avatar} 
                             alt="头像预览" 
-                            className="w-12 h-12 rounded-full object-cover ring-2 ring-purple-400/50"
+                            className="w-16 h-16 rounded-full object-cover ring-2 ring-purple-400/50"
                             onError={(e) => {
                               e.currentTarget.src = "/lovable-uploads/9cc92493-5e50-470d-9543-d2fe07d350f6.png";
                             }}
                           />
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full opacity-20 animate-pulse"></div>
                         </div>
-                        <div>
-                          <div className="text-sm text-green-300 font-medium">✅ 头像已设置</div>
-                          <div className="text-xs text-slate-400">将用作您的AI助手头像</div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <div className="text-sm text-green-300 font-medium">头像已设置</div>
+                          </div>
+                          <div className="text-xs text-slate-400 mt-1">将用作您的AI助手头像</div>
                         </div>
                         <Button
                           type="button"
@@ -918,7 +1041,8 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                             setCustomAvatarUrl('');
                             setNewApiForm(prev => ({ ...prev, avatar: '' }));
                           }}
-                          className="text-slate-400 hover:text-red-400 ml-auto"
+                          className="text-slate-400 hover:text-red-400"
+                          disabled={isUploading}
                         >
                           <X className="w-4 h-4" />
                         </Button>
@@ -926,12 +1050,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     )}
 
                     {/* Help Text */}
-                    <div className="text-xs text-slate-500 space-y-1">
+                    <div className="text-xs text-slate-500 space-y-1 bg-slate-700/20 p-3 rounded-lg">
                       <div className="flex items-start gap-2">
-                        <span>💡</span>
-                        <div>
-                          <div>支持 JPG、PNG、GIF 等格式</div>
-                          <div>建议尺寸: 200x200像素以上，正方形效果最佳</div>
+                        <Image className="w-3 h-3 mt-0.5 text-purple-400" />
+                        <div className="space-y-1">
+                          <div>• 推荐尺寸: 200x200像素以上，正方形效果最佳</div>
+                          <div>• 支持格式: JPG、PNG、GIF</div>
+                          <div>• 文件大小: 最大5MB</div>
+                          <div>• 上传的图片会存储在安全的云端</div>
                         </div>
                       </div>
                     </div>
