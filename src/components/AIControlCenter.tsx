@@ -11,14 +11,7 @@ import { SuperBrainDetection } from "./SuperBrainDetection";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { logger } from "@/utils/errorHandler";
 import { useLanguage } from "@/hooks/useLanguage";
-
-// Import avatars
-import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
-import warrenAvatar from "@/assets/warren-buffett-cartoon-avatar.png";
-import billAvatar from "@/assets/bill-gates-cartoon-avatar.png";
-import vitalikAvatar from "@/assets/vitalik-buterin-cartoon-avatar.png";
-import justinAvatar from "@/assets/justin-sun-cartoon-avatar.png";
-import trumpAvatar from "@/assets/donald-trump-cartoon-avatar.png";
+import { CryptoStaticIcon } from "./Static3DIconShowcase";
 
 interface PortfolioData {
   totalValue: number;
@@ -49,6 +42,16 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     justin: { enabled: false, apiKey: "", model: "claude-sonnet-4-20250514" },
     trump: { enabled: false, apiKey: "", model: "gpt-5-mini-2025-08-07" }
   });
+
+  // AI Advisor to Crypto mapping
+  const aiAdvisorCrypto = {
+    elon: { symbol: "BTC", name: "Bitcoin" },
+    warren: { symbol: "ETH", name: "Ethereum" },
+    bill: { symbol: "USDT", name: "Tether" },
+    vitalik: { symbol: "BNB", name: "Binance Coin" },
+    justin: { symbol: "XRP", name: "Ripple" },
+    trump: { symbol: "USDC", name: "USD Coin" }
+  };
 
   const cryptoOptions = [
     { symbol: "BTC", name: "Bitcoin", price: 43832.346, change: 85.23, changePercent: 0.19 },
@@ -162,32 +165,44 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
           </div>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={elonAvatar} alt="Elon Musk" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="w-8 h-8 mx-auto mb-2">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.elon.symbol} name={aiAdvisorCrypto.elon.name} size={32} />
+              </div>
               <div className="text-sm text-white font-medium">{t('ai.control_center.news_engine')}</div>
               <div className="text-xs text-slate-400">Elon Musk</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={warrenAvatar} alt="Warren Buffett" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="w-8 h-8 mx-auto mb-2">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.warren.symbol} name={aiAdvisorCrypto.warren.name} size={32} />
+              </div>
               <div className="text-sm text-white font-medium">{t('ai.control_center.technical_engine')}</div>
               <div className="text-xs text-slate-400">Warren Buffett</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={billAvatar} alt="Bill Gates" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="w-8 h-8 mx-auto mb-2">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.bill.symbol} name={aiAdvisorCrypto.bill.name} size={32} />
+              </div>
               <div className="text-sm text-white font-medium">{t('ai.control_center.bigdata_engine')}</div>
               <div className="text-xs text-slate-400">Bill Gates</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="w-8 h-8 mx-auto mb-2">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.vitalik.symbol} name={aiAdvisorCrypto.vitalik.name} size={32} />
+              </div>
               <div className="text-sm text-white font-medium">{t('ai.control_center.blockchain_engine')}</div>
               <div className="text-xs text-slate-400">Vitalik Buterin</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={justinAvatar} alt="Justin Sun" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="w-8 h-8 mx-auto mb-2">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.justin.symbol} name={aiAdvisorCrypto.justin.name} size={32} />
+              </div>
               <div className="text-sm text-white font-medium">{t('ai.control_center.defi_engine')}</div>
               <div className="text-xs text-slate-400">Justin Sun</div>
             </div>
             <div className="text-center p-4 bg-slate-700/30 rounded-lg">
-              <img src={trumpAvatar} alt="Donald Trump" className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" />
+              <div className="w-8 h-8 mx-auto mb-2">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.trump.symbol} name={aiAdvisorCrypto.trump.name} size={32} />
+              </div>
               <div className="text-sm text-white font-medium">{t('ai.control_center.policy_engine')}</div>
               <div className="text-xs text-slate-400">Donald Trump</div>
             </div>
@@ -201,7 +216,9 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <img src={elonAvatar} alt="Elon Musk" className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.elon.symbol} name={aiAdvisorCrypto.elon.name} size={40} />
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.elon_config')}</h3>
                 <Badge variant="outline" className="text-blue-400 border-blue-400/20 mt-1">{t('ai.control_center.news_engine')}</Badge>
@@ -269,7 +286,9 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <img src={warrenAvatar} alt="Warren Buffett" className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.warren.symbol} name={aiAdvisorCrypto.warren.name} size={40} />
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.warren_config')}</h3>
                 <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{t('ai.control_center.technical_engine')}</Badge>
@@ -337,7 +356,9 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <img src={billAvatar} alt="Bill Gates" className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.bill.symbol} name={aiAdvisorCrypto.bill.name} size={40} />
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.bill_config')}</h3>
                 <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">{t('ai.control_center.bigdata_engine')}</Badge>
@@ -401,7 +422,9 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.vitalik.symbol} name={aiAdvisorCrypto.vitalik.name} size={40} />
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.vitalik_config')}</h3>
                 <Badge variant="outline" className="text-cyan-400 border-cyan-400/20 mt-1">{t('ai.control_center.blockchain_engine')}</Badge>
@@ -465,7 +488,9 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <img src={justinAvatar} alt="Justin Sun" className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.justin.symbol} name={aiAdvisorCrypto.justin.name} size={40} />
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.justin_config')}</h3>
                 <Badge variant="outline" className="text-orange-400 border-orange-400/20 mt-1">{t('ai.control_center.defi_engine')}</Badge>
@@ -529,7 +554,9 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <img src={trumpAvatar} alt="Donald Trump" className="w-10 h-10 rounded-full object-cover" />
+              <div className="w-10 h-10">
+                <CryptoStaticIcon symbol={aiAdvisorCrypto.trump.symbol} name={aiAdvisorCrypto.trump.name} size={40} />
+              </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.trump_config')}</h3>
                 <Badge variant="outline" className="text-red-400 border-red-400/20 mt-1">{t('ai.control_center.policy_engine')}</Badge>
@@ -606,32 +633,44 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
             {/* AI Status Indicators */}
             <div className="space-y-2 mb-4">
               <div className="flex items-center gap-2 text-xs">
-                <img src={elonAvatar} alt="Elon Musk" className="w-4 h-4 rounded-full object-cover" />
+                <div className="w-4 h-4">
+                  <CryptoStaticIcon symbol={aiAdvisorCrypto.elon.symbol} name={aiAdvisorCrypto.elon.name} size={16} />
+                </div>
                 <span className="text-slate-300">{t('ai.control_center.news_engine')}</span>
                 <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/20">Elon Musk</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <img src={warrenAvatar} alt="Warren Buffett" className="w-4 h-4 rounded-full object-cover" />
+                <div className="w-4 h-4">
+                  <CryptoStaticIcon symbol={aiAdvisorCrypto.warren.symbol} name={aiAdvisorCrypto.warren.name} size={16} />
+                </div>
                 <span className="text-slate-300">{t('ai.control_center.technical_engine')}</span>
                 <Badge variant="outline" className="text-xs text-purple-400 border-purple-400/20">Warren Buffett</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <img src={billAvatar} alt="Bill Gates" className="w-4 h-4 rounded-full object-cover" />
+                <div className="w-4 h-4">
+                  <CryptoStaticIcon symbol={aiAdvisorCrypto.bill.symbol} name={aiAdvisorCrypto.bill.name} size={16} />
+                </div>
                 <span className="text-slate-300">{t('ai.control_center.bigdata_engine')}</span>
                 <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Bill Gates</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-4 h-4 rounded-full object-cover" />
+                <div className="w-4 h-4">
+                  <CryptoStaticIcon symbol={aiAdvisorCrypto.vitalik.symbol} name={aiAdvisorCrypto.vitalik.name} size={16} />
+                </div>
                 <span className="text-slate-300">{t('ai.control_center.blockchain_engine')}</span>
                 <Badge variant="outline" className="text-xs text-cyan-400 border-cyan-400/20">Vitalik Buterin</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <img src={justinAvatar} alt="Justin Sun" className="w-4 h-4 rounded-full object-cover" />
+                <div className="w-4 h-4">
+                  <CryptoStaticIcon symbol={aiAdvisorCrypto.justin.symbol} name={aiAdvisorCrypto.justin.name} size={16} />
+                </div>
                 <span className="text-slate-300">{t('ai.control_center.defi_engine')}</span>
                 <Badge variant="outline" className="text-xs text-orange-400 border-orange-400/20">Justin Sun</Badge>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <img src={trumpAvatar} alt="Donald Trump" className="w-4 h-4 rounded-full object-cover" />
+                <div className="w-4 h-4">
+                  <CryptoStaticIcon symbol={aiAdvisorCrypto.trump.symbol} name={aiAdvisorCrypto.trump.name} size={16} />
+                </div>
                 <span className="text-slate-300">{t('ai.control_center.policy_engine')}</span>
                 <Badge variant="outline" className="text-xs text-red-400 border-red-400/20">Donald Trump</Badge>
               </div>
