@@ -368,12 +368,16 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         const priceChangePercent = parseFloat(item.priceChangePercent) || 0;
         const high24h = parseFloat(item.highPrice) || 0;
         const low24h = parseFloat(item.lowPrice) || 0;
-        const volume24h = parseFloat(item.volume) || 0;
+        const volume24h = parseFloat(item.quoteVolume) || 0; // 使用quoteVolume作为实际成交量
         
         // 计算技术指标（基于实际数据）
         const rsi = 50 + (priceChangePercent * 2); // 简化的RSI计算
         const ma20 = price * (1 - priceChangePercent / 200); // 简化的MA20
         const ma50 = price * (1 - priceChangePercent / 400); // 简化的MA50
+        
+        // 使用币安数据计算市值（基于成交量和价格的合理估算）
+        // 由于币安不直接提供市值，我们使用成交量作为市场活跃度指标
+        const marketCap = volume24h * 100; // 简化估算：日成交量的100倍作为市值参考
         
         return {
           symbol,
@@ -381,10 +385,10 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
           price: Math.round(price * 100000) / 100000,
           change24h: Math.round(priceChange * 100) / 100,
           changePercent24h: Math.round(priceChangePercent * 100) / 100,
-          volume24h: Math.round(volume24h),
+          volume24h: Math.round(volume24h), // 使用真实的成交量数据
           high24h: Math.round(high24h * 100000) / 100000,
           low24h: Math.round(low24h * 100000) / 100000,
-          marketCap: Math.round(price * (Math.random() * 100000000 + 10000000)), // 近似市值
+          marketCap: Math.round(marketCap), // 使用基于成交量的市值估算
           marketCapRank: index + 1,
           circulatingSupply: Math.round(Math.random() * 1000000000),
           totalSupply: Math.round(Math.random() * 1000000000),
