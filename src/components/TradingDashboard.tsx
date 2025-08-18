@@ -24,11 +24,8 @@ import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
 
-interface TradingDashboardProps {
-  onAddNotification?: (notification: any) => void;
-}
 
-export const TradingDashboard = memo(({ onAddNotification }: TradingDashboardProps = {}) => {
+export const TradingDashboard = memo(() => {
   const { t } = useLanguage();
   const { cryptoData, newsData, loading, error, isRealTimeEnabled } = useCryptoData();
   const { getPortfolioData } = useWalletData();
@@ -219,7 +216,6 @@ export const TradingDashboard = memo(({ onAddNotification }: TradingDashboardPro
           onOpenChange={setShowAIControlCenter}
           advisorStates={advisorStates}
           portfolioData={portfolioData}
-          onAddNotification={onAddNotification}
         />
 
         {/* AI Advisors Section - Three Column Grid */}
@@ -228,7 +224,6 @@ export const TradingDashboard = memo(({ onAddNotification }: TradingDashboardPro
             cryptoData={cryptoData} 
             newsData={newsData} 
             onActivationChange={setAdvisorStates}
-            onAddNotification={onAddNotification}
           />
         </div>
 

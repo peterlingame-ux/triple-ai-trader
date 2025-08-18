@@ -36,10 +36,9 @@ interface AIControlCenterProps {
   onOpenChange: (open: boolean) => void;
   advisorStates?: Record<string, boolean>;
   portfolioData?: PortfolioData;
-  onAddNotification?: (notification: any) => void;
 }
 
-export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfolioData, onAddNotification }: AIControlCenterProps) => {
+export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfolioData }: AIControlCenterProps) => {
   const { t, currentLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
@@ -162,39 +161,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
       // Add actual analysis logic here
       // For now, just simulate delay
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // 触发分析完成通知
-      if (onAddNotification) {
-        const enabledCount = Object.values(aiConfigs).filter(config => config.enabled).length;
-        onAddNotification({
-          id: `analysis-complete-${Date.now()}`,
-          title: 'AI分析完成',
-          message: `${enabledCount} 个AI引擎已完成对 ${selectedCrypto} 的多维度分析，查看结果获取投资建议。`,
-          type: 'ai',
-          autoHide: true,
-          autoHideDelay: 6000,
-          persistent: false
-        });
-      }
     } catch (error) {
       logger.error("Multi-AI analysis failed", { error }, 'AIControlCenter');
-      
-      // 触发错误通知
-      if (onAddNotification) {
-        onAddNotification({
-          id: `analysis-error-${Date.now()}`,
-          title: 'AI分析失败',
-          message: '分析过程中发生错误，请检查AI引擎配置或稍后重试。',
-          type: 'error',
-          autoHide: true,
-          autoHideDelay: 5000,
-          persistent: false
-        });
-      }
     } finally {
       setIsAnalyzing(false);
     }
-  }, [analysisQuery, selectedCrypto, aiConfigs, isAnalyzing, onAddNotification]);
+  }, [analysisQuery, selectedCrypto, aiConfigs, isAnalyzing]);
 
   // Handle file upload
   const handleFileUpload = useCallback(async (file: File) => {
@@ -273,19 +245,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     const updatedApis = [...customApis, customApi];
     localStorage.setItem('customApis', JSON.stringify(updatedApis));
     
-    // 触发成功通知
-    if (onAddNotification) {
-      onAddNotification({
-        id: `api-added-${Date.now()}`,
-        title: 'API接口添加成功',
-        message: `自定义AI接口 "${newApiForm.name}" 已成功添加，您可以在配置页面启用它。`,
-        type: 'success',
-        autoHide: true,
-        autoHideDelay: 4000,
-        persistent: false
-      });
-    }
-    
     // Reset form
     setNewApiForm({
       name: "",
@@ -296,7 +255,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
       avatar: ""
     });
     setShowAddApiModal(false);
-  }, [newApiForm, customApis, onAddNotification]);
+  }, [newApiForm, customApis]);
 
   // Handle removing custom API
   const handleRemoveCustomApi = useCallback((id: string) => {
