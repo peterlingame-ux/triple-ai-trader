@@ -46,61 +46,57 @@ export function SecureAPIConfig({
   useEffect(() => {
     if (isAuthenticated) {
       console.log('SecureAPIConfig: User authenticated, checking configuration...');
-      // 添加延迟确保组件完全挂载
-      setTimeout(() => {
-        checkConfiguration();
-      }, 100);
+      // 立即检查配置，不需要延迟
+      checkConfiguration();
     }
   }, [isAuthenticated]);
+
+  // 添加一个额外的效果来确保配置被正确加载
+  useEffect(() => {
+    if (isAuthenticated && !isConfigured) {
+      console.log('SecureAPIConfig: Double-checking configuration status...');
+      const timer = setTimeout(() => {
+        checkConfiguration();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, isConfigured]);
 
   const checkConfiguration = async () => {
     console.log('SecureAPIConfig: Checking configuration...');
     try {
+      // 直接使用get方法来检查配置，这样更可靠
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
-          action: 'check',
+          action: 'get',
           service: 'binance_api_config' 
         }
       });
 
-      console.log('SecureAPIConfig: Check result:', { data, error });
+      console.log('SecureAPIConfig: Get config result:', { data, error, hasConfig: !!data?.config });
 
-      if (!error && data?.configured) {
-        console.log('SecureAPIConfig: Configuration found, loading details...');
+      if (!error && data?.success && data?.config) {
+        console.log('SecureAPIConfig: Configuration exists, setting up...');
         setIsConfigured(true);
         onConfigChange?.(true);
-        // 获取现有配置信息（用于显示和编辑）
-        await loadExistingConfig();
+        
+        // 设置脱敏的配置显示
+        setExistingConfig({
+          apiKey: data.config.apiKey ? maskApiKey(data.config.apiKey) : '',
+          secretKey: data.config.secretKey ? maskSecretKey(data.config.secretKey) : ''
+        });
+        
+        console.log('SecureAPIConfig: Component state updated to configured');
       } else {
-        console.log('SecureAPIConfig: No configuration found or check failed');
-        // 如果check失败，我们直接尝试get来确认
-        console.log('SecureAPIConfig: Trying direct get to verify...');
-        try {
-          const { data: getResult, error: getError } = await supabase.functions.invoke('api-config-manager', {
-            body: { 
-              action: 'get',
-              service: 'binance_api_config' 
-            }
-          });
-          
-          if (!getError && getResult?.success && getResult?.config) {
-            console.log('SecureAPIConfig: Configuration actually exists via get method');
-            setIsConfigured(true);
-            onConfigChange?.(true);
-            await loadExistingConfig();
-          } else {
-            setIsConfigured(false);
-            onConfigChange?.(false);
-          }
-        } catch (fallbackError) {
-          console.error('SecureAPIConfig: Fallback get also failed:', fallbackError);
-          setIsConfigured(false);
-          onConfigChange?.(false);
-        }
+        console.log('SecureAPIConfig: No configuration found');
+        setIsConfigured(false);
+        onConfigChange?.(false);
+        setExistingConfig({});
       }
     } catch (error) {
       console.error('SecureAPIConfig: Error checking configuration:', error);
       setIsConfigured(false);
+      onConfigChange?.(false);
     }
   };
 
@@ -396,15 +392,15 @@ export function SecureAPIConfig({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* 添加调试信息 */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-            <div>isConfigured: {isConfigured.toString()}</div>
-            <div>isEditing: {isEditing.toString()}</div>
-            <div>connectionStatus: {connectionStatus}</div>
-            <div>existingConfig: {JSON.stringify(existingConfig)}</div>
-          </div>
-        )}
+        {/* 始终显示调试信息以便排查问题 */}
+        <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs font-mono">
+          <div><strong>Debug Info:</strong></div>
+          <div>• isConfigured: <span className={isConfigured ? 'text-green-600' : 'text-red-600'}>{isConfigured.toString()}</span></div>
+          <div>• isEditing: {isEditing.toString()}</div>
+          <div>• connectionStatus: {connectionStatus}</div>
+          <div>• hasExistingConfig: {Object.keys(existingConfig).length > 0 ? 'yes' : 'no'}</div>
+          <div>• authStatus: {isAuthenticated ? 'authenticated' : 'not authenticated'}</div>
+        </div>
         
         {!isConfigured ? (
           <div className="space-y-4">
