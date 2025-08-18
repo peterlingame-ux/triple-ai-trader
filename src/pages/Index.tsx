@@ -1,16 +1,13 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
-import SuperBrainXSidebar from "@/components/SuperBrainXSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, LogIn, Brain } from "lucide-react";
+import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useState } from "react";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
-  const [showSuperBrain, setShowSuperBrain] = useState(false);
 
 
   if (loading) {
@@ -32,16 +29,6 @@ const Index = () => {
             Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSuperBrain(!showSuperBrain)}
-              className="flex items-center gap-2 hover:bg-primary/10 text-primary"
-              title="切换 SUPER BRAINX 面板 (Ctrl/Cmd+B)"
-            >
-              <Brain className="h-4 w-4" />
-              <span className="hidden sm:inline">SUPER BRAINX</span>
-            </Button>
             {isAuthenticated ? (
               <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -65,10 +52,6 @@ const Index = () => {
         </div>
       </header>
       <TradingDashboard />
-      <SuperBrainXSidebar 
-        isExpanded={showSuperBrain}
-        onToggle={() => setShowSuperBrain(!showSuperBrain)}
-      />
     </div>
   );
 };
