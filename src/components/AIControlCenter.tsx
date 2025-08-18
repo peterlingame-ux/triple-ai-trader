@@ -69,7 +69,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     name: "",
     provider: "",
     apiKey: "",
-    model: "",
     endpoint: "",
     description: ""
   });
@@ -168,6 +167,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     const customApi = {
       id: Date.now().toString(),
       ...newApiForm,
+      model: "", // Hidden from user
       enabled: false
     };
 
@@ -182,7 +182,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
       name: "",
       provider: "",
       apiKey: "",
-      model: "",
       endpoint: "",
       description: ""
     });
@@ -433,25 +432,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
-                  <Select
-                    value={aiConfigs.grok.model}
-                    onValueChange={(value) => setAiConfigs(prev => ({
-                      ...prev,
-                      grok: { ...prev.grok, model: value }
-                    }))}
-                  >
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="grok-beta">Grok Beta</SelectItem>
-                      <SelectItem value="grok-2-beta">Grok-2 Beta</SelectItem>
-                      <SelectItem value="grok-2-vision-beta">Grok-2 Vision Beta</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             </div>
           </div>
@@ -539,25 +519,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     }))}
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
-                </div>
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
-                  <Select
-                    value={aiConfigs.justin.model}
-                    onValueChange={(value) => setAiConfigs(prev => ({
-                      ...prev,
-                      justin: { ...prev.justin, model: value }
-                    }))}
-                  >
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="claude-sonnet-4-20250514">Claude 4 Sonnet</SelectItem>
-                      <SelectItem value="claude-opus-4-20250514">Claude 4 Opus</SelectItem>
-                      <SelectItem value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
             </div>
@@ -743,16 +704,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     placeholder="输入您的API密钥"
                     value={newApiForm.apiKey}
                     onChange={(e) => setNewApiForm(prev => ({ ...prev, apiKey: e.target.value }))}
-                    className="bg-slate-700/50 border-slate-600 text-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">模型名称</label>
-                  <Input
-                    placeholder="例如: gpt-4, claude-3.5-sonnet"
-                    value={newApiForm.model}
-                    onChange={(e) => setNewApiForm(prev => ({ ...prev, model: e.target.value }))}
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
