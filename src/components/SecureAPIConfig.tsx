@@ -46,7 +46,10 @@ export function SecureAPIConfig({
   useEffect(() => {
     if (isAuthenticated) {
       console.log('SecureAPIConfig: User authenticated, checking configuration...');
-      checkConfiguration();
+      // 添加延迟确保组件完全挂载
+      setTimeout(() => {
+        checkConfiguration();
+      }, 100);
     }
   }, [isAuthenticated]);
 
@@ -69,9 +72,31 @@ export function SecureAPIConfig({
         // 获取现有配置信息（用于显示和编辑）
         await loadExistingConfig();
       } else {
-        console.log('SecureAPIConfig: No configuration found');
-        setIsConfigured(false);
-        onConfigChange?.(false);
+        console.log('SecureAPIConfig: No configuration found or check failed');
+        // 如果check失败，我们直接尝试get来确认
+        console.log('SecureAPIConfig: Trying direct get to verify...');
+        try {
+          const { data: getResult, error: getError } = await supabase.functions.invoke('api-config-manager', {
+            body: { 
+              action: 'get',
+              service: 'binance_api_config' 
+            }
+          });
+          
+          if (!getError && getResult?.success && getResult?.config) {
+            console.log('SecureAPIConfig: Configuration actually exists via get method');
+            setIsConfigured(true);
+            onConfigChange?.(true);
+            await loadExistingConfig();
+          } else {
+            setIsConfigured(false);
+            onConfigChange?.(false);
+          }
+        } catch (fallbackError) {
+          console.error('SecureAPIConfig: Fallback get also failed:', fallbackError);
+          setIsConfigured(false);
+          onConfigChange?.(false);
+        }
       }
     } catch (error) {
       console.error('SecureAPIConfig: Error checking configuration:', error);
