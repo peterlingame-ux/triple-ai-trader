@@ -1478,7 +1478,23 @@ const translations = {
     'profile.personal': '个人资料',
     'profile.click_edit': '点击编辑',
     'profile.saved': '个人资料已保存',
-    'profile.updated': '您的头像和姓名已成功更新'
+    'profile.updated': '您的头像和姓名已成功更新',
+
+    // Supreme Brain Detection interface translations 最强大脑检测界面翻译
+    'ai.supreme_brain_ai_detection': '🧠 最强大脑AI检测 ⚡',
+    'ai.six_models_sync_analysis': '六模型同步分析',
+    'ai.active_analysis': 'AI实时分析',
+    'ai.standby': '待命',
+    'ai.opportunities_detected': '机会检测数量',
+    'ai.average_win_rate': '平均胜率',
+    'ai.high_win_rate_signal': '高胜率信号',
+    'ai.local_analysis_mode': '本地分析模式',
+
+    // 额外的检测相关翻译
+    'ai.scroll_to_top': '请向上滚动',
+    'ai.find_brain_detection': '在页面顶部找到"最强大脑AI检测"功能并点击"开始监控"',
+    'ai.find_brain_detection_short': '找到最强大脑检测功能',
+    'ai.latest_opportunities': '最新机会'
   },
   ja: {
     'app.title': 'Super BrainX',
