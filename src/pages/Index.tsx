@@ -1,16 +1,13 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
-import { AIAPIConfigManager } from "@/components/AIAPIConfigManager";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, LogIn, Settings, BarChart3 } from "lucide-react";
+import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useState } from "react";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
-  const [showAPIConfig, setShowAPIConfig] = useState(false);
 
 
   if (loading) {
@@ -32,26 +29,6 @@ const Index = () => {
             Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
-            {isAuthenticated && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowAPIConfig(!showAPIConfig)}
-                className="gap-2"
-              >
-                {showAPIConfig ? (
-                  <>
-                    <BarChart3 className="h-4 w-4" />
-                    交易面板
-                  </>
-                ) : (
-                  <>
-                    <Settings className="h-4 w-4" />
-                    AI配置
-                  </>
-                )}
-              </Button>
-            )}
             {isAuthenticated ? (
               <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -74,9 +51,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-6">
-        {showAPIConfig ? <AIAPIConfigManager /> : <TradingDashboard />}
-      </main>
+      <TradingDashboard />
     </div>
   );
 };
