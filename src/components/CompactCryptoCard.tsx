@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useRef } from "react";
+import { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -27,50 +27,9 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
 }) => {
   const { t } = useLanguage();
   const isPositive = change >= 0;
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [previousPrice, setPreviousPrice] = useState(price);
-  const [priceDirection, setPriceDirection] = useState<'up' | 'down' | 'same'>('same');
-  
-  // 检测价格变化并触发动画
-  useEffect(() => {
-    if (price !== previousPrice) {
-      if (price > previousPrice) {
-        setPriceDirection('up');
-      } else if (price < previousPrice) {
-        setPriceDirection('down');
-      }
-      
-      setIsUpdating(true);
-      setPreviousPrice(price);
-      
-      // 1秒后停止闪烁效果
-      const timer = setTimeout(() => {
-        setIsUpdating(false);
-        setPriceDirection('same');
-      }, 1000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [price, previousPrice]);
-  
-  // 动态样式类
-  const cardAnimationClass = isUpdating 
-    ? `animate-pulse ${priceDirection === 'up' ? 'ring-2 ring-green-500/50 bg-green-500/10' : 
-        priceDirection === 'down' ? 'ring-2 ring-red-500/50 bg-red-500/10' : ''}`
-    : '';
-  
-  const priceAnimationClass = isUpdating
-    ? `transition-all duration-500 ${priceDirection === 'up' ? 'text-green-400 font-bold scale-105' : 
-        priceDirection === 'down' ? 'text-red-400 font-bold scale-105' : ''}`
-    : 'transition-all duration-300';
   
   return (
-    <Card className={`p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group relative ${cardAnimationClass}`}>
-      {/* 数据更新指示器 */}
-      {isUpdating && (
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-ping"></div>
-      )}
-      
+    <Card className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
       {/* Header - 3D Icon, Symbol & Price */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
@@ -85,7 +44,7 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
         
         {/* Price */}
         <div className="text-right">
-          <p className={`text-foreground font-bold text-sm font-mono ${priceAnimationClass}`}>
+          <p className="text-foreground font-bold text-sm font-mono">
             ${formatPrice(price)}
           </p>
           <div className={`flex items-center gap-1 text-xs font-medium ${
