@@ -1,5 +1,5 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
-import AICollaborationManager from "@/components/AICollaborationManager";
+import ProfessionalAICollaboration from "@/components/ProfessionalAICollaboration";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn, Brain, BarChart3 } from "lucide-react";
@@ -71,7 +71,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-      {showAIManager ? <AICollaborationManager /> : <TradingDashboard />}
+      {showAIManager ? <ProfessionalAICollaboration /> : <TradingDashboard />}
     </div>
   );
 };
