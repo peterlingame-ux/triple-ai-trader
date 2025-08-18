@@ -295,8 +295,8 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
         </h2>
       </div>
 
-      {/* Twelve Column Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-4">
+      {/* Six Cards Per Row Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {aiAdvisors.map((advisor, index) => (
           <CompactAdvisorCard
             key={index}
