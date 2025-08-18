@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
@@ -29,6 +30,7 @@ const Index = () => {
             Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {isAuthenticated ? (
               <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
