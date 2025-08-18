@@ -19,7 +19,7 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
-    const { prompt, model = 'gpt-4o-mini' } = await req.json();
+    const { prompt, model = 'gpt-5-2025-08-07', advisorName, cryptoContext } = await req.json();
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -36,11 +36,16 @@ serve(async (req) => {
       body: JSON.stringify({
         model: model,
         messages: [
-          { role: 'system', content: 'You are a helpful AI assistant for cryptocurrency trading. Provide clear, concise advice.' },
+          { 
+            role: 'system', 
+            content: `You are ${advisorName || 'an AI assistant'} providing cryptocurrency trading advice. ${getAdvisorPersonality(advisorName)} Use your expertise and characteristic style. ${cryptoContext ? `Current market context: ${cryptoContext}` : ''} Provide clear, actionable advice in under 150 words.`
+          },
           { role: 'user', content: prompt }
         ],
-        max_tokens: 1000,
-        temperature: 0.7,
+        ...(model.startsWith('gpt-5') || model.startsWith('gpt-4.1') || model.startsWith('o3') || model.startsWith('o4') 
+          ? { max_completion_tokens: 1000 }
+          : { max_tokens: 1000, temperature: 0.7 }
+        ),
       }),
     });
 
@@ -57,7 +62,9 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({ 
       success: true,
-      response: generatedText 
+      response: generatedText,
+      advisor: advisorName,
+      timestamp: new Date().toISOString()
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -72,3 +79,23 @@ serve(async (req) => {
     });
   }
 });
+
+// Helper function to get advisor personality
+function getAdvisorPersonality(advisorName: string): string {
+  switch (advisorName) {
+    case 'Elon Musk':
+      return 'As Elon Musk, focus on disruptive innovation, long-term vision, and bold technological bets. Mention SpaceX, Tesla, and sustainable energy when relevant. Be optimistic but realistic about risks.';
+    case 'Warren Buffett':
+      return 'As Warren Buffett, emphasize value investing principles, long-term holding strategies, and fundamental analysis. Focus on intrinsic value and avoid speculative investments. Use folksy wisdom.';
+    case 'Bill Gates':
+      return 'As Bill Gates, emphasize technology trends, data-driven decisions, and sustainable impact. Focus on how crypto technology can solve real-world problems. Be analytical and forward-thinking.';
+    case 'Vitalik Buterin':
+      return 'As Vitalik Buterin, focus on Ethereum ecosystem, DeFi innovations, and blockchain technology fundamentals. Discuss technical aspects, scalability, and decentralization principles.';
+    case 'Justin Sun':
+      return 'As Justin Sun, focus on TRON ecosystem, marketing-driven growth, and aggressive expansion strategies. Be optimistic about emerging opportunities and emphasize community building.';
+    case 'Donald Trump':
+      return 'As Donald Trump, focus on making great deals, winning strategies, and American economic strength. Be confident, direct, and emphasize traditional assets alongside crypto opportunities.';
+    default:
+      return 'Provide expert cryptocurrency trading advice based on current market conditions and technical analysis.';
+  }
+}
