@@ -4,6 +4,7 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { CryptoStaticIcon } from "./Static3DIconShowcase";
 import { formatPrice, formatVolume, formatMarketCap, getCirculatingSupply, getMarketRank } from "@/utils/cryptoDataUtils";
+import { useNavigate } from "react-router-dom";
 
 interface CryptoCardProps {
   symbol: string;
@@ -18,10 +19,18 @@ interface CryptoCardProps {
 
 export const CryptoCard = memo<CryptoCardProps>(({ symbol, name, price, change, changePercent, image, volume, marketCap }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const isPositive = change >= 0;
   
+  const handleClick = () => {
+    navigate(`/crypto/${symbol}`);
+  };
+  
   return (
-    <Card className="p-3 sm:p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 rounded-xl">
+    <Card 
+      className="p-3 sm:p-6 bg-gradient-crypto border-border hover:shadow-crypto transition-all duration-300 rounded-xl cursor-pointer hover:scale-105"
+      onClick={handleClick}
+    >
       <div className="flex items-center justify-between">
         {/* Left side - Icon and Info */}
         <div className="flex items-center gap-2 sm:gap-4">
