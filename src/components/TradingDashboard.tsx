@@ -171,12 +171,6 @@ export const TradingDashboard = memo(() => {
                 <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
                 {t('market.overview')}
               </h2>
-              {isRealTimeEnabled && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  实时数据
-                </div>
-              )}
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
               <Button 
