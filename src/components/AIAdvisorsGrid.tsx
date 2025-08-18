@@ -99,22 +99,22 @@ const getAiAdvisorsData = (language: string) => [
     tags: language === 'zh' ? ["TRON", "营销", "DeFi"] : ["TRON", "Marketing", "DeFi"]
   },
   {
-    name: "Donald Trump",
-    specialty: language === 'zh' ? "房地产与品牌投资" : "Real Estate & Brand Investment",
-    confidence: 93,
-    recommendation: "BUY REAL ESTATE, GOLD",
-    netWorth: "$2.6 Billion",
-    avatar: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png",
-    backgroundColor: "bg-gradient-to-br from-yellow-900 via-orange-900 to-amber-800",
-    borderColor: "border-yellow-500/30",
-    accentColor: "text-yellow-300",
+    name: "Mark Zuckerberg",
+    specialty: language === 'zh' ? "社交媒体与元宇宙" : "Social Media & Metaverse",
+    confidence: 91,
+    recommendation: "BUY META, VR Tech",
+    netWorth: "$178.2 Billion",
+    avatar: "/lovable-uploads/e92b5082-863f-41bd-bd00-37f71c590748.png",
+    backgroundColor: "bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-800",
+    borderColor: "border-blue-500/30",
+    accentColor: "text-blue-300",
     isSpecial: true,
-    investmentStyle: language === 'zh' ? "品牌价值驱动" : "Brand Value Driven",
-    historicalReturn: "+156%",
-    famousQuote: language === 'zh' ? "我们要让美国再次伟大，让投资再次伟大！" : "We're going to make America great again, make investments great again!",
-    mainAchievements: language === 'zh' ? ["特朗普集团主席", "美国第45任总统", "房地产大亨", "品牌授权专家"] : ["Trump Organization Chairman", "45th US President", "Real Estate Mogul", "Brand Licensing Expert"],
-    currentHoldings: [language === 'zh' ? "房地产" : "Real Estate", language === 'zh' ? "特朗普NFT" : "Trump NFTs", language === 'zh' ? "黄金" : "Gold", "Trump Media"],
-    tags: language === 'zh' ? ["房地产", "品牌", "政治"] : ["Real Estate", "Branding", "Politics"]
+    investmentStyle: language === 'zh' ? "平台生态驱动" : "Platform Ecosystem Driven",
+    historicalReturn: "+234%",
+    famousQuote: language === 'zh' ? "连接世界，构建人类未来的数字化社区。" : "Connecting the world and building the digital communities of the future.",
+    mainAchievements: language === 'zh' ? ["Meta创始人兼CEO", "Facebook创建者", "元宇宙先驱", "全球社交网络架构师"] : ["Meta Founder & CEO", "Facebook Creator", "Metaverse Pioneer", "Global Social Network Architect"],
+    currentHoldings: ["META", language === 'zh' ? "VR/AR技术股" : "VR/AR Tech Stocks", language === 'zh' ? "AI基础设施" : "AI Infrastructure", language === 'zh' ? "数字资产" : "Digital Assets"],
+    tags: language === 'zh' ? ["社交媒体", "元宇宙", "AI"] : ["Social Media", "Metaverse", "AI"]
   }
 ];
 
@@ -133,7 +133,7 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
     "Bill Gates": true,
     "Vitalik Buterin": true,
     "Justin Sun": true,
-    "Donald Trump": true
+    "Mark Zuckerberg": true
   });
 
   // Get localized advisor data
