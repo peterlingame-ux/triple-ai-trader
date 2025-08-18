@@ -1,35 +1,19 @@
-import React, { useEffect, useRef, memo, useState } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { useTheme } from 'next-themes';
-import { ChartAIChat } from './ChartAIChat';
 
 interface TradingViewChartProps {
   symbol?: string;
   height?: string;
   className?: string;
-  chartData?: {
-    price: number;
-    change24h: number;
-    volume24h: number;
-    high24h: number;
-    low24h: number;
-    technicalIndicators?: any;
-  };
-  marketData?: {
-    marketCap: number;
-    dominance?: number;
-  };
 }
 
 const TradingViewChart: React.FC<TradingViewChartProps> = memo(({ 
   symbol = "NASDAQ:AAPL", 
   height = "500px",
-  className = "",
-  chartData,
-  marketData
+  className = ""
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
-  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -91,20 +75,11 @@ const TradingViewChart: React.FC<TradingViewChartProps> = memo(({
   }, [symbol, theme]);
 
   return (
-    <div className={`w-full relative ${className}`} style={{ height }}>
+    <div className={`w-full ${className}`} style={{ height }}>
       <div 
         ref={containerRef}
         className="tradingview-widget-container w-full h-full rounded-lg border border-border bg-card"
         style={{ height: '100%', width: '100%' }}
-      />
-      
-      {/* AI图表分析聊天 */}
-      <ChartAIChat
-        symbol={symbol}
-        isOpen={isChatOpen}
-        onToggle={() => setIsChatOpen(!isChatOpen)}
-        chartData={chartData}
-        marketData={marketData}
       />
     </div>
   );

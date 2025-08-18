@@ -247,17 +247,6 @@ export const TradingDashboard = memo(() => {
                 symbol="NASDAQ:AAPL" 
                 height="500px"
                 className="w-full"
-                chartData={{
-                  price: 150.25,
-                  change24h: 2.5,
-                  volume24h: 45000000,
-                  high24h: 152.80,
-                  low24h: 148.20
-                }}
-                marketData={{
-                  marketCap: 2400000000000,
-                  dominance: 5.2
-                }}
               />
             </div>
           </div>
