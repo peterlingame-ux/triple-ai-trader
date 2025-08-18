@@ -192,6 +192,9 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
       try {
         if (!chartContainerRef.current || !isMounted) return;
         
+        const containerWidth = chartContainerRef.current.clientWidth || 800;
+        const containerHeight = chartContainerRef.current.clientHeight || 400;
+        
         chart = createChart(chartContainerRef.current, {
           layout: {
             background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
@@ -208,8 +211,8 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
             timeVisible: true,
             secondsVisible: false,
           },
-          width: chartContainerRef.current.clientWidth,
-          height: 400,
+          width: containerWidth,
+          height: containerHeight,
         });
 
         candlestickSeries = chart.addCandlestickSeries({
@@ -231,9 +234,11 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         resizeObserver = new ResizeObserver(() => {
           if (chart && chartContainerRef.current && isMounted) {
             try {
+              const newWidth = chartContainerRef.current.clientWidth;
+              const newHeight = chartContainerRef.current.clientHeight || 400;
               chart.applyOptions({
-                width: chartContainerRef.current.clientWidth,
-                height: 400,
+                width: newWidth,
+                height: newHeight,
               });
             } catch (error) {
               // 静默处理resize错误
@@ -409,13 +414,15 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           </div>
         )}
 
-        {/* 图表容器 */}
-        {!loading && (
-          <div 
-            ref={chartContainerRef}
-            className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700"
-          />
-        )}
+        {/* 图表容器 - 始终显示，避免渲染问题 */}
+        <div 
+          ref={chartContainerRef}
+          className="w-full flex-1 bg-slate-800/30 rounded-lg border border-slate-700 min-h-[400px]"
+          style={{ 
+            display: loading ? 'none' : 'block',
+            position: 'relative'
+          }}
+        />
 
         {/* 技术指标面板 */}
         {technicalIndicators && (
