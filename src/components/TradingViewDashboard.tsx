@@ -5,7 +5,8 @@ import TradingViewScreener from "./TradingViewScreener";
 import TradingViewHeatmap from "./TradingViewHeatmap";
 import TradingViewTimeline from "./TradingViewTimeline";
 import TradingViewTechnicalAnalysis from "./TradingViewTechnicalAnalysis";
-import { BarChart3, TrendingUp, Newspaper, Activity, LineChart } from "lucide-react";
+import TradingViewAIAnalysis from "./TradingViewAIAnalysis";
+import { BarChart3, TrendingUp, Newspaper, Activity, LineChart, Brain } from "lucide-react";
 
 const TradingViewDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("screener");
@@ -23,7 +24,7 @@ const TradingViewDashboard: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl"></div>
         <div className="relative p-4 sm:p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsList className="grid w-full grid-cols-6 mb-6">
               <TabsTrigger value="screener" className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4" />
                 <span className="hidden sm:inline">市场筛选器</span>
@@ -48,6 +49,11 @@ const TradingViewDashboard: React.FC = () => {
                 <LineChart className="w-4 h-4" />
                 <span className="hidden sm:inline">图表</span>
                 <span className="sm:hidden">图表</span>
+              </TabsTrigger>
+              <TabsTrigger value="ai" className="flex items-center gap-2">
+                <Brain className="w-4 h-4" />
+                <span className="hidden sm:inline">AI分析</span>
+                <span className="sm:hidden">AI</span>
               </TabsTrigger>
             </TabsList>
             
@@ -82,6 +88,13 @@ const TradingViewDashboard: React.FC = () => {
             <TabsContent value="chart" className="mt-0">
               <TradingViewChart 
                 height="500px"
+                className="w-full"
+              />
+            </TabsContent>
+            
+            <TabsContent value="ai" className="mt-0">
+              <TradingViewAIAnalysis 
+                activeTab={activeTab}
                 className="w-full"
               />
             </TabsContent>
