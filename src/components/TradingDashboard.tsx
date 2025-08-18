@@ -20,9 +20,8 @@ import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 import TradingViewChart from "./TradingViewChart";
-import VoiceInterface from "./VoiceInterface";
 // Portfolio cards moved to AI Control Center
-import { BarChart3, Brain, TrendingUp, MessageSquare } from "lucide-react";
+import { BarChart3, Brain, TrendingUp } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
@@ -272,17 +271,6 @@ export const TradingDashboard = memo(() => {
 
         {/* Upcoming Advisors Section */}
         <UpcomingAdvisors />
-
-        {/* AI Voice Interface */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6" />
-              AI语音助手
-            </h2>
-          </div>
-          <VoiceInterface />
-        </div>
 
         {/* Professional Trading Panel Modal */}
         {showTradingPanel && selectedTradingSymbol && (
