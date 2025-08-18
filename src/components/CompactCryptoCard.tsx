@@ -3,8 +3,7 @@ import { Card } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { formatPrice, formatVolume, formatMarketCap } from "@/utils/cryptoDataUtils";
-import { CryptoIcon } from "./CryptoIcon";
-import { useNavigate } from "react-router-dom";
+import CryptoIcon from "./CryptoIcon";
 
 interface CompactCryptoCardProps {
   symbol: string;
@@ -27,18 +26,10 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   marketCap 
 }) => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
   const isPositive = change >= 0;
   
-  const handleClick = () => {
-    navigate(`/crypto/${symbol}`);
-  };
-  
   return (
-    <Card 
-      className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group cursor-pointer hover:scale-105"
-      onClick={handleClick}
-    >
+    <Card className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
       {/* Header - 3D Icon, Symbol & Price */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
