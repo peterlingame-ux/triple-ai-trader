@@ -2,8 +2,10 @@ import { useState, useCallback, useMemo, useEffect, memo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CryptoCard } from "./CryptoCard";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { CryptoAIChat } from "./CryptoAIChat";
 
 
 import { AutoTrader } from "./AutoTrader";
@@ -140,79 +142,118 @@ export const TradingDashboard = memo(({ onAddNotification }: TradingDashboardPro
         {/* 币安API配置 */}
         <BinanceAPIConfig />
 
-        {/* Crypto Cards Grid */}
-        <div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-                <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-                {t('market.overview')}
-              </h2>
-              {isRealTimeEnabled && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  实时数据
+        {/* Main Dashboard Content with Tabs */}
+        <Tabs defaultValue="market" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-background/50 backdrop-blur-sm border border-border/50">
+            <TabsTrigger value="market" className="data-[state=active]:bg-primary/20">
+              市场概览
+            </TabsTrigger>
+            <TabsTrigger value="ai-chat" className="data-[state=active]:bg-primary/20">
+              AI 货币咨询
+            </TabsTrigger>
+            <TabsTrigger value="ai-advisors" className="data-[state=active]:bg-primary/20">
+              AI 智能顾问
+            </TabsTrigger>
+          </TabsList>
+
+          {/* 市场概览标签页 */}
+          <TabsContent value="market" className="mt-6 space-y-6">
+            {/* Crypto Cards Grid */}
+            <div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+                    <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
+                    {t('market.overview')}
+                  </h2>
+                  {isRealTimeEnabled && (
+                    <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      实时数据
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowAllCrypto(!showAllCrypto)}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+                  >
+                    {showAllCrypto ? t('button.collapse') : t('button.all_categories')}
+                    <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Search Component - Mobile Optimized */}
+              <div className="mb-4 sm:mb-6">
+                <CryptoSearch
+                  onSearch={handleSearch}
+                  onClearSearch={handleClearSearch}
+                  searchQuery={searchQuery}
+                  totalCryptos={cryptoData.length}
+                  filteredCount={filteredCryptoData.length}
+                />
+              </div>
+              
+              <ProfessionalCryptoGrid 
+                cryptoData={filteredCryptoData} 
+                showAll={showAllCrypto}
+                maxVisible={6}
+              />
+              
+              {/* 货币计数和折叠状态显示 */}
+              <div className="flex items-center justify-between mt-4 px-2">
+                <div className="text-sm text-muted-foreground">
+                  {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
+                </div>
+                {filteredCryptoData.length > 6 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowAllCrypto(!showAllCrypto)}
+                    className="text-primary hover:text-primary/80 text-xs sm:text-sm"
+                  >
+                    {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
+                  </Button>
+                )}
+              </div>
+        
+              {filteredCryptoData.length === 0 && searchQuery && (
+                <div className="text-center py-8 sm:py-12">
+                  <p className="text-muted-foreground text-base sm:text-lg">
+                    {t('search.not_found')} "{searchQuery}" {t('search.try_other')}
+                  </p>
+                  <p className="text-muted-foreground/70 text-sm mt-2">
+                    {t('search.suggestion')}
+                  </p>
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowAllCrypto(!showAllCrypto)}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
-              >
-                {showAllCrypto ? t('button.collapse') : t('button.all_categories')}
-                <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
-              </Button>
-            </div>
-          </div>
-          
-          {/* Search Component - Mobile Optimized */}
-          <div className="mb-4 sm:mb-6">
-            <CryptoSearch
-              onSearch={handleSearch}
-              onClearSearch={handleClearSearch}
-              searchQuery={searchQuery}
-              totalCryptos={cryptoData.length}
-              filteredCount={filteredCryptoData.length}
-            />
-          </div>
-          
-                  <ProfessionalCryptoGrid 
-                    cryptoData={filteredCryptoData} 
-                    showAll={showAllCrypto}
-                    maxVisible={6}
-                  />
-                  
-                  {/* 货币计数和折叠状态显示 */}
-                  <div className="flex items-center justify-between mt-4 px-2">
-                    <div className="text-sm text-muted-foreground">
-                      {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
-                    </div>
-                    {filteredCryptoData.length > 6 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowAllCrypto(!showAllCrypto)}
-                        className="text-primary hover:text-primary/80 text-xs sm:text-sm"
-                      >
-                        {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
-                      </Button>
-                    )}
-                  </div>
-          
-          {filteredCryptoData.length === 0 && searchQuery && (
-            <div className="text-center py-8 sm:py-12">
-              <p className="text-muted-foreground text-base sm:text-lg">
-                {t('search.not_found')} "{searchQuery}" {t('search.try_other')}
-              </p>
-              <p className="text-muted-foreground/70 text-sm mt-2">
-                {t('search.suggestion')}
-              </p>
-            </div>
-          )}
-        </div>
+          </TabsContent>
 
+          {/* AI 货币咨询标签页 */}
+          <TabsContent value="ai-chat" className="mt-6">
+            <CryptoAIChat />
+          </TabsContent>
+
+          {/* AI 智能顾问标签页 */}
+          <TabsContent value="ai-advisors" className="mt-6 space-y-6">
+            {/* AI Advisors Section - Three Column Grid */}
+            <div className="mb-6">
+              <AIAdvisorsGrid 
+                cryptoData={cryptoData} 
+                newsData={newsData} 
+                onActivationChange={setAdvisorStates}
+                onAddNotification={onAddNotification}
+              />
+            </div>
+
+            {/* Upcoming Advisors Section */}
+            <UpcomingAdvisors />
+          </TabsContent>
+        </Tabs>
+        
         {/* AI Control Center Modal */}
         <AIControlCenter 
           open={showAIControlCenter} 
@@ -221,19 +262,6 @@ export const TradingDashboard = memo(({ onAddNotification }: TradingDashboardPro
           portfolioData={portfolioData}
           onAddNotification={onAddNotification}
         />
-
-        {/* AI Advisors Section - Three Column Grid */}
-        <div className="mb-6">
-          <AIAdvisorsGrid 
-            cryptoData={cryptoData} 
-            newsData={newsData} 
-            onActivationChange={setAdvisorStates}
-            onAddNotification={onAddNotification}
-          />
-        </div>
-
-        {/* Upcoming Advisors Section */}
-        <UpcomingAdvisors />
       </div>
       </div>
     </div>
