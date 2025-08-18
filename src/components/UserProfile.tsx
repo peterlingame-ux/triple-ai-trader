@@ -166,26 +166,26 @@ export const UserProfile = () => {
     <Dialog open={isEditing} onOpenChange={setIsEditing}>
       <DialogTrigger asChild>
         <div className="group cursor-pointer">
-          <div className="flex items-center gap-4 px-5 py-3 bg-gradient-to-r from-slate-800/40 to-slate-700/40 backdrop-blur-xl rounded-2xl border border-white/10 hover:border-accent/30 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-accent/20">
+          <div className="flex flex-col items-center gap-3 px-6 py-4 bg-gradient-to-br from-purple-800/40 via-purple-700/30 to-purple-600/20 backdrop-blur-xl rounded-3xl border border-purple-400/20 hover:border-purple-400/40 transition-all duration-300 hover:scale-[1.02] shadow-xl hover:shadow-purple-400/20 min-w-[180px]">
             <div className="relative">
-              <Avatar className="w-12 h-12 ring-2 ring-accent/30 ring-offset-2 ring-offset-transparent transition-all duration-300 group-hover:ring-accent/50 shadow-lg">
+              <Avatar className="w-16 h-16 ring-3 ring-purple-400/40 ring-offset-2 ring-offset-transparent transition-all duration-300 group-hover:ring-purple-400/60 shadow-xl">
                 <AvatarImage src={profileData.avatar} alt={profileData.name} className="object-cover" />
-                <AvatarFallback className="bg-gradient-to-br from-accent/30 to-accent/20 text-accent text-lg font-bold">
-                  {profileData.initials || <User className="w-6 h-6" />}
+                <AvatarFallback className="bg-gradient-to-br from-purple-500/40 to-purple-400/30 text-purple-300 text-xl font-bold">
+                  {profileData.initials || <User className="w-8 h-8" />}
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-accent rounded-full flex items-center justify-center shadow-lg">
-                <Edit3 className="w-3 h-3 text-accent-foreground" />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-purple-400/30">
+                <Edit3 className="w-3 h-3 text-white" />
               </div>
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-base font-semibold text-accent truncate">
+                <h3 className="text-lg font-bold text-purple-100 tracking-wide">
                   {profileData.name || 'LINYUAN'}
                 </h3>
-                <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
               </div>
-              <p className="text-sm text-accent/70 truncate">
+              <p className="text-sm text-purple-300/80">
                 {t('profile.personal')}
               </p>
             </div>

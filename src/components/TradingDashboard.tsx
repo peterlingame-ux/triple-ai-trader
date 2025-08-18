@@ -104,23 +104,29 @@ export const TradingDashboard = memo(() => {
                 </div>
               </div>
               
-              {/* Center Section - Status Indicator - Mobile: Full Width */}
-              <div className="flex items-center justify-center sm:justify-start gap-4">
-                <div className="relative">
-                  <Badge variant="outline" className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full mr-2 sm:mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
-                    <Brain className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    {t('status.live')}
-                  </Badge>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+              {/* Three Section Layout */}
+              <div className="flex items-center justify-between w-full gap-4">
+                {/* Left Section - Real-time Data Status */}
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <Badge variant="outline" className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-400 border-green-500/20 backdrop-blur-sm hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-300">
+                      <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full mr-2 sm:mr-3 animate-pulse shadow-lg shadow-green-400/50"></div>
+                      <Brain className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                      {t('status.live')}
+                    </Badge>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 blur-md -z-10 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Right Section - User Controls - Professional Cards Layout */}
-              <div className="flex items-center gap-3">
-                <UserProfile />
                 
-                <LanguageSwitcher />
+                {/* Center Section - User Profile */}
+                <div className="flex-1 flex justify-center">
+                  <UserProfile />
+                </div>
+                
+                {/* Right Section - Language Switcher */}
+                <div className="flex items-center gap-3">
+                  <LanguageSwitcher />
+                </div>
               </div>
             </div>
           </div>
