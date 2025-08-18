@@ -343,10 +343,10 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
     let interval: NodeJS.Timeout | null = null;
     
     if (isRealTimeEnabled) {
-      // 每5秒自动刷新数据，让变化更明显
+      // 每30秒自动刷新数据
       interval = setInterval(() => {
         fetchCryptoData(false);
-      }, 5000);
+      }, 30000);
     }
     
     return () => {
