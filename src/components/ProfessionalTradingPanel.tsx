@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { supabase } from '@/integrations/supabase/client';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -26,7 +27,8 @@ import {
   TrendingUpIcon,
   Palette,
   Type,
-  Smile
+  Smile,
+  Loader2
 } from "lucide-react";
 import { BinanceKlineChart } from "./BinanceKlineChart";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -75,6 +77,7 @@ export const ProfessionalTradingPanel = ({
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [priceChange, setPriceChange] = useState<number>(0);
   const [priceChangePercent, setPriceChangePercent] = useState<number>(0);
+  const [technicalIndicators, setTechnicalIndicators] = useState<any>(null);
 
   const currentCrypto = cryptoData.find(c => c.symbol === selectedCrypto) || cryptoData[0];
 
@@ -93,8 +96,8 @@ export const ProfessionalTradingPanel = ({
     setRefreshKey(prev => prev + 1);
   }, [selectedCrypto]);
 
-  // AI聊天功能
-  const sendMessage = useCallback(() => {
+  // AI综合分析功能
+  const sendMessage = useCallback(async () => {
     if (!inputMessage.trim()) return;
     
     const newMessage: ChatMessage = {
@@ -106,18 +109,59 @@ export const ProfessionalTradingPanel = ({
     
     setChatMessages(prev => [...prev, newMessage]);
     setInputMessage('');
+    setLoading(true);
     
-    // 模拟AI回复
-    setTimeout(() => {
+    try {
+      // 获取激活的AI顾问
+      const activeAdvisors = Object.entries(aiConfigs)
+        .filter(([_, config]) => config.enabled)
+        .map(([name, _]) => name);
+
+      if (activeAdvisors.length === 0) {
+        throw new Error('没有激活的AI顾问');
+      }
+
+      // 调用Super Brain分析API，综合多个AI顾问意见
+      const { data, error } = await supabase.functions.invoke('super-brain-analysis', {
+        body: {
+          symbol: selectedCrypto,
+          question: inputMessage,
+          activeAdvisors: activeAdvisors,
+          technicalData: technicalIndicators,
+          priceData: {
+            currentPrice,
+            priceChange,
+            priceChangePercent
+          }
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message || '分析请求失败');
+      }
+
       const aiResponse: ChatMessage = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
-        content: `关于 ${selectedCrypto} 的分析：基于当前技术指标，RSI处于65.42，MACD显示正向趋势。建议关注支撑位43200和阻力位44500。`,
+        content: data.analysis || `综合分析结果：基于 ${activeAdvisors.length} 个AI顾问的意见，当前 ${selectedCrypto} 的技术指标显示...`,
         timestamp: new Date()
       };
+      
       setChatMessages(prev => [...prev, aiResponse]);
-    }, 1000);
-  }, [inputMessage, selectedCrypto]);
+      
+    } catch (error) {
+      console.error('AI分析失败:', error);
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 2).toString(),
+        type: 'ai',
+        content: `抱歉，AI分析暂时不可用。错误：${error instanceof Error ? error.message : '未知错误'}`,
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setLoading(false);
+    }
+  }, [inputMessage, selectedCrypto, aiConfigs, technicalIndicators, currentPrice, priceChange, priceChangePercent]);
 
   const timeframes = [
     { label: "1分", value: "1m" },
@@ -488,10 +532,77 @@ export const ProfessionalTradingPanel = ({
             {showAIChat && (
               <div className="w-80 bg-slate-900/50 border-l border-slate-700/50 flex flex-col">
                 <div className="bg-slate-800/50 border-b border-slate-700/50 p-3">
-                  <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                    <Bot className="w-4 h-4 text-blue-400" />
-                    AI 分析师 - {selectedCrypto}
-                  </h3>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Bot className="w-5 h-5 text-blue-400" />
+                      <span className="font-medium text-white">AI实时分析</span>
+                      <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-xs px-2">
+                        {Object.values(aiConfigs).filter(config => config.enabled).length}个引擎 • {selectedCrypto}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* 活跃引擎显示 */}
+                  <div className="mb-4">
+                    <div className="text-xs text-slate-400 mb-2">活跃引擎:</div>
+                    <div className="flex items-center gap-2">
+                      {Object.entries(aiConfigs)
+                        .filter(([_, config]) => config.enabled)
+                        .map(([name, _]) => (
+                          <div key={name} className="flex items-center gap-1 px-2 py-1 bg-slate-700/50 rounded-full text-xs">
+                            <User className="w-3 h-3" />
+                            <span className="capitalize text-slate-300">{name}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* AI实时分析就绪提示 */}
+                  <div className="mb-4 p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-lg">
+                    <div className="flex items-center gap-2 text-yellow-400">
+                      <span className="text-lg">👋</span>
+                      <span className="text-sm font-medium">AI实时分析就绪</span>
+                    </div>
+                  </div>
+
+                  {/* 快速分析按钮 */}
+                  <div className="mb-4 space-y-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start text-left h-auto py-3 px-4 bg-slate-800/30 border-slate-600/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                      onClick={() => setInputMessage('分析当前技术指标')}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">💡</span>
+                        <span>分析{selectedCrypto}的技术指标</span>
+                      </div>
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start text-left h-auto py-3 px-4 bg-slate-800/30 border-slate-600/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                      onClick={() => setInputMessage('支撑位和阻力位在哪里')}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">💡</span>
+                        <span>{selectedCrypto}的支撑位和阻力位在哪里？</span>
+                      </div>
+                    </Button>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-start text-left h-auto py-3 px-4 bg-slate-800/30 border-slate-600/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                      onClick={() => setInputMessage('请在图上画出趋势线')}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg">💡</span>
+                        <span>请在图上画出{selectedCrypto}的趋势线</span>
+                      </div>
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="flex-1 p-3 space-y-3 overflow-y-auto">
@@ -499,7 +610,7 @@ export const ProfessionalTradingPanel = ({
                     <div className="text-center text-slate-400 text-sm">
                       <Bot className="w-12 h-12 mx-auto mb-3 text-slate-600" />
                       <p>我是您的专业AI分析师</p>
-                      <p className="text-xs mt-1">询问技术指标、价格预测或交易建议</p>
+                      <p className="text-xs mt-1">综合{Object.values(aiConfigs).filter(config => config.enabled).length}个AI引擎的分析意见</p>
                     </div>
                   )}
                   
@@ -529,24 +640,44 @@ export const ProfessionalTradingPanel = ({
                       )}
                     </div>
                   ))}
+                  
+                  {loading && (
+                    <div className="flex gap-2 justify-start">
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <Bot className="w-3 h-3 text-white" />
+                      </div>
+                      <div className="max-w-[75%] rounded-lg p-2.5 text-sm bg-slate-800 text-white">
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>正在综合AI分析...</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-slate-800/50 border-t border-slate-700/50 p-3">
-                  <div className="flex gap-2">
+                  {/* 输入框 */}
+                  <div className="flex items-center gap-2">
                     <Input
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
-                      placeholder="询问关于交易的问题..."
-                      className="flex-1 bg-slate-900/50 border-slate-700 text-white placeholder-slate-400 text-sm"
-                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                      placeholder="询问AI技术分析..."
+                      className="flex-1 bg-slate-800/50 border-slate-600 text-white placeholder-slate-400"
+                      onKeyPress={(e) => e.key === 'Enter' && !loading && sendMessage()}
+                      disabled={loading}
                     />
-                    <Button 
+                    <Button
                       onClick={sendMessage}
                       size="sm"
-                      disabled={!inputMessage.trim()}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-black p-2"
+                      disabled={loading || !inputMessage.trim()}
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-4"
                     >
-                      <Send className="w-4 h-4" />
+                      {loading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Send className="w-4 h-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
