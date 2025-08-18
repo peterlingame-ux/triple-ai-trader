@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageSquare, Send, Bot, TrendingUp, TrendingDown, BarChart3, Activity, DollarSign, Clock, Globe, LineChart, Zap, AlertTriangle, Search } from "lucide-react";
+import { BinanceKlineChart } from "./BinanceKlineChart";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { getAllSupportedCryptos, getTokenName } from "@/hooks/useCryptoData";
@@ -586,59 +587,12 @@ ${crypto.rsi > 50 ? '技术面偏向多头' : '技术面偏向震荡'}，建议�
                               </div>
                             </div>
                             
-                            {/* Chart Container with Technical Overlays */}
+                             {/* Real Binance Kline Chart */}
                             <div className="relative h-80">
-                              <div ref={chartRef} className="h-full bg-muted/10 rounded border border-border flex flex-col">
-                                {/* Chart Header with Price Info */}
-                                <div className="p-3 border-b border-border bg-muted/5">
-                                  <div className="flex items-center justify-between text-xs">
-                                    <div className="flex items-center gap-4">
-                                      <span className="font-mono font-bold text-foreground">
-                                        {currentCrypto.symbol}/USDT
-                                      </span>
-                                      <span className="text-muted-foreground">
-                                        O: ${currentCrypto.price * 0.998}
-                                      </span>
-                                      <span className="text-muted-foreground">
-                                        H: ${currentCrypto.high24h}
-                                      </span>
-                                      <span className="text-muted-foreground">
-                                        L: ${currentCrypto.low24h}
-                                      </span>
-                                      <span className="text-foreground font-semibold">
-                                        C: ${currentCrypto.price}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <Badge variant="outline" className="text-xs bg-accent/20 text-accent">
-                                        Volume: ${(currentCrypto.volume24h / 1e9).toFixed(2)}B
-                                      </Badge>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Main Chart Area */}
-                                <div className="flex-1 flex items-center justify-center">
-                                  <div className="text-center text-muted-foreground">
-                                    <LineChart className="w-20 h-20 mx-auto mb-3 text-accent/50" />
-                                    <p className="text-lg font-semibold">{t('ai.professional_kline')} ({timeframe})</p>
-                                    <p className="text-sm">{t('ai.realtime_data')}</p>
-                                    <div className="mt-3 flex items-center justify-center gap-4 text-xs">
-                                      <span className="flex items-center gap-1">
-                                        <div className="w-3 h-3 bg-accent rounded"></div>
-                                        MA20
-                                      </span>
-                                      <span className="flex items-center gap-1">
-                                        <div className="w-3 h-3 bg-blue-400 rounded"></div>
-                                        MA50
-                                      </span>
-                                      <span className="flex items-center gap-1">
-                                        <div className="w-3 h-3 bg-orange-400 rounded"></div>
-                                        BOLL
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
+                              <BinanceKlineChart 
+                                symbol={currentCrypto.symbol} 
+                                className="h-full"
+                              />
 
                                 {/* Technical Indicator Sub-Charts */}
                                 <div className="grid grid-cols-3 gap-2 p-3 border-t border-border bg-muted/5">
@@ -670,7 +624,6 @@ ${crypto.rsi > 50 ? '技术面偏向多头' : '技术面偏向震荡'}，建议�
                                     </div>
                                   </div>
                                 </div>
-                              </div>
                             </div>
                           </Card>
                         </div>

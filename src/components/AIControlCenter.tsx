@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
+import { BinanceKlineChart } from "./BinanceKlineChart";
 import { SuperBrainDetection } from "./SuperBrainDetection";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { logger } from "@/utils/errorHandler";
@@ -815,13 +816,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                       ))}
                     </div>
 
-                    <div className="h-80 bg-slate-700/30 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <BarChart3 className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                        <p className="text-slate-400 text-lg font-medium">{t('ai.control_center.professional_chart')} ({selectedTimeframe})</p>
-                        <p className="text-slate-500 text-sm mt-2">{t('ai.control_center.realtime_analysis')}</p>
-                      </div>
-                    </div>
+                    {/* Real Binance Kline Chart */}
+                    <BinanceKlineChart 
+                      symbol={selectedCrypto} 
+                      className="h-80"
+                    />
                   </div>
                 </Card>
               </div>
