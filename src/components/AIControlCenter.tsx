@@ -1222,6 +1222,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                 value="analysis" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
               >
+                <Activity className="w-4 h-4 mr-2" />
                 {t('ai.control_center.realtime_analysis')}
               </TabsTrigger>
               <TabsTrigger 
