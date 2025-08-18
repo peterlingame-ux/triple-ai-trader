@@ -229,34 +229,6 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         throw new Error('Invalid data format from Binance API');
       }
 
-      // 获取币种的市值排名和供应量数据
-      const getMarketData = (symbol: string, price: number) => {
-        const marketData: Record<string, any> = {
-          'BTC': { marketCap: price * 19700000, rank: 1, supply: 19700000, maxSupply: 21000000 },
-          'ETH': { marketCap: price * 120300000, rank: 2, supply: 120300000, maxSupply: null },
-          'USDT': { marketCap: price * 120000000000, rank: 3, supply: 120000000000, maxSupply: null },
-          'BNB': { marketCap: price * 147000000, rank: 4, supply: 147000000, maxSupply: 200000000 },
-          'XRP': { marketCap: price * 57200000000, rank: 5, supply: 57200000000, maxSupply: 100000000000 },
-          'USDC': { marketCap: price * 38000000000, rank: 6, supply: 38000000000, maxSupply: null },
-          'ADA': { marketCap: price * 35800000000, rank: 7, supply: 35800000000, maxSupply: 45000000000 },
-          'SOL': { marketCap: price * 589000000, rank: 8, supply: 589000000, maxSupply: null },
-          'DOGE': { marketCap: price * 147000000000, rank: 9, supply: 147000000000, maxSupply: null },
-          'AVAX': { marketCap: price * 406000000, rank: 10, supply: 406000000, maxSupply: 720000000 },
-          'TRX': { marketCap: price * 86400000000, rank: 11, supply: 86400000000, maxSupply: null },
-          'TON': { marketCap: price * 2540000000, rank: 12, supply: 2540000000, maxSupply: 5100000000 },
-          'DOT': { marketCap: price * 1430000000, rank: 13, supply: 1430000000, maxSupply: null },
-          'MATIC': { marketCap: price * 9320000000, rank: 14, supply: 9320000000, maxSupply: 10000000000 },
-          'SHIB': { marketCap: price * 589700000000000, rank: 15, supply: 589700000000000, maxSupply: null }
-        };
-        
-        return marketData[symbol] || {
-          marketCap: price * (Math.random() * 1000000000 + 100000000),
-          rank: Math.floor(Math.random() * 100) + 20,
-          supply: Math.round(Math.random() * 1000000000 + 100000000),
-          maxSupply: Math.round(Math.random() * 2000000000 + 1000000000)
-        };
-      };
-
       const convertedData: CryptoData[] = data.map((item: any, index: number) => {
         const symbol = item.symbol;
         const price = parseFloat(item.price) || 0;
@@ -265,19 +237,10 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
         const high24h = parseFloat(item.highPrice) || 0;
         const low24h = parseFloat(item.lowPrice) || 0;
         const volume24h = parseFloat(item.volume) || 0;
-        const quoteVolume24h = parseFloat(item.quoteVolume) || 0;
         
-        // 计算真实的技术指标
-        const rsi = 50 + Math.max(-30, Math.min(30, priceChangePercent * 1.5));
+        const rsi = 50 + (priceChangePercent * 2);
         const ma20 = price * (1 - priceChangePercent / 200);
         const ma50 = price * (1 - priceChangePercent / 400);
-        
-        // 获取市值数据
-        const marketData = getMarketData(symbol, price);
-        
-        // 计算ATH和ATL（基于24小时数据的估算）
-        const ath = high24h * (1.2 + Math.random() * 1.5);
-        const atl = low24h * (0.1 + Math.random() * 0.4);
         
         return {
           symbol,
@@ -288,16 +251,16 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
           volume24h: Math.round(volume24h),
           high24h: Math.round(high24h * 100000) / 100000,
           low24h: Math.round(low24h * 100000) / 100000,
-          marketCap: Math.round(marketData.marketCap),
-          marketCapRank: marketData.rank,
-          circulatingSupply: marketData.supply,
-          totalSupply: marketData.supply,
-          maxSupply: marketData.maxSupply,
-          ath: Math.round(ath * 100000) / 100000,
-          atl: Math.round(atl * 100000) / 100000,
-          image: `https://bin.bnbstatic.com/image/admin_mgs_image_upload/20201110/87496d50-2408-43e1-ad4c-78b47b448a6a.png`,
-          dominance: Math.round((symbol === 'BTC' ? 45 + priceChangePercent * 0.1 : (marketData.marketCap / 2500000000000) * 100) * 100) / 100,
-          rsi: Math.round(Math.max(10, Math.min(90, rsi)) * 100) / 100,
+          marketCap: Math.round(price * (Math.random() * 100000000 + 10000000)),
+          marketCapRank: index + 1,
+          circulatingSupply: Math.round(Math.random() * 1000000000),
+          totalSupply: Math.round(Math.random() * 1000000000),
+          maxSupply: Math.round(Math.random() * 1000000000),
+          ath: Math.round(price * (1.5 + Math.random() * 2) * 100000) / 100000,
+          atl: Math.round(price * (0.1 + Math.random() * 0.3) * 100000) / 100000,
+          image: `https://assets.coingecko.com/coins/images/${index + 1}/large/${symbol.toLowerCase()}.png`,
+          dominance: Math.round((symbol === 'BTC' ? 40 + Math.random() * 10 : Math.random() * 5) * 100) / 100,
+          rsi: Math.round(Math.max(0, Math.min(100, rsi)) * 100) / 100,
           ma20: Math.round(ma20 * 100000) / 100000,
           ma50: Math.round(ma50 * 100000) / 100000,
           support: Math.round(low24h * 0.98 * 100000) / 100000,
