@@ -19,7 +19,7 @@ const LanguageContext = createContext<LanguageContextType>({
 
 const translations = {
   en: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': 'Ultimate Brain Makes Earning Money Easier',
     'portfolio.total': 'Total Portfolio',
     'portfolio.change': '24h Change',
@@ -769,7 +769,7 @@ const translations = {
     'wallet.okx.description': 'Web3 wallet by OKX exchange'
   },
   zh: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': '终极大脑让赚钱更简单',
     'portfolio.total': '总投资组合',
     'portfolio.change': '24小时变化',
@@ -1481,7 +1481,7 @@ const translations = {
     'profile.updated': '您的头像和姓名已成功更新'
   },
   ja: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': '3-IN-1 究極のブレイン お金を稼ぐのがより簡単に',
     'portfolio.total': 'トータルポートフォリオ',
     'portfolio.change': '24時間変動',
@@ -1832,7 +1832,7 @@ const translations = {
     'language.switch': '言語切替'
   },
   es: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': '3-EN-1 Cerebro Definitivo Hacer Dinero Más Fácil',
     'portfolio.total': 'Portafolio Total',
     'portfolio.change': 'Cambio 24h',
@@ -2183,7 +2183,7 @@ const translations = {
     'language.switch': 'Cambio de Idioma'
   },
   ko: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': '3-IN-1 궁극적인 브레인 돈 벌기가 더 쉬워짐',
     'portfolio.total': '총 포트폴리오',
     'portfolio.change': '24시간 변동',
@@ -2534,7 +2534,7 @@ const translations = {
     'language.switch': '언어 전환'
   },
   fr: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': '3-EN-1 Cerveau Ultime Gagner de l\'Argent Plus Facilement',
     'portfolio.total': 'Portefeuille Total',
     'portfolio.change': 'Changement 24h',
@@ -2885,7 +2885,7 @@ const translations = {
     'language.switch': 'Changement de Langue'
   },
   de: {
-    'app.title': 'Meta BrainX',
+    'app.title': 'Super BrainX',
     'app.subtitle': '3-IN-1 Ultimatives Gehirn Geld Verdienen Leichter Gemacht',
     'portfolio.total': 'Gesamtportfolio',
     'portfolio.change': '24h Änderung',

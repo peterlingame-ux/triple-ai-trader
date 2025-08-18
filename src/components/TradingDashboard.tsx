@@ -96,7 +96,7 @@ export const TradingDashboard = memo(() => {
               <div className="flex items-center gap-4 sm:gap-8">
                 <div className="space-y-1 sm:space-y-2">
                   <h1 className="text-3xl sm:text-6xl font-orbitron font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-200 to-amber-300 tracking-tight">
-                    Meta BrainX
+                    Super BrainX
                   </h1>
                   <p className="text-sm sm:text-lg text-slate-300 font-inter font-medium tracking-wide">
                     {t('app.subtitle')}
