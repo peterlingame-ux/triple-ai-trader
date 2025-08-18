@@ -115,6 +115,25 @@ const getAiAdvisorsData = (language: string) => [
     mainAchievements: language === 'zh' ? ["特朗普集团主席", "美国第45任总统", "房地产大亨", "品牌授权专家"] : ["Trump Organization Chairman", "45th US President", "Real Estate Mogul", "Brand Licensing Expert"],
     currentHoldings: [language === 'zh' ? "房地产" : "Real Estate", language === 'zh' ? "特朗普NFT" : "Trump NFTs", language === 'zh' ? "黄金" : "Gold", "Trump Media"],
     tags: language === 'zh' ? ["房地产", "品牌", "政治"] : ["Real Estate", "Branding", "Politics"]
+  },
+  {
+    name: language === 'zh' ? "神秘顾问" : "Mystery Advisor",
+    specialty: language === 'zh' ? "即将揭晓..." : "Coming Soon...",
+    confidence: 0,
+    recommendation: language === 'zh' ? "敬请期待" : "Stay Tuned",
+    netWorth: "???",
+    avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzkiIGZpbGw9IiM0QjU1NjMiIHN0cm9rZT0iIzZCNzI4MCIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik00MCAyNUM0MS4xIDI1IDQyIDI1LjkgNDIgMjdWMzVDNDIgMzYuMSA0MS4xIDM3IDQwIDM3QzM4LjkgMzcgMzggMzYuMSAzOCAzNVYyN0MzOCAyNS45IDM4LjkgMjUgNDAgMjVaIiBmaWxsPSIjOUI5Q0E0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDgiIHI9IjMiIGZpbGw9IiM5QjlDQTQiLz4KPC9zdmc+",
+    backgroundColor: "bg-gradient-to-br from-gray-900 via-slate-800 to-gray-700",
+    borderColor: "border-gray-600/50",
+    accentColor: "text-gray-400",
+    isSpecial: false,
+    investmentStyle: language === 'zh' ? "未知" : "Unknown",
+    historicalReturn: "???",
+    famousQuote: language === 'zh' ? "一切即将揭晓..." : "All will be revealed...",
+    mainAchievements: language === 'zh' ? ["未公开", "保密中", "敬请期待"] : ["Classified", "Confidential", "Coming Soon"],
+    currentHoldings: ["???", "???", "???"],
+    tags: language === 'zh' ? ["神秘", "未知", "即将到来"] : ["Mystery", "Unknown", "Coming Soon"],
+    isLocked: true
   }
 ];
 
@@ -133,7 +152,8 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
     "Bill Gates": true,
     "Vitalik Buterin": true,
     "Justin Sun": true,
-    "Donald Trump": true
+    "Donald Trump": true,
+    [language === 'zh' ? "神秘顾问" : "Mystery Advisor"]: false
   });
 
   // Get localized advisor data
@@ -175,8 +195,8 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
         </h2>
       </div>
 
-      {/* Six Column Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      {/* Seven Column Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4">
         {aiAdvisors.map((advisor, index) => (
           <CompactAdvisorCard
             key={index}
@@ -190,6 +210,7 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
             borderColor={advisor.borderColor}
             accentColor={advisor.accentColor}
             isSpecial={activationStates[advisor.name]}
+            isLocked={advisor.isLocked}
             investmentStyle={advisor.investmentStyle}
             historicalReturn={advisor.historicalReturn}
             famousQuote={advisor.famousQuote}
