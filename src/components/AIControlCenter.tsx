@@ -10,6 +10,8 @@ import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, 
 import { BinanceKlineChart } from "./BinanceKlineChart";
 import { SuperBrainDetection } from "./SuperBrainDetection";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
+import { EnhancedAIChat } from "./EnhancedAIChat";
+import { EnhancedChartPanel } from "./EnhancedChartPanel";
 import { logger } from "@/utils/errorHandler";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
@@ -1123,311 +1125,55 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     </div>
   );
 
-  const RealTimeAnalysisPanel = () => (
-    <div className="grid grid-cols-12 gap-6 h-full">
-      {/* Left Panel - AI Analysis Chat */}
-      <div className="col-span-3">
-        <Card className="h-full bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-          <div className="p-6 h-full flex flex-col">
-            <div className="flex items-center gap-2 mb-4">
-              <Brain className="w-5 h-5 text-yellow-400" />
-              <h3 className="text-lg font-semibold text-white">{t('ai.control_center.ai_analysis_chat')}</h3>
-            </div>
-            
-            {/* AI Status Indicators */}
-            <div className="space-y-2 mb-4">
-              <div className="flex items-center gap-2 text-xs">
-                <img src={elonAvatar} alt="Elon Musk" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">{t('ai.control_center.news_engine')}</span>
-                <Badge variant="outline" className="text-xs text-blue-400 border-blue-400/20">Elon Musk</Badge>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <img src={warrenAvatar} alt="Warren Buffett" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">{t('ai.control_center.technical_engine')}</span>
-                <Badge variant="outline" className="text-xs text-purple-400 border-purple-400/20">Warren Buffett</Badge>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <img src={billAvatar} alt="Bill Gates" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">{t('ai.control_center.bigdata_engine')}</span>
-                <Badge variant="outline" className="text-xs text-green-400 border-green-400/20">Bill Gates</Badge>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">{t('ai.control_center.blockchain_engine')}</span>
-                <Badge variant="outline" className="text-xs text-cyan-400 border-cyan-400/20">Vitalik Buterin</Badge>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <img src={justinAvatar} alt="Justin Sun" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">{t('ai.control_center.defi_engine')}</span>
-                <Badge variant="outline" className="text-xs text-orange-400 border-orange-400/20">Justin Sun</Badge>
-              </div>
-              <div className="flex items-center gap-2 text-xs">
-                <img src={trumpAvatar} alt="Donald Trump" className="w-4 h-4 rounded-full object-cover" />
-                <span className="text-slate-300">{t('ai.control_center.policy_engine')}</span>
-                <Badge variant="outline" className="text-xs text-red-400 border-red-400/20">Donald Trump</Badge>
-              </div>
-            </div>
-            
-            <div className="flex-1 space-y-4 mb-4">
-              <div className="text-slate-300 text-sm">
-                {t('ai.control_center.analysis_desc')}
-              </div>
-              
-              <div className="space-y-2">
-                <div className="text-yellow-400 text-sm font-medium mb-2">{t('ai.control_center.try_asking')}</div>
-                {sampleQuestions.map((question, index) => (
-                  <div 
-                    key={index}
-                    className="text-slate-400 text-sm p-2 rounded bg-slate-700/30 hover:bg-slate-700/50 cursor-pointer transition-colors"
-                    onClick={() => setAnalysisQuery(question)}
-                  >
-                    "{question}"
-                  </div>
-                ))}
-              </div>
-            </div>
+  // 新增绘图注释状态
+  const [drawingAnnotations, setDrawingAnnotations] = useState<Array<{
+    id: string;
+    type: 'line' | 'support' | 'resistance' | 'fibonacci' | 'note';
+    coordinates: Array<{x: number, y: number}>;
+    color: string;
+    text?: string;
+    timestamp: Date;
+  }>>([]);
 
-            <div className="flex gap-2">
-              <Input
-                placeholder={t('ai.control_center.ask_technical')}
-                value={analysisQuery}
-                onChange={(e) => setAnalysisQuery(e.target.value)}
-                className="bg-slate-700/50 border-slate-600 text-white placeholder-slate-400"
-                onKeyPress={(e) => e.key === 'Enter' && handleMultiAIAnalysis()}
-              />
-              <Button 
-                onClick={handleMultiAIAnalysis}
-                className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
-            
-            {/* Multi-AI Analysis Status */}
-            <div className="mt-3 text-xs text-center">
-              <span className="text-slate-500">
-                {t('activation.activated')} {Object.values(aiConfigs).filter(config => config.enabled).length}/6 {t('ai.control_center.engines_enabled')}
-              </span>
-            </div>
-          </div>
-        </Card>
+  // 处理AI绘图分析
+  const handleDrawAnalysis = useCallback((coordinates: Array<{x: number, y: number}>, type: string) => {
+    const newAnnotation = {
+      id: Date.now().toString(),
+      type: 'support' as const,
+      coordinates,
+      color: '#22c55e',
+      text: 'AI分析：关键支撑/阻力位',
+      timestamp: new Date()
+    };
+    setDrawingAnnotations(prev => [...prev, newAnnotation]);
+  }, []);
+
+  // 添加绘图注释
+  const handleAddAnnotation = useCallback((annotation: any) => {
+    setDrawingAnnotations(prev => [...prev, annotation]);
+  }, []);
+
+  const RealTimeAnalysisPanel = () => (
+    <div className="grid grid-cols-12 gap-6 h-[calc(100vh-200px)]">
+      {/* Left Panel - Enhanced AI Chat */}
+      <div className="col-span-4 h-full">
+        <EnhancedAIChat 
+          selectedCrypto={selectedCrypto}
+          aiConfigs={aiConfigs}
+          customApis={customApis}
+          onDrawAnalysis={handleDrawAnalysis}
+        />
       </div>
 
-      {/* Main Content */}
-      <div className="col-span-9 space-y-6">
-        {/* Crypto Selection & Price Display */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* Crypto Selection */}
-          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-            <div className="p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <BarChart3 className="w-5 h-5 text-yellow-400" />
-                <span className="text-white font-medium">{t('ai.control_center.currency_selection')}</span>
-              </div>
-              
-              {/* Quick Selection Buttons */}
-              <div className="grid grid-cols-4 gap-2 mb-4">
-                {cryptoOptions.slice(0, 8).map((crypto) => (
-                  <Button
-                    key={crypto.symbol}
-                    variant={selectedCrypto === crypto.symbol ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCrypto(crypto.symbol)}
-                    className={selectedCrypto === crypto.symbol 
-                      ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs" 
-                      : "border-slate-600 text-slate-300 hover:bg-slate-700 text-xs"
-                    }
-                  >
-                    {crypto.symbol}
-                  </Button>
-                ))}
-              </div>
-
-              <Select value={selectedCrypto} onValueChange={setSelectedCrypto}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700 max-h-60">
-                  {cryptoOptions.map((crypto) => (
-                    <SelectItem key={crypto.symbol} value={crypto.symbol} className="text-white">
-                      <div className="flex items-center justify-between w-full">
-                        <span>{crypto.symbol} • {crypto.name}</span>
-                        <span className={`text-xs ml-2 ${crypto.changePercent > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {crypto.changePercent > 0 ? '+' : ''}{crypto.changePercent}%
-                        </span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </Card>
-
-          {/* Price Display */}
-          <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-white">{currentCrypto.symbol}</span>
-                  <span className="text-slate-400">{currentCrypto.name}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {currentCrypto.changePercent > 0 ? (
-                    <TrendingUp className="w-4 h-4 text-green-400" />
-                  ) : (
-                    <TrendingDown className="w-4 h-4 text-red-400" />
-                  )}
-                  <span className={currentCrypto.changePercent > 0 ? "text-green-400" : "text-red-400"}>
-                    {currentCrypto.changePercent > 0 ? "+" : ""}{currentCrypto.changePercent}%
-                  </span>
-                </div>
-              </div>
-              
-              <div className="text-3xl font-bold text-white mb-1">
-                ${currentCrypto.price.toLocaleString()}
-              </div>
-              
-              <div className={`text-lg ${currentCrypto.change > 0 ? "text-green-400" : "text-red-400"}`}>
-                {currentCrypto.change > 0 ? "+" : ""}${currentCrypto.change}
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Analysis Tabs */}
-        <Tabs defaultValue="chart" className="w-full">
-          <TabsList className="grid grid-cols-3 bg-slate-800/50 border-slate-700">
-            <TabsTrigger value="chart" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              {t('ai.control_center.price_chart')}
-            </TabsTrigger>
-            <TabsTrigger value="technical" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black">
-              <Activity className="w-4 h-4 mr-2" />
-              {t('ai.control_center.technical_analysis')}
-            </TabsTrigger>
-            <TabsTrigger value="news" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black">
-              <Newspaper className="w-4 h-4 mr-2" />
-              {t('ai.control_center.news_sentiment')}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="chart" className="mt-6">
-            <div className="grid grid-cols-4 gap-6">
-              <div className="col-span-3">
-                <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">{t('ai.control_center.chart_title')}</h3>
-                        <div className="flex items-center gap-2 text-sm text-slate-400">
-                          <span>BTC/USDT</span>
-                          <span>O: $43744.68149762</span>
-                          <span>H: $44763.15853</span>
-                          <span>L: $42766.78252</span>
-                          <span>C: $43832.34619</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 mb-6">
-                      {timeframes.map((tf) => (
-                        <Button
-                          key={tf.value}
-                          variant={selectedTimeframe === tf.value ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setSelectedTimeframe(tf.value)}
-                          className={selectedTimeframe === tf.value 
-                            ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs" 
-                            : "border-slate-600 text-slate-300 hover:bg-slate-700 text-xs"
-                          }
-                        >
-                          {tf.label}
-                        </Button>
-                      ))}
-                    </div>
-
-                    {/* Real Binance Kline Chart */}
-                    <BinanceKlineChart 
-                      symbol={selectedCrypto} 
-                      className="h-80"
-                    />
-                  </div>
-                </Card>
-              </div>
-
-              <div className="col-span-1">
-                <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm h-full">
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 mb-6">
-                      <Activity className="w-5 h-5 text-yellow-400" />
-                      <h3 className="text-lg font-semibold text-white">{t('ai.control_center.technical_panel')}</h3>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="text-yellow-400 text-sm font-medium mb-3">{t('ai.control_center.basic_indicators')}</h4>
-                        <div className="space-y-3">
-                          {technicalIndicators.map((indicator, index) => (
-                            <div key={index} className="flex justify-between items-center">
-                              <span className="text-slate-300 text-sm">{indicator.name}</span>
-                              <span className={`text-sm font-medium ${indicator.color}`}>
-                                {indicator.value}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="pt-4 border-t border-slate-700">
-                        <h4 className="text-yellow-400 text-sm font-medium mb-3">{t('ai.control_center.moving_averages')}</h4>
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-slate-300 text-sm">MA5</span>
-                            <span className="text-orange-400 text-sm">$43613.1</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-slate-300 text-sm">MA10</span>
-                            <span className="text-pink-400 text-sm">$43481.7</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="technical" className="mt-6">
-            <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">{t('ai.control_center.technical_analysis')}</h3>
-                <div className="h-96 bg-slate-700/30 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <Activity className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                    <p className="text-slate-400 text-lg">{t('ai.control_center.deep_technical_report')}</p>
-                    <p className="text-slate-500 text-sm mt-2">{t('ai.control_center.ai_technical_analysis')}</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="news" className="mt-6">
-            <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">{t('ai.control_center.news_sentiment')}</h3>
-                <div className="h-96 bg-slate-700/30 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <Newspaper className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
-                    <p className="text-slate-400 text-lg">{t('ai.control_center.realtime_news')}</p>
-                    <p className="text-slate-500 text-sm mt-2">{t('ai.control_center.ai_sentiment')}</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
+      {/* Right Panel - Enhanced Chart */}
+      <div className="col-span-8 h-full">
+        <EnhancedChartPanel 
+          selectedCrypto={selectedCrypto}
+          onCryptoChange={setSelectedCrypto}
+          cryptoOptions={cryptoOptions}
+          drawingAnnotations={drawingAnnotations}
+          onAddAnnotation={handleAddAnnotation}
+        />
       </div>
     </div>
   );
