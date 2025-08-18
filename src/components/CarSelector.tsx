@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Car3DModel } from './Car3DModel';
+import { RealisticCar3DModel } from './RealisticCar3DModel';
 import { Car, Sparkles } from 'lucide-react';
 
 // Import car logos
@@ -101,7 +101,7 @@ export const CarSelector: React.FC<CarSelectorProps> = ({
       {/* 3D Car Display - Bottom */}
       <div className="relative group">
         <div className="relative">
-          <Car3DModel 
+          <RealisticCar3DModel 
             brand={currentCar} 
             size={size} 
             color={selectedBrand.color}
