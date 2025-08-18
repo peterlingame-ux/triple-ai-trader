@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createChart, IChartApi, ISeriesApi, ColorType, CandlestickData, Time } from 'lightweight-charts';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, RefreshCw, TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
+import { Loader2, RefreshCw, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface KlineData {
   time: number;
@@ -55,6 +56,8 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
   className = '' 
 }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const candlestickSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const [klineData, setKlineData] = useState<KlineData[]>([]);
   const [technicalIndicators, setTechnicalIndicators] = useState<TechnicalIndicators | null>(null);
   const [loading, setLoading] = useState(false);
@@ -156,15 +159,77 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
     }
   }, [symbol, interval, getBinanceConfig, toast]);
 
-  // 处理时间周期变化
-  const handleIntervalChange = (newInterval: string) => {
-    setInterval(newInterval);
-  };
+  // 初始化图表
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
+        textColor: 'rgba(255, 255, 255, 0.9)',
+      },
+      grid: {
+        vertLines: {
+          color: 'rgba(197, 203, 206, 0.1)',
+        },
+        horzLines: {
+          color: 'rgba(197, 203, 206, 0.1)',
+        },
+      },
+      crosshair: {
+        mode: 1,
+      },
+      rightPriceScale: {
+        borderColor: 'rgba(197, 203, 206, 0.8)',
+      },
+      timeScale: {
+        borderColor: 'rgba(197, 203, 206, 0.8)',
+        timeVisible: true,
+        secondsVisible: false,
+      },
+    });
+
+    const candlestickSeries = chart.addCandlestickSeries({
+      upColor: '#4ade80',
+      downColor: '#f87171',
+      borderDownColor: '#f87171',
+      borderUpColor: '#4ade80',
+      wickDownColor: '#f87171',
+      wickUpColor: '#4ade80',
+    });
+
+    chartRef.current = chart;
+    candlestickSeriesRef.current = candlestickSeries;
+
+    return () => {
+      chart.remove();
+    };
+  }, []);
+
+  // 更新图表数据
+  useEffect(() => {
+    if (candlestickSeriesRef.current && klineData.length > 0) {
+      const chartData: CandlestickData[] = klineData.map(candle => ({
+        time: candle.time as Time,
+        open: candle.open,
+        high: candle.high,
+        low: candle.low,
+        close: candle.close,
+      }));
+
+      candlestickSeriesRef.current.setData(chartData);
+    }
+  }, [klineData]);
 
   // 初始加载数据
   useEffect(() => {
     fetchKlineData();
   }, [fetchKlineData]);
+
+  // 处理时间周期变化
+  const handleIntervalChange = (newInterval: string) => {
+    setInterval(newInterval);
+  };
 
   return (
     <Card className={`bg-gradient-to-br from-slate-900/90 to-blue-900/30 border-slate-700 backdrop-blur-sm ${className}`}>
@@ -173,7 +238,7 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             <h3 className="text-lg font-semibold text-white">
-              {symbol}/USDT 专业K线图表
+              {symbol}/USDT K线图表
             </h3>
             {currentPrice > 0 && (
               <div className="flex items-center gap-2">
@@ -208,7 +273,7 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
               ) : (
                 <RefreshCw className="w-4 h-4" />
               )}
-              刷新数据
+              刷新
             </Button>
           </div>
         </div>
@@ -232,69 +297,11 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           ))}
         </div>
 
-        {/* K线数据显示 */}
-        {klineData.length > 0 && (
-          <div className="mb-4 p-3 bg-slate-800/50 rounded-lg">
-            <div className="grid grid-cols-5 gap-4 text-sm">
-              <div>
-                <span className="text-slate-400">开盘价: </span>
-                <span className="text-white font-mono">${klineData[klineData.length - 1]?.open.toFixed(5)}</span>
-              </div>
-              <div>
-                <span className="text-slate-400">最高价: </span>
-                <span className="text-green-400 font-mono">${klineData[klineData.length - 1]?.high.toFixed(5)}</span>
-              </div>
-              <div>
-                <span className="text-slate-400">最低价: </span>
-                <span className="text-red-400 font-mono">${klineData[klineData.length - 1]?.low.toFixed(5)}</span>
-              </div>
-              <div>
-                <span className="text-slate-400">收盘价: </span>
-                <span className="text-white font-mono">${klineData[klineData.length - 1]?.close.toFixed(5)}</span>
-              </div>
-              <div>
-                <span className="text-slate-400">成交量: </span>
-                <span className="text-blue-400 font-mono">{(klineData[klineData.length - 1]?.volume || 0).toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 图表容器 - 使用简化的可视化 */}
-        <div className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700 flex items-center justify-center">
-          {loading ? (
-            <div className="text-center">
-              <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4 text-amber-400" />
-              <div className="text-slate-300">加载K线数据中...</div>
-            </div>
-          ) : klineData.length > 0 ? (
-            <div className="text-center">
-              <BarChart3 className="w-16 h-16 text-amber-400 mx-auto mb-4" />
-              <div className="text-lg font-semibold text-white mb-2">
-                {symbol}/USDT 专业K线图表 ({interval})
-              </div>
-              <div className="text-slate-300 mb-4">
-                共 {klineData.length} 根K线数据
-              </div>
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="text-green-400">
-                  最新价格: ${klineData[klineData.length - 1]?.close.toFixed(5)}
-                </div>
-                <div className="text-blue-400">
-                  最高: ${Math.max(...klineData.map(k => k.high)).toFixed(5)}
-                </div>
-                <div className="text-red-400">
-                  最低: ${Math.min(...klineData.map(k => k.low)).toFixed(5)}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-center">
-              <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <div className="text-slate-400">暂无K线数据</div>
-            </div>
-          )}
-        </div>
+        {/* 图表容器 */}
+        <div 
+          ref={chartContainerRef}
+          className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700"
+        />
 
         {/* 技术指标面板 */}
         {technicalIndicators && (
@@ -338,7 +345,7 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         <div className="mt-3 flex items-center justify-between">
           <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">
             <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-            币安实时K线数据
+            币安实时数据
           </Badge>
           
           {klineData.length > 0 && (

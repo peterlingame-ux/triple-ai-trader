@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,15 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu, RefreshCw, Loader2 } from "lucide-react";
+import { BarChart3, TrendingUp, TrendingDown, Send, Settings, Brain, Newspaper, Activity, X, Bot, Zap, TrendingUpIcon, Monitor, Cpu } from "lucide-react";
 import { BinanceKlineChart } from "./BinanceKlineChart";
 import { SuperBrainDetection } from "./SuperBrainDetection";
 import { OptimizedPortfolioCards } from "./OptimizedPortfolioCards";
 import { logger } from "@/utils/errorHandler";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useCryptoData } from "@/hooks/useCryptoData";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 // Import avatars
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
@@ -40,99 +37,48 @@ interface AIControlCenterProps {
 
 export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfolioData }: AIControlCenterProps) => {
   const { t, currentLanguage } = useLanguage();
-  const { cryptoData, newsData, loading, refreshData } = useCryptoData();
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
   const [analysisQuery, setAnalysisQuery] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [grokResponse, setGrokResponse] = useState<string>("");
   const [aiConfigs, setAiConfigs] = useState({
     openai: { enabled: false, apiKey: "", model: "gpt-4o-mini" },
     claude: { enabled: false, apiKey: "", model: "claude-3-5-sonnet-20241022" },
-    grok: { enabled: true, apiKey: "", model: "grok-beta" },
+    grok: { enabled: false, apiKey: "", model: "grok-beta" },
     vitalik: { enabled: false, apiKey: "", model: "gpt-5-2025-08-07" },
     justin: { enabled: false, apiKey: "", model: "claude-sonnet-4-20250514" },
     trump: { enabled: false, apiKey: "", model: "gpt-5-mini-2025-08-07" }
   });
 
-  // 使用真实的加密货币数据
-  const cryptoOptions = cryptoData.slice(0, 24).map(crypto => ({
-    symbol: crypto.symbol,
-    name: crypto.name,
-    price: crypto.price,
-    change: crypto.change24h,
-    changePercent: crypto.changePercent24h,
-    volume: crypto.volume24h,
-    marketCap: crypto.marketCap,
-    high24h: crypto.high24h,
-    low24h: crypto.low24h,
-    rsi: crypto.rsi,
-    ma20: crypto.ma20,
-    ma50: crypto.ma50,
-    support: crypto.support,
-    resistance: crypto.resistance
-  }));
+  const cryptoOptions = [
+    { symbol: "BTC", name: "Bitcoin", price: 43832.346, change: 85.23, changePercent: 0.19 },
+    { symbol: "ETH", name: "Ethereum", price: 2567.89, change: -45.30, changePercent: -1.73 },
+    { symbol: "USDT", name: "Tether", price: 1.00, change: 0.001, changePercent: 0.01 },
+    { symbol: "BNB", name: "Binance Coin", price: 315.67, change: 12.45, changePercent: 4.12 },
+    { symbol: "XRP", name: "Ripple", price: 0.634, change: -0.021, changePercent: -3.20 },
+    { symbol: "USDC", name: "USD Coin", price: 1.001, change: 0.001, changePercent: 0.10 },
+    { symbol: "ADA", name: "Cardano", price: 0.485, change: 0.023, changePercent: 4.98 },
+    { symbol: "SOL", name: "Solana", price: 98.75, change: 3.42, changePercent: 3.59 },
+    { symbol: "DOGE", name: "Dogecoin", price: 0.078, change: 0.004, changePercent: 5.41 },
+    { symbol: "DOT", name: "Polkadot", price: 7.23, change: -0.18, changePercent: -2.43 },
+    { symbol: "MATIC", name: "Polygon", price: 0.89, change: 0.065, changePercent: 7.88 },
+    { symbol: "AVAX", name: "Avalanche", price: 36.78, change: 1.89, changePercent: 5.42 },
+    { symbol: "LINK", name: "Chainlink", price: 14.23, change: -0.67, changePercent: -4.50 },
+    { symbol: "UNI", name: "Uniswap", price: 6.45, change: 0.34, changePercent: 5.57 },
+    { symbol: "LTC", name: "Litecoin", price: 73.45, change: -2.12, changePercent: -2.81 },
+    { symbol: "ATOM", name: "Cosmos", price: 8.67, change: 0.45, changePercent: 5.48 },
+    { symbol: "ICP", name: "Internet Computer", price: 5.23, change: -0.23, changePercent: -4.21 },
+    { symbol: "NEAR", name: "NEAR Protocol", price: 2.34, change: 0.12, changePercent: 5.41 },
+    { symbol: "APT", name: "Aptos", price: 8.90, change: 0.67, changePercent: 8.13 },
+    { symbol: "FTM", name: "Fantom", price: 0.445, change: 0.023, changePercent: 5.46 },
+    { symbol: "SHIB", name: "Shiba Inu", price: 0.0000089, change: 0.0000004, changePercent: 4.71 },
+    { symbol: "TRX", name: "TRON", price: 0.067, change: 0.002, changePercent: 3.08 },
+    { symbol: "TON", name: "Toncoin", price: 2.45, change: 0.11, changePercent: 4.70 },
+    { symbol: "HBAR", name: "Hedera", price: 0.052, change: 0.003, changePercent: 6.12 }
+  ];
 
   const currentCrypto = cryptoOptions.find(c => c.symbol === selectedCrypto) || cryptoOptions[0];
-
-  // GROK API 分析函数
-  const handleGrokAnalysis = async (query: string) => {
-    if (!query.trim()) {
-      toast({
-        title: "请输入分析问题",
-        description: "请输入您想要分析的问题",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsAnalyzing(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('openai-chat', {
-        body: {
-          prompt: `作为专业的加密货币分析师，基于当前${selectedCrypto}的市场数据进行分析：
-            当前价格: $${currentCrypto?.price.toLocaleString() || 'N/A'}
-            24小时变化: ${currentCrypto?.changePercent.toFixed(2) || 'N/A'}%
-            24小时成交量: $${currentCrypto?.volume ? (currentCrypto.volume / 1e9).toFixed(2) + 'B' : 'N/A'}
-            RSI: ${currentCrypto?.rsi?.toFixed(2) || 'N/A'}
-            MA20: $${currentCrypto?.ma20?.toFixed(2) || 'N/A'}
-            MA50: $${currentCrypto?.ma50?.toFixed(2) || 'N/A'}
-            
-            用户问题: ${query}
-            
-            请提供专业的分析建议，包括技术分析、风险评估和投资建议。`,
-          model: 'gpt-5-2025-08-07',
-          advisorName: 'GROK分析师',
-          cryptoContext: `${selectedCrypto} 实时市场数据`
-        }
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (data?.success) {
-        setGrokResponse(data.response);
-        toast({
-          title: "GROK 分析完成",
-          description: `基于${selectedCrypto}的实时数据完成分析`
-        });
-      } else {
-        throw new Error(data?.error || 'GROK分析失败');
-      }
-    } catch (error) {
-      console.error('GROK analysis error:', error);
-      toast({
-        title: "分析失败",
-        description: "请稍后重试或检查网络连接",
-        variant: "destructive"
-      });
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
 
   const timeframes = [
     { label: "1m", value: "1m" },
@@ -150,18 +96,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
   ];
 
   const technicalIndicators = [
-    { name: "RSI(14)", value: currentCrypto?.rsi?.toFixed(2) || "59.18", color: "text-yellow-400" },
-    { name: "Volume", value: `$${currentCrypto?.volume ? (currentCrypto.volume / 1e9).toFixed(2) + 'B' : '0.31B'}`, color: "text-blue-400" },
-    { name: "MACD", value: currentCrypto?.ma20 && currentCrypto?.ma50 ? ((currentCrypto.ma20 - currentCrypto.ma50) / currentCrypto.ma50 * 100).toFixed(2) + '%' : "0.68%", color: "text-green-400" },
+    { name: "RSI(14)", value: "59.18", color: "text-yellow-400" },
+    { name: "Volume", value: "$0.31B", color: "text-blue-400" },
+    { name: "MACD", value: "0.68%", color: "text-green-400" },
     { name: "KDJ", value: "43.5", color: "text-purple-400" },
-    { name: "MA5", value: `$${currentCrypto?.price ? (currentCrypto.price * 0.998).toFixed(2) : '43613.1'}`, color: "text-orange-400" },
-    { name: "MA10", value: `$${currentCrypto?.ma20?.toFixed(2) || '43481.7'}`, color: "text-pink-400" },
-    { name: "MA20", value: `$${currentCrypto?.ma20?.toFixed(2) || '43613.1'}`, color: "text-orange-400" },
-    { name: "MA50", value: `$${currentCrypto?.ma50?.toFixed(2) || '43481.7'}`, color: "text-pink-400" },
-    { name: "Support", value: `$${currentCrypto?.support?.toFixed(2) || '41200'}`, color: "text-green-400" },
-    { name: "Resistance", value: `$${currentCrypto?.resistance?.toFixed(2) || '45800'}`, color: "text-red-400" },
-    { name: "24h High", value: `$${currentCrypto?.high24h?.toFixed(2) || '44763.16'}`, color: "text-emerald-400" },
-    { name: "24h Low", value: `$${currentCrypto?.low24h?.toFixed(2) || '42766.78'}`, color: "text-rose-400" }
+    { name: "MA5", value: "$43613.1", color: "text-orange-400" },
+    { name: "MA10", value: "$43481.7", color: "text-pink-400" }
   ];
 
   const sampleQuestions = [

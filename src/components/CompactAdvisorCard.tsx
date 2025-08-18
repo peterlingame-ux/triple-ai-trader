@@ -1,13 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, TrendingUp, Target, Quote, Star, Power, MessageSquare, Loader2 } from "lucide-react";
+import { DollarSign, TrendingUp, Target, Quote, Star, Power } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 interface CompactAdvisorCardProps {
   name: string;
@@ -49,63 +44,12 @@ export const CompactAdvisorCard = ({
   onActivationToggle
 }: CompactAdvisorCardProps) => {
   const [isActive, setIsActive] = useState(isSpecial || false);
-  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
-  const [aiResponse, setAiResponse] = useState<string>('');
-  const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [userQuestion, setUserQuestion] = useState('');
   const { t } = useLanguage();
-  const { toast } = useToast();
 
   const handleActivationToggle = () => {
     const newActiveState = !isActive;
     setIsActive(newActiveState);
     onActivationToggle?.(name, newActiveState);
-  };
-
-  const handleAskAdvisor = async (question: string) => {
-    if (!question.trim()) {
-      toast({
-        title: "请输入问题",
-        description: "请输入您想咨询的问题",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoadingAI(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('openai-chat', {
-        body: {
-          prompt: question,
-          model: 'gpt-5-2025-08-07',
-          advisorName: name,
-          cryptoContext: `Current recommendation: ${recommendation}`
-        }
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (data?.success) {
-        setAiResponse(data.response);
-        toast({
-          title: "AI 建议已生成",
-          description: `${name} 已为您提供专业建议`
-        });
-      } else {
-        throw new Error(data?.error || 'AI 响应失败');
-      }
-    } catch (error) {
-      console.error('AI chat error:', error);
-      toast({
-        title: "AI 咨询失败",
-        description: "请稍后重试或检查网络连接",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoadingAI(false);
-    }
   };
 
   return (
@@ -335,107 +279,6 @@ export const CompactAdvisorCard = ({
           }`}>
             {recommendation}
           </button>
-          
-          {/* AI Chat Dialog */}
-          <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
-            <DialogTrigger asChild>
-              <button 
-                className={`w-full py-2.5 px-4 rounded-lg text-xs font-semibold backdrop-blur-sm transition-all duration-300 flex items-center justify-center gap-1 border ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-blue-500/80 to-purple-500/80 text-white border-white/20 hover:from-blue-500 hover:to-purple-500' 
-                    : 'bg-gradient-to-r from-gray-600/50 to-gray-500/50 text-gray-300 border-gray-500/20 hover:from-gray-600/70 hover:to-gray-500/70'
-                }`}
-                disabled={!isActive}
-              >
-                <MessageSquare className="w-3 h-3" />
-                <span>AI 咨询</span>
-              </button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 border-slate-700">
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-3 text-white">
-                  <img src={avatar} alt={name} className="w-10 h-10 rounded-full" />
-                  <div>
-                    <div className="text-lg font-bold">{name} AI 顾问</div>
-                    <div className="text-sm text-slate-300">{specialty}</div>
-                  </div>
-                </DialogTitle>
-              </DialogHeader>
-              
-              <div className="space-y-4 mt-4">
-                <div className="flex gap-2">
-                  <Input
-                    value={userQuestion}
-                    onChange={(e) => setUserQuestion(e.target.value)}
-                    placeholder={`向 ${name} 咨询加密货币投资建议...`}
-                    className="flex-1 bg-slate-800/50 border-slate-600 text-white"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' && !isLoadingAI) {
-                        handleAskAdvisor(userQuestion);
-                      }
-                    }}
-                  />
-                  <Button
-                    onClick={() => handleAskAdvisor(userQuestion)}
-                    disabled={isLoadingAI || !userQuestion.trim()}
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                  >
-                    {isLoadingAI ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <MessageSquare className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-
-                {/* Quick Questions */}
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    "现在应该买入哪种加密货币？",
-                    "比特币的未来趋势如何？",
-                    "DeFi 投资有什么建议？",
-                    "如何分散加密货币投资风险？"
-                  ].map((question, index) => (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setUserQuestion(question);
-                        handleAskAdvisor(question);
-                      }}
-                      disabled={isLoadingAI}
-                      className="text-xs bg-slate-800/30 border-slate-600 text-slate-300 hover:bg-slate-700/50 hover:text-white"
-                    >
-                      {question}
-                    </Button>
-                  ))}
-                </div>
-
-                {/* AI Response */}
-                {aiResponse && (
-                  <div className="bg-gradient-to-r from-emerald-900/30 to-teal-900/30 rounded-lg p-4 border border-emerald-500/20">
-                    <div className="flex items-start gap-3 mb-3">
-                      <img src={avatar} alt={name} className="w-8 h-8 rounded-full" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-emerald-400 mb-1">{name} 的建议</div>
-                        <div className="text-white leading-relaxed whitespace-pre-wrap">{aiResponse}</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {isLoadingAI && (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="text-center">
-                      <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-blue-400" />
-                      <div className="text-slate-300">AI 正在分析市场数据...</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </DialogContent>
-          </Dialog>
         </div>
 
         {/* Hover Details Overlay */}
