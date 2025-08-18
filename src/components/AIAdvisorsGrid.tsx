@@ -122,9 +122,10 @@ interface AIAdvisorsGridProps {
   cryptoData?: CryptoData[];
   newsData?: NewsArticle[];
   onActivationChange?: (states: Record<string, boolean>) => void;
+  onAddNotification?: (notification: any) => void;
 }
 
-export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationChange }: AIAdvisorsGridProps) => {
+export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationChange, onAddNotification }: AIAdvisorsGridProps) => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const [activationStates, setActivationStates] = useState<Record<string, boolean>>({
@@ -147,11 +148,25 @@ export const AIAdvisorsGrid = ({ cryptoData = [], newsData = [], onActivationCha
     setActivationStates(newStates);
     onActivationChange?.(newStates);
     
+    // 原有的toast通知
     toast({
       title: isActive ? (language === 'zh' ? "顾问已激活" : "Advisor Activated") : (language === 'zh' ? "顾问已停用" : "Advisor Deactivated"),
       description: `${name} ${isActive ? (language === 'zh' ? '现在已激活并将提供投资建议' : 'is now activated and will provide investment advice') : (language === 'zh' ? '已停用，不再提供投资建议' : 'is deactivated and will no longer provide investment advice')}`,
       duration: 3000,
     });
+
+    // 新的右下角弹窗通知
+    if (onAddNotification && isActive) {
+      onAddNotification({
+        id: `advisor-activated-${name}-${Date.now()}`,
+        title: `${name} 已激活`,
+        message: `AI投资顾问 ${name} 现在已激活，开始为您提供专业的投资分析和建议。`,
+        type: 'ai',
+        autoHide: true,
+        autoHideDelay: 5000,
+        persistent: false
+      });
+    }
   };
 
   return (
