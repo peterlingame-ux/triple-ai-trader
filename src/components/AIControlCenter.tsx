@@ -61,6 +61,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     endpoint: string;
     enabled: boolean;
     description: string;
+    avatar: string;
   }>>([]);
   
   // Add API modal state
@@ -70,8 +71,21 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     provider: "",
     apiKey: "",
     endpoint: "",
-    description: ""
+    description: "",
+    avatar: ""
   });
+
+  // Predefined avatars for selection
+  const predefinedAvatars = [
+    { name: "Robot 1", url: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png" },
+    { name: "Robot 2", url: "/lovable-uploads/38caa01f-8296-4f15-af91-60ab8b06ebfa.png" },
+    { name: "Robot 3", url: "/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png" },
+    { name: "Robot 4", url: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png" },
+    { name: "Robot 5", url: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png" },
+    { name: "Robot 6", url: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png" },
+    { name: "Robot 7", url: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png" },
+    { name: "Robot 8", url: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png" }
+  ];
 
   const cryptoOptions = [
     { symbol: "BTC", name: "Bitcoin", price: 43832.346, change: 85.23, changePercent: 0.19 },
@@ -168,7 +182,8 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
       id: Date.now().toString(),
       ...newApiForm,
       model: "", // Hidden from user
-      enabled: false
+      enabled: false,
+      avatar: newApiForm.avatar || predefinedAvatars[0].url // Use first avatar as default
     };
 
     setCustomApis(prev => [...prev, customApi]);
@@ -183,10 +198,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
       provider: "",
       apiKey: "",
       endpoint: "",
-      description: ""
+      description: "",
+      avatar: ""
     });
     setShowAddApiModal(false);
-  }, [newApiForm, customApis]);
+  }, [newApiForm, customApis, predefinedAvatars]);
 
   // Handle removing custom API
   const handleRemoveCustomApi = useCallback((id: string) => {
@@ -274,6 +290,19 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
               <div className="text-sm text-white font-medium">{t('ai.control_center.policy_engine')}</div>
               <div className="text-xs text-slate-400">Donald Trump</div>
             </div>
+            
+            {/* Custom APIs */}
+            {customApis.map((api) => (
+              <div key={api.id} className="text-center p-4 bg-slate-700/30 rounded-lg">
+                <img 
+                  src={api.avatar || predefinedAvatars[0].url} 
+                  alt={api.name} 
+                  className="w-8 h-8 rounded-full mx-auto mb-2 object-cover" 
+                />
+                <div className="text-sm text-white font-medium">{api.provider}</div>
+                <div className="text-xs text-slate-400">{api.name}</div>
+              </div>
+            ))}
           </div>
         </div>
       </Card>
@@ -591,9 +620,11 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
           <Card key={api.id} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
             <div className="p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
-                </div>
+                <img 
+                  src={api.avatar || predefinedAvatars[0].url} 
+                  alt={api.name} 
+                  className="w-10 h-10 rounded-full object-cover" 
+                />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-white">{api.name}</h3>
                   <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{api.provider}</Badge>
@@ -707,6 +738,35 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     onChange={(e) => setNewApiForm(prev => ({ ...prev, provider: e.target.value }))}
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">选择头像</label>
+                  <div className="grid grid-cols-4 gap-3 p-3 bg-slate-700/30 rounded-lg">
+                    {predefinedAvatars.map((avatar, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setNewApiForm(prev => ({ ...prev, avatar: avatar.url }))}
+                        className={`relative w-12 h-12 rounded-full overflow-hidden transition-all duration-200 ${
+                          newApiForm.avatar === avatar.url 
+                            ? 'ring-2 ring-purple-400 scale-110' 
+                            : 'hover:scale-105 opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <img 
+                          src={avatar.url} 
+                          alt={avatar.name} 
+                          className="w-full h-full object-cover"
+                        />
+                        {newApiForm.avatar === avatar.url && (
+                          <div className="absolute inset-0 bg-purple-400/20 flex items-center justify-center">
+                            <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
