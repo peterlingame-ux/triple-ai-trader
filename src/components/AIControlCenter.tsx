@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,29 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     vitalik: { enabled: false, apiKey: "", model: "gpt-5-2025-08-07" },
     justin: { enabled: false, apiKey: "", model: "claude-sonnet-4-20250514" },
     trump: { enabled: false, apiKey: "", model: "gpt-5-mini-2025-08-07" }
+  });
+  
+  // Custom API configurations
+  const [customApis, setCustomApis] = useState<Array<{
+    id: string;
+    name: string;
+    provider: string;
+    apiKey: string;
+    model: string;
+    endpoint: string;
+    enabled: boolean;
+    description: string;
+  }>>([]);
+  
+  // Add API modal state
+  const [showAddApiModal, setShowAddApiModal] = useState(false);
+  const [newApiForm, setNewApiForm] = useState({
+    name: "",
+    provider: "",
+    apiKey: "",
+    model: "",
+    endpoint: "",
+    description: ""
   });
 
   const cryptoOptions = [
@@ -135,6 +158,66 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
       setIsAnalyzing(false);
     }
   }, [analysisQuery, selectedCrypto, aiConfigs, isAnalyzing]);
+
+  // Handle adding custom API
+  const handleAddCustomApi = useCallback(() => {
+    if (!newApiForm.name.trim() || !newApiForm.provider.trim() || !newApiForm.apiKey.trim()) {
+      return;
+    }
+
+    const customApi = {
+      id: Date.now().toString(),
+      ...newApiForm,
+      enabled: false
+    };
+
+    setCustomApis(prev => [...prev, customApi]);
+    
+    // Save to localStorage for persistence
+    const updatedApis = [...customApis, customApi];
+    localStorage.setItem('customApis', JSON.stringify(updatedApis));
+    
+    // Reset form
+    setNewApiForm({
+      name: "",
+      provider: "",
+      apiKey: "",
+      model: "",
+      endpoint: "",
+      description: ""
+    });
+    setShowAddApiModal(false);
+  }, [newApiForm, customApis]);
+
+  // Handle removing custom API
+  const handleRemoveCustomApi = useCallback((id: string) => {
+    setCustomApis(prev => {
+      const updated = prev.filter(api => api.id !== id);
+      localStorage.setItem('customApis', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  // Handle toggling custom API
+  const handleToggleCustomApi = useCallback((id: string, enabled: boolean) => {
+    setCustomApis(prev => {
+      const updated = prev.map(api => api.id === id ? { ...api, enabled } : api);
+      localStorage.setItem('customApis', JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  // Load custom APIs from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('customApis');
+      if (saved) {
+        setCustomApis(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Failed to load custom APIs:', error);
+    }
+  }, []);
 
   const AIConfigurationPanel = () => (
     <div className="space-y-6">
@@ -589,6 +672,199 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
             </div>
           </div>
         </Card>
+
+        {/* Custom API Configurations */}
+        {customApis.map((api) => (
+          <Card key={api.id} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
+                  <Bot className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{api.name}</h3>
+                  <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{api.provider}</Badge>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleRemoveCustomApi(api.id)}
+                  className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-sm text-slate-400 mb-4">{api.description}</p>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={api.enabled}
+                    onChange={(e) => handleToggleCustomApi(api.id, e.target.checked)}
+                    className="rounded"
+                  />
+                  <span className="text-sm text-slate-300">启用 {api.name}</span>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-slate-300 block mb-2">API 密钥</label>
+                    <Input
+                      placeholder="API密钥已保存"
+                      type="password"
+                      value="••••••••••••••••"
+                      disabled
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-slate-300 block mb-2">模型</label>
+                    <Input
+                      value={api.model}
+                      disabled
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
+                  </div>
+                </div>
+                
+                {api.endpoint && (
+                  <div>
+                    <label className="text-sm text-slate-300 block mb-2">API 端点</label>
+                    <Input
+                      value={api.endpoint}
+                      disabled
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                    />
+                  </div>
+                )}
+                
+                <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
+                  🔧 自定义API配置 • 创建时间: {new Date(parseInt(api.id)).toLocaleDateString()}
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+
+        {/* Add New API Button */}
+        <Card className="bg-gradient-to-br from-purple-900/30 via-blue-800/20 to-purple-900/30 border border-purple-500/30 backdrop-blur-sm">
+          <div className="p-6">
+            <Button
+              onClick={() => setShowAddApiModal(true)}
+              className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-0 py-6"
+            >
+              <Bot className="w-5 h-5 mr-3" />
+              <span className="text-lg font-medium">添加新的 API 接口</span>
+            </Button>
+            <p className="text-center text-slate-400 text-sm mt-3">
+              连接您自己的AI模型和API服务
+            </p>
+          </div>
+        </Card>
+
+        {/* Add API Modal */}
+        {showAddApiModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-900 rounded-xl border border-slate-700 p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white">添加新的 API 接口</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAddApiModal(false)}
+                  className="text-slate-400 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">API 名称 *</label>
+                  <Input
+                    placeholder="例如: My Custom GPT"
+                    value={newApiForm.name}
+                    onChange={(e) => setNewApiForm(prev => ({ ...prev, name: e.target.value }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">提供商 *</label>
+                  <Input
+                    placeholder="例如: OpenAI, Anthropic, Custom"
+                    value={newApiForm.provider}
+                    onChange={(e) => setNewApiForm(prev => ({ ...prev, provider: e.target.value }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">API 密钥 *</label>
+                  <Input
+                    type="password"
+                    placeholder="输入您的API密钥"
+                    value={newApiForm.apiKey}
+                    onChange={(e) => setNewApiForm(prev => ({ ...prev, apiKey: e.target.value }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">模型名称</label>
+                  <Input
+                    placeholder="例如: gpt-4, claude-3.5-sonnet"
+                    value={newApiForm.model}
+                    onChange={(e) => setNewApiForm(prev => ({ ...prev, model: e.target.value }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">API 端点 (可选)</label>
+                  <Input
+                    placeholder="例如: https://api.openai.com/v1"
+                    value={newApiForm.endpoint}
+                    onChange={(e) => setNewApiForm(prev => ({ ...prev, endpoint: e.target.value }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300 block mb-2">描述</label>
+                  <Input
+                    placeholder="这个API的用途和特点"
+                    value={newApiForm.description}
+                    onChange={(e) => setNewApiForm(prev => ({ ...prev, description: e.target.value }))}
+                    className="bg-slate-700/50 border-slate-600 text-white"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    onClick={handleAddCustomApi}
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
+                    disabled={!newApiForm.name.trim() || !newApiForm.provider.trim() || !newApiForm.apiKey.trim()}
+                  >
+                    添加 API
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAddApiModal(false)}
+                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                  >
+                    取消
+                  </Button>
+                </div>
+              </div>
+
+              <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded mt-4">
+                🔒 您的API密钥将安全存储在本地浏览器中
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
