@@ -126,14 +126,8 @@ export const TradingDashboard = memo(() => {
         {/* 币安API配置 */}
         <BinanceAPIConfig />
 
-        {/* 主要分析面板 - TradingView 综合分析中心 */}
+        {/* 主要分析面板 - SUPER BRAINX 综合分析中心 */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              专业分析中心 - TradingView 综合面板
-            </h2>
-          </div>
           <TradingViewDashboard />
         </div>
 

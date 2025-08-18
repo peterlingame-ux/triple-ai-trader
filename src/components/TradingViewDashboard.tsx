@@ -1,23 +1,69 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
 import TradingViewChart from "./TradingViewChart";
 import TradingViewScreener from "./TradingViewScreener";
 import TradingViewHeatmap from "./TradingViewHeatmap";
 import TradingViewTimeline from "./TradingViewTimeline";
 import TradingViewTechnicalAnalysis from "./TradingViewTechnicalAnalysis";
 import TradingViewAIAnalysis from "./TradingViewAIAnalysis";
-import { BarChart3, TrendingUp, Newspaper, Activity, LineChart, Brain } from "lucide-react";
+import { BarChart3, TrendingUp, Newspaper, Activity, LineChart, Brain, Zap, CheckCircle } from "lucide-react";
 
 const TradingViewDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("screener");
+  const [binanceApiActive, setBinanceApiActive] = useState(false);
+
+  const toggleBinanceApi = () => {
+    setBinanceApiActive(!binanceApiActive);
+    // 这里可以添加实际的API激活逻辑
+  };
 
   return (
     <div className="w-full">
-      <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-          <LineChart className="w-5 h-5 sm:w-6 sm:h-6" />
-          TradingView 综合面板
-        </h2>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+            <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+            SUPER BRAINX 综合面板
+          </h2>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={toggleBinanceApi}
+            variant={binanceApiActive ? "default" : "outline"}
+            size="sm"
+            className={`flex items-center gap-2 text-xs sm:text-sm font-medium transition-all duration-300 ${
+              binanceApiActive 
+                ? "bg-green-600 hover:bg-green-700 text-white border-green-600" 
+                : "border-gray-600 text-gray-300 hover:border-green-500 hover:text-green-400"
+            }`}
+          >
+            <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+              binanceApiActive ? "bg-green-300" : "bg-gray-500"
+            }`} />
+            <Zap className="w-3 h-3" />
+            <span className="hidden sm:inline">
+              {binanceApiActive ? "BINANCE API 已激活" : "激活 BINANCE API"}
+            </span>
+            <span className="sm:hidden">
+              {binanceApiActive ? "已激活" : "激活"}
+            </span>
+            {binanceApiActive && <CheckCircle className="w-3 h-3" />}
+          </Button>
+          
+          <Badge 
+            variant={binanceApiActive ? "default" : "secondary"}
+            className={`text-xs font-medium ${
+              binanceApiActive 
+                ? "bg-green-500/20 text-green-300 border-green-500/30" 
+                : "bg-gray-500/20 text-gray-400 border-gray-500/30"
+            }`}
+          >
+            {binanceApiActive ? "实时数据" : "演示模式"}
+          </Badge>
+        </div>
       </div>
       
       <div className="relative">
