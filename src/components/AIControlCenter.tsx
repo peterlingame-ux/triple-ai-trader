@@ -289,7 +289,6 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
     <div className="space-y-6">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-white mb-2">{t('ai.control_center.title')}</h2>
-        <p className="text-slate-400">{t('ai.control_center.description')}</p>
       </div>
 
       {/* Portfolio Overview Cards - Removed per user request */}
