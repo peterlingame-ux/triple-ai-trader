@@ -14,7 +14,7 @@ import { useCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import TradingViewDashboard from "./TradingViewDashboard";
-import { BarChart3, Brain } from "lucide-react";
+import { BarChart3, Brain, ChevronUp, ChevronDown } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
@@ -28,6 +28,7 @@ export const TradingDashboard = memo(() => {
   const [advisorStates, setAdvisorStates] = useState<Record<string, boolean>>({});
   const [showTradingPanel, setShowTradingPanel] = useState(false);
   const [selectedTradingSymbol, setSelectedTradingSymbol] = useState<string>("");
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
 
   // Listen for AI Control Center open events
   const handleOpenAIControlCenter = useCallback(() => {
@@ -128,7 +129,10 @@ export const TradingDashboard = memo(() => {
 
         {/* 主要分析面板 - SUPER BRAINX 综合分析中心 */}
         <div className="mb-8">
-          <TradingViewDashboard />
+          <TradingViewDashboard 
+            isCollapsed={isPanelCollapsed}
+            onToggleCollapse={() => setIsPanelCollapsed(!isPanelCollapsed)}
+          />
         </div>
 
         {/* AI Control Center Modal */}
