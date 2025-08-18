@@ -19,8 +19,9 @@ import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
+import TradingViewChart from "./TradingViewChart";
 // Portfolio cards moved to AI Control Center
-import { BarChart3, Brain } from "lucide-react";
+import { BarChart3, Brain, TrendingUp } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
@@ -229,6 +230,26 @@ export const TradingDashboard = memo(() => {
               </p>
             </div>
           )}
+        </div>
+
+        {/* TradingView Chart Section */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
+              专业图表分析
+            </h2>
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl"></div>
+            <div className="relative p-4 sm:p-6">
+              <TradingViewChart 
+                symbol="NASDAQ:AAPL" 
+                height="500px"
+                className="w-full"
+              />
+            </div>
+          </div>
         </div>
 
         {/* AI Control Center Modal */}
