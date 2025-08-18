@@ -164,14 +164,25 @@ export const TradingDashboard = memo(() => {
         {/* 币安API配置 */}
         <BinanceAPIConfig />
 
-        {/* Crypto Cards Grid */}
-        <div>
+        {/* 主要分析面板 - TradingView 综合分析中心 */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
+              专业分析中心 - TradingView 综合面板
+            </h2>
+          </div>
+          <TradingViewDashboard />
+        </div>
+
+        {/* 快速加密货币导航 */}
+        <div className="mb-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2 sm:gap-0">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-                <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-                {t('market.overview')}
-              </h2>
+              <h3 className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
+                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+                快速市场导航
+              </h3>
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
               <Button 
@@ -196,29 +207,29 @@ export const TradingDashboard = memo(() => {
             />
           </div>
           
-                  <ProfessionalCryptoGrid 
-                    cryptoData={filteredCryptoData} 
-                    showAll={showAllCrypto}
-                    maxVisible={6}
-                    onOpenTrading={handleOpenTrading}
-                  />
+          <ProfessionalCryptoGrid 
+            cryptoData={filteredCryptoData} 
+            showAll={showAllCrypto}
+            maxVisible={6}
+            onOpenTrading={handleOpenTrading}
+          />
                   
-                  {/* 货币计数和折叠状态显示 */}
-                  <div className="flex items-center justify-between mt-4 px-2">
-                    <div className="text-sm text-muted-foreground">
-                      {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
-                    </div>
-                    {filteredCryptoData.length > 6 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowAllCrypto(!showAllCrypto)}
-                        className="text-primary hover:text-primary/80 text-xs sm:text-sm"
-                      >
-                        {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
-                      </Button>
-                    )}
-                  </div>
+          {/* 货币计数和折叠状态显示 */}
+          <div className="flex items-center justify-between mt-4 px-2">
+            <div className="text-sm text-muted-foreground">
+              {t('search.showing')} {showAllCrypto ? filteredCryptoData.length : Math.min(6, filteredCryptoData.length)} {t('search.of')} {filteredCryptoData.length} {t('search.currencies')}
+            </div>
+            {filteredCryptoData.length > 6 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAllCrypto(!showAllCrypto)}
+                className="text-primary hover:text-primary/80 text-xs sm:text-sm"
+              >
+                {showAllCrypto ? t('button.collapse') : `${t('button.view_all')} ${filteredCryptoData.length}`}
+              </Button>
+            )}
+          </div>
           
           {filteredCryptoData.length === 0 && searchQuery && (
             <div className="text-center py-8 sm:py-12">
@@ -231,9 +242,6 @@ export const TradingDashboard = memo(() => {
             </div>
           )}
         </div>
-
-        {/* TradingView Comprehensive Dashboard */}
-        <TradingViewDashboard />
 
         {/* AI Control Center Modal */}
         <AIControlCenter 
