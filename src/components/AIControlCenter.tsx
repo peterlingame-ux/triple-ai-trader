@@ -442,10 +442,16 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <img src={vitalikAvatar} alt="Vitalik Buterin" className="w-10 h-10 rounded-full object-cover" />
-              <div>
+              <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.vitalik_config')}</h3>
                 <Badge variant="outline" className="text-cyan-400 border-cyan-400/20 mt-1">{t('ai.control_center.blockchain_engine')}</Badge>
               </div>
+              {aiConfigs.vitalik.enabled && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-medium">已启用</span>
+                </div>
+              )}
             </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.vitalik_desc')}</p>
               
@@ -485,10 +491,16 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
               <img src={justinAvatar} alt="Justin Sun" className="w-10 h-10 rounded-full object-cover" />
-              <div>
+              <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white">{t('ai.control_center.justin_config')}</h3>
                 <Badge variant="outline" className="text-orange-400 border-orange-400/20 mt-1">{t('ai.control_center.defi_engine')}</Badge>
               </div>
+              {aiConfigs.justin.enabled && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-medium">已启用</span>
+                </div>
+              )}
             </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.justin_desc')}</p>
             
