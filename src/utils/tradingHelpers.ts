@@ -48,9 +48,9 @@ export const generateMockAnalysis = (): TradingAlert | null => {
       signal: isLong ? 'buy' : 'sell',
       price: basePrice,
       analysis: {
-        priceAnalysis: `📊 6AI综合技术分析：${randomSymbol}价格突破关键${isLong ? '阻力' : '支撑'}位$${basePrice.toFixed(0)}，MACD金叉确认趋势`,
-        technicalAnalysis: `🎯 技术指标汇总：RSI(${isLong ? '70+' : '30-'})，布林带${isLong ? '上轨突破' : '下轨支撑'}，成交量放大${Math.floor(Math.random() * 200 + 150)}%`,
-        sentimentAnalysis: `🧠 AI大脑综合结论：基于6种分析模型，当前${randomSymbol}显示${confidence}%胜率的${isLong ? '看涨' : '看跌'}信号，建议立即行动`
+        priceAnalysis: `📊 6AI Comprehensive Technical Analysis: ${randomSymbol} price breaks through key ${isLong ? 'resistance' : 'support'} level $${basePrice.toFixed(0)}, MACD golden cross confirms trend`,
+        technicalAnalysis: `🎯 Technical Indicators Summary: RSI(${isLong ? '70+' : '30-'}), Bollinger Bands ${isLong ? 'Upper Band Breakout' : 'Lower Band Support'}, Volume Amplification ${Math.floor(Math.random() * 200 + 150)}%`,
+        sentimentAnalysis: `🧠 AI Supreme Brain Comprehensive Conclusion: Based on 6 analysis models, current ${randomSymbol} shows ${confidence}% win rate ${isLong ? 'bullish' : 'bearish'} signal, recommend immediate action`
       },
       alerts: [],
       timestamp: new Date(),
@@ -58,8 +58,8 @@ export const generateMockAnalysis = (): TradingAlert | null => {
         entry: Math.round(basePrice),
         stopLoss: stopLoss,
         takeProfit: Math.round(basePrice * (isLong ? 1.12 : 0.88)),
-        position: confidence >= 95 ? '重仓' : confidence >= 90 ? '中仓' : '轻仓',
-        reasoning: `最强大脑6AI模型综合分析：价格图表、技术指标、新闻情绪、市场情绪、成交量、宏观环境全部指向${isLong ? '多头' : '空头'}机会，高胜率交易信号确认。`,
+        position: confidence >= 95 ? 'Heavy' : confidence >= 90 ? 'Medium' : 'Light',
+        reasoning: `Supreme Brain 6 AI Models Comprehensive Analysis: Price chart, technical indicators, news sentiment, market sentiment, volume, and macro environment all point to ${isLong ? 'bullish' : 'bearish'} opportunity, high win rate trading signal confirmed.`,
         firstTakeProfit: firstTakeProfit,
         secondTakeProfit: secondTakeProfit,
         positionRatio: positionRatio,
