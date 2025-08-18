@@ -6,7 +6,7 @@ interface CryptoIconProps {
   className?: string;
 }
 
-// 完整的93个货币图标映射 - 使用多个可靠源
+// 完整的加密货币图标映射 - 使用币安生态和多个可靠源
 const CRYPTO_ICONS: Record<string, string[]> = {
   // Top 10 主流币种
   BTC: [
@@ -39,11 +39,6 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/usd-coin-usdc-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png'
   ],
-  STETH: [
-    'https://assets.coingecko.com/coins/images/13442/large/steth_logo.png',
-    'https://cryptologos.cc/logos/staked-ether-steth-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/8085.png'
-  ],
   ADA: [
     'https://assets.coingecko.com/coins/images/975/large/cardano.png',
     'https://cryptologos.cc/logos/cardano-ada-logo.png',
@@ -59,6 +54,11 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/dogecoin-doge-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png'
   ],
+  AVAX: [
+    'https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png',
+    'https://cryptologos.cc/logos/avalanche-avax-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png'
+  ],
 
   // Top 11-30
   TRX: [
@@ -70,11 +70,6 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://assets.coingecko.com/coins/images/17980/large/ton_symbol.png',
     'https://cryptologos.cc/logos/toncoin-ton-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/11419.png'
-  ],
-  AVAX: [
-    'https://assets.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png',
-    'https://cryptologos.cc/logos/avalanche-avax-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/5805.png'
   ],
   DOT: [
     'https://assets.coingecko.com/coins/images/12171/large/polkadot.png',
@@ -106,13 +101,33 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/chainlink-link-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png'
   ],
+  NEAR: [
+    'https://assets.coingecko.com/coins/images/10365/large/near.jpg',
+    'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/6535.png'
+  ],
   XLM: [
     'https://assets.coingecko.com/coins/images/100/large/Stellar_symbol_black_RGB.png',
     'https://cryptologos.cc/logos/stellar-xlm-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/512.png'
   ],
-  
-  // 继续添加更多币种...
+
+  // DeFi 和 Layer2
+  UNI: [
+    'https://assets.coingecko.com/coins/images/12504/large/uniswap-uni.png',
+    'https://cryptologos.cc/logos/uniswap-uni-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png'
+  ],
+  ATOM: [
+    'https://assets.coingecko.com/coins/images/1481/large/cosmos_hub.png',
+    'https://cryptologos.cc/logos/cosmos-atom-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/3794.png'
+  ],
+  ETC: [
+    'https://assets.coingecko.com/coins/images/453/large/ethereum-classic-logo.png',
+    'https://cryptologos.cc/logos/ethereum-classic-etc-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/1321.png'
+  ],
   HBAR: [
     'https://assets.coingecko.com/coins/images/3441/large/Hedera_Hashgraph_Logo.png',
     'https://cryptologos.cc/logos/hedera-hbar-logo.png',
@@ -138,15 +153,27 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/aptos-apt-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/21794.png'
   ],
-  NEAR: [
-    'https://assets.coingecko.com/coins/images/10365/large/near.jpg',
-    'https://cryptologos.cc/logos/near-protocol-near-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/6535.png'
-  ],
   VET: [
     'https://assets.coingecko.com/coins/images/1167/large/VeChain-Logo-Icon.png',
     'https://cryptologos.cc/logos/vechain-vet-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/3077.png'
+  ],
+  STX: [
+    'https://assets.coingecko.com/coins/images/2069/large/Stacks_logo_full.png',
+    'https://cryptologos.cc/logos/stacks-stx-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/4847.png'
+  ],
+
+  // Layer2 和新兴项目
+  ARB: [
+    'https://assets.coingecko.com/coins/images/16547/large/photo_2023-03-29_21.47.00.jpeg',
+    'https://cryptologos.cc/logos/arbitrum-arb-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/11841.png'
+  ],
+  OP: [
+    'https://assets.coingecko.com/coins/images/25244/large/Optimism.png',
+    'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/11840.png'
   ],
   GRT: [
     'https://assets.coingecko.com/coins/images/13397/large/Graph_Token.png',
@@ -183,6 +210,169 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/maker-mkr-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/1518.png'
   ],
+  COMP: [
+    'https://assets.coingecko.com/coins/images/10775/large/COMP.png',
+    'https://cryptologos.cc/logos/compound-comp-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/5692.png'
+  ],
+
+  // 新兴热门项目
+  JASMY: [
+    'https://assets.coingecko.com/coins/images/13876/large/JASMY200x200.jpg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/8425.png'
+  ],
+  IMX: [
+    'https://assets.coingecko.com/coins/images/17233/large/immutableX-symbol-BLK-RGB.png',
+    'https://cryptologos.cc/logos/immutable-x-imx-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/10603.png'
+  ],
+  INJ: [
+    'https://assets.coingecko.com/coins/images/12882/large/Secondary_Symbol.png',
+    'https://cryptologos.cc/logos/injective-inj-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/7226.png'
+  ],
+  SEI: [
+    'https://assets.coingecko.com/coins/images/28205/large/sei.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/23149.png'
+  ],
+  SUI: [
+    'https://assets.coingecko.com/coins/images/26375/large/sui_asset.jpeg',
+    'https://cryptologos.cc/logos/sui-sui-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/20947.png'
+  ],
+  JUP: [
+    'https://assets.coingecko.com/coins/images/34188/large/jup.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/29210.png'
+  ],
+  WLD: [
+    'https://assets.coingecko.com/coins/images/31069/large/worldcoin.jpeg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/13502.png'
+  ],
+  FET: [
+    'https://assets.coingecko.com/coins/images/5681/large/Fetch.jpg',
+    'https://cryptologos.cc/logos/fetch-ai-fet-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/3773.png'
+  ],
+  RNDR: [
+    'https://assets.coingecko.com/coins/images/11636/large/rndr.png',
+    'https://cryptologos.cc/logos/render-token-rndr-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/5690.png'
+  ],
+  RUNE: [
+    'https://assets.coingecko.com/coins/images/6595/large/RUNE.png',
+    'https://cryptologos.cc/logos/thorchain-rune-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/4157.png'
+  ],
+
+  // Meme币
+  PEPE: [
+    'https://assets.coingecko.com/coins/images/29850/large/pepe-token.jpeg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/24478.png'
+  ],
+  BONK: [
+    'https://assets.coingecko.com/coins/images/28600/large/bonk.jpg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/23095.png'
+  ],
+  WIF: [
+    'https://assets.coingecko.com/coins/images/33767/large/dogwifhat.jpg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/28752.png'
+  ],
+  FLOKI: [
+    'https://assets.coingecko.com/coins/images/16746/large/PNG_image.png',
+    'https://cryptologos.cc/logos/floki-floki-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/10804.png'
+  ],
+  BABYDOGE: [
+    'https://assets.coingecko.com/coins/images/16125/large/baby-doge-coin.jpg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/10186.png'
+  ],
+  PENGU: [
+    'https://assets.coingecko.com/coins/images/34236/large/pengu.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/33138.png'
+  ],
+  TURBO: [
+    'https://assets.coingecko.com/coins/images/30045/large/turbo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/24580.png'
+  ],
+  BRETT: [
+    'https://assets.coingecko.com/coins/images/30641/large/brett.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/29743.png'
+  ],
+
+  // 稳定币
+  FDUSD: [
+    'https://assets.coingecko.com/coins/images/31079/large/firstdigitalusd.jpeg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/26081.png'
+  ],
+  TUSD: [
+    'https://assets.coingecko.com/coins/images/3449/large/tusd.png',
+    'https://cryptologos.cc/logos/trueusd-tusd-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png'
+  ],
+  DAI: [
+    'https://assets.coingecko.com/coins/images/9956/large/4943.png',
+    'https://cryptologos.cc/logos/multi-collateral-dai-dai-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png'
+  ],
+  BUSD: [
+    'https://assets.coingecko.com/coins/images/9576/large/BUSD.png',
+    'https://cryptologos.cc/logos/binance-usd-busd-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/4687.png'
+  ],
+  STETH: [
+    'https://assets.coingecko.com/coins/images/13442/large/steth_logo.png',
+    'https://cryptologos.cc/logos/staked-ether-steth-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/8085.png'
+  ],
+  RETH: [
+    'https://assets.coingecko.com/coins/images/20764/large/reth.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/15060.png'
+  ],
+  WETH: [
+    'https://assets.coingecko.com/coins/images/2518/large/weth.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/2396.png'
+  ],
+  WBTC: [
+    'https://assets.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png',
+    'https://cryptologos.cc/logos/wrapped-bitcoin-wbtc-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png'
+  ],
+
+  // 交易所币
+  OKB: [
+    'https://assets.coingecko.com/coins/images/4463/large/WeChat_Image_20220118095654.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/3897.png'
+  ],
+  KCS: [
+    'https://assets.coingecko.com/coins/images/1047/large/sa9z79.png',
+    'https://cryptologos.cc/logos/kucoin-shares-kcs-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/2087.png'
+  ],
+  HT: [
+    'https://assets.coingecko.com/coins/images/2822/large/huobi-token-logo.png',
+    'https://cryptologos.cc/logos/huobi-token-ht-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/2502.png'
+  ],
+  LEO: [
+    'https://assets.coingecko.com/coins/images/8418/large/leo-token.png',
+    'https://cryptologos.cc/logos/unus-sed-leo-leo-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/3957.png'
+  ],
+  MCO: [
+    'https://assets.coingecko.com/coins/images/599/large/monaco.png',
+    'https://cryptologos.cc/logos/monaco-mco-logo.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/1776.png'
+  ],
+  BGB: [
+    'https://assets.coingecko.com/coins/images/11610/large/bitget.jpg',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/11092.png'
+  ],
+  GT: [
+    'https://assets.coingecko.com/coins/images/8183/large/gt.png',
+    'https://s2.coinmarketcap.com/static/img/coins/64x64/4026.png'
+  ],
+
+  // 其他重要DeFi代币
   LRC: [
     'https://assets.coingecko.com/coins/images/913/large/LRC.png',
     'https://cryptologos.cc/logos/loopring-lrc-logo.png',
@@ -203,11 +393,6 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/zcash-zec-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/1437.png'
   ],
-  COMP: [
-    'https://assets.coingecko.com/coins/images/10775/large/COMP.png',
-    'https://cryptologos.cc/logos/compound-comp-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/5692.png'
-  ],
   YFI: [
     'https://assets.coingecko.com/coins/images/11849/large/yfi-192x192.png',
     'https://cryptologos.cc/logos/yearn-finance-yfi-logo.png',
@@ -222,16 +407,6 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://assets.coingecko.com/coins/images/13469/large/1inch-token.png',
     'https://cryptologos.cc/logos/1inch-1inch-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png'
-  ],
-  REN: [
-    'https://assets.coingecko.com/coins/images/3139/large/REN.png',
-    'https://cryptologos.cc/logos/ren-ren-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/2539.png'
-  ],
-  KNC: [
-    'https://assets.coingecko.com/coins/images/14899/large/RwdVsGcw_400x400.jpg',
-    'https://cryptologos.cc/logos/kyber-network-crystal-knc-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/9444.png'
   ],
   CRV: [
     'https://assets.coingecko.com/coins/images/12124/large/Curve.png',
@@ -273,20 +448,10 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://cryptologos.cc/logos/harmony-one-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/3945.png'
   ],
-  HIVE: [
-    'https://assets.coingecko.com/coins/images/10840/large/hive_logo.png',
-    'https://cryptologos.cc/logos/hive-hive-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/5370.png'
-  ],
   THETA: [
     'https://assets.coingecko.com/coins/images/2538/large/theta-token-logo.png',
     'https://cryptologos.cc/logos/theta-token-theta-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/2416.png'
-  ],
-  TFUEL: [
-    'https://assets.coingecko.com/coins/images/8029/large/1_0YusgngOrriVg4ZYx4wOFw.png',
-    'https://cryptologos.cc/logos/theta-fuel-tfuel-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/3822.png'
   ],
   KAVA: [
     'https://assets.coingecko.com/coins/images/9761/large/kava.png',
@@ -307,172 +472,6 @@ const CRYPTO_ICONS: Record<string, string[]> = {
     'https://assets.coingecko.com/coins/images/2687/large/Zilliqa-logo.png',
     'https://cryptologos.cc/logos/zilliqa-zil-logo.png',
     'https://s2.coinmarketcap.com/static/img/coins/64x64/2687.png'
-  ],
-  ICX: [
-    'https://assets.coingecko.com/coins/images/1060/large/icon-icx-logo.png',
-    'https://cryptologos.cc/logos/icon-icx-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/2099.png'
-  ],
-  ONT: [
-    'https://assets.coingecko.com/coins/images/3447/large/ONT.png',
-    'https://cryptologos.cc/logos/ontology-ont-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/2566.png'
-  ],
-  QTUM: [
-    'https://assets.coingecko.com/coins/images/684/large/Qtum_Logo_blue_CG.png',
-    'https://cryptologos.cc/logos/qtum-qtum-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1684.png'
-  ],
-  WAVES: [
-    'https://assets.coingecko.com/coins/images/425/large/waves.png',
-    'https://cryptologos.cc/logos/waves-waves-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1274.png'
-  ],
-  SC: [
-    'https://assets.coingecko.com/coins/images/289/large/siacoin.png',
-    'https://cryptologos.cc/logos/siacoin-sc-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1042.png'
-  ],
-  DGB: [
-    'https://assets.coingecko.com/coins/images/63/large/digibyte.png',
-    'https://cryptologos.cc/logos/digibyte-dgb-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/109.png'
-  ],
-  LSK: [
-    'https://assets.coingecko.com/coins/images/385/large/Lisk_Symbol_-_Blue.png',
-    'https://cryptologos.cc/logos/lisk-lsk-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1214.png'
-  ],
-  ARK: [
-    'https://assets.coingecko.com/coins/images/484/large/ark.png',
-    'https://cryptologos.cc/logos/ark-ark-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1586.png'
-  ],
-  NANO: [
-    'https://assets.coingecko.com/coins/images/756/large/nano-logo.png',
-    'https://cryptologos.cc/logos/nano-nano-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1567.png'
-  ],
-  IOST: [
-    'https://assets.coingecko.com/coins/images/2948/large/IOST.png',
-    'https://cryptologos.cc/logos/iost-iost-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/2405.png'
-  ],
-  ZEN: [
-    'https://assets.coingecko.com/coins/images/691/large/horizen.png',
-    'https://cryptologos.cc/logos/horizen-zen-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1698.png'
-  ],
-  MAID: [
-    'https://assets.coingecko.com/coins/images/588/large/maidsafecoin.png',
-    'https://cryptologos.cc/logos/maidsafecoin-maid-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/291.png'
-  ],
-  REP: [
-    'https://assets.coingecko.com/coins/images/309/large/REP.png',
-    'https://cryptologos.cc/logos/augur-rep-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1104.png'
-  ],
-  KMD: [
-    'https://assets.coingecko.com/coins/images/440/large/komodo.png',
-    'https://cryptologos.cc/logos/komodo-kmd-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1521.png'
-  ],
-  DCR: [
-    'https://assets.coingecko.com/coins/images/329/large/decred.png',
-    'https://cryptologos.cc/logos/decred-dcr-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1168.png'
-  ],
-  STRAT: [
-    'https://assets.coingecko.com/coins/images/415/large/stratis.png',
-    'https://cryptologos.cc/logos/stratis-strax-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1343.png'
-  ],
-  NXT: [
-    'https://assets.coingecko.com/coins/images/313/large/nxt.png',
-    'https://cryptologos.cc/logos/nxt-nxt-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/66.png'
-  ],
-  SYS: [
-    'https://assets.coingecko.com/coins/images/384/large/syscoin.png',
-    'https://cryptologos.cc/logos/syscoin-sys-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/541.png'
-  ],
-  
-  // 其他Meme coins
-  BABYDOGE: [
-    'https://assets.coingecko.com/coins/images/16125/large/baby-doge-coin.jpg',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/10186.png'
-  ],
-  SAFE: [
-    'https://assets.coingecko.com/coins/images/14362/large/safemoon.jpg',
-    'https://cryptologos.cc/logos/safemoon-safemoon-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/8757.png'
-  ],
-  MEME: [
-    'https://assets.coingecko.com/coins/images/32750/large/memecoin.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/28301.png'
-  ],
-  WOJAK: [
-    'https://assets.coingecko.com/coins/images/30323/large/wojak-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/24641.png'
-  ],
-  TURBO: [
-    'https://assets.coingecko.com/coins/images/30045/large/turbo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/24580.png'
-  ],
-  LADYS: [
-    'https://assets.coingecko.com/coins/images/30462/large/milady.jpg',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/26611.png'
-  ],
-  TRUMP: [
-    'https://assets.coingecko.com/coins/images/33335/large/trump-avatar.jpg',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/29462.png'
-  ],
-  UNI: [
-    'https://assets.coingecko.com/coins/images/12504/large/uniswap-uni.png',
-    'https://cryptologos.cc/logos/uniswap-uni-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png'
-  ],
-  ATOM: [
-    'https://assets.coingecko.com/coins/images/1481/large/cosmos_hub.png',
-    'https://cryptologos.cc/logos/cosmos-atom-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/3794.png'
-  ],
-  ETC: [
-    'https://assets.coingecko.com/coins/images/453/large/ethereum-classic-logo.png',
-    'https://cryptologos.cc/logos/ethereum-classic-etc-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/1321.png'
-  ],
-  
-  // Meme coins
-  PEPE: [
-    'https://assets.coingecko.com/coins/images/29850/large/pepe-token.jpeg',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/24478.png'
-  ],
-  BONK: [
-    'https://assets.coingecko.com/coins/images/28600/large/bonk.jpg',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/23095.png'
-  ],
-  WIF: [
-    'https://assets.coingecko.com/coins/images/33767/large/dogwifhat.jpg',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/28752.png'
-  ],
-  FLOKI: [
-    'https://assets.coingecko.com/coins/images/16746/large/PNG_image.png',
-    'https://cryptologos.cc/logos/floki-inu-floki-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/10804.png'
-  ],
-  
-  // 新增币种
-  OKB: [
-    'https://assets.coingecko.com/coins/images/4463/large/WeChat_Image_20220118181706.png',
-    'https://cryptologos.cc/logos/okb-okb-logo.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/3897.png'
-  ],
-  PENGU: [
-    'https://assets.coingecko.com/coins/images/34238/large/PENGU-200x200.png',
-    'https://s2.coinmarketcap.com/static/img/coins/64x64/31274.png'
   ]
 };
 
@@ -487,16 +486,12 @@ const CRYPTO_COLORS: Record<string, string> = {
   GRT: '#6F4CFF', ALGO: '#000000', QNT: '#FA6D01', MANA: '#FF2D55', SAND: '#00ADEF',
   AAVE: '#B6509E', MKR: '#1AAB9B', LRC: '#1C60FF', ENJ: '#624DBF', BAT: '#FF5000',
   ZEC: '#F4B728', COMP: '#00D395', YFI: '#006AE3', SNX: '#00D4FF', '1INCH': '#1B1E29',
-  REN: '#080817', KNC: '#31CB9E', CRV: '#40649F', UMA: '#FF6B6B', BAL: '#1E1E1E',
-  SUSHI: '#FA52A0', FTM: '#13B5EC', FLOW: '#00EF8B', EGLD: '#1B46C2', ONE: '#00AEE9',
-  HIVE: '#E31337', THETA: '#2AB8E6', TFUEL: '#2AB8E6', KAVA: '#FF564F', BAND: '#516AFF',
-  RVN: '#384182', ZIL: '#49C1BF', ICX: '#1FC5C9', ONT: '#32A4BE', QTUM: '#2E9AD0',
-  WAVES: '#0155FF', SC: '#00CBA0', DGB: '#006BA6', LSK: '#0D98BA', ARK: '#CC3E3E',
-  NANO: '#4A90E2', IOST: '#1C1C1C', ZEN: '#00586E', MAID: '#5492D6', REP: '#602C50',
-  KMD: '#326464', DCR: '#2ED6A1', STRAT: '#1382C6', NXT: '#008FBB', SYS: '#0082C6',
-  PEPE: '#40B68A', BONK: '#FFB900', WIF: '#FF6B35', FLOKI: '#F15A24', BABYDOGE: '#FFA500',
-  SAFE: '#42C55C', MEME: '#FF4081', WOJAK: '#4CAF50', TURBO: '#FF9800', LADYS: '#E91E63',
-  TRUMP: '#FF0000', OKB: '#3075EE', PENGU: '#7B68EE'
+  CRV: '#40649F', UMA: '#FF6B6B', BAL: '#1E1E1E', SUSHI: '#FA52A0', FTM: '#13B5EC',
+  FLOW: '#00EF8B', EGLD: '#1B46C2', ONE: '#00AEE9', THETA: '#2AB8E6', KAVA: '#FF564F',
+  BAND: '#516AFF', RVN: '#384182', ZIL: '#49C1BF', PEPE: '#40B68A', BONK: '#FFB900',
+  WIF: '#FF6B35', FLOKI: '#F15A24', BABYDOGE: '#FFA500', PENGU: '#7B68EE',
+  TURBO: '#FF9800', BRETT: '#4CAF50', OKB: '#3075EE', FDUSD: '#26A17B',
+  TUSD: '#002868', DAI: '#F4B731', BUSD: '#F0B90B', WETH: '#627EEA', WBTC: '#F7931A'
 };
 
 export const CryptoIcon: React.FC<CryptoIconProps> = ({
@@ -510,7 +505,8 @@ export const CryptoIcon: React.FC<CryptoIconProps> = ({
   
   const iconUrls = CRYPTO_ICONS[symbol.toUpperCase()] || [
     `https://assets.coingecko.com/coins/images/1/large/${symbol.toLowerCase()}.png`,
-    `https://cryptologos.cc/logos/${symbol.toLowerCase()}-${symbol.toLowerCase()}-logo.png`
+    `https://cryptologos.cc/logos/${symbol.toLowerCase()}-${symbol.toLowerCase()}-logo.png`,
+    `https://s2.coinmarketcap.com/static/img/coins/64x64/1.png`
   ];
   
   const cryptoColor = CRYPTO_COLORS[symbol.toUpperCase()] || '#6B7280';
