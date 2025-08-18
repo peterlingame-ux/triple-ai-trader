@@ -14,6 +14,7 @@ interface CompactCryptoCardProps {
   image?: string;
   volume?: number;
   marketCap?: number;
+  onOpenTrading?: (symbol: string) => void;
 }
 
 export const CompactCryptoCard = memo<CompactCryptoCardProps>(({ 
@@ -23,13 +24,21 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   change, 
   changePercent, 
   volume, 
-  marketCap 
+  marketCap,
+  onOpenTrading 
 }) => {
   const { t } = useLanguage();
   const isPositive = change >= 0;
   
+  const handleClick = () => {
+    onOpenTrading?.(symbol);
+  };
+
   return (
-    <Card className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group">
+    <Card 
+      className="p-3 bg-card/50 backdrop-blur-sm border-border/30 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 rounded-lg group cursor-pointer hover:scale-105"
+      onClick={handleClick}
+    >
       {/* Header - 3D Icon, Symbol & Price */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">

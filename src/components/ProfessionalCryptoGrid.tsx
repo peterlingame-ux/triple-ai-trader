@@ -17,12 +17,14 @@ interface ProfessionalCryptoGridProps {
   cryptoData: CryptoData[];
   showAll: boolean;
   maxVisible?: number;
+  onOpenTrading?: (symbol: string) => void;
 }
 
 export const ProfessionalCryptoGrid = memo<ProfessionalCryptoGridProps>(({ 
   cryptoData, 
   showAll, 
-  maxVisible = 6 
+  maxVisible = 6,
+  onOpenTrading
 }) => {
   const [displayData, setDisplayData] = useState<CryptoData[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -83,6 +85,7 @@ export const ProfessionalCryptoGrid = memo<ProfessionalCryptoGridProps>(({
               image={crypto.image}
               volume={crypto.volume24h}
               marketCap={crypto.marketCap}
+              onOpenTrading={onOpenTrading}
             />
           </div>
         ))}

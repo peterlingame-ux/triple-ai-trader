@@ -11,6 +11,7 @@ import { UpcomingAdvisors } from "./UpcomingAdvisors";
 import { AIAdvisorsGrid } from "./AIAdvisorsGrid";
 // import { AIOpportunityAlert } from "./AIOpportunityAlert"; // Temporarily disabled
 import { UserProfile } from "./UserProfile";
+import { ProfessionalTradingPanel } from "./ProfessionalTradingPanel";
 
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData, filterCryptoData } from "@/hooks/useCryptoData";
@@ -33,6 +34,8 @@ export const TradingDashboard = memo(() => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAIControlCenter, setShowAIControlCenter] = useState(false);
   const [advisorStates, setAdvisorStates] = useState<Record<string, boolean>>({});
+  const [showTradingPanel, setShowTradingPanel] = useState(false);
+  const [selectedTradingSymbol, setSelectedTradingSymbol] = useState<string>("");
 
   // Listen for AI Control Center open events - 优化事件监听
   const handleOpenAIControlCenter = useCallback(() => {
@@ -64,6 +67,16 @@ export const TradingDashboard = memo(() => {
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery("");
+  }, []);
+
+  const handleOpenTrading = useCallback((symbol: string) => {
+    setSelectedTradingSymbol(symbol);
+    setShowTradingPanel(true);
+  }, []);
+
+  const handleCloseTradingPanel = useCallback(() => {
+    setShowTradingPanel(false);
+    setSelectedTradingSymbol("");
   }, []);
 
   return (
@@ -179,6 +192,7 @@ export const TradingDashboard = memo(() => {
                     cryptoData={filteredCryptoData} 
                     showAll={showAllCrypto}
                     maxVisible={6}
+                    onOpenTrading={handleOpenTrading}
                   />
                   
                   {/* 货币计数和折叠状态显示 */}
@@ -229,6 +243,23 @@ export const TradingDashboard = memo(() => {
 
         {/* Upcoming Advisors Section */}
         <UpcomingAdvisors />
+
+        {/* Professional Trading Panel Modal */}
+        {showTradingPanel && selectedTradingSymbol && (
+          <ProfessionalTradingPanel
+            selectedCrypto={selectedTradingSymbol}
+            onCryptoChange={setSelectedTradingSymbol}
+            onClose={handleCloseTradingPanel}
+            aiConfigs={{
+              openai: { enabled: true, apiKey: "", model: "gpt-4" },
+              claude: { enabled: true, apiKey: "", model: "claude-3" },
+              grok: { enabled: true, apiKey: "", model: "grok-1" },
+              vitalik: { enabled: true, apiKey: "", model: "vitalik-ai" },
+              justin: { enabled: true, apiKey: "", model: "justin-ai" },
+              trump: { enabled: true, apiKey: "", model: "trump-ai" }
+            }}
+          />
+        )}
       </div>
       </div>
     </div>
