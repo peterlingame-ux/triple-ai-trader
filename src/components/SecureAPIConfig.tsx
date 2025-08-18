@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Shield, CheckCircle, XCircle, Loader2, AlertTriangle } from "lucide-react";
+import { Eye, EyeOff, Shield, CheckCircle, XCircle, Loader2, AlertTriangle, Edit, Save, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,6 +37,10 @@ export function SecureAPIConfig({
   const [isConfigured, setIsConfigured] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [isEditing, setIsEditing] = useState(false);
+  const [existingConfig, setExistingConfig] = useState<{apiKey?: string; secretKey?: string}>({});
+  const [originalApiKey, setOriginalApiKey] = useState('');
+  const [originalSecretKey, setOriginalSecretKey] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -57,10 +61,43 @@ export function SecureAPIConfig({
       if (!error && data?.configured) {
         setIsConfigured(true);
         onConfigChange?.(true);
+        // 获取现有配置信息（用于显示和编辑）
+        await loadExistingConfig();
       }
     } catch (error) {
       console.error('Error checking configuration:', error);
     }
+  };
+
+  const loadExistingConfig = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'get',
+          service: 'binance_api_config' 
+        }
+      });
+
+      if (!error && data?.config) {
+        const config = data.config;
+        setExistingConfig({
+          apiKey: config.apiKey ? maskApiKey(config.apiKey) : '',
+          secretKey: config.secretKey ? maskSecretKey(config.secretKey) : ''
+        });
+      }
+    } catch (error) {
+      console.error('Error loading existing configuration:', error);
+    }
+  };
+
+  const maskApiKey = (key: string) => {
+    if (key.length <= 8) return '•'.repeat(key.length);
+    return key.slice(0, 4) + '•'.repeat(key.length - 8) + key.slice(-4);
+  };
+
+  const maskSecretKey = (key: string) => {
+    if (key.length <= 8) return '•'.repeat(key.length);
+    return key.slice(0, 4) + '•'.repeat(key.length - 8) + key.slice(-4);
   };
 
   const handleSaveConfig = async () => {
@@ -78,7 +115,7 @@ export function SecureAPIConfig({
       const { error } = await supabase.functions.invoke('api-config-manager', {
         body: {
           action: 'save',
-          service: 'binance_api_config', // 使用统一的服务名称
+          service: 'binance_api_config',
           apiKey,
           secretKey: hasSecretKey ? secretKey : undefined
         }
@@ -92,18 +129,20 @@ export function SecureAPIConfig({
       onConfigChange?.(true);
       setApiKey('');
       setSecretKey('');
+      setIsEditing(false);
       
       toast({
         title: "Configuration Saved",
         description: `${title} API configuration has been securely saved`,
       });
 
+      // 重新加载配置信息
+      await loadExistingConfig();
       // Test connection after saving
       testConnection();
     } catch (error: any) {
       console.error('Save config error:', error);
       
-      // Handle specific error cases
       if (error.message?.includes('Unauthorized') || error.message?.includes('needsLogin')) {
         toast({
           title: "Authentication Required",
@@ -120,6 +159,40 @@ export function SecureAPIConfig({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const startEditing = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'get',
+          service: 'binance_api_config' 
+        }
+      });
+
+      if (!error && data?.config) {
+        const config = data.config;
+        setOriginalApiKey(config.apiKey || '');
+        setOriginalSecretKey(config.secretKey || '');
+        setApiKey(config.apiKey || '');
+        setSecretKey(config.secretKey || '');
+        setIsEditing(true);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load configuration for editing",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const cancelEditing = () => {
+    setApiKey('');
+    setSecretKey('');
+    setIsEditing(false);
+    setShowApiKey(false);
+    setShowSecretKey(false);
   };
 
   const testConnection = async () => {
@@ -179,6 +252,10 @@ export function SecureAPIConfig({
 
       setIsConfigured(false);
       setConnectionStatus('idle');
+      setIsEditing(false);
+      setExistingConfig({});
+      setApiKey('');
+      setSecretKey('');
       onConfigChange?.(false);
       
       toast({
@@ -335,18 +412,109 @@ export function SecureAPIConfig({
               Save Configuration
             </Button>
           </div>
+        ) : isEditing ? (
+          <div className="space-y-4">
+            <Alert>
+              <Edit className="h-4 w-4" />
+              <AlertDescription>
+                Editing existing configuration. Leave fields unchanged to keep current values.
+              </AlertDescription>
+            </Alert>
+
+            <div className="space-y-2">
+              <Label htmlFor={`${title}-edit-api-key`}>{apiKeyLabel}</Label>
+              <div className="relative">
+                <Input
+                  id={`${title}-edit-api-key`}
+                  type={showApiKey ? "text" : "password"}
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder={`Update your ${apiKeyLabel.toLowerCase()}`}
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                >
+                  {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
+
+            {hasSecretKey && (
+              <div className="space-y-2">
+                <Label htmlFor={`${title}-edit-secret-key`}>{secretKeyLabel}</Label>
+                <div className="relative">
+                  <Input
+                    id={`${title}-edit-secret-key`}
+                    type={showSecretKey ? "text" : "password"}
+                    value={secretKey}
+                    onChange={(e) => setSecretKey(e.target.value)}
+                    placeholder={`Update your ${secretKeyLabel.toLowerCase()}`}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowSecretKey(!showSecretKey)}
+                  >
+                    {showSecretKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <Button onClick={handleSaveConfig} disabled={isLoading} className="flex-1">
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Save className="mr-2 h-4 w-4" />
+                Update Configuration
+              </Button>
+              <Button onClick={cancelEditing} variant="outline">
+                <X className="mr-2 h-4 w-4" />
+                Cancel
+              </Button>
+            </div>
+          </div>
         ) : (
           <div className="space-y-4">
             <Alert>
               <Shield className="h-4 w-4" />
               <AlertDescription>
-                API keys are securely encrypted and stored. Only authorized requests can access them.
+                API configuration is active and securely encrypted.
               </AlertDescription>
             </Alert>
+
+            {/* 显示现有配置信息（脱敏） */}
+            <div className="space-y-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">{apiKeyLabel}:</span>
+                <span className="text-sm font-mono text-muted-foreground">
+                  {existingConfig.apiKey || '••••••••••••••••'}
+                </span>
+              </div>
+              {hasSecretKey && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{secretKeyLabel}:</span>
+                  <span className="text-sm font-mono text-muted-foreground">
+                    {existingConfig.secretKey || '••••••••••••••••'}
+                  </span>
+                </div>
+              )}
+            </div>
 
             <div className="flex gap-2">
               <Button onClick={testConnection} variant="outline" className="flex-1">
                 Test Connection
+              </Button>
+              <Button onClick={startEditing} variant="secondary">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
               </Button>
               <Button onClick={clearConfiguration} variant="destructive">
                 Clear Config
