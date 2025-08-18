@@ -1,13 +1,16 @@
 import { TradingDashboard } from "@/components/TradingDashboard";
+import AICollaborationManager from "@/components/AICollaborationManager";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { LogOut, User, LogIn } from "lucide-react";
+import { LogOut, User, LogIn, Brain, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useState } from "react";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
+  const [showAIManager, setShowAIManager] = useState(false);
 
 
   if (loading) {
@@ -29,6 +32,23 @@ const Index = () => {
             Crypto Trading Platform
           </h1>
           <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowAIManager(!showAIManager)}
+            >
+              {showAIManager ? (
+                <>
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  交易面板
+                </>
+              ) : (
+                <>
+                  <Brain className="h-4 w-4 mr-2" />
+                  AI协作系统
+                </>
+              )}
+            </Button>
             {isAuthenticated ? (
               <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -51,7 +71,7 @@ const Index = () => {
           </div>
         </div>
       </header>
-      <TradingDashboard />
+      {showAIManager ? <AICollaborationManager /> : <TradingDashboard />}
     </div>
   );
 };
