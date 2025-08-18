@@ -20,8 +20,9 @@ import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 // Portfolio cards moved to AI Control Center
-import { BarChart3, Brain } from "lucide-react";
+import { BarChart3, Brain, Settings } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
+import { Link } from "react-router-dom";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
 
@@ -145,6 +146,18 @@ export const TradingDashboard = memo(() => {
               {/* Right Section - User Controls - Professional Cards Layout */}
               <div className="flex items-center gap-3">
                 <UserProfile />
+                
+                {/* 管理中心按钮 */}
+                <Link to="/management">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 hover:from-purple-600/30 hover:to-blue-600/30 text-purple-300 border-purple-500/30 hover:border-purple-400/50 backdrop-blur-sm transition-all duration-300"
+                  >
+                    <Settings className="w-4 h-4 mr-2" />
+                    管理中心
+                  </Button>
+                </Link>
                 
                 <LanguageSwitcher />
               </div>
