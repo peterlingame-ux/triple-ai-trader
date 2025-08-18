@@ -74,14 +74,18 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         // 直接调用AutoTrader的处理函数，不依赖事件
         const autoTraderHandleSignal = (window as any).autoTraderHandleSignal;
         if (autoTraderHandleSignal) {
-          console.log('直接调用AutoTrader处理函数');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('直接调用AutoTrader处理函数');
+          }
           autoTraderHandleSignal(signal);
         } else {
           // 备用：存储信号供AutoTrader读取
           const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
           pendingSignals.push(signal);
           localStorage.setItem('pendingAutoTraderSignals', JSON.stringify(pendingSignals));
-          console.log('信号已存储，等待AutoTrader处理');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('信号已存储，等待AutoTrader处理');
+          }
         }
         
         dispatchSignal(signal);
@@ -90,7 +94,9 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
         showNotification(alert);
       }
     } catch (error) {
-      console.error('Detection analysis error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Detection analysis error:', error);
+      }
     }
   }, [isMonitoring, callSuperBrainAPI, convertToTradingAlert, convertToSignal, dispatchSignal, showNotification]);
 
@@ -342,13 +348,16 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
 
       {/* Alert Dialog */}
       <Dialog open={showAlert} onOpenChange={setShowAlert}>
-        <DialogContent className="max-w-md bg-slate-900 border-slate-700">
+        <DialogContent className="max-w-md bg-slate-900 border-slate-700" aria-describedby="opportunity-description">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-white text-lg">
               <Brain className="w-5 h-5 text-yellow-400" />
               {t('ai.high_win_rate_opportunity')}
             </DialogTitle>
           </DialogHeader>
+          <div id="opportunity-description" className="sr-only">
+            {t('ai.high_win_rate_opportunity')} - {currentAlert?.symbol} {currentAlert?.signal}
+          </div>
           
           {currentAlert && (
             <div className="space-y-3">

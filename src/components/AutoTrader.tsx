@@ -87,15 +87,10 @@ export const AutoTrader = () => {
 
   // 执行交易并记录历史
   const executeTradeWithSignal = useCallback(async (signal: SuperBrainSignal, strategy: 'conservative' | 'aggressive') => {
-    console.log('🔥 executeTradeWithSignal 开始:', { signal, strategy });
-    
     try {
-      console.log('🔥 调用 executeTrade...');
       const position = await executeTrade(signal, strategy);
-      console.log('🔥 executeTrade 返回结果:', position);
       
       if (position) {
-        console.log('✅ 交易执行成功，创建历史记录');
         const strategyData = TRADING_STRATEGIES.find(s => s.type === strategy);
         const executedHistory = formatTradingHistory('trade_executed', signal.symbol, signal.action, {
           entry: signal.entry,
@@ -112,11 +107,11 @@ export const AutoTrader = () => {
           title: "交易执行成功!",
           description: `${signal.symbol} ${signal.action === 'buy' ? '买入' : '卖出'}订单已执行`,
         });
-      } else {
-        console.log('❌ executeTrade 返回空值');
       }
     } catch (error) {
-      console.error('💥 executeTradeWithSignal 执行失败:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('💥 executeTradeWithSignal 执行失败:', error);
+      }
       toast({
         title: "交易执行失败",
         description: "请检查账户余额和网络连接",
@@ -127,58 +122,32 @@ export const AutoTrader = () => {
 
   // 统一的信号处理函数
   const handleSignal = useCallback((signal: SuperBrainSignal) => {
-    console.log('🔥 AutoTrader - handleSignal 开始，信号:', signal);
-    
     try {
       // 步骤1: 检查设置
       const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
       const currentIsEnabled = currentSettings.auto_trading_enabled || false;
       const currentStrategy = currentSettings.trading_strategy || 'conservative';
       
-      console.log('🔥 步骤1 - 当前设置:', { currentIsEnabled, currentStrategy });
-      
-      if (!currentIsEnabled) {
-        console.log('❌ 停止：AI自动交易未启动');
-        return;
-      }
+      if (!currentIsEnabled) return;
 
       // 步骤2: 验证信号
-      console.log('🔥 步骤2 - 验证信号...');
-      if (!validateSignal(signal)) {
-        console.log('❌ 停止：信号验证失败');
-        return;
-      }
-      console.log('✅ 信号验证通过');
+      if (!validateSignal(signal)) return;
       
       // 步骤3: 检查策略
       const strategy = TRADING_STRATEGIES.find(s => s.type === currentStrategy);
-      console.log('🔥 步骤3 - 策略检查:', { 
-        strategy: strategy?.name, 
-        required: strategy?.minConfidence, 
-        actual: signal.confidence 
-      });
       
-      if (!strategy || signal.confidence < strategy.minConfidence) {
-        console.log('❌ 停止：胜率不足，需要', strategy?.minConfidence, '实际', signal.confidence);
-        return;
-      }
-      console.log('✅ 策略检查通过');
+      if (!strategy || signal.confidence < strategy.minConfidence) return;
 
       // 步骤4: 检查重复持仓
-      console.log('🔥 步骤4 - 检查重复持仓，当前持仓:', positions);
-      if (positions.some(p => p.symbol === signal.symbol)) {
-        console.log('❌ 停止：重复持仓');
-        return;
-      }
-      console.log('✅ 无重复持仓');
+      if (positions.some(p => p.symbol === signal.symbol)) return;
 
       // 步骤5: 执行交易
-      console.log('🔥 步骤5 - 开始执行交易...');
       executeTradeWithSignal(signal, currentStrategy);
-      console.log('🔥 executeTradeWithSignal 调用完成');
       
     } catch (error) {
-      console.error('💥 handleSignal 错误:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('💥 handleSignal 错误:', error);
+      }
     }
   }, [positions, executeTradeWithSignal]);
 
@@ -190,9 +159,7 @@ export const AutoTrader = () => {
     // 检查是否有待处理的信号
     const pendingSignals = JSON.parse(localStorage.getItem('pendingAutoTraderSignals') || '[]');
     if (pendingSignals.length > 0) {
-      console.log('发现待处理信号:', pendingSignals.length);
       pendingSignals.forEach((signal: SuperBrainSignal) => {
-        console.log('处理待处理信号:', signal);
         handleSignal(signal);
       });
       // 清空已处理的信号
@@ -206,31 +173,18 @@ export const AutoTrader = () => {
 
   // 监听SuperBrain信号 - 稳定的事件监听器
   useEffect(() => {
-    console.log('AutoTrader - 设置superBrainSignal事件监听器');
-    
     const handleSuperBrainSignal = (event: CustomEvent) => {
-      console.log('AutoTrader - 收到superBrainSignal事件:', event.detail);
-      
       // 确保事件详情有效
-      if (!event.detail) {
-        console.log('AutoTrader - 信号详情为空，忽略');
-        return;
-      }
+      if (!event.detail) return;
       
       // 立即处理信号，不依赖状态
       const signal = event.detail as SuperBrainSignal;
-      console.log('AutoTrader - 开始处理信号:', signal);
       
       // 获取最新的设置状态
       const currentSettings = JSON.parse(localStorage.getItem('userSettings') || '{}');
       const currentIsEnabled = currentSettings.auto_trading_enabled || false;
       
-      console.log('AutoTrader - 当前自动交易状态:', currentIsEnabled);
-      
-      if (!currentIsEnabled) {
-        console.log('AI自动交易未启动，忽略信号:', signal);
-        return;
-      }
+      if (!currentIsEnabled) return;
       
       // 调用处理函数
       handleSignal(signal);
@@ -239,11 +193,7 @@ export const AutoTrader = () => {
     // 立即设置监听器
     window.addEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
     
-    // 检查是否有待处理的信号
-    console.log('AutoTrader - 监听器已设置，等待信号...');
-    
     return () => {
-      console.log('AutoTrader - 清理superBrainSignal事件监听器');
       window.removeEventListener('superBrainSignal', handleSuperBrainSignal as EventListener);
     };
   }, [handleSignal]); // 依赖handleSignal确保逻辑更新
@@ -253,8 +203,6 @@ export const AutoTrader = () => {
     let realTimeInterval: NodeJS.Timeout;
     
     if (isAuthenticated && isEnabled && isSuperBrainActive) {
-      console.log('AutoTrader - 启动实时信号检查');
-      
       const handleRealTimeSignal = async () => {
         try {
           const data = await callSuperBrainAPI();
@@ -273,7 +221,9 @@ export const AutoTrader = () => {
             window.dispatchEvent(new CustomEvent('superBrainSignal', { detail: signal }));
           }
         } catch (error) {
-          console.error('获取实时信号失败:', error);
+          if (process.env.NODE_ENV === 'development') {
+            console.error('获取实时信号失败:', error);
+          }
         }
       };
       
@@ -283,7 +233,6 @@ export const AutoTrader = () => {
     
     return () => {
       if (realTimeInterval) {
-        console.log('AutoTrader - 清理实时信号检查');
         clearInterval(realTimeInterval);
       }
     };

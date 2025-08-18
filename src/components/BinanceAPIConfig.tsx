@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useCallback } from 'react';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,23 +9,14 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
-export function BinanceAPIConfig() {
+export const BinanceAPIConfig = memo(() => {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isConfigured, setIsConfigured] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
 
-  // 添加调试日志
-  console.log('BinanceAPIConfig render:', { isAuthenticated, isExpanded, isConfigured, connectionStatus });
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      checkConfiguration();
-    }
-  }, [isAuthenticated]);
-
-  const checkConfiguration = async () => {
+  const checkConfiguration = useCallback(async () => {
     try {
       const { data, error } = await supabase.functions.invoke('check-api-config', {
         body: { service: 'binance_api_config' }
@@ -33,15 +24,16 @@ export function BinanceAPIConfig() {
 
       if (!error && data?.configured) {
         setIsConfigured(true);
-        // Auto test connection to get status
         testConnection();
       }
     } catch (error) {
-      console.error('Error checking configuration:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error checking configuration:', error);
+      }
     }
-  };
+  }, []);
 
-  const testConnection = async () => {
+  const testConnection = useCallback(async () => {
     setConnectionStatus('testing');
     try {
       const { data, error } = await supabase.functions.invoke('test-api-connection', {
@@ -52,10 +44,18 @@ export function BinanceAPIConfig() {
         setConnectionStatus(data.success ? 'success' : 'error');
       }
     } catch (error) {
-      console.error('Test connection error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Test connection error:', error);
+      }
       setConnectionStatus('error');
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      checkConfiguration();
+    }
+  }, [isAuthenticated, checkConfiguration]);
 
   const getStatusBadge = () => {
     // 未登录状态
@@ -296,4 +296,6 @@ export function BinanceAPIConfig() {
       </div>
     </div>
   );
-}
+});
+
+BinanceAPIConfig.displayName = "BinanceAPIConfig";
