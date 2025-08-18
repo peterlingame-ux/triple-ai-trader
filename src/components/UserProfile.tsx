@@ -217,13 +217,22 @@ export const UserProfile = () => {
                 <h3 className="text-base font-semibold text-accent truncate">
                   {profileData.name || 'LINYUAN'}
                 </h3>
-                <FlagIcon countryCode={profileData.nationality} size="sm" />
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
               </div>
-              <p className="text-sm text-accent/70 truncate flex items-center gap-1">
-                <Globe className="w-3 h-3" />
-                {t('profile.personal')}
-              </p>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <Globe className="w-3 h-3 text-accent/70" />
+                  <p className="text-sm text-accent/70 truncate">
+                    {t('profile.personal')}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 px-2 py-1 bg-accent/10 rounded-full border border-accent/20">
+                  <FlagIcon countryCode={profileData.nationality} size="sm" />
+                  <span className="text-xs text-accent/80 font-medium">
+                    {countries.find(c => c.code === profileData.nationality)?.name}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
