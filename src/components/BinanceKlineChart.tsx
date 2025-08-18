@@ -70,7 +70,7 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
   const [priceChangePercent, setPriceChangePercent] = useState<number>(0);
   const { toast } = useToast();
 
-  // 获取币安API配置
+  // 获取币安API配置 - 优化缓存
   const getBinanceConfig = useCallback(async () => {
     try {
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
@@ -94,26 +94,28 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
       console.error('获取币安配置失败:', error);
       return { isConfigured: false };
     }
-  }, []);
+  }, []); // 不依赖任何变化的值
 
-  // 获取K线数据
+  // 获取K线数据 - 修复无限循环问题
   const fetchKlineData = useCallback(async () => {
     if (!symbol || loading) return;
     
     setLoading(true);
-    setProgress(0);
+    setProgress(10);
     setLoadingStatus('检查API配置...');
     
     try {
-      setProgress(20);
+      setProgress(30);
       const config = await getBinanceConfig();
       
       if (!config.isConfigured) {
         setLoadingStatus('币安API未配置');
+        setProgress(0);
+        setLoading(false);
         return;
       }
 
-      setProgress(40);
+      setProgress(50);
       setLoadingStatus('连接币安API...');
       
       const { data, error } = await supabase.functions.invoke('binance-klines', {
@@ -134,9 +136,9 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
       setProgress(80);
       setLoadingStatus('处理数据...');
 
-      if (data && data.klines) {
+      if (data && data.klines && data.klines.length > 0) {
         setKlineData(data.klines);
-        setTechnicalIndicators(data.technicalIndicators);
+        setTechnicalIndicators(data.technicalIndicators || null);
         
         // 更新当前价格信息
         const latestCandle = data.klines[data.klines.length - 1];
@@ -154,24 +156,28 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         setProgress(100);
         setLoadingStatus('数据加载完成');
         
-        // 延迟清理加载状态
+        // 快速清理加载状态
         setTimeout(() => {
           setProgress(0);
           setLoadingStatus('');
-        }, 1000);
+          setLoading(false);
+        }, 500);
+      } else {
+        throw new Error('未获取到有效数据');
       }
     } catch (error) {
       console.error('获取K线数据失败:', error);
-      setLoadingStatus('数据获取失败');
+      setLoadingStatus('数据获取失败: ' + (error instanceof Error ? error.message : '未知错误'));
+      setProgress(0);
+      setLoading(false);
+      
       toast({
         title: "数据获取失败",
         description: error instanceof Error ? error.message : '未知错误',
         variant: "destructive"
       });
-    } finally {
-      setLoading(false);
     }
-  }, [symbol, interval, getBinanceConfig, toast, loading]);
+  }, [symbol, interval, loading, getBinanceConfig, toast]); // 移除会导致循环的依赖
 
   // 稳定的图表初始化
   useEffect(() => {
@@ -266,43 +272,54 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
     };
   }, []);
 
-  // 稳定的数据更新
+  // 稳定的数据更新 - 避免重复渲染
   useEffect(() => {
-    if (candlestickSeriesRef.current && klineData.length > 0) {
-      try {
-        const chartData: CandlestickData[] = klineData.map(candle => ({
-          time: candle.time as Time,
-          open: candle.open,
-          high: candle.high,
-          low: candle.low,
-          close: candle.close,
-        }));
+    if (!candlestickSeriesRef.current || !klineData || klineData.length === 0) return;
+    
+    try {
+      const chartData: CandlestickData[] = klineData.map(candle => ({
+        time: candle.time as Time,
+        open: candle.open,
+        high: candle.high,
+        low: candle.low,
+        close: candle.close,
+      }));
 
-        candlestickSeriesRef.current.setData(chartData);
-        
-        // 自动调整视图
-        if (chartRef.current) {
-          chartRef.current.timeScale().fitContent();
-        }
-      } catch (error) {
-        console.error('Chart data update error:', error);
+      candlestickSeriesRef.current.setData(chartData);
+      
+      // 自动调整视图到最新数据
+      if (chartRef.current && chartData.length > 0) {
+        setTimeout(() => {
+          if (chartRef.current) {
+            chartRef.current.timeScale().fitContent();
+          }
+        }, 100);
       }
+    } catch (error) {
+      console.error('Chart data update error:', error);
     }
   }, [klineData]);
 
-  // 初始加载数据 - 添加防抖
+  // 初始加载数据 - 修复无限循环
   useEffect(() => {
+    if (!symbol) return;
+    
     const timer = setTimeout(() => {
       fetchKlineData();
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(timer);
-  }, [symbol, interval]); // 移除 fetchKlineData 依赖避免无限循环
+  }, [symbol, interval]); // 只依赖 symbol 和 interval
 
-  // 处理时间周期变化
-  const handleIntervalChange = (newInterval: string) => {
-    setInterval(newInterval);
-  };
+  // 处理时间周期变化 - 防止重复调用
+  const handleIntervalChange = useCallback((newInterval: string) => {
+    if (newInterval !== interval) {
+      setInterval(newInterval);
+      // 清理当前数据，避免显示错误的图表
+      setKlineData([]);
+      setTechnicalIndicators(null);
+    }
+  }, [interval]);
 
   return (
     <Card className={`bg-gradient-to-br from-slate-900/90 to-blue-900/30 border-slate-700 backdrop-blur-sm ${className}`}>
