@@ -284,30 +284,35 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         {/* Elon Musk Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <img src={elonAvatar} alt="Elon Musk" className="w-10 h-10 rounded-full object-cover" />
-              <div>
-                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.elon_config')}</h3>
-                <Badge variant="outline" className="text-blue-400 border-blue-400/20 mt-1">{t('ai.control_center.news_engine')}</Badge>
+              <div className="flex items-center gap-3 mb-4">
+                <img src={elonAvatar} alt="Elon Musk" className="w-10 h-10 rounded-full object-cover" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{t('ai.control_center.elon_config')}</h3>
+                  <Badge variant="outline" className="text-blue-400 border-blue-400/20 mt-1">{t('ai.control_center.news_engine')}</Badge>
+                </div>
+                {aiConfigs.openai.enabled && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">已启用</span>
+                  </div>
+                )}
               </div>
-            </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.elon_desc')}</p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={aiConfigs.openai.enabled}
-                  onChange={(e) => setAiConfigs(prev => ({
-                    ...prev,
-                    openai: { ...prev.openai, enabled: e.target.checked }
-                  }))}
-                  className="rounded"
-                />
-                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Elon Musk {t('ai.control_center.news_engine')}</span>
-              </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={aiConfigs.openai.enabled}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      openai: { ...prev.openai, enabled: e.target.checked }
+                    }))}
+                    className="rounded"
+                  />
+                  <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Elon Musk {t('ai.control_center.news_engine')}</span>
+                </div>
+                
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
@@ -321,61 +326,46 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
-                  <Select
-                    value={aiConfigs.openai.model}
-                    onValueChange={(value) => setAiConfigs(prev => ({
-                      ...prev,
-                      openai: { ...prev.openai, model: value }
-                    }))}
-                  >
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="gpt-4o-mini">GPT-4o Mini</SelectItem>
-                      <SelectItem value="gpt-4o">GPT-4o</SelectItem>
-                      <SelectItem value="gpt-5-mini-2025-08-07">GPT-5 Mini</SelectItem>
-                    </SelectContent>
-                  </Select>
+                
+                <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
+                  ⚠️ {t('ai.control_center.login_required')}
                 </div>
               </div>
-              
-              <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
-                ⚠️ {t('ai.control_center.login_required')}
-              </div>
-            </div>
           </div>
         </Card>
 
         {/* Warren Buffett Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <img src={warrenAvatar} alt="Warren Buffett" className="w-10 h-10 rounded-full object-cover" />
-              <div>
-                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.warren_config')}</h3>
-                <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{t('ai.control_center.technical_engine')}</Badge>
+              <div className="flex items-center gap-3 mb-4">
+                <img src={warrenAvatar} alt="Warren Buffett" className="w-10 h-10 rounded-full object-cover" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{t('ai.control_center.warren_config')}</h3>
+                  <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{t('ai.control_center.technical_engine')}</Badge>
+                </div>
+                {aiConfigs.claude.enabled && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">已启用</span>
+                  </div>
+                )}
               </div>
-            </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.warren_desc')}</p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={aiConfigs.claude.enabled}
-                  onChange={(e) => setAiConfigs(prev => ({
-                    ...prev,
-                    claude: { ...prev.claude, enabled: e.target.checked }
-                  }))}
-                  className="rounded"
-                />
-                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Warren Buffett {t('ai.control_center.technical_engine')}</span>
-              </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={aiConfigs.claude.enabled}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      claude: { ...prev.claude, enabled: e.target.checked }
+                    }))}
+                    className="rounded"
+                  />
+                  <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Warren Buffett {t('ai.control_center.technical_engine')}</span>
+                </div>
+                
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
@@ -389,44 +379,30 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
-                  <Select
-                    value={aiConfigs.claude.model}
-                    onValueChange={(value) => setAiConfigs(prev => ({
-                      ...prev,
-                      claude: { ...prev.claude, model: value }
-                    }))}
-                  >
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet</SelectItem>
-                      <SelectItem value="claude-sonnet-4-20250514">Claude 4 Sonnet</SelectItem>
-                      <SelectItem value="claude-opus-4-20250514">Claude 4 Opus</SelectItem>
-                    </SelectContent>
-                  </Select>
+                
+                <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
+                  🔒 {t('ai.control_center.security_notice')}
                 </div>
               </div>
-              
-              <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
-                🔒 {t('ai.control_center.security_notice')}
-              </div>
-            </div>
           </div>
         </Card>
 
         {/* Bill Gates Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <img src={billAvatar} alt="Bill Gates" className="w-10 h-10 rounded-full object-cover" />
-              <div>
-                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.bill_config')}</h3>
-                <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">{t('ai.control_center.bigdata_engine')}</Badge>
+              <div className="flex items-center gap-3 mb-4">
+                <img src={billAvatar} alt="Bill Gates" className="w-10 h-10 rounded-full object-cover" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{t('ai.control_center.bill_config')}</h3>
+                  <Badge variant="outline" className="text-green-400 border-green-400/20 mt-1">{t('ai.control_center.bigdata_engine')}</Badge>
+                </div>
+                {aiConfigs.grok.enabled && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">已启用</span>
+                  </div>
+                )}
               </div>
-            </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.bill_desc')}</p>
             
             <div className="space-y-4">
@@ -492,22 +468,21 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
               </div>
             </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.vitalik_desc')}</p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={aiConfigs.vitalik.enabled}
-                  onChange={(e) => setAiConfigs(prev => ({
-                    ...prev,
-                    vitalik: { ...prev.vitalik, enabled: e.target.checked }
-                  }))}
-                  className="rounded"
-                />
-                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Vitalik Buterin {t('ai.control_center.blockchain_engine')}</span>
-              </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={aiConfigs.vitalik.enabled}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      vitalik: { ...prev.vitalik, enabled: e.target.checked }
+                    }))}
+                    className="rounded"
+                  />
+                  <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Vitalik Buterin {t('ai.control_center.blockchain_engine')}</span>
+                </div>
+                
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
@@ -521,27 +496,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
-                  <Select
-                    value={aiConfigs.vitalik.model}
-                    onValueChange={(value) => setAiConfigs(prev => ({
-                      ...prev,
-                      vitalik: { ...prev.vitalik, model: value }
-                    }))}
-                  >
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="gpt-5-2025-08-07">GPT-5</SelectItem>
-                      <SelectItem value="gpt-5-mini-2025-08-07">GPT-5 Mini</SelectItem>
-                      <SelectItem value="gpt-4.1-2025-04-14">GPT-4.1</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
-            </div>
           </div>
         </Card>
 
@@ -612,30 +567,35 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
         {/* Donald Trump Configuration */}
         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
           <div className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <img src={trumpAvatar} alt="Donald Trump" className="w-10 h-10 rounded-full object-cover" />
-              <div>
-                <h3 className="text-lg font-semibold text-white">{t('ai.control_center.trump_config')}</h3>
-                <Badge variant="outline" className="text-red-400 border-red-400/20 mt-1">{t('ai.control_center.policy_engine')}</Badge>
+              <div className="flex items-center gap-3 mb-4">
+                <img src={trumpAvatar} alt="Donald Trump" className="w-10 h-10 rounded-full object-cover" />
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-white">{t('ai.control_center.trump_config')}</h3>
+                  <Badge variant="outline" className="text-red-400 border-red-400/20 mt-1">{t('ai.control_center.policy_engine')}</Badge>
+                </div>
+                {aiConfigs.trump.enabled && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">已启用</span>
+                  </div>
+                )}
               </div>
-            </div>
             <p className="text-sm text-slate-400 mb-4">{t('ai.control_center.trump_desc')}</p>
-            
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={aiConfigs.trump.enabled}
-                  onChange={(e) => setAiConfigs(prev => ({
-                    ...prev,
-                    trump: { ...prev.trump, enabled: e.target.checked }
-                  }))}
-                  className="rounded"
-                />
-                <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Donald Trump {t('ai.control_center.policy_engine')}</span>
-              </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={aiConfigs.trump.enabled}
+                    onChange={(e) => setAiConfigs(prev => ({
+                      ...prev,
+                      trump: { ...prev.trump, enabled: e.target.checked }
+                    }))}
+                    className="rounded"
+                  />
+                  <span className="text-sm text-slate-300">{t('ai.control_center.enable')} Donald Trump {t('ai.control_center.policy_engine')}</span>
+                </div>
+                
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.api_key')}</label>
                   <Input
@@ -649,27 +609,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                     className="bg-slate-700/50 border-slate-600 text-white"
                   />
                 </div>
-                <div>
-                  <label className="text-sm text-slate-300 block mb-2">{t('ai.control_center.model_selection')}</label>
-                  <Select
-                    value={aiConfigs.trump.model}
-                    onValueChange={(value) => setAiConfigs(prev => ({
-                      ...prev,
-                      trump: { ...prev.trump, model: value }
-                    }))}
-                  >
-                    <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      <SelectItem value="gpt-5-mini-2025-08-07">GPT-5 Mini</SelectItem>
-                      <SelectItem value="gpt-5-2025-08-07">GPT-5</SelectItem>
-                      <SelectItem value="gpt-4.1-mini-2025-04-14">GPT-4.1 Mini</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
-            </div>
           </div>
         </Card>
 
@@ -685,6 +625,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                   <h3 className="text-lg font-semibold text-white">{api.name}</h3>
                   <Badge variant="outline" className="text-purple-400 border-purple-400/20 mt-1">{api.provider}</Badge>
                 </div>
+                {api.enabled && (
+                  <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs font-medium">已启用</span>
+                  </div>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -695,19 +641,18 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                 </Button>
               </div>
               <p className="text-sm text-slate-400 mb-4">{api.description}</p>
-              
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={api.enabled}
-                    onChange={(e) => handleToggleCustomApi(api.id, e.target.checked)}
-                    className="rounded"
-                  />
-                  <span className="text-sm text-slate-300">启用 {api.name}</span>
-                </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={api.enabled}
+                      onChange={(e) => handleToggleCustomApi(api.id, e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm text-slate-300">启用 {api.name}</span>
+                  </div>
+                  
                   <div>
                     <label className="text-sm text-slate-300 block mb-2">API 密钥</label>
                     <Input
@@ -718,31 +663,22 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                       className="bg-slate-700/50 border-slate-600 text-white"
                     />
                   </div>
-                  <div>
-                    <label className="text-sm text-slate-300 block mb-2">模型</label>
-                    <Input
-                      value={api.model}
-                      disabled
-                      className="bg-slate-700/50 border-slate-600 text-white"
-                    />
+                  
+                  {api.endpoint && (
+                    <div>
+                      <label className="text-sm text-slate-300 block mb-2">API 端点</label>
+                      <Input
+                        value={api.endpoint}
+                        disabled
+                        className="bg-slate-700/50 border-slate-600 text-white"
+                      />
+                    </div>
+                  )}
+                  
+                  <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
+                    🔧 自定义API配置 • 创建时间: {new Date(parseInt(api.id)).toLocaleDateString()}
                   </div>
                 </div>
-                
-                {api.endpoint && (
-                  <div>
-                    <label className="text-sm text-slate-300 block mb-2">API 端点</label>
-                    <Input
-                      value={api.endpoint}
-                      disabled
-                      className="bg-slate-700/50 border-slate-600 text-white"
-                    />
-                  </div>
-                )}
-                
-                <div className="text-xs text-slate-500 bg-slate-700/30 p-3 rounded">
-                  🔧 自定义API配置 • 创建时间: {new Date(parseInt(api.id)).toLocaleDateString()}
-                </div>
-              </div>
             </div>
           </Card>
         ))}
