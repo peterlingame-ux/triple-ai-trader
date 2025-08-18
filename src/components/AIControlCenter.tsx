@@ -20,6 +20,7 @@ import billAvatar from "@/assets/bill-gates-cartoon-avatar.png";
 import vitalikAvatar from "@/assets/vitalik-buterin-cartoon-avatar.png";
 import justinAvatar from "@/assets/justin-sun-cartoon-avatar.png";
 import trumpAvatar from "@/assets/donald-trump-cartoon-avatar.png";
+import binanceRealIcon from "@/assets/binance-real-logo.png";
 
 interface PortfolioData {
   totalValue: number;
@@ -77,15 +78,42 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
 
   // Predefined avatars for selection
   const predefinedAvatars = [
-    { name: "Robot 1", url: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png" },
-    { name: "Robot 2", url: "/lovable-uploads/38caa01f-8296-4f15-af91-60ab8b06ebfa.png" },
-    { name: "Robot 3", url: "/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png" },
-    { name: "Robot 4", url: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png" },
-    { name: "Robot 5", url: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png" },
-    { name: "Robot 6", url: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png" },
-    { name: "Robot 7", url: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png" },
-    { name: "Robot 8", url: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png" }
+    // 商业领袖
+    { name: "Warren Buffett 1", url: "/lovable-uploads/11d23e11-5de1-45f8-9894-919cd96033d1.png", category: "business" },
+    { name: "Warren Buffett 2", url: "/lovable-uploads/95952d3d-a183-488d-9fc8-4b12a9e06365.png", category: "business" },
+    // 科技领袖  
+    { name: "Tech Leader 1", url: "/lovable-uploads/38caa01f-8296-4f15-af91-60ab8b06ebfa.png", category: "tech" },
+    { name: "Tech Leader 2", url: "/lovable-uploads/4cd6a022-c475-4af7-a9c1-681f2a8c06b1.png", category: "tech" },
+    { name: "Elon Musk", url: "/lovable-uploads/4d4ba882-5d48-4828-b81b-a2b60ad7c68b.png", category: "tech" },
+    { name: "Tech Visionary", url: "/lovable-uploads/7d9761f6-da66-4be0-b4f6-482682564e52.png", category: "tech" },
+    // 政治人物
+    { name: "Political Leader", url: "/lovable-uploads/5616db28-ef44-4766-b461-7f9a97023859.png", category: "political" },
+    { name: "Trump Style", url: "/lovable-uploads/7d4748c1-c1ec-4468-891e-445541a5a42c.png", category: "political" },
+    // 品牌与组织
+    { name: "Binance", url: binanceRealIcon, category: "brands" },
+    { name: "Meta BrainX", url: "/lovable-uploads/a11e3b1a-1c1c-403b-910c-bd42820384c4.png", category: "brands" },
+    // 机器人与AI
+    { name: "AI Robot 1", url: "/lovable-uploads/9cc92493-5e50-470d-9543-d2fe07d350f6.png", category: "ai" },
+    { name: "AI Robot 2", url: "/lovable-uploads/ed9162db-2b3e-40ac-8c54-4c00f966b7a7.png", category: "ai" },
+    { name: "AI Assistant", url: "/lovable-uploads/efc313aa-5268-413f-bb28-d1bf3b1f6f9f.png", category: "ai" }
   ];
+
+  const avatarCategories = [
+    { id: 'all', name: '全部', icon: '🎭' },
+    { id: 'business', name: '商业', icon: '💼' },
+    { id: 'tech', name: '科技', icon: '🔬' },
+    { id: 'political', name: '政治', icon: '🏛️' },
+    { id: 'brands', name: '品牌', icon: '🏢' },
+    { id: 'ai', name: 'AI', icon: '🤖' },
+    { id: 'custom', name: '自定义', icon: '📎' }
+  ];
+
+  const [selectedAvatarCategory, setSelectedAvatarCategory] = useState('all');
+  const [customAvatarUrl, setCustomAvatarUrl] = useState('');
+
+  const filteredAvatars = selectedAvatarCategory === 'all' 
+    ? predefinedAvatars 
+    : predefinedAvatars.filter(avatar => avatar.category === selectedAvatarCategory);
 
   const cryptoOptions = [
     { symbol: "BTC", name: "Bitcoin", price: 43832.346, change: 85.23, changePercent: 0.19 },
@@ -883,8 +911,59 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
 
                 <div>
                   <label className="text-sm text-slate-300 block mb-2">选择头像</label>
-                  <div className="grid grid-cols-4 gap-3 p-3 bg-slate-700/30 rounded-lg">
-                    {predefinedAvatars.map((avatar, index) => (
+                  
+                  {/* Avatar Category Tabs */}
+                  <div className="flex gap-1 mb-3 overflow-x-auto pb-1">
+                    {avatarCategories.map(category => (
+                      <button
+                        key={category.id}
+                        type="button"
+                        onClick={() => setSelectedAvatarCategory(category.id)}
+                        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all duration-200 ${
+                          selectedAvatarCategory === category.id
+                            ? 'bg-purple-500/20 text-purple-300 ring-1 ring-purple-400/30'
+                            : 'bg-slate-600/30 text-slate-400 hover:bg-slate-600/50 hover:text-slate-300'
+                        }`}
+                      >
+                        <span>{category.icon}</span>
+                        <span>{category.name}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Custom URL Input for Custom Category */}
+                  {selectedAvatarCategory === 'custom' && (
+                    <div className="mb-3">
+                      <Input
+                        placeholder="输入头像图片URL或拖拽图片"
+                        value={customAvatarUrl}
+                        onChange={(e) => {
+                          setCustomAvatarUrl(e.target.value);
+                          if (e.target.value.trim()) {
+                            setNewApiForm(prev => ({ ...prev, avatar: e.target.value }));
+                          }
+                        }}
+                        className="bg-slate-600/50 border-slate-500 text-white text-sm"
+                      />
+                      {customAvatarUrl && (
+                        <div className="mt-2 flex items-center gap-2">
+                          <img 
+                            src={customAvatarUrl} 
+                            alt="Custom avatar preview" 
+                            className="w-8 h-8 rounded-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                          <span className="text-xs text-slate-400">预览</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Avatar Grid */}
+                  <div className="grid grid-cols-4 gap-3 p-3 bg-slate-700/30 rounded-lg max-h-48 overflow-y-auto">
+                    {(selectedAvatarCategory === 'custom' ? [] : filteredAvatars).map((avatar, index) => (
                       <button
                         key={index}
                         type="button"
@@ -894,6 +973,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                             ? 'ring-2 ring-purple-400 scale-110' 
                             : 'hover:scale-105 opacity-70 hover:opacity-100'
                         }`}
+                        title={avatar.name}
                       >
                         <img 
                           src={avatar.url} 
@@ -907,6 +987,25 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                         )}
                       </button>
                     ))}
+                    
+                    {/* Show message when no avatars in category */}
+                    {selectedAvatarCategory !== 'custom' && filteredAvatars.length === 0 && (
+                      <div className="col-span-4 text-center py-4">
+                        <div className="text-slate-400 text-sm">该分类暂无头像</div>
+                      </div>
+                    )}
+                    
+                    {/* Custom category hint */}
+                    {selectedAvatarCategory === 'custom' && !customAvatarUrl && (
+                      <div className="col-span-4 text-center py-6">
+                        <div className="text-slate-400 text-sm mb-2">🖼️</div>
+                        <div className="text-slate-400 text-xs">输入图片URL使用自定义头像</div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="text-xs text-slate-500 mt-2">
+                    💡 提示：选择头像代表您的AI助手形象
                   </div>
                 </div>
 
