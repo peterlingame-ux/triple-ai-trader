@@ -138,13 +138,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
     if (newStatus) {
       setLastCheckTime(new Date());
       toast({
-        title: '监控已启动',
-        description: `AI 6大脑模型正在分析市场机会...${isAuthenticated ? '后台监控已启动' : '本地监控模式'}`,
+        title: t('ai.monitoring_started'),
+        description: t('ai.monitoring_started_desc'),
       });
     } else {
       toast({
-        title: '监控已暂停',
-        description: 'AI 监控功能已暂停',
+        title: t('ai.monitoring_paused'),
+        description: t('ai.monitoring_paused_desc'),
       });
     }
   };
@@ -153,8 +153,8 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
   const clearAllAlerts = () => {
     setAlerts([]);
     toast({
-      title: '已清空历史记录',
-      description: '所有交易信号历史已清除',
+      title: t('ai.all_alerts_cleared'),
+      description: t('ai.history_cleared'),
     });
   };
 
@@ -164,11 +164,11 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Brain className="w-8 h-8 text-yellow-400" />
-          <h2 className="text-3xl font-bold text-white">最强大脑AI监测</h2>
+          <h2 className="text-3xl font-bold text-white">{t('ai.supreme_brain_ai_detection')}</h2>
           <Zap className="w-8 h-8 text-yellow-400" />
         </div>
         <p className="text-slate-400 max-w-2xl mx-auto">
-          6大AI模型同步分析，实时捕捉高胜率交易机会
+          {t('ai.six_models_sync_analysis')}
         </p>
       </div>
 
@@ -188,12 +188,12 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                 {isMonitoring ? (
                   <>
                     <Pause className="w-4 h-4 mr-2" />
-                    暂停监控
+                    {t('ai.pause_monitoring')}
                   </>
                 ) : (
                   <>
                     <Play className="w-4 h-4 mr-2" />
-                    开始监控
+                    {t('ai.start_monitoring')}
                   </>
                 )}
               </Button>
@@ -201,7 +201,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
               <div className="flex items-center gap-2">
                 <div className={`w-3 h-3 rounded-full ${isMonitoring ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`}></div>
                 <span className="text-sm text-slate-300">
-                  {isMonitoring ? '监控中' : '已暂停'}
+                  {isMonitoring ? t('ai.monitoring') : t('ai.paused')}
                 </span>
               </div>
             </div>
@@ -209,7 +209,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
             <div className="flex items-center gap-4">
               {lastCheckTime && (
                 <div className="text-sm text-slate-400">
-                  最后检查: {lastCheckTime.toLocaleTimeString()}
+                  {t('ai.last_check')}: {lastCheckTime.toLocaleTimeString()}
                 </div>
               )}
               <Button
@@ -218,7 +218,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                 onClick={clearAllAlerts}
                 className="border-slate-600 text-slate-300 hover:bg-slate-700"
               >
-                清空历史
+                {t('ai.clear_history')}
               </Button>
             </div>
           </div>
@@ -249,7 +249,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                           <XCircle className="w-4 h-4 text-red-400" />
                         )}
                         <span className={`text-xs ${advisor.accentColor}`}>
-                          {isActive ? '活跃分析' : '待机中'}
+                          {isActive ? t('ai.active_analysis') : t('ai.standby')}
                         </span>
                       </div>
                     </div>
@@ -263,25 +263,25 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
               <div className="text-2xl font-bold text-green-400">{alerts.length}</div>
-              <div className="text-sm text-slate-400">检测到机会</div>
+              <div className="text-sm text-slate-400">{t('ai.opportunities_detected')}</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
               <div className="text-2xl font-bold text-blue-400">
                 {alerts.length > 0 ? Math.round(alerts.reduce((sum, alert) => sum + alert.confidence, 0) / alerts.length) : 0}%
               </div>
-              <div className="text-sm text-slate-400">平均胜率</div>
+              <div className="text-sm text-slate-400">{t('ai.average_win_rate')}</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
               <div className="text-2xl font-bold text-purple-400">
                 {alerts.filter(alert => alert.confidence >= 90).length}
               </div>
-              <div className="text-sm text-slate-400">高胜率信号</div>
+              <div className="text-sm text-slate-400">{t('ai.high_win_rate_signal')}</div>
             </div>
             <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
               <div className="text-2xl font-bold text-yellow-400">
-                {isAuthenticated ? '云端' : '本地'}
+                {isAuthenticated ? 'Cloud' : 'Local'}
               </div>
-              <div className="text-sm text-slate-400">分析模式</div>
+              <div className="text-sm text-slate-400">{t('ai.local_analysis_mode')}</div>
             </div>
           </div>
         </div>
@@ -293,7 +293,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           <div className="p-6">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Brain className="w-5 h-5 text-yellow-400" />
-              最新机会
+              {t('ai.latest_opportunities')}
             </h3>
             <div className="space-y-3">
               {alerts.slice(0, 3).map((alert, index) => (
@@ -318,7 +318,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                         variant={alert.signal === 'buy' ? 'default' : 'destructive'}
                         className={alert.signal === 'buy' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}
                       >
-                        {alert.signal === 'buy' ? '买入' : '卖出'}
+                        {alert.signal === 'buy' ? t('ai.buy_now') : t('ai.sell_now')}
                       </Badge>
                       <Badge variant="outline" className="border-yellow-400 text-yellow-400">
                         {alert.confidence}%
@@ -346,7 +346,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-white text-lg">
               <Brain className="w-5 h-5 text-yellow-400" />
-              高胜率交易机会
+              {t('ai.high_win_rate_opportunity')}
             </DialogTitle>
           </DialogHeader>
           
@@ -365,7 +365,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                     variant={currentAlert.signal === 'buy' ? 'default' : 'destructive'}
                     className={`text-sm px-3 py-1 ${currentAlert.signal === 'buy' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
                   >
-                    {currentAlert.signal === 'buy' ? '买入' : '卖出'}
+                    {currentAlert.signal === 'buy' ? t('ai.buy_now') : t('ai.sell_now')}
                   </Badge>
                   <Badge variant="outline" className="border-yellow-400 text-yellow-400 text-sm px-3 py-1">
                     {currentAlert.confidence}%
@@ -373,28 +373,28 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 gap-3">
+               <div className="grid grid-cols-1 gap-3">
                 <div className="bg-slate-800 rounded-lg p-3">
-                  <h4 className="font-medium text-white mb-2 text-sm">价格分析</h4>
+                  <h4 className="font-medium text-white mb-2 text-sm">{t('ai.price_analysis')}</h4>
                   <p className="text-xs text-slate-300">{currentAlert.analysis.priceAnalysis}</p>
                 </div>
                 <div className="bg-slate-800 rounded-lg p-3">
-                  <h4 className="font-medium text-white mb-2 text-sm">技术分析</h4>
+                  <h4 className="font-medium text-white mb-2 text-sm">{t('ai.technical_analysis')}</h4>
                   <p className="text-xs text-slate-300">{currentAlert.analysis.technicalAnalysis}</p>
                 </div>
                 <div className="bg-slate-800 rounded-lg p-3">
-                  <h4 className="font-medium text-white mb-2 text-sm">综合分析</h4>
+                  <h4 className="font-medium text-white mb-2 text-sm">{t('ai.comprehensive_analysis')}</h4>
                   <p className="text-xs text-slate-300">{currentAlert.analysis.sentimentAnalysis}</p>
                 </div>
               </div>
               
               {currentAlert.tradingDetails && (
                 <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-4 space-y-4">
-                  <h4 className="font-medium text-white text-sm">交易参数</h4>
+                  <h4 className="font-medium text-white text-sm">{t('ai.trading_parameters')}</h4>
                   
                   {/* Entry Price Range */}
                   <div className="bg-slate-900/50 rounded-lg p-3">
-                    <h5 className="text-white font-medium mb-2 text-sm">入场价格区间</h5>
+                    <h5 className="text-white font-medium mb-2 text-sm">{t('ai.entry_price_range')}</h5>
                     <div className="text-lg font-bold text-white mb-1">
                       ${currentAlert.tradingDetails.entry.toLocaleString()}
                     </div>
@@ -406,7 +406,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                   {/* Position & Win Rate */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-slate-900/50 rounded-lg p-3">
-                      <h5 className="text-slate-400 text-xs mb-1">建议仓位</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.suggested_position')}</h5>
                       <div className="text-lg font-bold text-blue-400">
                         {currentAlert.confidence >= 95 ? '25%' :
                          currentAlert.confidence >= 90 ? '20%' :
@@ -414,7 +414,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                       </div>
                     </div>
                     <div className="bg-slate-900/50 rounded-lg p-3">
-                      <h5 className="text-slate-400 text-xs mb-1">AI分析胜率</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.analysis_win_rate')}</h5>
                       <div className="text-lg font-bold text-yellow-400">
                         {currentAlert.confidence}%
                       </div>
@@ -424,13 +424,13 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                   {/* Technical Parameters */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-slate-900/50 rounded-lg p-3">
-                      <h5 className="text-slate-400 text-xs mb-1">止损价格</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.stop_loss_price')}</h5>
                       <div className="text-sm font-bold text-red-400">
                         ${currentAlert.tradingDetails.stopLoss.toLocaleString()}
                       </div>
                     </div>
                     <div className="bg-slate-900/50 rounded-lg p-3">
-                      <h5 className="text-slate-400 text-xs mb-1">止盈价格</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.take_profit_price')}</h5>
                       <div className="text-sm font-bold text-green-400">
                         ${currentAlert.tradingDetails.takeProfit.toLocaleString()}
                       </div>
@@ -440,25 +440,25 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                   {/* Additional Parameters */}
                   <div className="grid grid-cols-3 gap-2">
                     <div className="bg-slate-900/50 rounded-lg p-2">
-                      <h5 className="text-slate-400 text-xs mb-1">风险</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.risk_level')}</h5>
                       <div className={`text-sm font-bold ${
                         currentAlert.tradingDetails.riskLevel === 'low' ? 'text-green-400' :
                         currentAlert.tradingDetails.riskLevel === 'medium' ? 'text-yellow-400' : 'text-red-400'
                       }`}>
-                        {currentAlert.tradingDetails.riskLevel === 'low' ? '低' :
-                         currentAlert.tradingDetails.riskLevel === 'medium' ? '中' : '高'}
+                        {currentAlert.tradingDetails.riskLevel === 'low' ? t('ai.low') :
+                         currentAlert.tradingDetails.riskLevel === 'medium' ? t('ai.medium') : t('ai.high')}
                       </div>
                     </div>
                     <div className="bg-slate-900/50 rounded-lg p-2">
-                      <h5 className="text-slate-400 text-xs mb-1">杠杆</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.leverage')}</h5>
                       <div className="text-sm font-bold text-purple-400">
                         {currentAlert.tradingDetails.leverage}
                       </div>
                     </div>
                     <div className="bg-slate-900/50 rounded-lg p-2">
-                      <h5 className="text-slate-400 text-xs mb-1">加仓</h5>
+                      <h5 className="text-slate-400 text-xs mb-1">{t('ai.add_position')}</h5>
                       <div className="text-sm font-bold text-blue-400">
-                        {currentAlert.confidence >= 90 ? '有' : '无'}
+                        {currentAlert.confidence >= 90 ? t('ai.yes') : t('ai.no')}
                       </div>
                     </div>
                   </div>
@@ -467,7 +467,7 @@ export const SuperBrainDetection = ({ cryptoData, advisorStates = {} }: SuperBra
                   {currentAlert.confidence < 90 && (
                     <div className="bg-red-900/20 border border-red-500/20 rounded-lg p-2">
                       <div className="text-red-400 text-xs font-medium">
-                        ⚠️ 必须设置止损，安全系数 {(100 - currentAlert.confidence)}%
+                        ⚠️ {t('ai.must_set_stop_loss', { safety: String(100 - currentAlert.confidence) })}
                       </div>
                     </div>
                   )}

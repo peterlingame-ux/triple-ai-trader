@@ -452,17 +452,17 @@ export const AutoTrader = () => {
                          <Button 
                            size="sm" 
                            className="bg-amber-600 hover:bg-amber-700 text-black font-medium"
-                           onClick={() => {
-                             // 滚动到页面顶部的最强大脑部分
-                             window.scrollTo({ top: 0, behavior: 'smooth' });
-                              toast({
-                                title: "请向上滚动",
-                                description: `在页面上方找到"最强大脑AI监测"功能并点击"开始监控"`,
-                              });
-                           }}
+            onClick={() => {
+              // 滚动到页面顶部的最强大脑部分
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+               toast({
+                 title: t('ai.scroll_to_top'),
+                 description: t('ai.find_brain_detection'),
+               });
+            }}
                          >
-                           <Brain className="w-4 h-4 mr-2" />
-                           找到最强大脑监测功能
+            <Brain className="w-4 h-4 mr-2" />
+            {t('ai.find_brain_detection_short')}
                          </Button>
                        )}
                      </div>
