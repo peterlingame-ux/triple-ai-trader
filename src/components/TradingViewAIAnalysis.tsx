@@ -8,6 +8,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Brain, Send, Loader2, TrendingUp, AlertTriangle, Target, Zap, Database, LineChart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import SuperBrainDataSourcesGrid from './SuperBrainDataSourcesGrid';
 
 interface TradingViewAIAnalysisProps {
   activeTab?: string;
@@ -111,35 +112,11 @@ const TradingViewAIAnalysis: React.FC<TradingViewAIAnalysisProps> = ({
 
   return (
     <div className={`w-full space-y-6 ${className}`}>
-      {/* API Status Dashboard */}
-      <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Database className="w-5 h-5 text-primary" />
-            SUPER BRAINX 六大数据源状态
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {Object.entries({
-              binance: 'Binance 实时数据',
-              tradingview: 'TradingView 技术分析', 
-              news: '新闻情感分析',
-              technical: '技术指标引擎',
-              sentiment: '市场情绪监测',
-              blockchain: '链上数据分析'
-            }).map(([key, label]) => (
-              <div key={key} className="flex items-center gap-2 p-2 rounded-md bg-muted/30">
-                <div className={`w-2 h-2 rounded-full ${
-                  apiStatus[key] ? 'bg-green-400' : 'bg-gray-500'
-                }`} />
-                <span className="text-xs text-foreground">{label}</span>
-                {apiStatus[key] && <Zap className="w-3 h-3 text-green-400" />}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Six Data Source Characters Grid */}
+      <SuperBrainDataSourcesGrid 
+        apiStatus={apiStatus}
+        className="mb-6"
+      />
 
       {/* AI Chat Interface */}
       <Card className="bg-card/50 backdrop-blur-sm border-border/50">
