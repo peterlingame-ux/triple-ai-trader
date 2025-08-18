@@ -71,13 +71,25 @@ export const TradingDashboard = memo(() => {
 
   const handleOpenTrading = useCallback((symbol: string) => {
     console.log('handleOpenTrading called with symbol:', symbol);
+    
+    // 防抖处理，避免重复点击
+    if (selectedTradingSymbol === symbol && showTradingPanel) {
+      console.log('面板已经打开，跳过重复点击');
+      return;
+    }
+    
     setSelectedTradingSymbol(symbol);
     setShowTradingPanel(true);
-  }, []);
+    console.log('设置交易面板状态:', { symbol, show: true });
+  }, [selectedTradingSymbol, showTradingPanel]);
 
   const handleCloseTradingPanel = useCallback(() => {
+    console.log('关闭交易面板');
     setShowTradingPanel(false);
-    setSelectedTradingSymbol("");
+    // 延迟清除选中的symbol，避免闪烁
+    setTimeout(() => {
+      setSelectedTradingSymbol("");
+    }, 300);
   }, []);
 
   return (
@@ -247,19 +259,21 @@ export const TradingDashboard = memo(() => {
 
         {/* Professional Trading Panel Modal */}
         {showTradingPanel && selectedTradingSymbol && (
-          <ProfessionalTradingPanel
-            selectedCrypto={selectedTradingSymbol}
-            onCryptoChange={setSelectedTradingSymbol}
-            onClose={handleCloseTradingPanel}
-            aiConfigs={{
-              openai: { enabled: true, apiKey: "", model: "gpt-4" },
-              claude: { enabled: true, apiKey: "", model: "claude-3" },
-              grok: { enabled: true, apiKey: "", model: "grok-1" },
-              vitalik: { enabled: true, apiKey: "", model: "vitalik-ai" },
-              justin: { enabled: true, apiKey: "", model: "justin-ai" },
-              trump: { enabled: true, apiKey: "", model: "trump-ai" }
-            }}
-          />
+          <div className="fixed inset-0 z-50">
+            <ProfessionalTradingPanel
+              selectedCrypto={selectedTradingSymbol}
+              onCryptoChange={setSelectedTradingSymbol}
+              onClose={handleCloseTradingPanel}
+              aiConfigs={{
+                openai: { enabled: true, apiKey: "", model: "gpt-4" },
+                claude: { enabled: true, apiKey: "", model: "claude-3" },
+                grok: { enabled: true, apiKey: "", model: "grok-1" },
+                vitalik: { enabled: true, apiKey: "", model: "vitalik-ai" },
+                justin: { enabled: true, apiKey: "", model: "justin-ai" },
+                trump: { enabled: true, apiKey: "", model: "trump-ai" }
+              }}
+            />
+          </div>
         )}
       </div>
       </div>

@@ -95,26 +95,23 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
 
   // 获取K线数据
   const fetchKlineData = useCallback(async () => {
-    if (!symbol) return;
+    if (!symbol || loading) return;
     
     setLoading(true);
     try {
       const config = await getBinanceConfig();
       
       if (!config.isConfigured) {
-        toast({
-          title: "API未配置",
-          description: "请先配置币安API密钥",
-          variant: "destructive"
-        });
+        console.log('币安API未配置');
         return;
       }
 
+      console.log('使用币安API获取数据...');
       const { data, error } = await supabase.functions.invoke('binance-klines', {
         body: {
           symbol,
           interval,
-          limit: 500,
+          limit: 100,
           apiKey: config.apiKey,
           secretKey: config.secretKey,
           testnet: config.testnet
@@ -126,6 +123,7 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
       }
 
       if (data && data.klines) {
+        console.log('币安API数据获取成功，条数:', data.klines.length);
         setKlineData(data.klines);
         setTechnicalIndicators(data.technicalIndicators);
         
@@ -142,10 +140,13 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           setPriceChangePercent(changePercent);
         }
 
-        toast({
-          title: "数据更新成功",
-          description: `${symbol} K线数据已更新`
-        });
+        // 只在开发模式显示成功消息，避免生产环境的重复弹窗
+        if (process.env.NODE_ENV === 'development') {
+          toast({
+            title: "数据更新成功",
+            description: `${symbol} K线数据已更新`
+          });
+        }
       }
     } catch (error) {
       console.error('获取K线数据失败:', error);
@@ -157,8 +158,9 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [symbol, interval, getBinanceConfig, toast]);
+  }, [symbol, interval, getBinanceConfig, toast, loading]);
 
+  // 初始化图表
   // 初始化图表
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -168,78 +170,96 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
       try {
         chartRef.current.remove();
       } catch (error) {
-        console.error('Chart cleanup error:', error);
+        // 忽略清理错误
       }
       chartRef.current = null;
       candlestickSeriesRef.current = null;
     }
 
-    try {
-      const chart = createChart(chartContainerRef.current, {
-        layout: {
-          background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
-          textColor: 'rgba(255, 255, 255, 0.9)',
-        },
-        grid: {
-          vertLines: {
-            color: 'rgba(197, 203, 206, 0.1)',
+    // 添加延迟确保DOM元素准备就绪
+    const initChart = () => {
+      try {
+        if (!chartContainerRef.current) return;
+        
+        const chart = createChart(chartContainerRef.current, {
+          layout: {
+            background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
+            textColor: 'rgba(255, 255, 255, 0.9)',
           },
-          horzLines: {
-            color: 'rgba(197, 203, 206, 0.1)',
+          grid: {
+            vertLines: {
+              color: 'rgba(197, 203, 206, 0.1)',
+            },
+            horzLines: {
+              color: 'rgba(197, 203, 206, 0.1)',
+            },
           },
-        },
-        crosshair: {
-          mode: 1,
-        },
-        rightPriceScale: {
-          borderColor: 'rgba(197, 203, 206, 0.8)',
-        },
-        timeScale: {
-          borderColor: 'rgba(197, 203, 206, 0.8)',
-          timeVisible: true,
-          secondsVisible: false,
-        },
-      });
+          crosshair: {
+            mode: 1,
+          },
+          rightPriceScale: {
+            borderColor: 'rgba(197, 203, 206, 0.8)',
+          },
+          timeScale: {
+            borderColor: 'rgba(197, 203, 206, 0.8)',
+            timeVisible: true,
+            secondsVisible: false,
+          },
+        });
 
-      const candlestickSeries = chart.addCandlestickSeries({
-        upColor: '#4ade80',
-        downColor: '#f87171',
-        borderDownColor: '#f87171',
-        borderUpColor: '#4ade80',
-        wickDownColor: '#f87171',
-        wickUpColor: '#4ade80',
-      });
+        const candlestickSeries = chart.addCandlestickSeries({
+          upColor: '#4ade80',
+          downColor: '#f87171',
+          borderDownColor: '#f87171',
+          borderUpColor: '#4ade80',
+          wickDownColor: '#f87171',
+          wickUpColor: '#4ade80',
+        });
 
-      chartRef.current = chart;
-      candlestickSeriesRef.current = candlestickSeries;
+        chartRef.current = chart;
+        candlestickSeriesRef.current = candlestickSeries;
 
-      // 自动调整大小
-      const resizeObserver = new ResizeObserver(() => {
-        if (chartRef.current && chartContainerRef.current) {
-          chartRef.current.applyOptions({
-            width: chartContainerRef.current.clientWidth,
-            height: 400,
-          });
-        }
-      });
-      
-      resizeObserver.observe(chartContainerRef.current);
-
-      return () => {
-        resizeObserver.disconnect();
-        if (chartRef.current) {
-          try {
-            chartRef.current.remove();
-          } catch (error) {
-            console.error('Chart cleanup error:', error);
+        // 自动调整大小
+        const resizeObserver = new ResizeObserver(() => {
+          if (chartRef.current && chartContainerRef.current) {
+            try {
+              chartRef.current.applyOptions({
+                width: chartContainerRef.current.clientWidth,
+                height: 400,
+              });
+            } catch (error) {
+              // 忽略调整大小错误
+            }
           }
-          chartRef.current = null;
-          candlestickSeriesRef.current = null;
+        });
+        
+        if (chartContainerRef.current) {
+          resizeObserver.observe(chartContainerRef.current);
         }
-      };
-    } catch (error) {
-      console.error('Chart initialization error:', error);
-    }
+
+        return () => {
+          resizeObserver.disconnect();
+          if (chartRef.current) {
+            try {
+              chartRef.current.remove();
+            } catch (error) {
+              // 忽略清理错误
+            }
+            chartRef.current = null;
+            candlestickSeriesRef.current = null;
+          }
+        };
+      } catch (error) {
+        console.error('Chart initialization error:', error);
+      }
+    };
+
+    // 使用 requestAnimationFrame 确保在下一帧初始化
+    const rafId = requestAnimationFrame(initChart);
+    
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // 更新图表数据
@@ -261,10 +281,14 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
     }
   }, [klineData]);
 
-  // 初始加载数据
+  // 初始加载数据 - 添加防抖
   useEffect(() => {
-    fetchKlineData();
-  }, [fetchKlineData]);
+    const timer = setTimeout(() => {
+      fetchKlineData();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [symbol, interval]); // 移除 fetchKlineData 依赖避免无限循环
 
   // 处理时间周期变化
   const handleIntervalChange = (newInterval: string) => {
