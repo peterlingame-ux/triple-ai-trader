@@ -171,6 +171,9 @@ export const TradingDashboard = memo(() => {
                 <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
                 {t('market.overview')}
               </h2>
+              <div className="bg-amber-500/10 text-amber-400 px-3 py-1 rounded-full text-xs font-medium border border-amber-500/20">
+                💡 点击任意加密货币查看K线图表
+              </div>
               {isRealTimeEnabled && (
                 <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
