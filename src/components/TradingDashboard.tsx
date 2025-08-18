@@ -19,10 +19,7 @@ import { useWalletData } from "@/hooks/useWalletData";
 import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
-import TradingViewChart from "./TradingViewChart";
-import TradingViewScreener from "./TradingViewScreener";
-import TradingViewHeatmap from "./TradingViewHeatmap";
-import TradingViewTimeline from "./TradingViewTimeline";
+import TradingViewDashboard from "./TradingViewDashboard";
 // Portfolio cards moved to AI Control Center
 import { BarChart3, Brain, TrendingUp, Newspaper } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
@@ -235,82 +232,8 @@ export const TradingDashboard = memo(() => {
           )}
         </div>
 
-        {/* TradingView Chart Section */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />
-              专业图表分析
-            </h2>
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl"></div>
-            <div className="relative p-4 sm:p-6">
-              <TradingViewChart 
-                symbol="NASDAQ:AAPL" 
-                height="500px"
-                className="w-full"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* TradingView Crypto Screener */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              加密货币市场筛选器
-            </h2>
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl"></div>
-            <div className="relative p-4 sm:p-6">
-              <TradingViewScreener 
-                height={550}
-                className="w-full"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* TradingView Crypto Heatmap */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
-              加密货币热力图
-            </h2>
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl"></div>
-            <div className="relative p-4 sm:p-6">
-              <TradingViewHeatmap 
-                height="500px"
-                className="w-full"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* TradingView News Timeline */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-              <Newspaper className="w-5 h-5 sm:w-6 sm:h-6" />
-              市场新闻
-            </h2>
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-blue-950/80 to-slate-900/90 backdrop-blur-2xl rounded-xl border border-white/5 shadow-2xl"></div>
-            <div className="relative p-4 sm:p-6">
-              <TradingViewTimeline 
-                height={550}
-                className="w-full"
-              />
-            </div>
-          </div>
-        </div>
+        {/* TradingView Comprehensive Dashboard */}
+        <TradingViewDashboard />
 
         {/* AI Control Center Modal */}
         <AIControlCenter 
