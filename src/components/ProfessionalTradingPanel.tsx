@@ -51,8 +51,16 @@ export const ProfessionalTradingPanel = ({
   const [drawingAnnotations, setDrawingAnnotations] = useState<DrawingAnnotation[]>([]);
   const [showOrderBook, setShowOrderBook] = useState(true);
   const [showAIChat, setShowAIChat] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const currentCrypto = cryptoData.find(c => c.symbol === selectedCrypto) || cryptoData[0];
+
+  // 刷新数据函数
+  const fetchKlineData = useCallback(() => {
+    console.log('手动刷新K线数据:', selectedCrypto);
+    setRefreshKey(prev => prev + 1);
+  }, [selectedCrypto]);
 
   const timeframes = [
     { label: "1分", value: "1m" },
@@ -200,8 +208,11 @@ export const ProfessionalTradingPanel = ({
                 size="sm"
                 variant="outline"
                 className="border-slate-600 text-slate-300 hover:bg-slate-700 text-xs h-7"
+                onClick={fetchKlineData}
+                disabled={loading}
               >
-                <Settings className="w-3 h-3" />
+                <Activity className="w-3 h-3 mr-1" />
+                {loading ? '更新中...' : '刷新数据'}
               </Button>
               <Button
                 size="sm"
@@ -257,11 +268,14 @@ export const ProfessionalTradingPanel = ({
             </div>
 
             {/* K线图表 */}
-            <div className="flex-1 bg-slate-900 relative">
-              <BinanceKlineChart 
-                symbol={selectedCrypto} 
-                className="h-full w-full"
-              />
+            <div className="flex-1 bg-slate-900 relative min-h-0">
+              <div className="absolute inset-0">
+                <BinanceKlineChart 
+                  key={`${selectedCrypto}-${refreshKey}`} // 强制重新渲染
+                  symbol={selectedCrypto} 
+                  className="h-full w-full"
+                />
+              </div>
               
               {/* AI绘制的标记和注释 */}
               {drawingAnnotations.map((annotation) => (

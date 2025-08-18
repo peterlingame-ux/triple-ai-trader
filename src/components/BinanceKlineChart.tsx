@@ -161,7 +161,18 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
 
   // 初始化图表
   useEffect(() => {
-    if (!chartContainerRef.current || chartRef.current) return;
+    if (!chartContainerRef.current) return;
+    
+    // 清理现有图表
+    if (chartRef.current) {
+      try {
+        chartRef.current.remove();
+      } catch (error) {
+        console.error('Chart cleanup error:', error);
+      }
+      chartRef.current = null;
+      candlestickSeriesRef.current = null;
+    }
 
     try {
       const chart = createChart(chartContainerRef.current, {
@@ -201,21 +212,34 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
 
       chartRef.current = chart;
       candlestickSeriesRef.current = candlestickSeries;
-    } catch (error) {
-      console.error('Chart initialization error:', error);
-    }
 
-    return () => {
-      try {
+      // 自动调整大小
+      const resizeObserver = new ResizeObserver(() => {
+        if (chartRef.current && chartContainerRef.current) {
+          chartRef.current.applyOptions({
+            width: chartContainerRef.current.clientWidth,
+            height: 400,
+          });
+        }
+      });
+      
+      resizeObserver.observe(chartContainerRef.current);
+
+      return () => {
+        resizeObserver.disconnect();
         if (chartRef.current) {
-          chartRef.current.remove();
+          try {
+            chartRef.current.remove();
+          } catch (error) {
+            console.error('Chart cleanup error:', error);
+          }
           chartRef.current = null;
           candlestickSeriesRef.current = null;
         }
-      } catch (error) {
-        console.error('Chart cleanup error:', error);
-      }
-    };
+      };
+    } catch (error) {
+      console.error('Chart initialization error:', error);
+    }
   }, []);
 
   // 更新图表数据
@@ -296,11 +320,23 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           ))}
         </div>
 
+        {/* 加载状态 */}
+        {loading && (
+          <div className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700 flex items-center justify-center">
+            <div className="flex items-center gap-3 text-yellow-400">
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <span>正在获取币安实时数据...</span>
+            </div>
+          </div>
+        )}
+
         {/* 图表容器 */}
-        <div 
-          ref={chartContainerRef}
-          className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700"
-        />
+        {!loading && (
+          <div 
+            ref={chartContainerRef}
+            className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700"
+          />
+        )}
 
         {/* 技术指标面板 */}
         {technicalIndicators && (
