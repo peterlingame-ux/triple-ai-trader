@@ -1349,7 +1349,7 @@ const translations = {
     'binance.api_secure_storage': '您的 API 密钥经过安全加密和存储',
 
     // AI 控制中心翻译
-    'ai.control_center.title': 'AI控制中心',
+    'ai.control_center.title': 'Super BrainX控制中心',
     'ai.control_center.description': '配置和管理您的AI交易助手',
     'ai.control_center.system_status': '系统状态概览',
     'ai.control_center.system_overview': '系统状态概览',

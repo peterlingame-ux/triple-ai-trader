@@ -197,7 +197,7 @@ export const ProfessionalAIControls = ({ cryptoData = [], newsData = [], onOpenA
                     <Brain className="w-6 h-6 text-amber-400" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-amber-100 font-inter mb-1">AI控制中心</h4>
+                    <h4 className="text-lg font-semibold text-amber-100 font-inter mb-1">Super BrainX控制中心</h4>
                     <p className="text-sm text-amber-300/80">配置和管理您的AI交易助手</p>
                   </div>
                   <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
