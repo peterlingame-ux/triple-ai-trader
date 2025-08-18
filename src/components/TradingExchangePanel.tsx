@@ -190,7 +190,6 @@ export const TradingExchangePanel = ({
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-amber-100">Super BrainX控制中心</div>
-                  <div className="text-xs text-amber-300/70">配置和管理您的AI交易助手</div>
                 </div>
                 <div className="ml-auto">
                   <Settings className="w-4 h-4 text-amber-400/60 group-hover:text-amber-400" />
