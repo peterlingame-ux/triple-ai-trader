@@ -7,17 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Camera, User, Edit3, Upload, X, Globe, Car } from 'lucide-react';
+import { Camera, User, Edit3, Upload, X, Globe } from 'lucide-react';
 import { removeBackground, loadImage } from '@/utils/backgroundRemoval';
 import { FlagIcon } from '@/components/FlagIcon';
-import { CarSelector } from '@/components/CarSelector';
 
 interface UserProfileData {
   name: string;
   avatar: string;
   initials: string;
   nationality: string;
-  selectedCar: string;
 }
 
 const countries = [
@@ -48,14 +46,12 @@ export const UserProfile = () => {
     name: '',
     avatar: '',
     initials: '',
-    nationality: 'cn',
-    selectedCar: 'ferrari'
+    nationality: 'cn'
   });
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState('');
   const [tempAvatar, setTempAvatar] = useState('');
   const [tempNationality, setTempNationality] = useState('cn');
-  const [tempSelectedCar, setTempSelectedCar] = useState('ferrari');
   const [isUploading, setIsUploading] = useState(false);
   const [removeBackgroundEnabled, setRemoveBackgroundEnabled] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,17 +62,15 @@ export const UserProfile = () => {
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
       const parsed = JSON.parse(savedProfile);
-      // Handle backward compatibility for existing profiles without nationality and car
+      // Handle backward compatibility for existing profiles without nationality
       const profileWithDefaults = {
         nationality: 'cn',
-        selectedCar: 'ferrari',
         ...parsed
       };
       setProfileData(profileWithDefaults);
       setTempName(profileWithDefaults.name);
       setTempAvatar(profileWithDefaults.avatar);
       setTempNationality(profileWithDefaults.nationality);
-      setTempSelectedCar(profileWithDefaults.selectedCar);
     }
   }, []);
 
@@ -97,8 +91,7 @@ export const UserProfile = () => {
       name: tempName,
       avatar: tempAvatar,
       initials,
-      nationality: tempNationality,
-      selectedCar: tempSelectedCar
+      nationality: tempNationality
     };
     
     setProfileData(updatedProfile);
@@ -195,7 +188,6 @@ export const UserProfile = () => {
     setTempName(profileData.name);
     setTempAvatar(profileData.avatar);
     setTempNationality(profileData.nationality);
-    setTempSelectedCar(profileData.selectedCar);
     setIsEditing(false);
   };
 
@@ -226,18 +218,6 @@ export const UserProfile = () => {
                   {profileData.name || 'LINYUAN'}
                 </h3>
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                
-                {/* Car Selector */}
-                <div className="ml-2">
-                  <CarSelector 
-                    selectedCar={profileData.selectedCar}
-                    onCarChange={(carId) => {
-                      setProfileData(prev => ({ ...prev, selectedCar: carId }));
-                      localStorage.setItem('userProfile', JSON.stringify({ ...profileData, selectedCar: carId }));
-                    }}
-                    size={45}
-                  />
-                </div>
               </div>
               <div className="flex items-center gap-1 px-2 py-1 bg-accent/10 rounded-full border border-accent/20 w-fit">
                 <FlagIcon countryCode={profileData.nationality} size="sm" />
@@ -365,25 +345,6 @@ export const UserProfile = () => {
                 ))}
               </SelectContent>
             </Select>
-          </div>
-
-          {/* Car Selection Section */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium flex items-center gap-2">
-              <Car className="w-4 h-4" />
-              专属座驾
-            </Label>
-            <div className="flex items-center gap-4 p-4 bg-slate-700/50 rounded-lg border border-slate-600">
-              <CarSelector 
-                selectedCar={tempSelectedCar}
-                onCarChange={setTempSelectedCar}
-                size={80}
-              />
-              <div className="flex-1 text-sm text-muted-foreground">
-                <p>选择您的专属超跑展示</p>
-                <p className="text-xs mt-1 text-accent/60">3D模型会在名字旁边缓慢旋转</p>
-              </div>
-            </div>
           </div>
 
           {/* Action Buttons */}
