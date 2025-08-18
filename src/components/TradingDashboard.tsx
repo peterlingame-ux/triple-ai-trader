@@ -147,8 +147,8 @@ export const TradingDashboard = memo(() => {
               </h2>
               {isRealTimeEnabled && (
                 <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  实时数据
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                  实时数据 • 每5秒更新
                 </div>
               )}
             </div>
