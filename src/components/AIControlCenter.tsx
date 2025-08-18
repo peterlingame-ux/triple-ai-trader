@@ -947,7 +947,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                         type="file"
                         accept="image/*"
                         onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 pointer-events-auto"
                         disabled={isUploading}
                       />
                       
