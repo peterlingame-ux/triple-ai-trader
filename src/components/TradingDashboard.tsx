@@ -19,7 +19,7 @@ import { CryptoSearch } from "./CryptoSearch";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
 import { ProfessionalCryptoGrid } from "./ProfessionalCryptoGrid";
 // Portfolio cards moved to AI Control Center
-import { BarChart3, Brain, RefreshCw } from "lucide-react";
+import { BarChart3, Brain } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
 
 // Removed duplicate mock data - using centralized data from useCryptoData hook
@@ -27,7 +27,7 @@ import { AIControlCenter } from "./AIControlCenter";
 
 export const TradingDashboard = memo(() => {
   const { t } = useLanguage();
-  const { cryptoData, newsData, loading, error, refreshData, isRealTimeEnabled } = useCryptoData();
+  const { cryptoData, newsData, loading, error, isRealTimeEnabled } = useCryptoData();
   const { getPortfolioData } = useWalletData();
   const [showAllCrypto, setShowAllCrypto] = useState(false); // 默认折叠状态
   const [searchQuery, setSearchQuery] = useState("");
@@ -144,7 +144,6 @@ export const TradingDashboard = memo(() => {
               <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
                 <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
                 {t('market.overview')}
-                {loading && <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />}
               </h2>
               {isRealTimeEnabled && (
                 <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">
@@ -154,15 +153,6 @@ export const TradingDashboard = memo(() => {
               )}
             </div>
             <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-              <Button 
-                variant="outline" 
-                onClick={refreshData}
-                size="sm"
-                className="bg-green-600/20 hover:bg-green-600/30 text-green-400 border-green-600/30 text-xs sm:text-sm whitespace-nowrap"
-              >
-                <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                {t('button.refresh')}
-              </Button>
               <Button 
                 variant="outline" 
                 onClick={() => setShowAllCrypto(!showAllCrypto)}

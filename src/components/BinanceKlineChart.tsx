@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, RefreshCw, TrendingUp, TrendingDown } from 'lucide-react';
+import { Loader2, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface KlineData {
   time: number;
@@ -258,23 +258,6 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
                 </div>
               </div>
             )}
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={fetchKlineData}
-              disabled={loading}
-              variant="outline"
-              size="sm"
-              className="border-green-600 text-green-400 hover:bg-green-600/20"
-            >
-              {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <RefreshCw className="w-4 h-4" />
-              )}
-              刷新
-            </Button>
           </div>
         </div>
 
