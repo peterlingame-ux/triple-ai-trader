@@ -3,9 +3,10 @@ import { createChart, IChartApi, ISeriesApi, ColorType, CandlestickData, Time } 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, TrendingUp, TrendingDown } from 'lucide-react';
+import { Loader2, TrendingUp, TrendingDown, RefreshCw, Download } from 'lucide-react';
 
 interface KlineData {
   time: number;
@@ -61,6 +62,8 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
   const [klineData, setKlineData] = useState<KlineData[]>([]);
   const [technicalIndicators, setTechnicalIndicators] = useState<TechnicalIndicators | null>(null);
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [loadingStatus, setLoadingStatus] = useState('');
   const [interval, setInterval] = useState('1h');
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [priceChange, setPriceChange] = useState<number>(0);
@@ -98,15 +101,21 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
     if (!symbol || loading) return;
     
     setLoading(true);
+    setProgress(0);
+    setLoadingStatus('检查API配置...');
+    
     try {
+      setProgress(20);
       const config = await getBinanceConfig();
       
       if (!config.isConfigured) {
-        console.log('币安API未配置');
+        setLoadingStatus('币安API未配置');
         return;
       }
 
-      console.log('使用币安API获取数据...');
+      setProgress(40);
+      setLoadingStatus('连接币安API...');
+      
       const { data, error } = await supabase.functions.invoke('binance-klines', {
         body: {
           symbol,
@@ -122,8 +131,10 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         throw new Error(error.message);
       }
 
+      setProgress(80);
+      setLoadingStatus('处理数据...');
+
       if (data && data.klines) {
-        console.log('币安API数据获取成功，条数:', data.klines.length);
         setKlineData(data.klines);
         setTechnicalIndicators(data.technicalIndicators);
         
@@ -140,19 +151,21 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           setPriceChangePercent(changePercent);
         }
 
-        // 只在开发模式显示成功消息，避免生产环境的重复弹窗
-        if (process.env.NODE_ENV === 'development') {
-          toast({
-            title: "数据更新成功",
-            description: `${symbol} K线数据已更新`
-          });
-        }
+        setProgress(100);
+        setLoadingStatus('数据加载完成');
+        
+        // 延迟清理加载状态
+        setTimeout(() => {
+          setProgress(0);
+          setLoadingStatus('');
+        }, 1000);
       }
     } catch (error) {
       console.error('获取K线数据失败:', error);
+      setLoadingStatus('数据获取失败');
       toast({
         title: "数据获取失败",
-        description: error.message,
+        description: error instanceof Error ? error.message : '未知错误',
         variant: "destructive"
       });
     } finally {
@@ -160,54 +173,40 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
     }
   }, [symbol, interval, getBinanceConfig, toast, loading]);
 
-  // 初始化图表
-  // 初始化图表
+  // 稳定的图表初始化
   useEffect(() => {
     if (!chartContainerRef.current) return;
     
-    // 清理现有图表
-    if (chartRef.current) {
-      try {
-        chartRef.current.remove();
-      } catch (error) {
-        // 忽略清理错误
-      }
-      chartRef.current = null;
-      candlestickSeriesRef.current = null;
-    }
+    let isMounted = true;
+    let chart: IChartApi | null = null;
+    let candlestickSeries: ISeriesApi<"Candlestick"> | null = null;
+    let resizeObserver: ResizeObserver | null = null;
 
-    // 添加延迟确保DOM元素准备就绪
     const initChart = () => {
       try {
-        if (!chartContainerRef.current) return;
+        if (!chartContainerRef.current || !isMounted) return;
         
-        const chart = createChart(chartContainerRef.current, {
+        chart = createChart(chartContainerRef.current, {
           layout: {
             background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
             textColor: 'rgba(255, 255, 255, 0.9)',
           },
           grid: {
-            vertLines: {
-              color: 'rgba(197, 203, 206, 0.1)',
-            },
-            horzLines: {
-              color: 'rgba(197, 203, 206, 0.1)',
-            },
+            vertLines: { color: 'rgba(197, 203, 206, 0.1)' },
+            horzLines: { color: 'rgba(197, 203, 206, 0.1)' },
           },
-          crosshair: {
-            mode: 1,
-          },
-          rightPriceScale: {
-            borderColor: 'rgba(197, 203, 206, 0.8)',
-          },
+          crosshair: { mode: 1 },
+          rightPriceScale: { borderColor: 'rgba(197, 203, 206, 0.8)' },
           timeScale: {
             borderColor: 'rgba(197, 203, 206, 0.8)',
             timeVisible: true,
             secondsVisible: false,
           },
+          width: chartContainerRef.current.clientWidth,
+          height: 400,
         });
 
-        const candlestickSeries = chart.addCandlestickSeries({
+        candlestickSeries = chart.addCandlestickSeries({
           upColor: '#4ade80',
           downColor: '#f87171',
           borderDownColor: '#f87171',
@@ -216,19 +215,22 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           wickUpColor: '#4ade80',
         });
 
-        chartRef.current = chart;
-        candlestickSeriesRef.current = candlestickSeries;
+        // 安全地设置refs
+        if (isMounted) {
+          chartRef.current = chart;
+          candlestickSeriesRef.current = candlestickSeries;
+        }
 
-        // 自动调整大小
-        const resizeObserver = new ResizeObserver(() => {
-          if (chartRef.current && chartContainerRef.current) {
+        // 尺寸监听
+        resizeObserver = new ResizeObserver(() => {
+          if (chart && chartContainerRef.current && isMounted) {
             try {
-              chartRef.current.applyOptions({
+              chart.applyOptions({
                 width: chartContainerRef.current.clientWidth,
                 height: 400,
               });
             } catch (error) {
-              // 忽略调整大小错误
+              // 静默处理resize错误
             }
           }
         });
@@ -236,35 +238,37 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         if (chartContainerRef.current) {
           resizeObserver.observe(chartContainerRef.current);
         }
-
-        return () => {
-          resizeObserver.disconnect();
-          if (chartRef.current) {
-            try {
-              chartRef.current.remove();
-            } catch (error) {
-              // 忽略清理错误
-            }
-            chartRef.current = null;
-            candlestickSeriesRef.current = null;
-          }
-        };
       } catch (error) {
         console.error('Chart initialization error:', error);
       }
     };
 
-    // 使用 requestAnimationFrame 确保在下一帧初始化
-    const rafId = requestAnimationFrame(initChart);
+    const timeoutId = setTimeout(initChart, 100);
     
     return () => {
-      cancelAnimationFrame(rafId);
+      isMounted = false;
+      clearTimeout(timeoutId);
+      
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+      
+      if (chart) {
+        try {
+          chart.remove();
+        } catch (error) {
+          // 静默处理清理错误
+        }
+      }
+      
+      chartRef.current = null;
+      candlestickSeriesRef.current = null;
     };
   }, []);
 
-  // 更新图表数据
+  // 稳定的数据更新
   useEffect(() => {
-    if (candlestickSeriesRef.current && chartRef.current && klineData.length > 0) {
+    if (candlestickSeriesRef.current && klineData.length > 0) {
       try {
         const chartData: CandlestickData[] = klineData.map(candle => ({
           time: candle.time as Time,
@@ -275,6 +279,11 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
         }));
 
         candlestickSeriesRef.current.setData(chartData);
+        
+        // 自动调整视图
+        if (chartRef.current) {
+          chartRef.current.timeScale().fitContent();
+        }
       } catch (error) {
         console.error('Chart data update error:', error);
       }
@@ -325,31 +334,60 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
           </div>
         </div>
 
-        {/* 时间周期按钮 */}
-        <div className="flex items-center gap-1 mb-4 flex-wrap">
-          {timeframes.map((tf) => (
-            <Button
-              key={tf.value}
-              size="sm"
-              variant={interval === tf.value ? "default" : "outline"}
-              onClick={() => handleIntervalChange(tf.value)}
-              className={`text-xs px-3 py-1 h-7 ${
-                interval === tf.value 
-                  ? 'bg-amber-500 text-black hover:bg-amber-600' 
-                  : 'border-slate-600 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              {tf.label}
-            </Button>
-          ))}
+        {/* 时间周期按钮和刷新控制 */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1 flex-wrap">
+            {timeframes.map((tf) => (
+              <Button
+                key={tf.value}
+                size="sm"
+                variant={interval === tf.value ? "default" : "outline"}
+                onClick={() => handleIntervalChange(tf.value)}
+                className={`text-xs px-3 py-1 h-7 ${
+                  interval === tf.value 
+                    ? 'bg-amber-500 text-black hover:bg-amber-600' 
+                    : 'border-slate-600 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                {tf.label}
+              </Button>
+            ))}
+          </div>
+          
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={fetchKlineData}
+            disabled={loading}
+            className="border-slate-600 text-slate-300 hover:bg-slate-700 flex items-center gap-2"
+          >
+            <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
+            刷新数据
+          </Button>
         </div>
 
-        {/* 加载状态 */}
+        {/* 数据加载进度 */}
         {loading && (
-          <div className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700 flex items-center justify-center">
+          <div className="w-full h-96 bg-slate-800/30 rounded-lg border border-slate-700 flex flex-col items-center justify-center gap-6 p-8">
             <div className="flex items-center gap-3 text-yellow-400">
-              <Loader2 className="w-6 h-6 animate-spin" />
-              <span>正在获取币安实时数据...</span>
+              <Download className="w-8 h-8 animate-bounce" />
+              <span className="text-lg font-medium">正在获取币安实时数据...</span>
+            </div>
+            
+            <div className="w-full max-w-md space-y-3">
+              <Progress 
+                value={progress} 
+                className="w-full h-3 bg-slate-700"
+              />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">{loadingStatus}</span>
+                <span className="text-yellow-400 font-mono">{progress.toFixed(0)}%</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              实时数据连接中...
             </div>
           </div>
         )}
