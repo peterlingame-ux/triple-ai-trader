@@ -50,46 +50,19 @@ export const CarSelector: React.FC<CarSelectorProps> = ({
   const selectedBrand = carBrands.find(brand => brand.id === currentCar) || carBrands[0];
 
   return (
-    <div className="flex items-center gap-3">
-      {/* 3D Car Display */}
-      <div className="relative group">
-        <div className="relative">
-          <Car3DModel 
-            brand={currentCar} 
-            size={size} 
-            color={selectedBrand.color}
-          />
-          {/* Glow effect */}
-          <div 
-            className="absolute inset-0 rounded-lg opacity-30 blur-sm group-hover:opacity-50 transition-opacity duration-300"
-            style={{
-              background: `radial-gradient(circle, ${selectedBrand.color}40 0%, transparent 70%)`
-            }}
-          />
-        </div>
-        
-        {/* Brand indicator with real logo */}
-        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 backdrop-blur-sm">
-          <img 
-            src={selectedBrand.logo} 
-            alt={selectedBrand.name}
-            className="w-6 h-6 object-contain"
-          />
-        </div>
-      </div>
-
-      {/* Car Selection */}
-      <div className="flex flex-col gap-1">
+    <div className="flex flex-col items-center gap-2">
+      {/* Car Selection and Name - Top */}
+      <div className="flex flex-col items-center gap-1">
         <Select value={currentCar} onValueChange={handleCarChange}>
-          <SelectTrigger className="w-32 h-8 text-xs bg-gradient-to-r from-slate-700/50 to-slate-600/50 border-accent/30 hover:border-accent/50 transition-all duration-200">
+          <SelectTrigger className="w-36 h-8 text-xs bg-gradient-to-r from-slate-700/50 to-slate-600/50 border-accent/30 hover:border-accent/50 transition-all duration-200">
             <SelectValue>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 justify-center">
                 <img 
                   src={selectedBrand.logo} 
                   alt={selectedBrand.name}
                   className="w-4 h-4 object-contain"
                 />
-                <span className="truncate font-medium">{selectedBrand.name}</span>
+                <span className="truncate font-medium text-center">{selectedBrand.name}</span>
               </div>
             </SelectValue>
           </SelectTrigger>
@@ -122,6 +95,33 @@ export const CarSelector: React.FC<CarSelectorProps> = ({
           <Car className="w-3 h-3 text-accent/60" />
           <span className="text-accent/80 font-medium">超跑</span>
           <Sparkles className="w-3 h-3 text-accent/60" />
+        </div>
+      </div>
+
+      {/* 3D Car Display - Bottom */}
+      <div className="relative group">
+        <div className="relative">
+          <Car3DModel 
+            brand={currentCar} 
+            size={size} 
+            color={selectedBrand.color}
+          />
+          {/* Glow effect */}
+          <div 
+            className="absolute inset-0 rounded-lg opacity-30 blur-sm group-hover:opacity-50 transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(circle, ${selectedBrand.color}40 0%, transparent 70%)`
+            }}
+          />
+        </div>
+        
+        {/* Brand indicator with real logo */}
+        <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 backdrop-blur-sm">
+          <img 
+            src={selectedBrand.logo} 
+            alt={selectedBrand.name}
+            className="w-6 h-6 object-contain"
+          />
         </div>
       </div>
     </div>
