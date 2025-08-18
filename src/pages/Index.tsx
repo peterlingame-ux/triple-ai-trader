@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import CoinMarketCapWidget from "@/components/CoinMarketCapWidget";
 
 const Index = () => {
   const { signOut, user, isAuthenticated, loading } = useAuth();
@@ -51,6 +52,13 @@ const Index = () => {
           </div>
         </div>
       </header>
+      <CoinMarketCapWidget 
+        coins="1,1027,825"
+        currency="USD"
+        theme="light"
+        transparent={false}
+        showSymbol={true}
+      />
       <TradingDashboard />
     </div>
   );
