@@ -21,20 +21,89 @@ const TradingViewDashboard: React.FC<TradingViewDashboardProps> = ({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 font-orbitron tracking-wide">
-          <Brain className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
-          SUPER BRAINX 综合面板
-        </h2>
-        {onToggleCollapse && (
-          <button
-            onClick={onToggleCollapse}
-            className="flex items-center gap-1 px-3 py-1 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
-          >
-            {isCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
-            {isCollapsed ? '展开' : '收起'}
-          </button>
-        )}
+      {/* Activated Header Design */}
+      <div className="relative mb-6">
+        {/* Background Glow Effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-blue-500/30 to-purple-500/20 blur-xl rounded-2xl animate-pulse"></div>
+        
+        {/* Main Header Container */}
+        <div className="relative bg-gradient-to-r from-slate-900/95 via-blue-950/90 to-slate-900/95 backdrop-blur-2xl rounded-2xl border border-purple-400/30 shadow-2xl shadow-purple-500/20 p-4 sm:p-6">
+          {/* Energy Lines */}
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-pulse"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-pulse delay-500"></div>
+          
+          {/* Header Content */}
+          <div className="flex items-center justify-between">
+            {/* Left Section - Activated Title */}
+            <div className="flex items-center gap-3">
+              {/* Animated Brain Icon with Glow */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-purple-400/50 blur-lg rounded-full animate-pulse"></div>
+                <Brain className="relative w-6 h-6 sm:w-8 sm:h-8 text-purple-300 animate-pulse" strokeWidth={1.5} />
+                {/* Neural Network Lines */}
+                <div className="absolute -inset-2 opacity-40">
+                  <div className="w-full h-full border border-purple-400/30 rounded-full animate-spin" style={{ animationDuration: '8s' }}></div>
+                  <div className="absolute inset-1 border border-blue-400/20 rounded-full animate-spin" style={{ animationDuration: '6s', animationDirection: 'reverse' }}></div>
+                </div>
+              </div>
+              
+              {/* Enhanced Title with Holographic Effect */}
+              <div className="relative">
+                <h2 className="text-2xl sm:text-3xl font-bold font-orbitron tracking-wider bg-gradient-to-r from-purple-200 via-blue-200 to-purple-200 bg-clip-text text-transparent animate-pulse">
+                  SUPER BRAINX
+                </h2>
+                <div className="text-sm sm:text-base text-purple-300/80 font-light tracking-widest mt-1">
+                  综合面板 <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-ping ml-2"></span> ACTIVATED
+                </div>
+                
+                {/* Holographic Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 animate-pulse delay-1000"></div>
+              </div>
+            </div>
+            
+            {/* Right Section - Enhanced Controls */}
+            <div className="flex items-center gap-3">
+              {/* Status Indicators */}
+              <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg border border-green-400/20">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-300 font-mono">ONLINE</span>
+              </div>
+              
+              {/* Collapse Button with Enhanced Styling */}
+              {onToggleCollapse && (
+                <button
+                  onClick={onToggleCollapse}
+                  className="group relative flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-200 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-300 rounded-lg border border-purple-400/30 hover:border-purple-400/50"
+                >
+                  {/* Button Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 blur-lg rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  <span className="relative z-10 font-mono">
+                    {isCollapsed ? '展开' : '收起'}
+                  </span>
+                  {isCollapsed ? 
+                    <ChevronDown className="relative z-10 w-4 h-4 group-hover:animate-pulse" /> : 
+                    <ChevronUp className="relative z-10 w-4 h-4 group-hover:animate-pulse" />
+                  }
+                </button>
+              )}
+            </div>
+          </div>
+          
+          {/* Data Flow Animation */}
+          <div className="absolute inset-x-4 bottom-1 flex justify-center space-x-1 opacity-30">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="w-1 h-1 bg-purple-400 rounded-full animate-pulse"
+                style={{ 
+                  animationDelay: `${i * 200}ms`,
+                  animationDuration: '1.5s'
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
       </div>
       
       {!isCollapsed && (
