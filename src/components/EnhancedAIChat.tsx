@@ -237,49 +237,48 @@ export const EnhancedAIChat = ({ selectedCrypto, aiConfigs, customApis, onDrawAn
   ];
 
   return (
-    <Card className="h-full bg-slate-900/90 border-slate-700 backdrop-blur-sm">
-      <div className="p-6 h-full flex flex-col">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
+    <Card className="h-full bg-slate-900/95 border-slate-700/50 backdrop-blur-sm">
+      <div className="p-3 h-full flex flex-col">
+        {/* Header - 紧凑型 */}
+        <div className="flex items-center gap-2 mb-3">
           <div className="relative">
-            <Brain className="w-6 h-6 text-yellow-400" />
+            <Brain className="w-4 h-4 text-yellow-400" />
             {isAnalyzing && (
-              <div className="absolute -inset-1 bg-yellow-400/20 rounded-full animate-ping"></div>
+              <div className="absolute -inset-0.5 bg-yellow-400/20 rounded-full animate-ping"></div>
             )}
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white">AI实时分析对话</h3>
-            <p className="text-sm text-slate-400">
-              已启用 {enabledEngines.length} 个AI引擎 • 正在分析 {selectedCrypto}
+            <h3 className="text-sm font-semibold text-white">AI实时分析</h3>
+            <p className="text-xs text-slate-400">
+              {enabledEngines.length}个引擎 • {selectedCrypto}
             </p>
           </div>
         </div>
 
-        {/* 启用的AI引擎状态 */}
-        <div className="mb-6">
-          <div className="text-xs text-slate-400 mb-3">活跃引擎：</div>
-          <div className="flex flex-wrap gap-2">
+        {/* 启用的AI引擎状态 - 紧凑型 */}
+        <div className="mb-3">
+          <div className="text-xs text-slate-500 mb-1">活跃引擎：</div>
+          <div className="flex flex-wrap gap-1">
             {enabledEngines.map((engine) => (
-              <div key={engine.id} className="flex items-center gap-2 bg-slate-800/60 rounded-lg px-3 py-2">
+              <div key={engine.id} className="flex items-center gap-1 bg-slate-800/60 rounded px-2 py-1">
                 <div className="relative">
                   <img 
                     src={engine.avatar} 
                     alt={engine.name}
-                    className={`w-6 h-6 rounded-full object-cover transition-all duration-300 ${
+                    className={`w-4 h-4 rounded-full object-cover transition-all duration-300 ${
                       activeEngine === engine.id 
-                        ? 'shadow-lg shadow-green-400/50 ring-2 ring-green-400/60 animate-pulse' 
+                        ? 'shadow-sm shadow-green-400/50 ring-1 ring-green-400/60 animate-pulse' 
                         : 'opacity-80'
                     }`} 
                   />
                   {activeEngine === engine.id && (
-                    <div className="absolute -inset-1 bg-green-400/20 rounded-full animate-ping"></div>
+                    <div className="absolute -inset-0.5 bg-green-400/20 rounded-full animate-ping"></div>
                   )}
                 </div>
                 <div className="text-xs">
-                  <div className="text-white font-medium">{engine.name}</div>
-                  <div className="text-slate-400">{engine.description}</div>
+                  <div className="text-white font-medium leading-none">{engine.name.split(' ')[0]}</div>
                 </div>
-                <div className={`w-2 h-2 rounded-full ${
+                <div className={`w-1.5 h-1.5 rounded-full ${
                   activeEngine === engine.id ? 'bg-green-400 animate-pulse' : 'bg-slate-600'
                 }`}></div>
               </div>
@@ -287,21 +286,21 @@ export const EnhancedAIChat = ({ selectedCrypto, aiConfigs, customApis, onDrawAn
           </div>
         </div>
 
-        {/* 消息区域 */}
-        <div className="flex-1 mb-4">
-          <ScrollArea className="h-full pr-4">
-            <div className="space-y-4">
+        {/* 消息区域 - 紧凑型 */}
+        <div className="flex-1 mb-3">
+          <ScrollArea className="h-full pr-2">
+            <div className="space-y-2">
               {/* 系统欢迎消息 */}
               {messages.length === 0 && (
-                <div className="text-center py-8">
-                  <div className="text-slate-400 text-sm mb-4">
-                    👋 欢迎使用AI实时分析！我可以帮您：
+                <div className="text-center py-4">
+                  <div className="text-slate-400 text-xs mb-2">
+                    👋 AI实时分析就绪
                   </div>
-                  <div className="space-y-2">
-                    {quickQuestions.map((question, index) => (
+                  <div className="space-y-1">
+                    {quickQuestions.slice(0, 3).map((question, index) => (
                       <div
                         key={index}
-                        className="text-left text-slate-300 text-sm p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer transition-colors border border-slate-700/50"
+                        className="text-left text-slate-300 text-xs p-2 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer transition-colors border border-slate-700/30"
                         onClick={() => setInputMessage(question)}
                       >
                         💡 {question}
@@ -313,33 +312,33 @@ export const EnhancedAIChat = ({ selectedCrypto, aiConfigs, customApis, onDrawAn
 
               {/* 消息列表 */}
               {messages.map((message) => (
-                <div key={message.id} className={`flex gap-3 ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
+                <div key={message.id} className={`flex gap-2 ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
                   <div className="flex-shrink-0">
                     {message.type === 'user' ? (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
                         U
                       </div>
                     ) : (
                       <img 
                         src={message.avatar} 
                         alt={message.engine}
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-yellow-400/50"
+                        className="w-6 h-6 rounded-full object-cover ring-1 ring-yellow-400/30"
                       />
                     )}
                   </div>
-                  <div className={`flex-1 max-w-[80%] ${message.type === 'user' ? 'text-right' : ''}`}>
-                    <div className={`inline-block p-3 rounded-lg ${
+                  <div className={`flex-1 max-w-[85%] ${message.type === 'user' ? 'text-right' : ''}`}>
+                    <div className={`inline-block p-2 rounded ${
                       message.type === 'user' 
                         ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' 
-                        : 'bg-slate-800/80 text-white border border-slate-700/50'
+                        : 'bg-slate-800/80 text-white border border-slate-700/30'
                     }`}>
                       {message.engine && (
-                        <div className="text-xs text-yellow-400 mb-1 font-medium">
+                        <div className="text-xs text-yellow-400 mb-0.5 font-medium">
                           {message.engine}
                         </div>
                       )}
-                      <div className="text-sm leading-relaxed">{message.content}</div>
-                      <div className="text-xs mt-2 opacity-60">
+                      <div className="text-xs leading-relaxed">{message.content}</div>
+                      <div className="text-xs mt-1 opacity-50">
                         {message.timestamp.toLocaleTimeString()}
                       </div>
                     </div>
@@ -349,15 +348,15 @@ export const EnhancedAIChat = ({ selectedCrypto, aiConfigs, customApis, onDrawAn
 
               {/* 分析中状态 */}
               {isAnalyzing && (
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
-                    <div className="w-4 h-4 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex gap-2">
+                  <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center">
+                    <div className="w-3 h-3 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                   <div className="flex-1">
-                    <div className="bg-slate-800/80 p-3 rounded-lg border border-slate-700/50">
-                      <div className="text-yellow-400 text-sm mb-1">AI引擎分析中...</div>
-                      <div className="text-slate-300 text-sm">
-                        正在调用 {enabledEngines.length} 个AI引擎进行多维度分析
+                    <div className="bg-slate-800/80 p-2 rounded border border-slate-700/30">
+                      <div className="text-yellow-400 text-xs mb-0.5">分析中...</div>
+                      <div className="text-slate-300 text-xs">
+                        调用 {enabledEngines.length} 个AI引擎
                       </div>
                     </div>
                   </div>
@@ -369,53 +368,54 @@ export const EnhancedAIChat = ({ selectedCrypto, aiConfigs, customApis, onDrawAn
           </ScrollArea>
         </div>
 
-        {/* 输入区域 */}
-        <div className="space-y-3">
+        {/* 输入区域 - 紧凑型 */}
+        <div className="space-y-2">
           <div className="flex gap-2">
             <div className="flex-1 relative">
               <Input
                 ref={inputRef}
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                placeholder="询问AI关于技术分析、画图标记、市场预测..."
-                className="bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 pr-20"
+                placeholder="询问AI技术分析..."
+                className="bg-slate-800/50 border-slate-600/50 text-white placeholder-slate-500 text-xs h-8 pr-16"
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 disabled={isAnalyzing}
               />
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+              <div className="absolute right-1 top-1/2 transform -translate-y-1/2 flex gap-0.5">
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={handleVoiceInput}
-                  className={`text-slate-400 hover:text-white p-1 h-7 w-7 ${isListening ? 'text-red-400' : ''}`}
+                  className={`text-slate-400 hover:text-white p-0.5 h-5 w-5 ${isListening ? 'text-red-400' : ''}`}
                 >
-                  {isListening ? <Square className="w-3 h-3" /> : <Mic className="w-3 h-3" />}
+                  {isListening ? <Square className="w-2.5 h-2.5" /> : <Mic className="w-2.5 h-2.5" />}
                 </Button>
                 <Button
                   size="sm" 
                   variant="ghost"
-                  className="text-slate-400 hover:text-white p-1 h-7 w-7"
+                  className="text-slate-400 hover:text-white p-0.5 h-5 w-5"
                 >
-                  <Volume2 className="w-3 h-3" />
+                  <Volume2 className="w-2.5 h-2.5" />
                 </Button>
               </div>
             </div>
             <Button 
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isAnalyzing}
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600"
+              size="sm"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:from-yellow-500 hover:to-orange-600 h-8 px-3"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3 h-3" />
             </Button>
           </div>
           
           {/* 状态指示器 */}
           <div className="flex items-center justify-between text-xs">
             <div className="text-slate-500">
-              {isAnalyzing ? '🤖 AI正在分析...' : `💡 输入问题或点击上方快速问题模板`}
+              {isAnalyzing ? '🤖 AI分析中...' : `💡 快速分析`}
             </div>
             <div className="text-slate-500">
-              {enabledEngines.length > 0 ? `✅ ${enabledEngines.length}个引擎就绪` : '⚠️ 请先启用AI引擎'}
+              {enabledEngines.length > 0 ? `✅ ${enabledEngines.length}引擎` : '⚠️ 需启用引擎'}
             </div>
           </div>
         </div>

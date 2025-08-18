@@ -1154,7 +1154,7 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
   }, []);
 
   const RealTimeAnalysisPanel = () => (
-    <div className="grid grid-cols-12 gap-6 h-[calc(100vh-200px)]">
+    <div className="grid grid-cols-12 gap-4 h-[calc(100vh-180px)]">
       {/* Left Panel - Enhanced AI Chat */}
       <div className="col-span-4 h-full">
         <EnhancedAIChat 
