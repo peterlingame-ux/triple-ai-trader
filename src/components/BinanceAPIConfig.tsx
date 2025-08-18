@@ -18,8 +18,11 @@ export const BinanceAPIConfig = memo(() => {
 
   const checkConfiguration = useCallback(async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-api-config', {
-        body: { service: 'binance_api_config' }
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'check',
+          service: 'binance_api_config' 
+        }
       });
 
       if (!error && data?.configured) {
@@ -36,8 +39,11 @@ export const BinanceAPIConfig = memo(() => {
   const testConnection = useCallback(async () => {
     setConnectionStatus('testing');
     try {
-      const { data, error } = await supabase.functions.invoke('test-api-connection', {
-        body: { service: 'binance_api_config' }
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'test',
+          service: 'binance_api_config' 
+        }
       });
 
       if (!error) {

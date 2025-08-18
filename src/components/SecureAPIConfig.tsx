@@ -47,8 +47,11 @@ export function SecureAPIConfig({
 
   const checkConfiguration = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-api-config', {
-        body: { service: title.toLowerCase().replace(' ', '_') }
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'check',
+          service: 'binance_api_config' 
+        }
       });
 
       if (!error && data?.configured) {
@@ -72,9 +75,10 @@ export function SecureAPIConfig({
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.functions.invoke('save-api-config', {
+      const { error } = await supabase.functions.invoke('api-config-manager', {
         body: {
-          service: title.toLowerCase().replace(' ', '_'),
+          action: 'save',
+          service: 'binance_api_config', // 使用统一的服务名称
           apiKey,
           secretKey: hasSecretKey ? secretKey : undefined
         }
@@ -121,8 +125,11 @@ export function SecureAPIConfig({
   const testConnection = async () => {
     setConnectionStatus('testing');
     try {
-      const { data, error } = await supabase.functions.invoke('test-api-connection', {
-        body: { service: title.toLowerCase().replace(' ', '_') }
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'test',
+          service: 'binance_api_config' 
+        }
       });
 
       if (error) {
@@ -159,8 +166,11 @@ export function SecureAPIConfig({
 
   const clearConfiguration = async () => {
     try {
-      const { error } = await supabase.functions.invoke('clear-api-config', {
-        body: { service: title.toLowerCase().replace(' ', '_') }
+      const { error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'clear',
+          service: 'binance_api_config' 
+        }
       });
 
       if (error) {

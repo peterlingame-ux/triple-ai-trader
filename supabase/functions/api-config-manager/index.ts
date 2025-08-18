@@ -154,6 +154,7 @@ serve(async (req) => {
         let testResult;
         switch (service) {
           case 'binance':
+          case 'binance_api_config':
             testResult = await testBinanceConnection(config.apiKey, config.secretKey);
             break;
           case 'openai':

@@ -317,8 +317,11 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
   // 获取币安API配置
   const getBinanceConfig = useCallback(async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('check-api-config', {
-        body: { service: 'binance_api_config' }
+      const { data, error } = await supabase.functions.invoke('api-config-manager', {
+        body: { 
+          action: 'get',
+          service: 'binance_api_config' 
+        }
       });
 
       if (error) {
@@ -326,10 +329,10 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       }
 
       return { 
-        isConfigured: data?.configured || false,
-        apiKey: data?.apiKey,
-        secretKey: data?.secretKey,
-        testnet: data?.testnet || false
+        isConfigured: data?.success || false,
+        apiKey: data?.config?.apiKey,
+        secretKey: data?.config?.secretKey,
+        testnet: data?.config?.testnet || false
       };
     } catch (error) {
       console.error('获取币安配置失败:', error);
@@ -411,13 +414,17 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       setError(null);
       
       // 优先尝试币安API配置
+      console.log('检查币安API配置...');
       const binanceConfig = await getBinanceConfig();
+      console.log('币安配置结果:', binanceConfig);
       
       if (binanceConfig.isConfigured) {
         try {
+          console.log('使用币安API获取数据...');
           // 使用币安API获取数据
           const binanceData = await fetchFromBinanceAPI(binanceConfig);
           if (binanceData.length > 0) {
+            console.log('币安API数据获取成功，条数:', binanceData.length);
             setCryptoData(binanceData);
             toast({
               title: "数据已更新",
@@ -426,8 +433,11 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
             return;
           }
         } catch (binanceError) {
-          console.log('币安API调用失败，使用模拟数据');
+          console.error('币安API调用失败:', binanceError);
+          console.log('回退到模拟数据');
         }
+      } else {
+        console.log('币安API未配置，使用模拟数据');
       }
       
       // 直接使用模拟数据，不尝试调用可能失败的API端点
@@ -436,7 +446,7 @@ export const useCryptoData = (symbols: string[] = DEFAULT_SYMBOLS) => {
       
       toast({
         title: "数据已更新", 
-        description: "使用模拟数据（API接口预留中）",
+        description: binanceConfig.isConfigured ? "币安API未返回数据，使用模拟数据" : "使用模拟数据（API接口预留中）",
       });
       
     } catch (err) {
