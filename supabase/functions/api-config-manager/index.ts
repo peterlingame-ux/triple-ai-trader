@@ -83,15 +83,19 @@ serve(async (req) => {
       case 'check': {
         const { data, error } = await supabaseClient
           .from('user_api_configs')
-          .select('service')
+          .select('service, config_data, updated_at')
           .eq('user_id', userId)
           .eq('service', service)
           .single();
 
+        const isConfigured = !error && data !== null;
+        
         return new Response(
           JSON.stringify({ 
-            configured: !error && data !== null,
-            message: !error && data ? 'Configuration found' : 'No configuration found'
+            configured: isConfigured,
+            success: true,
+            message: isConfigured ? 'Configuration found' : 'No configuration found',
+            ...(isConfigured && { lastUpdated: data.updated_at })
           }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );

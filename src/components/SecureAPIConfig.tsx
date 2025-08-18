@@ -45,11 +45,13 @@ export function SecureAPIConfig({
 
   useEffect(() => {
     if (isAuthenticated) {
+      console.log('SecureAPIConfig: User authenticated, checking configuration...');
       checkConfiguration();
     }
   }, [isAuthenticated]);
 
   const checkConfiguration = async () => {
+    console.log('SecureAPIConfig: Checking configuration...');
     try {
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
@@ -58,18 +60,27 @@ export function SecureAPIConfig({
         }
       });
 
+      console.log('SecureAPIConfig: Check result:', { data, error });
+
       if (!error && data?.configured) {
+        console.log('SecureAPIConfig: Configuration found, loading details...');
         setIsConfigured(true);
         onConfigChange?.(true);
         // 获取现有配置信息（用于显示和编辑）
         await loadExistingConfig();
+      } else {
+        console.log('SecureAPIConfig: No configuration found');
+        setIsConfigured(false);
+        onConfigChange?.(false);
       }
     } catch (error) {
-      console.error('Error checking configuration:', error);
+      console.error('SecureAPIConfig: Error checking configuration:', error);
+      setIsConfigured(false);
     }
   };
 
   const loadExistingConfig = async () => {
+    console.log('SecureAPIConfig: Loading existing config...');
     try {
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
@@ -78,15 +89,18 @@ export function SecureAPIConfig({
         }
       });
 
+      console.log('SecureAPIConfig: Load config result:', { data, error });
+
       if (!error && data?.config) {
         const config = data.config;
+        console.log('SecureAPIConfig: Config loaded successfully');
         setExistingConfig({
           apiKey: config.apiKey ? maskApiKey(config.apiKey) : '',
           secretKey: config.secretKey ? maskSecretKey(config.secretKey) : ''
         });
       }
     } catch (error) {
-      console.error('Error loading existing configuration:', error);
+      console.error('SecureAPIConfig: Error loading existing configuration:', error);
     }
   };
 
@@ -357,6 +371,16 @@ export function SecureAPIConfig({
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* 添加调试信息 */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+            <div>isConfigured: {isConfigured.toString()}</div>
+            <div>isEditing: {isEditing.toString()}</div>
+            <div>connectionStatus: {connectionStatus}</div>
+            <div>existingConfig: {JSON.stringify(existingConfig)}</div>
+          </div>
+        )}
+        
         {!isConfigured ? (
           <div className="space-y-4">
             <div className="space-y-2">
@@ -515,6 +539,16 @@ export function SecureAPIConfig({
               <Button onClick={startEditing} variant="secondary">
                 <Edit className="mr-2 h-4 w-4" />
                 Edit
+              </Button>
+              <Button 
+                onClick={() => {
+                  console.log('Manual refresh triggered');
+                  checkConfiguration();
+                }} 
+                variant="outline" 
+                size="sm"
+              >
+                🔄 Refresh
               </Button>
               <Button onClick={clearConfiguration} variant="destructive">
                 Clear Config
