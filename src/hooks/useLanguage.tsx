@@ -361,7 +361,17 @@ const translations = {
      'stats.data_time': 'Data Statistics Time',
      'common.select_date': 'Select Date',
      'trading.records': 'Trading Records',
-     'ai.moving_averages': 'Moving Averages',
+      'ai.moving_averages': 'Moving Averages',
+      
+      // Supreme Brain Detection interface translations
+      'ai.supreme_brain_ai_detection': 'Supreme Brain AI Detection', 
+      'ai.six_models_sync_analysis': '6 AI models sync analysis, real-time capture high win rate trading opportunities',
+      'ai.active_analysis': 'Active Analysis',
+      'ai.standby': 'Standby', 
+      'ai.opportunities_detected': 'Opportunities Detected',
+      'ai.average_win_rate': 'Average Win Rate',
+      'ai.high_win_rate_signal': 'High Win Rate Signal',
+      'ai.local_analysis_mode': 'Local Analysis Mode',
     'autotrader.button': 'AI Auto Money',
     'autotrader.title': 'AI Auto Money System - Multi-Model Smart Trading',
     'autotrader.ai_analysis_active': 'AI Analysis Active',
