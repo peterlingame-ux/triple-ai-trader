@@ -1212,22 +1212,6 @@ const translations = {
      'ai.add_position_price_range': '加仓价格区间',
      'ai.long_position': '多仓',
      'ai.short_position': '空仓',
-     'ai.active_analysis': 'AI活跃分析',
-     'ai.standby': '待机',
-     'ai.opportunities_detected': '检测到机会',
-     'ai.high_win_rate_signal': '高胜率信号',
-     'ai.local_analysis_mode': '本地分析模式',
-     
-     // Supreme Brain Detection additional translations
-     'ai.supreme_brain_ai_detection': '最强大脑AI检测',
-     'ai.six_models_sync_analysis': '六种AI模型同步分析，实时捕获高胜率交易机会',  
-     'ai.latest_opportunities': '最新机会',
-     'ai.trading_parameters': '交易参数',
-     'ai.entry_price_range': '入场价格区间',
-     'ai.suggested_position': '建议仓位',
-     'ai.analysis_win_rate': 'AI分析胜率',
-     'ai.stop_loss_price': '止损价格',
-     'ai.take_profit_price': '止盈价格',
     
     // 自动交易器翻译
     'autotrader.stopped': 'AI自动交易已停止',
