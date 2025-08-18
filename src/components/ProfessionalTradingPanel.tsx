@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -15,10 +15,19 @@ import {
   X,
   Maximize2,
   Eye,
-  Settings
+  Settings,
+  Send,
+  Bot,
+  User,
+  Minus,
+  Plus,
+  RotateCcw,
+  Crosshair,
+  TrendingUpIcon,
+  Palette,
+  Type,
+  Smile
 } from "lucide-react";
-import { EnhancedChartPanel } from "./EnhancedChartPanel";
-import { EnhancedAIChat } from "./EnhancedAIChat";
 import { BinanceKlineChart } from "./BinanceKlineChart";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData } from "@/hooks/useCryptoData";
@@ -29,6 +38,13 @@ interface DrawingAnnotation {
   coordinates: Array<{x: number, y: number}>;
   color: string;
   text?: string;
+  timestamp: Date;
+}
+
+interface ChatMessage {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
   timestamp: Date;
 }
 
@@ -53,14 +69,55 @@ export const ProfessionalTradingPanel = ({
   const [showAIChat, setShowAIChat] = useState(true);
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [selectedDrawingTool, setSelectedDrawingTool] = useState<string>('cursor');
+  const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [priceChange, setPriceChange] = useState<number>(0);
+  const [priceChangePercent, setPriceChangePercent] = useState<number>(0);
 
   const currentCrypto = cryptoData.find(c => c.symbol === selectedCrypto) || cryptoData[0];
+
+  // 模拟实时价格更新
+  useEffect(() => {
+    if (currentCrypto) {
+      setCurrentPrice(currentCrypto.price || 43364.25);
+      setPriceChange(currentCrypto.change24h || -104.69);
+      setPriceChangePercent(currentCrypto.changePercent24h || -2.34);
+    }
+  }, [currentCrypto]);
 
   // 刷新数据函数
   const fetchKlineData = useCallback(() => {
     console.log('手动刷新K线数据:', selectedCrypto);
     setRefreshKey(prev => prev + 1);
   }, [selectedCrypto]);
+
+  // AI聊天功能
+  const sendMessage = useCallback(() => {
+    if (!inputMessage.trim()) return;
+    
+    const newMessage: ChatMessage = {
+      id: Date.now().toString(),
+      type: 'user',
+      content: inputMessage,
+      timestamp: new Date()
+    };
+    
+    setChatMessages(prev => [...prev, newMessage]);
+    setInputMessage('');
+    
+    // 模拟AI回复
+    setTimeout(() => {
+      const aiResponse: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        type: 'ai',
+        content: `关于 ${selectedCrypto} 的分析：基于当前技术指标，RSI处于65.42，MACD显示正向趋势。建议关注支撑位43200和阻力位44500。`,
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, aiResponse]);
+    }, 1000);
+  }, [inputMessage, selectedCrypto]);
 
   const timeframes = [
     { label: "1分", value: "1m" },
@@ -128,57 +185,79 @@ export const ProfessionalTradingPanel = ({
   }, [handleAddAnnotation]);
 
   return (
-    <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full h-full bg-slate-900 border-slate-700 shadow-2xl overflow-hidden">
-        {/* 顶部工具栏 */}
-        <div className="bg-slate-800/90 border-b border-slate-700 p-2">
+    <div className="fixed inset-0 bg-black/98 backdrop-blur-sm z-50">
+      <div className="w-full h-full bg-slate-950 border-slate-700 shadow-2xl overflow-hidden flex flex-col">
+        
+        {/* 币安风格顶部价格栏 */}
+        <div className="bg-slate-900/95 border-b border-slate-700 px-6 py-3">
           <div className="flex items-center justify-between">
-            {/* 左侧 - 标题和货币信息 */}
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-yellow-400" />
-                <h2 className="text-lg font-bold text-white">
-                  {selectedCrypto}/USDT 永续
-                </h2>
-                <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">
-                  实时
-                </Badge>
+            {/* 左侧 - 交易对和价格信息 */}
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <span className="text-black font-bold text-xs">{selectedCrypto.slice(0,3)}</span>
+                  </div>
+                  <h2 className="text-xl font-bold text-white">
+                    {selectedCrypto}/USDT
+                  </h2>
+                  <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30 text-xs px-2">
+                    现货
+                  </Badge>
+                </div>
               </div>
               
-              {/* 价格信息 */}
-              <div className="flex items-center gap-6">
-                <div>
-                  <div className="text-2xl font-bold text-white">
-                    ${currentCrypto?.price?.toFixed(2) || "43,364.25"}
-                  </div>
-                  <div className={`text-sm flex items-center gap-1 ${
-                    (currentCrypto?.changePercent24h || -2.34) >= 0 ? 'text-green-400' : 'text-red-400'
+              {/* 实时价格信息 */}
+              <div className="flex items-center gap-8">
+                <div className="space-y-1">
+                  <div className={`text-3xl font-bold font-mono ${
+                    priceChangePercent >= 0 ? 'text-green-400' : 'text-red-400'
                   }`}>
-                    {(currentCrypto?.changePercent24h || -2.34) >= 0 ? 
+                    ${currentPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </div>
+                  <div className={`text-sm font-mono flex items-center gap-1 ${
+                    priceChangePercent >= 0 ? 'text-green-400' : 'text-red-400'
+                  }`}>
+                    {priceChangePercent >= 0 ? 
                       <TrendingUp className="w-3 h-3" /> : 
                       <TrendingDown className="w-3 h-3" />
                     }
-                    {(currentCrypto?.changePercent24h || -2.34).toFixed(2)}% 
-                    (${Math.abs(currentCrypto?.change24h || -104.69).toFixed(2)})
+                    {priceChange >= 0 ? '+' : ''}{priceChange.toFixed(2)} ({priceChangePercent >= 0 ? '+' : ''}{priceChangePercent.toFixed(2)}%)
                   </div>
                 </div>
 
-                <div className="text-xs text-slate-400 grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-5 gap-6 text-xs">
                   <div>
-                    <div className="text-slate-500">24h最高</div>
-                    <div className="text-white">${technicalData.high24h}</div>
+                    <div className="text-slate-400 mb-1">指数价格</div>
+                    <div className="text-white font-mono">${(currentPrice * 1.0001).toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-slate-500">24h最低</div>
-                    <div className="text-white">${technicalData.low24h}</div>
+                    <div className="text-slate-400 mb-1">标记价格</div>
+                    <div className="text-white font-mono">${(currentPrice * 0.9999).toFixed(2)}</div>
                   </div>
                   <div>
-                    <div className="text-slate-500">24h量(BTC)</div>
-                    <div className="text-white">688.42万</div>
+                    <div className="text-slate-400 mb-1">资金费率/倒计时</div>
+                    <div className="text-orange-400 font-mono">0.01% / 3小时45分40秒</div>
                   </div>
                   <div>
-                    <div className="text-slate-500">24h额</div>
-                    <div className="text-white">$261.88亿</div>
+                    <div className="text-slate-400 mb-1">24小时最低</div>
+                    <div className="text-white font-mono">${(currentPrice * 0.95).toFixed(2)}</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 mb-1">24小时最高</div>
+                    <div className="text-white font-mono">${(currentPrice * 1.05).toFixed(2)}</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 mb-1">持仓量</div>
+                    <div className="text-white font-mono">688.42万张</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 mb-1">24小时量</div>
+                    <div className="text-white font-mono">6,000.72万张</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-400 mb-1">24小时额</div>
+                    <div className="text-white font-mono">$261.38亿</div>
                   </div>
                 </div>
               </div>
@@ -188,44 +267,9 @@ export const ProfessionalTradingPanel = ({
             <div className="flex items-center gap-2">
               <Button
                 size="sm"
-                variant="outline"
-                onClick={() => setShowOrderBook(!showOrderBook)}
-                className="border-slate-600 text-slate-300 hover:bg-slate-700 text-xs h-7"
-              >
-                <Eye className="w-3 h-3 mr-1" />
-                订单簿
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setShowAIChat(!showAIChat)}
-                className="border-slate-600 text-slate-300 hover:bg-slate-700 text-xs h-7"
-              >
-                <Zap className="w-3 h-3 mr-1" />
-                AI分析
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-slate-600 text-slate-300 hover:bg-slate-700 text-xs h-7"
-                onClick={fetchKlineData}
-                disabled={loading}
-              >
-                <Activity className="w-3 h-3 mr-1" />
-                {loading ? '更新中...' : '刷新数据'}
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-slate-600 text-slate-300 hover:bg-slate-700 text-xs h-7"
-              >
-                <Maximize2 className="w-3 h-3" />
-              </Button>
-              <Button
-                size="sm"
                 variant="ghost"
                 onClick={onClose}
-                className="text-slate-400 hover:text-white hover:bg-slate-700 h-7"
+                className="text-slate-400 hover:text-white hover:bg-slate-700 h-8 w-8 p-0"
               >
                 <X className="w-4 h-4" />
               </Button>
@@ -233,153 +277,206 @@ export const ProfessionalTradingPanel = ({
           </div>
         </div>
 
-        {/* 主要内容区域 */}
-        <div className="flex h-full">
-          {/* 左侧 - 图表区域 */}
-          <div className={`${showOrderBook && showAIChat ? 'w-2/3' : showOrderBook || showAIChat ? 'w-3/4' : 'w-full'} flex flex-col`}>
-            {/* 时间周期和工具栏 */}
-            <div className="bg-slate-800/50 border-b border-slate-700/50 p-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {timeframes.map((tf) => (
-                    <Button
-                      key={tf.value}
-                      variant={selectedTimeframe === tf.value ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setSelectedTimeframe(tf.value)}
-                      className={selectedTimeframe === tf.value 
-                        ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs h-6 px-2" 
-                        : "text-slate-300 hover:text-white hover:bg-slate-700 text-xs h-6 px-2"
-                      }
-                    >
-                      {tf.label}
-                    </Button>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <span>开: <span className="text-white">${technicalData.open}</span></span>
-                  <span>高: <span className="text-green-400">${technicalData.high24h}</span></span>
-                  <span>低: <span className="text-red-400">${technicalData.low24h}</span></span>
-                  <span>收: <span className="text-white">${technicalData.close}</span></span>
-                  <span>量: <span className="text-blue-400">{technicalData.volume}</span></span>
-                </div>
-              </div>
-            </div>
-
-            {/* K线图表 */}
-            <div className="flex-1 bg-slate-900 relative min-h-0">
-              <div className="absolute inset-0">
-                <BinanceKlineChart 
-                  key={`${selectedCrypto}-${refreshKey}`} // 强制重新渲染
-                  symbol={selectedCrypto} 
-                  className="h-full w-full"
-                />
-              </div>
-              
-              {/* AI绘制的标记和注释 */}
-              {drawingAnnotations.map((annotation) => (
-                <div
-                  key={annotation.id}
-                  className="absolute pointer-events-none z-10"
-                  style={{
-                    left: annotation.coordinates[0]?.x || 0,
-                    top: annotation.coordinates[0]?.y || 0,
-                  }}
-                >
-                  <div 
-                    className="w-2 h-2 rounded-full border-2" 
-                    style={{ backgroundColor: annotation.color, borderColor: annotation.color }}
-                  ></div>
-                  {annotation.text && (
-                    <div className="bg-slate-900/90 text-white text-xs p-2 rounded mt-1 whitespace-nowrap border border-slate-600">
-                      {annotation.text}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* 底部技术指标 */}
-            <div className="bg-slate-800/50 border-t border-slate-700/50 p-2">
-              <div className="flex items-center gap-6 text-xs text-slate-400">
-                <span>RSI(14): <span className="text-yellow-400">{technicalData.rsi}</span></span>
-                <span>MACD: <span className="text-green-400">{technicalData.macd}</span></span>
-                <span>成交量: <span className="text-blue-400">{technicalData.volume}</span></span>
-                <span>资金费率: <span className="text-orange-400">0.01%</span></span>
-              </div>
+        {/* 导航标签栏 */}
+        <div className="bg-slate-900/50 border-b border-slate-700/50 px-6">
+          <div className="flex items-center gap-8 py-2">
+            <div className="flex items-center gap-6 text-sm">
+              <span className="text-white font-medium border-b-2 border-yellow-400 pb-2">现货</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">BTC/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">ETH/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">OKB/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">XRP/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">SOL/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">DOGE/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">ADA/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">LINK/USDT</span>
+              <span className="text-slate-400 hover:text-white cursor-pointer">添加自选</span>
             </div>
           </div>
+        </div>
 
-          {/* 右侧面板 */}
+        {/* 主体布局 */}
+        <div className="flex flex-1 min-h-0">
+          
+          {/* 左侧绘图工具栏 */}
+          <div className="w-12 bg-slate-900/50 border-r border-slate-700/50 flex flex-col items-center py-4 gap-2">
+            {[
+              { icon: Crosshair, key: 'cursor', tooltip: '十字光标' },
+              { icon: Minus, key: 'line', tooltip: '趋势线' },
+              { icon: Plus, key: 'horizontal', tooltip: '水平线' },
+              { icon: Target, key: 'vertical', tooltip: '垂直线' },
+              { icon: TrendingUpIcon, key: 'fibonacci', tooltip: '斐波那契' },
+              { icon: Palette, key: 'brush', tooltip: '画笔' },
+              { icon: Type, key: 'text', tooltip: '文字' },
+              { icon: Smile, key: 'emoji', tooltip: '表情' },
+              { icon: RotateCcw, key: 'clear', tooltip: '清除' }
+            ].map((tool) => (
+              <Button
+                key={tool.key}
+                size="sm"
+                variant={selectedDrawingTool === tool.key ? "default" : "ghost"}
+                onClick={() => setSelectedDrawingTool(tool.key)}
+                className={`h-8 w-8 p-0 ${
+                  selectedDrawingTool === tool.key 
+                    ? 'bg-yellow-500 text-black' 
+                    : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                }`}
+                title={tool.tooltip}
+              >
+                <tool.icon className="w-4 h-4" />
+              </Button>
+            ))}
+          </div>
+
+          {/* 中间区域：图表和时间周期 */}
+          <div className="flex-1 flex flex-col min-w-0">
+            
+            {/* 图表头部 - 时间周期和OHLCV信息 */}
+            <div className="bg-slate-900/30 border-b border-slate-700/30 px-4 py-2 flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                {timeframes.map((tf) => (
+                  <Button
+                    key={tf.value}
+                    variant={selectedTimeframe === tf.value ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setSelectedTimeframe(tf.value)}
+                    className={selectedTimeframe === tf.value 
+                      ? "bg-yellow-500 text-black text-xs h-6 px-3 font-medium" 
+                      : "text-slate-300 hover:text-white hover:bg-slate-700/50 text-xs h-6 px-3"
+                    }
+                  >
+                    {tf.label}
+                  </Button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-6 text-xs font-mono">
+                <span className="text-slate-400">开: <span className="text-white">{currentPrice.toFixed(2)}</span></span>
+                <span className="text-slate-400">高: <span className="text-green-400">{(currentPrice * 1.02).toFixed(2)}</span></span>
+                <span className="text-slate-400">低: <span className="text-red-400">{(currentPrice * 0.98).toFixed(2)}</span></span>
+                <span className="text-slate-400">收: <span className="text-white">{currentPrice.toFixed(2)}</span></span>
+                <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30 text-xs px-2">
+                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse"></div>
+                  币安实时数据
+                </Badge>
+              </div>
+            </div>
+
+            {/* 主图表区域 */}
+            <div className="flex-1 bg-slate-950 relative min-h-0">
+              <BinanceKlineChart 
+                key={`${selectedCrypto}-${refreshKey}`}
+                symbol={selectedCrypto} 
+                className="h-full w-full"
+              />
+            </div>
+
+            {/* 成交量图表区域 */}
+            <div className="h-32 bg-slate-900/30 border-t border-slate-700/30 relative">
+              <div className="absolute inset-0 flex items-center justify-center text-slate-500 text-sm">
+                成交量(Volume) SMA 250.271K
+              </div>
+            </div>
+
+          </div>
+
+          {/* 右侧面板组合 */}
           <div className="flex">
-            {/* 订单簿 */}
+            {/* 订单簿面板 */}
             {showOrderBook && (
-              <div className="w-80 bg-slate-800/30 border-l border-slate-700/50">
+              <div className="w-80 bg-slate-900/50 border-l border-slate-700/50">
                 <Tabs defaultValue="orderbook" className="h-full">
-                  <TabsList className="grid grid-cols-3 bg-slate-800/50 border-b border-slate-700 w-full h-8">
+                  <TabsList className="grid grid-cols-3 bg-slate-800/50 border-b border-slate-700/50 w-full h-10">
                     <TabsTrigger value="orderbook" className="text-xs">订单簿</TabsTrigger>
                     <TabsTrigger value="trades" className="text-xs">最新成交</TabsTrigger>
-                    <TabsTrigger value="chart" className="text-xs">深度图</TabsTrigger>
+                    <TabsTrigger value="depth" className="text-xs">深度图</TabsTrigger>
                   </TabsList>
 
-                  <TabsContent value="orderbook" className="mt-0 h-full">
-                    <div className="p-2">
-                      <div className="text-xs text-slate-400 grid grid-cols-3 gap-2 mb-2">
+                  <TabsContent value="orderbook" className="mt-0 h-full p-3">
+                    <div className="space-y-3">
+                      <div className="text-xs text-slate-400 grid grid-cols-3 gap-2">
                         <span>价格(USDT)</span>
-                        <span className="text-right">数量(BTC)</span>
-                        <span className="text-right">合计(BTC)</span>
+                        <span className="text-right">数量({selectedCrypto})</span>
+                        <span className="text-right">合计({selectedCrypto})</span>
                       </div>
 
-                      {/* 卖单 */}
-                      <div className="space-y-0.5 mb-3">
-                        {orderBookData.asks.map((ask, index) => (
-                          <div key={index} className="grid grid-cols-3 gap-2 text-xs hover:bg-red-500/10 p-1 rounded">
-                            <span className="text-red-400">{ask.price.toFixed(2)}</span>
-                            <span className="text-right text-white">{ask.amount.toFixed(2)}</span>
-                            <span className="text-right text-slate-400">{ask.total.toFixed(2)}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* 当前价格 */}
-                      <div className="text-center py-2 border-y border-slate-700/50 mb-3">
-                        <div className="text-lg font-bold text-red-400">
-                          ${currentCrypto?.price?.toFixed(2) || "43,364.25"}
-                        </div>
-                        <div className="text-xs text-slate-500">最新成交价</div>
-                      </div>
-
-                      {/* 买单 */}
+                      {/* 卖单区域 */}
                       <div className="space-y-0.5">
-                        {orderBookData.bids.map((bid, index) => (
-                          <div key={index} className="grid grid-cols-3 gap-2 text-xs hover:bg-green-500/10 p-1 rounded">
-                            <span className="text-green-400">{bid.price.toFixed(2)}</span>
-                            <span className="text-right text-white">{bid.amount.toFixed(2)}</span>
-                            <span className="text-right text-slate-400">{bid.total.toFixed(2)}</span>
-                          </div>
-                        ))}
+                        {Array.from({length: 8}, (_, i) => {
+                          const price = currentPrice + (i + 1) * 0.50;
+                          const amount = Math.random() * 100;
+                          const total = Math.random() * 1000;
+                          return (
+                            <div key={i} className="grid grid-cols-3 gap-2 text-xs hover:bg-red-500/10 p-1 rounded cursor-pointer">
+                              <span className="text-red-400 font-mono">{price.toFixed(2)}</span>
+                              <span className="text-right text-white font-mono">{amount.toFixed(2)}</span>
+                              <span className="text-right text-slate-400 font-mono">{total.toFixed(2)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* 当前价格指示器 */}
+                      <div className="flex items-center justify-between py-2 border-y border-slate-700/50">
+                        <div className={`text-lg font-bold font-mono ${priceChangePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {currentPrice.toFixed(2)}
+                        </div>
+                        <div className="text-xs text-slate-500">≈ $4,364.13</div>
+                      </div>
+
+                      {/* 买单区域 */}
+                      <div className="space-y-0.5">
+                        {Array.from({length: 8}, (_, i) => {
+                          const price = currentPrice - (i + 1) * 0.50;
+                          const amount = Math.random() * 100;
+                          const total = Math.random() * 1000;
+                          return (
+                            <div key={i} className="grid grid-cols-3 gap-2 text-xs hover:bg-green-500/10 p-1 rounded cursor-pointer">
+                              <span className="text-green-400 font-mono">{price.toFixed(2)}</span>
+                              <span className="text-right text-white font-mono">{amount.toFixed(2)}</span>
+                              <span className="text-right text-slate-400 font-mono">{total.toFixed(2)}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* 底部统计 */}
+                      <div className="flex justify-between text-xs text-slate-400 pt-2 border-t border-slate-700/50">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span>71.05%</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>28.95%</span>
+                          <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                        </div>
                       </div>
                     </div>
                   </TabsContent>
 
-                  <TabsContent value="trades" className="mt-0 h-full">
-                    <div className="p-2">
-                      <div className="text-xs text-slate-400 grid grid-cols-3 gap-2 mb-2">
+                  <TabsContent value="trades" className="mt-0 h-full p-3">
+                    <div className="space-y-2">
+                      <div className="text-xs text-slate-400 grid grid-cols-3 gap-2">
                         <span>价格(USDT)</span>
-                        <span className="text-right">数量(BTC)</span>
+                        <span className="text-right">数量({selectedCrypto})</span>
                         <span className="text-right">时间</span>
                       </div>
                       <div className="space-y-0.5">
-                        {recentTrades.map((trade, index) => (
-                          <div key={index} className={`grid grid-cols-3 gap-2 text-xs p-1 rounded hover:bg-slate-700/30`}>
-                            <span className={trade.type === 'buy' ? 'text-green-400' : 'text-red-400'}>
-                              {trade.price.toFixed(2)}
-                            </span>
-                            <span className="text-right text-white">{trade.amount.toFixed(2)}</span>
-                            <span className="text-right text-slate-400">{trade.time}</span>
-                          </div>
-                        ))}
+                        {Array.from({length: 20}, (_, i) => {
+                          const price = currentPrice + (Math.random() - 0.5) * 10;
+                          const amount = Math.random() * 50;
+                          const isBuy = Math.random() > 0.5;
+                          const time = new Date(Date.now() - i * 60000).toLocaleTimeString().slice(-8);
+                          return (
+                            <div key={i} className="grid grid-cols-3 gap-2 text-xs p-1 rounded hover:bg-slate-700/30">
+                              <span className={`font-mono ${isBuy ? 'text-green-400' : 'text-red-400'}`}>
+                                {price.toFixed(2)}
+                              </span>
+                              <span className="text-right text-white font-mono">{amount.toFixed(2)}</span>
+                              <span className="text-right text-slate-400 font-mono">{time}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </TabsContent>
@@ -389,18 +486,116 @@ export const ProfessionalTradingPanel = ({
 
             {/* AI聊天面板 */}
             {showAIChat && (
-              <div className="w-80 border-l border-slate-700/50">
-                <EnhancedAIChat
-                  selectedCrypto={selectedCrypto}
-                  aiConfigs={aiConfigs}
-                  customApis={[]}
-                  onDrawAnalysis={handleDrawAnalysis}
-                />
+              <div className="w-80 bg-slate-900/50 border-l border-slate-700/50 flex flex-col">
+                <div className="bg-slate-800/50 border-b border-slate-700/50 p-3">
+                  <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                    <Bot className="w-4 h-4 text-blue-400" />
+                    AI 分析师 - {selectedCrypto}
+                  </h3>
+                </div>
+
+                <div className="flex-1 p-3 space-y-3 overflow-y-auto">
+                  {chatMessages.length === 0 && (
+                    <div className="text-center text-slate-400 text-sm">
+                      <Bot className="w-12 h-12 mx-auto mb-3 text-slate-600" />
+                      <p>我是您的专业AI分析师</p>
+                      <p className="text-xs mt-1">询问技术指标、价格预测或交易建议</p>
+                    </div>
+                  )}
+                  
+                  {chatMessages.map((message) => (
+                    <div key={message.id} className={`flex gap-2 ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      {message.type === 'ai' && (
+                        <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <Bot className="w-3 h-3 text-white" />
+                        </div>
+                      )}
+                      <div className={`max-w-[75%] rounded-lg p-2.5 text-sm ${
+                        message.type === 'user' 
+                          ? 'bg-yellow-500 text-black' 
+                          : 'bg-slate-800 text-white'
+                      }`}>
+                        {message.content}
+                        <div className={`text-xs mt-1 ${
+                          message.type === 'user' ? 'text-black/60' : 'text-slate-400'
+                        }`}>
+                          {message.timestamp.toLocaleTimeString()}
+                        </div>
+                      </div>
+                      {message.type === 'user' && (
+                        <div className="w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                          <User className="w-3 h-3 text-black" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-slate-800/50 border-t border-slate-700/50 p-3">
+                  <div className="flex gap-2">
+                    <Input
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
+                      placeholder="询问关于交易的问题..."
+                      className="flex-1 bg-slate-900/50 border-slate-700 text-white placeholder-slate-400 text-sm"
+                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    />
+                    <Button 
+                      onClick={sendMessage}
+                      size="sm"
+                      disabled={!inputMessage.trim()}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-black p-2"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
+
+          {/* 右侧功能切换按钮 */}
+          <div className="w-12 bg-slate-900/50 border-l border-slate-700/50 flex flex-col items-center py-4 gap-2">
+            <Button
+              size="sm"
+              variant={showOrderBook ? "default" : "ghost"}
+              onClick={() => setShowOrderBook(!showOrderBook)}
+              className={`h-8 w-8 p-0 ${
+                showOrderBook 
+                  ? 'bg-yellow-500 text-black' 
+                  : 'text-slate-400 hover:text-white hover:bg-slate-700'
+              }`}
+              title="订单簿"
+            >
+              <BarChart3 className="w-4 h-4" />
+            </Button>
+            <Button
+              size="sm"
+              variant={showAIChat ? "default" : "ghost"}
+              onClick={() => setShowAIChat(!showAIChat)}
+              className={`h-8 w-8 p-0 ${
+                showAIChat 
+                  ? 'bg-yellow-500 text-black' 
+                  : 'text-slate-400 hover:text-white hover:bg-slate-700'
+              }`}
+              title="AI分析"
+            >
+              <Bot className="w-4 h-4" />
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={fetchKlineData}
+              disabled={loading}
+              className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-700"
+              title="刷新数据"
+            >
+              <Activity className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
-      </Card>
+
+      </div>
     </div>
   );
 };
