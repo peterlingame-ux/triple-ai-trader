@@ -161,63 +161,79 @@ export const BinanceKlineChart: React.FC<BinanceKlineChartProps> = ({
 
   // 初始化图表
   useEffect(() => {
-    if (!chartContainerRef.current) return;
+    if (!chartContainerRef.current || chartRef.current) return;
 
-    const chart = createChart(chartContainerRef.current, {
-      layout: {
-        background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
-        textColor: 'rgba(255, 255, 255, 0.9)',
-      },
-      grid: {
-        vertLines: {
-          color: 'rgba(197, 203, 206, 0.1)',
+    try {
+      const chart = createChart(chartContainerRef.current, {
+        layout: {
+          background: { type: ColorType.Solid, color: 'rgba(0, 0, 0, 0)' },
+          textColor: 'rgba(255, 255, 255, 0.9)',
         },
-        horzLines: {
-          color: 'rgba(197, 203, 206, 0.1)',
+        grid: {
+          vertLines: {
+            color: 'rgba(197, 203, 206, 0.1)',
+          },
+          horzLines: {
+            color: 'rgba(197, 203, 206, 0.1)',
+          },
         },
-      },
-      crosshair: {
-        mode: 1,
-      },
-      rightPriceScale: {
-        borderColor: 'rgba(197, 203, 206, 0.8)',
-      },
-      timeScale: {
-        borderColor: 'rgba(197, 203, 206, 0.8)',
-        timeVisible: true,
-        secondsVisible: false,
-      },
-    });
+        crosshair: {
+          mode: 1,
+        },
+        rightPriceScale: {
+          borderColor: 'rgba(197, 203, 206, 0.8)',
+        },
+        timeScale: {
+          borderColor: 'rgba(197, 203, 206, 0.8)',
+          timeVisible: true,
+          secondsVisible: false,
+        },
+      });
 
-    const candlestickSeries = chart.addCandlestickSeries({
-      upColor: '#4ade80',
-      downColor: '#f87171',
-      borderDownColor: '#f87171',
-      borderUpColor: '#4ade80',
-      wickDownColor: '#f87171',
-      wickUpColor: '#4ade80',
-    });
+      const candlestickSeries = chart.addCandlestickSeries({
+        upColor: '#4ade80',
+        downColor: '#f87171',
+        borderDownColor: '#f87171',
+        borderUpColor: '#4ade80',
+        wickDownColor: '#f87171',
+        wickUpColor: '#4ade80',
+      });
 
-    chartRef.current = chart;
-    candlestickSeriesRef.current = candlestickSeries;
+      chartRef.current = chart;
+      candlestickSeriesRef.current = candlestickSeries;
+    } catch (error) {
+      console.error('Chart initialization error:', error);
+    }
 
     return () => {
-      chart.remove();
+      try {
+        if (chartRef.current) {
+          chartRef.current.remove();
+          chartRef.current = null;
+          candlestickSeriesRef.current = null;
+        }
+      } catch (error) {
+        console.error('Chart cleanup error:', error);
+      }
     };
   }, []);
 
   // 更新图表数据
   useEffect(() => {
-    if (candlestickSeriesRef.current && klineData.length > 0) {
-      const chartData: CandlestickData[] = klineData.map(candle => ({
-        time: candle.time as Time,
-        open: candle.open,
-        high: candle.high,
-        low: candle.low,
-        close: candle.close,
-      }));
+    if (candlestickSeriesRef.current && chartRef.current && klineData.length > 0) {
+      try {
+        const chartData: CandlestickData[] = klineData.map(candle => ({
+          time: candle.time as Time,
+          open: candle.open,
+          high: candle.high,
+          low: candle.low,
+          close: candle.close,
+        }));
 
-      candlestickSeriesRef.current.setData(chartData);
+        candlestickSeriesRef.current.setData(chartData);
+      } catch (error) {
+        console.error('Chart data update error:', error);
+      }
     }
   }, [klineData]);
 

@@ -31,6 +31,7 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   const isPositive = change >= 0;
   
   const handleClick = () => {
+    console.log('CompactCryptoCard clicked:', symbol);
     onOpenTrading?.(symbol);
   };
 

@@ -70,6 +70,7 @@ export const TradingDashboard = memo(() => {
   }, []);
 
   const handleOpenTrading = useCallback((symbol: string) => {
+    console.log('handleOpenTrading called with symbol:', symbol);
     setSelectedTradingSymbol(symbol);
     setShowTradingPanel(true);
   }, []);
