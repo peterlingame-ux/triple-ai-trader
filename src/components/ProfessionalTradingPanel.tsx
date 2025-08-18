@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { EnhancedChartPanel } from "./EnhancedChartPanel";
 import { EnhancedAIChat } from "./EnhancedAIChat";
-import { BinanceKlineChart } from "./BinanceKlineChart";
+import { SimpleTradingChart } from "./SimpleTradingChart";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData } from "@/hooks/useCryptoData";
 
@@ -258,7 +258,7 @@ export const ProfessionalTradingPanel = ({
 
             {/* K线图表 */}
             <div className="flex-1 bg-slate-900 relative">
-              <BinanceKlineChart 
+              <SimpleTradingChart 
                 symbol={selectedCrypto} 
                 className="h-full w-full"
               />

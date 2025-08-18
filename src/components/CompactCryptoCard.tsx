@@ -31,8 +31,15 @@ export const CompactCryptoCard = memo<CompactCryptoCardProps>(({
   const isPositive = change >= 0;
   
   const handleClick = () => {
-    console.log('CompactCryptoCard clicked:', symbol);
-    onOpenTrading?.(symbol);
+    console.log('=== CompactCryptoCard clicked ===');
+    console.log('Symbol:', symbol);
+    console.log('onOpenTrading function:', onOpenTrading);
+    if (onOpenTrading) {
+      console.log('Calling onOpenTrading with symbol:', symbol);
+      onOpenTrading(symbol);
+    } else {
+      console.log('ERROR: onOpenTrading is not defined!');
+    }
   };
 
   return (
