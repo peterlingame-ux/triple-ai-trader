@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { 
   TrendingUp, TrendingDown, Target, Shield, Zap, 
   Brain, BarChart3, Globe, Database, LineChart, 
@@ -63,6 +63,7 @@ const ProfessionalTradingInterface: React.FC = () => {
   const [dailyTarget, setDailyTarget] = useState(400);
   const [currentBalance, setCurrentBalance] = useState(10000);
   const [dailyPnL, setDailyPnL] = useState(0);
+  const { toast } = useToast();
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
@@ -81,13 +82,24 @@ const ProfessionalTradingInterface: React.FC = () => {
 
       if (data.success) {
         setRecommendation(data.recommendation);
-        toast.success(`${symbol} 分析完成！`);
+        toast({
+          title: "成功",
+          description: `${symbol} 分析完成！`
+        });
       } else {
-        toast.error('分析失败，请检查API配置');
+        toast({
+          title: "错误",
+          description: "分析失败，请检查API配置",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('分析失败，请稍后重试');
+      toast({
+        title: "错误", 
+        description: "分析失败，请稍后重试",
+        variant: "destructive"
+      });
     } finally {
       setIsAnalyzing(false);
     }

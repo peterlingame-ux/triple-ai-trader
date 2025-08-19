@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { CheckCircle2, XCircle, Key, TrendingUp, Brain, BarChart3, Globe, Database, LineChart, AlertTriangle } from 'lucide-react';
 
 interface APIConfig {
@@ -110,6 +110,7 @@ export const ProfessionalAPIManager: React.FC = () => {
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [editingService, setEditingService] = useState<string | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const { toast } = useToast();
 
   useEffect(() => {
     loadAllConfigs();
@@ -147,7 +148,11 @@ export const ProfessionalAPIManager: React.FC = () => {
 
   const handleSave = async (serviceKey: string) => {
     if (!formData.apiKey?.trim()) {
-      toast.error('API Key不能为空');
+      toast({
+        title: "错误",
+        description: "API Key不能为空",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -163,7 +168,10 @@ export const ProfessionalAPIManager: React.FC = () => {
       });
 
       if (data.success) {
-        toast.success(`${serviceKey.toUpperCase()} 配置保存成功`);
+        toast({
+          title: "成功",
+          description: `${serviceKey.toUpperCase()} 配置保存成功`
+        });
         setConfigs({
           ...configs,
           [serviceKey]: {
@@ -175,11 +183,19 @@ export const ProfessionalAPIManager: React.FC = () => {
         setEditingService(null);
         setFormData({});
       } else {
-        toast.error('配置保存失败');
+        toast({
+          title: "错误",
+          description: "配置保存失败",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('保存配置错误:', error);
-      toast.error('配置保存失败');
+      toast({
+        title: "错误",
+        description: "配置保存失败",
+        variant: "destructive"
+      });
     } finally {
       setLoading({ ...loading, [serviceKey]: false });
     }
@@ -197,7 +213,10 @@ export const ProfessionalAPIManager: React.FC = () => {
       });
 
       if (data.success) {
-        toast.success(`${serviceKey.toUpperCase()} 连接测试成功`);
+        toast({
+          title: "成功",
+          description: `${serviceKey.toUpperCase()} 连接测试成功`
+        });
         setConfigs({
           ...configs,
           [serviceKey]: {
@@ -206,7 +225,11 @@ export const ProfessionalAPIManager: React.FC = () => {
           }
         });
       } else {
-        toast.error(`${serviceKey.toUpperCase()} 连接测试失败: ${data.message}`);
+        toast({
+          title: "错误", 
+          description: `${serviceKey.toUpperCase()} 连接测试失败: ${data.message}`,
+          variant: "destructive"
+        });
         setConfigs({
           ...configs,
           [serviceKey]: {
@@ -217,7 +240,11 @@ export const ProfessionalAPIManager: React.FC = () => {
       }
     } catch (error) {
       console.error('测试连接错误:', error);
-      toast.error('连接测试失败');
+      toast({
+        title: "错误",
+        description: "连接测试失败",
+        variant: "destructive"
+      });
     } finally {
       setLoading({ ...loading, [`${serviceKey}_test`]: false });
     }
