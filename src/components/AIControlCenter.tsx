@@ -15,6 +15,7 @@ import { EnhancedChartPanel } from "./EnhancedChartPanel";
 import { logger } from "@/utils/errorHandler";
 import { useLanguage } from "@/hooks/useLanguage";
 import { supabase } from "@/integrations/supabase/client";
+import { ProfessionalTradingConfig } from "./ProfessionalTradingConfig";
 
 // Import avatars
 import elonAvatar from "@/assets/elon-musk-cartoon-avatar.png";
@@ -40,7 +41,7 @@ interface AIControlCenterProps {
 
 export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfolioData }: AIControlCenterProps) => {
   const { t, currentLanguage } = useLanguage();
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("professional");
   const [selectedCrypto, setSelectedCrypto] = useState("BTC");
   const [selectedTimeframe, setSelectedTimeframe] = useState("1D");
   const [analysisQuery, setAnalysisQuery] = useState("");
@@ -1210,7 +1211,14 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
 
         <div className="flex-1 p-6 pt-2 overflow-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
-            <TabsList className="grid grid-cols-3 bg-slate-800/50 border-slate-700 mb-6">
+            <TabsList className="grid grid-cols-4 bg-slate-800/50 border-slate-700 mb-6">
+              <TabsTrigger 
+                value="professional" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-400 data-[state=active]:to-blue-500 data-[state=active]:text-white"
+              >
+                <TrendingUp className="w-4 h-4 mr-2" />
+                专业交易配置
+              </TabsTrigger>
               <TabsTrigger 
                 value="dashboard" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-black"
@@ -1233,6 +1241,10 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
                 {t('ai.control_center.supreme_brain_detection')}
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="professional" className="mt-0 h-full">
+              <ProfessionalTradingConfig />
+            </TabsContent>
 
             <TabsContent value="dashboard" className="mt-0 h-full">
               <AIConfigurationPanel />
