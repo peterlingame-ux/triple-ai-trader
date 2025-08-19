@@ -22,21 +22,21 @@ interface AIAnalysisConfig {
 const DEFAULT_CONFIG: AIAnalysisConfig = {
   priceChart: {
     provider: 'openai',
-    model: 'gpt-4.1-2025-04-14',
+    model: 'gpt-4o',
     apiKey: '',
     temperature: 0.3,
     maxTokens: 1000
   },
   technicalAnalysis: {
     provider: 'claude',
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-3-5-sonnet-20241022',
     apiKey: '',
     temperature: 0.2,
     maxTokens: 1500
   },
   newsSentiment: {
     provider: 'grok',
-    model: 'grok-2-beta',
+    model: 'grok-beta',
     apiKey: '',
     temperature: 0.1,
     maxTokens: 800

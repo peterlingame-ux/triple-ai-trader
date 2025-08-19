@@ -46,12 +46,12 @@ export const AIControlCenter = ({ open, onOpenChange, advisorStates = {}, portfo
   const [analysisQuery, setAnalysisQuery] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiConfigs, setAiConfigs] = useState({
-    openai: { enabled: false, apiKey: "", model: "gpt-4o-mini" },
+    openai: { enabled: false, apiKey: "", model: "gpt-4o" },
     claude: { enabled: false, apiKey: "", model: "claude-3-5-sonnet-20241022" },
     grok: { enabled: false, apiKey: "", model: "grok-beta" },
-    vitalik: { enabled: false, apiKey: "", model: "gpt-5-2025-08-07" },
-    justin: { enabled: false, apiKey: "", model: "claude-sonnet-4-20250514" },
-    trump: { enabled: false, apiKey: "", model: "gpt-5-mini-2025-08-07" }
+    vitalik: { enabled: false, apiKey: "", model: "gpt-4o-mini" },
+    justin: { enabled: false, apiKey: "", model: "claude-3-5-haiku-20241022" },
+    trump: { enabled: false, apiKey: "", model: "gpt-4o-mini" }
   });
   
   // Custom API configurations
