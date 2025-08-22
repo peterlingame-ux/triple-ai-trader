@@ -138,17 +138,17 @@ export const CompactAdvisorCard = ({
           
           {/* Company Icons for Elon Musk */}
           {name === "Elon Musk" && (
-            <div className="flex items-center justify-center gap-1.5 mb-3">
-              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
                 <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
               </div>
-              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
                 <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
               </div>
-              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
                 <img src={xLogo} alt="X" className="w-full h-full object-contain" />
               </div>
-              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
                 <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
               </div>
             </div>

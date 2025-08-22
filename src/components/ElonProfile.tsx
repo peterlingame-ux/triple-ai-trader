@@ -71,16 +71,16 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
             
             {/* Company Icons */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
                 <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
               </div>
-              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
                 <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
               </div>
-              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
                 <img src={xLogo} alt="X" className="w-full h-full object-contain" />
               </div>
-              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
                 <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
               </div>
             </div>
