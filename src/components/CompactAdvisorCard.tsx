@@ -15,6 +15,9 @@ import gatesFoundationLogo from "@/assets/gates-foundation-logo.png";
 import ethereumFoundationLogo from "@/assets/ethereum-foundation-logo.png";
 import tronLogo from "@/assets/tron-logo.png";
 import huobiLogo from "@/assets/huobi-logo.png";
+import trumpMemeLogo from "@/assets/trump-meme-logo.png";
+import truthSocialLogo from "@/assets/truth-social-logo.png";
+import djTcryptoLogo from "@/assets/djt-crypto-logo.png";
 
 interface CompactAdvisorCardProps {
   name: string;
@@ -144,13 +147,6 @@ export const CompactAdvisorCard = ({
             }`} />
           </div>
           
-            
-          {/* Company Icons for Elon Musk */}
-          {name === "Elon Musk" && (
-            <div className="flex items-center justify-center gap-2 mb-3">
-            </div>
-          )}
-          
           {/* Name and Title */}
           <div className="text-center">
             <h3 className={`font-bold text-sm mb-1 tracking-wide ${
@@ -214,6 +210,19 @@ export const CompactAdvisorCard = ({
                 </div>
                 <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
                   <img src={huobiLogo} alt="Huobi" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
+            {name === "Donald Trump" && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={djTcryptoLogo} alt="DJT Crypto" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={trumpMemeLogo} alt="Trump Meme Coin" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={truthSocialLogo} alt="Truth Social" className="w-full h-full object-contain" />
                 </div>
               </div>
             )}
