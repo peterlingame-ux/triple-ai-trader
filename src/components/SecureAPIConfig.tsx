@@ -17,6 +17,7 @@ interface SecureAPIConfigProps {
   apiKeyLabel: string;
   secretKeyLabel?: string;
   hasSecretKey?: boolean;
+  service?: string;
   onConfigChange?: (isConfigured: boolean) => void;
 }
 
@@ -26,6 +27,7 @@ export function SecureAPIConfig({
   apiKeyLabel, 
   secretKeyLabel = "Secret Key", 
   hasSecretKey = true,
+  service = "binance_api_config",
   onConfigChange 
 }: SecureAPIConfigProps) {
   const { t } = useLanguage();
@@ -69,7 +71,7 @@ export function SecureAPIConfig({
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
           action: 'get',
-          service: 'binance_api_config' 
+          service: service 
         }
       });
 
@@ -106,7 +108,7 @@ export function SecureAPIConfig({
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
           action: 'get',
-          service: 'binance_api_config' 
+          service: service 
         }
       });
 
@@ -150,7 +152,7 @@ export function SecureAPIConfig({
       const { error } = await supabase.functions.invoke('api-config-manager', {
         body: {
           action: 'save',
-          service: 'binance_api_config',
+          service: service,
           apiKey,
           secretKey: hasSecretKey ? secretKey : undefined
         }
@@ -201,7 +203,7 @@ export function SecureAPIConfig({
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
           action: 'get',
-          service: 'binance_api_config' 
+          service: service 
         }
       });
 
@@ -236,7 +238,7 @@ export function SecureAPIConfig({
       const { data, error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
           action: 'test',
-          service: 'binance_api_config' 
+          service: service 
         }
       });
 
@@ -277,7 +279,7 @@ export function SecureAPIConfig({
       const { error } = await supabase.functions.invoke('api-config-manager', {
         body: { 
           action: 'clear',
-          service: 'binance_api_config' 
+          service: service 
         }
       });
 

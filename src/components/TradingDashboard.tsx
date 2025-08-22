@@ -13,6 +13,7 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useCryptoData } from "@/hooks/useCryptoData";
 import { useWalletData } from "@/hooks/useWalletData";
 import { BinanceAPIConfig } from "./BinanceAPIConfig";
+import { OKXAPIConfig } from "./OKXAPIConfig";
 import TradingViewDashboard from "./TradingViewDashboard";
 import { BarChart3, Brain, ChevronUp, ChevronDown } from "lucide-react";
 import { AIControlCenter } from "./AIControlCenter";
@@ -124,8 +125,14 @@ export const TradingDashboard = memo(() => {
 
         {/* Portfolio Overview moved to AI Control Center */}
 
-        {/* 币安API配置 */}
-        <BinanceAPIConfig />
+        {/* API配置区域 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Binance API配置 */}
+          <BinanceAPIConfig />
+          
+          {/* OKX API配置 */}
+          <OKXAPIConfig />
+        </div>
 
         {/* 主要分析面板 - SUPER BRAINX 综合分析中心 */}
         <div className="mb-8">
