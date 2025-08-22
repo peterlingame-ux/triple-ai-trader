@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, MessageSquare, TrendingUp, Zap, DollarSign, Building, PieChart, Award, BookOpen } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import berkshireLogo from "@/assets/berkshire-logo.png";
+import appleLogo from "@/assets/apple-logo.png";
+import cocacolaLogo from "@/assets/cocacola-logo.png";
 
 interface WarrenProfileProps {
   name: string;
@@ -67,6 +70,21 @@ export const WarrenProfile = ({ name, specialty, confidence, recommendation, rea
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-white mb-1">{name}</h2>
             <p className="text-amber-300 text-sm mb-2">{t(specialty)}</p>
+            
+            {/* Company Icons for Warren Buffett */}
+            {name.includes("Warren") && (
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={berkshireLogo} alt="Berkshire Hathaway" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={appleLogo} alt="Apple" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={cocacolaLogo} alt="Coca-Cola" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
             
             {/* Net Worth */}
             <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg p-3 mb-3 border border-green-500/30">

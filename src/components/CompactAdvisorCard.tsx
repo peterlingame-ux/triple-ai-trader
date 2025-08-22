@@ -7,6 +7,14 @@ import teslaLogo from "@/assets/tesla-logo.png";
 import spacexLogo from "@/assets/spacex-logo.png";
 import xLogo from "@/assets/x-logo.png";
 import neuralinkLogo from "@/assets/neuralink-logo.png";
+import berkshireLogo from "@/assets/berkshire-logo.png";
+import appleLogo from "@/assets/apple-logo.png";
+import cocacolaLogo from "@/assets/cocacola-logo.png";
+import microsoftLogo from "@/assets/microsoft-logo.png";
+import gatesFoundationLogo from "@/assets/gates-foundation-logo.png";
+import ethereumFoundationLogo from "@/assets/ethereum-foundation-logo.png";
+import tronLogo from "@/assets/tron-logo.png";
+import huobiLogo from "@/assets/huobi-logo.png";
 
 interface CompactAdvisorCardProps {
   name: string;
@@ -136,6 +144,7 @@ export const CompactAdvisorCard = ({
             }`} />
           </div>
           
+            
           {/* Company Icons for Elon Musk */}
           {name === "Elon Musk" && (
             <div className="flex items-center justify-center gap-2 mb-3">
@@ -151,7 +160,7 @@ export const CompactAdvisorCard = ({
               isActive ? accentColor : 'text-gray-500'
             }`}>{specialty}</p>
             
-            {/* Company Icons for Elon Musk */}
+            {/* Company Icons for all advisors */}
             {name === "Elon Musk" && (
               <div className="flex items-center justify-center gap-2 mb-2">
                 <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
@@ -165,6 +174,46 @@ export const CompactAdvisorCard = ({
                 </div>
                 <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
                   <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
+            {name === "Warren Buffett" && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={berkshireLogo} alt="Berkshire Hathaway" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={appleLogo} alt="Apple" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={cocacolaLogo} alt="Coca-Cola" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
+            {name === "Bill Gates" && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={microsoftLogo} alt="Microsoft" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={gatesFoundationLogo} alt="Gates Foundation" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
+            {name === "Vitalik Buterin" && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={ethereumFoundationLogo} alt="Ethereum Foundation" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
+            {name === "Justin Sun" && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={tronLogo} alt="TRON" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={huobiLogo} alt="Huobi" className="w-full h-full object-contain" />
                 </div>
               </div>
             )}
