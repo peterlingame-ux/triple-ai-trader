@@ -139,18 +139,6 @@ export const CompactAdvisorCard = ({
           {/* Company Icons for Elon Musk */}
           {name === "Elon Musk" && (
             <div className="flex items-center justify-center gap-2 mb-3">
-              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
-                <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
-                <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
-                <img src={xLogo} alt="X" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
-                <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
-              </div>
             </div>
           )}
           
@@ -159,9 +147,27 @@ export const CompactAdvisorCard = ({
             <h3 className={`font-bold text-sm mb-1 tracking-wide ${
               isActive ? 'text-white' : 'text-gray-400'
             }`}>{name}</h3>
-            <p className={`text-xs font-medium opacity-90 ${
+            <p className={`text-xs font-medium opacity-90 mb-2 ${
               isActive ? accentColor : 'text-gray-500'
             }`}>{specialty}</p>
+            
+            {/* Company Icons for Elon Musk */}
+            {name === "Elon Musk" && (
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={xLogo} alt="X" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-5 h-5 hover:scale-110 transition-transform duration-200">
+                  <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

@@ -71,24 +71,30 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
             
             {/* Company Icons */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
-                <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
-                <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
-                <img src={xLogo} alt="X" className="w-full h-full object-contain" />
-              </div>
-              <div className="w-8 h-8 hover:scale-110 transition-transform duration-200">
-                <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
-              </div>
             </div>
           </div>
           
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-white mb-1">{name}</h2>
             <p className="text-blue-300 text-sm mb-2">{t(specialty)}</p>
+            
+            {/* Company Icons for Elon Musk */}
+            {name.includes("Elon") && (
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={xLogo} alt="X" className="w-full h-full object-contain" />
+                </div>
+                <div className="w-6 h-6 hover:scale-110 transition-transform duration-200">
+                  <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
+                </div>
+              </div>
+            )}
             
             {/* Net Worth */}
             <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg p-3 mb-3 border border-green-500/30">
