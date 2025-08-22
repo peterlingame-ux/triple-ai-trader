@@ -3,7 +3,7 @@
  * 用于管理和切换不同的加密货币数据源
  */
 
-export type APIProvider = 'coingecko' | 'binance' | 'coinmarketcap' | 'mock';
+export type APIProvider = 'coingecko' | 'binance' | 'coinmarketcap' | 'okx' | 'mock';
 
 export interface APIConfig {
   provider: APIProvider;
@@ -50,6 +50,14 @@ export const API_CONFIGS: Record<APIProvider, APIConfig> = {
     rateLimits: {
       requestsPerMinute: 30,
       requestsPerHour: 1000
+    }
+  },
+  okx: {
+    provider: 'okx',
+    baseUrl: 'https://www.okx.com/api/v5',
+    rateLimits: {
+      requestsPerMinute: 600,
+      requestsPerHour: 10000
     }
   },
   mock: {
@@ -147,6 +155,8 @@ export class CryptoAPIManager {
         return this.fetchFromBinance(symbols);
       case 'coinmarketcap':
         return this.fetchFromCoinMarketCap(symbols);
+      case 'okx':
+        return this.fetchFromOKX(symbols);
       case 'mock':
       default:
         return this.generateMockData(symbols);
@@ -244,6 +254,40 @@ export class CryptoAPIManager {
         volume24h: quote?.volume_24h || 0,
         marketCap: quote?.market_cap || 0,
         lastUpdated: quote?.last_updated || new Date().toISOString()
+      };
+    });
+  }
+
+  // OKX API实现
+  private async fetchFromOKX(symbols: string[]): Promise<CryptoAPIResponse[]> {
+    const instIds = symbols.map(symbol => `${symbol.toUpperCase()}-USDT`).join(',');
+    const url = `${this.config.baseUrl}/market/tickers?instType=SPOT&instId=${instIds}`;
+    
+    const headers: Record<string, string> = {};
+    if (this.config.apiKey) {
+      headers['OK-ACCESS-KEY'] = this.config.apiKey;
+    }
+
+    const response = await fetch(url, { headers });
+    
+    if (!response.ok) {
+      throw new Error(`OKX API错误: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    return symbols.map(symbol => {
+      const ticker = data.data?.find((t: any) => t.instId === `${symbol.toUpperCase()}-USDT`);
+      
+      return {
+        symbol: symbol.toUpperCase(),
+        name: symbol,
+        price: parseFloat(ticker?.last || '0'),
+        change24h: parseFloat(ticker?.last || '0') - parseFloat(ticker?.open24h || '0'),
+        changePercent24h: parseFloat(ticker?.changePercent || '0'),
+        volume24h: parseFloat(ticker?.vol24h || '0'),
+        marketCap: 0, // OKX不直接提供市值数据
+        lastUpdated: new Date().toISOString()
       };
     });
   }

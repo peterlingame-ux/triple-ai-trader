@@ -164,6 +164,9 @@ serve(async (req) => {
           case 'openai':
             testResult = await testOpenAIConnection(config.apiKey);
             break;
+          case 'okx':
+            testResult = await testOKXConnection(config.apiKey, config.secretKey);
+            break;
           default:
             testResult = { success: true, message: 'Configuration stored successfully' };
         }
@@ -229,6 +232,38 @@ async function testOpenAIConnection(apiKey: string) {
       return { success: true, message: 'OpenAI API connection successful' };
     } else {
       return { success: false, message: 'OpenAI API key is invalid' };
+    }
+  } catch (error) {
+    return { success: false, message: `Connection test failed: ${error.message}` };
+  }
+}
+
+async function testOKXConnection(apiKey: string, secretKey: string) {
+  try {
+    const timestamp = Date.now() / 1000;
+    const method = 'GET';
+    const requestPath = '/api/v5/account/balance';
+    const body = '';
+    
+    // Create OKX signature
+    const prehash = timestamp + method + requestPath + body;
+    const signature = await createHmacSignature(secretKey, prehash);
+    
+    const response = await fetch(`https://www.okx.com${requestPath}`, {
+      headers: {
+        'OK-ACCESS-KEY': apiKey,
+        'OK-ACCESS-SIGN': signature,
+        'OK-ACCESS-TIMESTAMP': timestamp.toString(),
+        'OK-ACCESS-PASSPHRASE': 'your_passphrase', // Note: This would need to be stored in config
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      return { success: true, message: 'OKX API connection successful' };
+    } else {
+      const errorData = await response.text();
+      return { success: false, message: `OKX API error: ${errorData}` };
     }
   } catch (error) {
     return { success: false, message: `Connection test failed: ${error.message}` };
