@@ -3,6 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, MessageSquare, TrendingUp, Zap, Rocket, Star, Award, DollarSign } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
+import teslaLogo from "@/assets/tesla-logo.png";
+import spacexLogo from "@/assets/spacex-logo.png";
+import xLogo from "@/assets/x-logo.png";
+import neuralinkLogo from "@/assets/neuralink-logo.png";
 
 interface ElonProfileProps {
   name: string;
@@ -50,18 +54,36 @@ export const ElonProfile = ({ name, specialty, confidence, recommendation, reaso
       <div className="relative z-10">
         {/* Header Section */}
         <div className="flex items-start gap-6 mb-6 mt-4">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-400/50 shadow-2xl mt-2">
-            {avatar ? (
-              <img 
-                src={avatar} 
-                alt={name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-blue-500/20 flex items-center justify-center">
-                <Brain className="w-12 h-12 text-blue-400" />
+          <div className="flex flex-col items-center">
+            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-400/50 shadow-2xl mb-3">
+              {avatar ? (
+                <img 
+                  src={avatar} 
+                  alt={name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-blue-500/20 flex items-center justify-center">
+                  <Brain className="w-12 h-12 text-blue-400" />
+                </div>
+              )}
+            </div>
+            
+            {/* Company Icons */}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
               </div>
-            )}
+              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
+              </div>
+              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={xLogo} alt="X" className="w-full h-full object-contain" />
+              </div>
+              <div className="w-8 h-8 bg-white/10 rounded-lg p-1.5 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
+              </div>
+            </div>
           </div>
           
           <div className="flex-1">
