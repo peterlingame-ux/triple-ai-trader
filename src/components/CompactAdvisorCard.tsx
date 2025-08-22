@@ -3,6 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { DollarSign, TrendingUp, Target, Quote, Star, Power } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
+import teslaLogo from "@/assets/tesla-logo.png";
+import spacexLogo from "@/assets/spacex-logo.png";
+import xLogo from "@/assets/x-logo.png";
+import neuralinkLogo from "@/assets/neuralink-logo.png";
 
 interface CompactAdvisorCardProps {
   name: string;
@@ -131,6 +135,24 @@ export const CompactAdvisorCard = ({
                 : 'bg-gradient-to-r from-gray-500/10 to-transparent'
             }`} />
           </div>
+          
+          {/* Company Icons for Elon Musk */}
+          {name === "Elon Musk" && (
+            <div className="flex items-center justify-center gap-1.5 mb-3">
+              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={teslaLogo} alt="Tesla" className="w-full h-full object-contain" />
+              </div>
+              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={spacexLogo} alt="SpaceX" className="w-full h-full object-contain" />
+              </div>
+              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={xLogo} alt="X" className="w-full h-full object-contain" />
+              </div>
+              <div className="w-6 h-6 bg-white/10 rounded-md p-1 border border-white/20 hover:bg-white/20 transition-colors">
+                <img src={neuralinkLogo} alt="Neuralink" className="w-full h-full object-contain" />
+              </div>
+            </div>
+          )}
           
           {/* Name and Title */}
           <div className="text-center">
